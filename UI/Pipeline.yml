@@ -1,0 +1,79 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+name: $(SourceBranchName)_$(date:yyyyMMdd)$(rev:.r)
+trigger:
+  branches:
+    include:
+      - develop
+      - master
+      - release/*
+      - hotfix/*
+
+stages:
+  - stage: Build
+    displayName: Build stage
+    jobs:
+      - job: BuildJob
+        pool:
+          name: Agents of Shield
+        steps:
+          - task: NodeTool@0
+            displayName: "Use Node 19.5.0"
+            inputs:
+              versionSpec: 19.5.0
+
+          - task: Npm@1
+            displayName: Install
+            inputs:
+              command: custom
+              verbose: true
+              customCommand: "ci"
+
+          - task: Npm@1
+            displayName: Build
+            inputs:
+              command: custom
+              verbose: false
+              customCommand: "run build"
+
+          - task: ArchiveFiles@2
+            displayName: "Archive build"
+            inputs:
+              rootFolderOrFile: build
+              includeRootFolder: false
+              archiveFile: "$(Build.ArtifactStagingDirectory)/dist.zip"
+
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish Artifact: drop"
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish Artifact: drop"
+
+  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/develop') }}:
+      - stage: TestEnv_Stage
+        displayName: Test Deploy UI
+        dependsOn: Build
+        jobs:
+          - deployment: TestEnv_Deploy
+            displayName: "Test Deploy UI"
+            environment: "ENV"
+            variables:
+              resourceGroup: "RG"
+              subscription: "SUB"
+              deploymentName: "Test-eBilling-"
+              vmImageName: "Agents of Shield"
+            pool: "${{ variables.vmImageName }}"
+            strategy:
+              runOnce:
+                deploy:
+                  steps:
+                    - task: AzureRmWebAppDeployment@4
+                      displayName: "Azure App Service Deploy: CoolWebAppName"
+                      inputs:
+                        azureSubscription: "${{ variables.subscription }}"
+                        WebAppName: "CoolWebAppName"
+                        packageForLinux: "$(Pipeline.Workspace)/drop/dist.zip"
+                        enableCustomDeployment: true
+                        DeploymentType: zipDeploy
