@@ -1,6 +1,6 @@
-import * as R from "ramda";
-import styles from "./pagination.module.scss";
+//THIS COMPONENT NEED TO BE REFACTOR TO BE CHACKRA COMPLIANT
 
+import * as R from "ramda";
 type PaginationComponentTypes = {
   count: number;
   page: number;
@@ -18,9 +18,9 @@ const PaginationComponent = ({
   const pageMinRange = 3;
   const pageMinRangeVal = R.gt(page, pageMinRange)
     ? R.min(
-      R.subtract(page, pageMinRange),
-      R.subtract(totalPages, pageMinRange)
-    )
+        R.subtract(page, pageMinRange),
+        R.subtract(totalPages, pageMinRange)
+      )
     : 0;
 
   const pageMaxRange = 2;
@@ -31,9 +31,9 @@ const PaginationComponent = ({
   const pageRange = R.range(pageMinRangeVal, page < 3 ? 5 : pageMaxRangeVal);
 
   return (
-    <div className={styles.paginationControls}>
-      {
-        count > pageSize ? <div className={styles.pagination}>
+    <div>
+      {count > pageSize ? (
+        <div>
           <PageItem
             display={page > pageMinRange}
             onChange={() => onPageChange(1)}
@@ -52,7 +52,7 @@ const PaginationComponent = ({
               <PageItem
                 display={(pVal - 1) * pageSize < count}
                 key={i}
-                className={R.equals(pVal, page) ? styles.active : ""}
+                // className={R.equals(pVal, page) ? is active  : is not active} // active page style apply here
                 onChange={() => onPageChange(pVal)}
                 title={R.toString(pVal)}
                 value={pVal}
@@ -70,8 +70,10 @@ const PaginationComponent = ({
             onChange={() => onPageChange(totalPages)}
             value={<i className="fa fa-angle-double-right" />}
           />
-        </div> : <></>
-      }
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
@@ -96,11 +98,10 @@ const PageItem = ({
   value,
 }: PageItemsTypes) =>
   R.ifElse(
-    (x: any) => x===true,
+    (x: any) => x === true,
     () => (
       <div
-        className={` ${className} ${disable ? styles.disabled + styles.pageNo : styles.pageNo
-          }`}
+        //className={` ${className} ${disable ? styles.disabled + styles.pageNo : styles.pageNo  }`}
         onClick={onChange}
         title={title}
       >

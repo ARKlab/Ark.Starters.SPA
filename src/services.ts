@@ -11,12 +11,11 @@ import { pipe } from "fp-ts/lib/function";
 export const createService = ({
   baseUrl,
   authHelpers,
-  scopes
+  scopes,
 }: {
   baseUrl: string;
   authHelpers: ReturnType<typeof createAuthHelpers>;
   scopes: string[];
-
 }) => {
   let languageSelector = () => "";
   const makeRequest = <A>(
@@ -37,7 +36,7 @@ export const createService = ({
                     (e) => {
                       console.log(PathReporter.report(t.failures(e)));
                     },
-                    () => { }
+                    () => {}
                   )
                 ),
                 RxOp.map(E.mapLeft(() => "parser error")),
@@ -48,7 +47,9 @@ export const createService = ({
       )
     );
   return {
-    updateLanguage: (ipdatedlanguageSelector: () => string) => { languageSelector = ipdatedlanguageSelector },
+    updateLanguage: (ipdatedlanguageSelector: () => string) => {
+      languageSelector = ipdatedlanguageSelector;
+    },
     get: <A>(url: string, decoder: t.Type<A>, headers?: t.Any) =>
       makeRequest(decoder, (token) =>
         ajax.get(`${baseUrl}/v1.0/${url}`, {
@@ -68,18 +69,17 @@ export const createService = ({
     getRaw: (url: string) =>
       pipe(
         authHelpers.getTokenSilently(scopes, authHelpers.getUserAccount()!),
-        TE.chain(
-          (token) =>
-            TE.tryCatch(
-              () =>
-                fetch(`${baseUrl}/v1.0/${url}`, {
-                  headers: {
-                    authorization: `Bearer ${token.accessToken}`,
-                    "Accept-Language": languageSelector(),
-                  },
-                }).then((x) => x.blob()),
-              (e) => e
-            )
+        TE.chain((token) =>
+          TE.tryCatch(
+            () =>
+              fetch(`${baseUrl}/v1.0/${url}`, {
+                headers: {
+                  authorization: `Bearer ${token.accessToken}`,
+                  "Accept-Language": languageSelector(),
+                },
+              }).then((x) => x.blob()),
+            (e) => e
+          )
         )
       ),
     post: <A, B>(url: string, body: A, decoder: t.Type<B>, headers = {}) =>

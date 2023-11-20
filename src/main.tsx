@@ -5,14 +5,11 @@ import Unauthorised from "./unauthorised/view";
 import Footer from "./components/footer/footer";
 import { useTranslate } from "./translate";
 import { useSelector } from "react-redux";
-import { Selectors as menuSelectors } from "./redux/modules/menu";
 import { Selectors as errorSelectors } from "./redux/modules/errorHandler";
 import {
   notificationResetNotificationAction,
   Selectors as notificationSelector,
 } from "./redux/modules/common/notification";
-
-import AuthLoader from "./authLoader/view";
 
 import { Box } from "@chakra-ui/react";
 
@@ -23,8 +20,6 @@ import { useDispatch } from "react-redux";
 import { ProblemDetailsModal } from "./componentsCommon/problemDetailsModal/problemDetailsModal";
 
 const Component = () => {
-  const translate = useTranslate();
-  const dispatch = useDispatch();
   return (
     <>
       <Routes>

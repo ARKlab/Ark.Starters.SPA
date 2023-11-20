@@ -1,4 +1,3 @@
-
 import * as Rx from "rxjs";
 import * as RxOp from "rxjs/operators";
 import { ajax, AjaxResponse } from "rxjs/ajax";
@@ -14,37 +13,37 @@ export const createServiceExt = ({
   baseUrl: string;
   token: string;
 }) => {
-
   let languageSelector = () => "";
 
   const makeRequest = <A>(
     decoder: t.Type<A>,
     fn: (token: string) => Rx.Observable<AjaxResponse>
   ) =>
-    pipe(
-      () =>
-        pipe(
-          fn(token)
-            .pipe(
-              RxOp.map((x) => x.response),
-              RxOp.map(decoder.decode),
-              RxOp.tap(
-                E.fold(
-                  (e) => {
-                    console.log(PathReporter.report(t.failures(e)));
-                  },
-                  () => { }
-                )
-              ),
-              RxOp.map(E.mapLeft(() => "parser error")),
-              RxOp.catchError((e) => Rx.of(E.left<string, A>(e)))
-            )
-            .toPromise()
-        )
+    pipe(() =>
+      pipe(
+        fn(token)
+          .pipe(
+            RxOp.map((x) => x.response),
+            RxOp.map(decoder.decode),
+            RxOp.tap(
+              E.fold(
+                (e) => {
+                  console.log(PathReporter.report(t.failures(e)));
+                },
+                () => {}
+              )
+            ),
+            RxOp.map(E.mapLeft(() => "parser error")),
+            RxOp.catchError((e) => Rx.of(E.left<string, A>(e)))
+          )
+          .toPromise()
+      )
     );
 
   return {
-    updateLanguage: (updatedlanguageSelector: () => string) => { languageSelector = updatedlanguageSelector },
+    updateLanguage: (updatedlanguageSelector: () => string) => {
+      languageSelector = updatedlanguageSelector;
+    },
 
     get: <A>(url: string, decoder: t.Type<A>, headers?: t.Any) =>
       makeRequest(decoder, (token) =>

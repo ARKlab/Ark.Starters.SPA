@@ -7,7 +7,6 @@ import App from "./App";
 import CreateStore from "./redux/configureStore";
 import { getEnv } from "./environment";
 import * as RxOp from "rxjs/operators";
-import "@fortawesome/fontawesome-pro/css/all.css";
 import { createAuthHelpers } from "./redux/authHelpers";
 import "./services";
 import { createService } from "./services";
