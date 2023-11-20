@@ -1,0 +1,74 @@
+@import "../../../styles/variables.module.scss";
+
+.customPagination,
+.pagination {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1rem;
+  font-weight: bold;
+  gap: 0.5em;
+  background-color: white;
+  > * {
+    display: flex;
+    align-items: center;
+  }
+  .pageNo {
+    padding: 0.5rem 0.75rem;
+    line-height: 1.25;
+    border: 2px solid black;
+    color: black;
+    &:hover {
+      color: black;
+      background-color: #a7a7a7;
+    }
+  }
+  .active {
+    color: white !important;
+    background-color: black !important;
+  }
+}
+.paginationControls {
+  display: flex;
+  justify-content: flex-end;
+  //width: 85vw;
+  padding: 1em 0;
+  margin: 0 auto;
+}
+.standardPaginationControls {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 15px;
+}
+.disabled {
+  pointer-events: none;
+  /* for "disabled" effect */
+  opacity: 0.5;
+  &:hover {
+    color: white;
+    background-color: #535353;
+  }
+}
+
+.pagination {
+  li {
+    a {
+      min-height: 28.4px;
+      border: 1px solid gray;
+      border-radius: 0 !important;
+      background: $pagination;
+      color: $mainTextColor;
+      border-color: $paginationActive !important;
+      &:focus {
+        box-shadow: none;
+      }
+    }
+  }
+  .active {
+    a {
+      color: $mainTextColor;
+      background-color: $paginationActive !important;
+      border-color: $paginationActive !important;
+    }
+  }
+}
