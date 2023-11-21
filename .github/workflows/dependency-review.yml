@@ -14,4 +14,4 @@ jobs:
         uses: actions/dependency-review-action@v3
         with:
           # Use comma-separated names to pass list arguments:
-          allow-licenses: MIT,Apache-2.0,BSD-3-Clause,CC0-1.0,BSD-2-Clause,ISC,Python-2.0,MPL-2.0,0BSD,Unlicense,CC-BY-3.0,CC-BY-4.0,BSD-3-Clause-Clear,OFL-1.1,Zlib
+          allow-licenses: MIT,Apache-2.0,BSD-3-Clause,CC0-1.0,BSD-2-Clause,ISC,Python-2.0,MPL-2.0,0BSD,Unlicense,CC-BY-3.0,CC-BY-4.0,BSD-3-Clause-Clear,OFL-1.1,Zlib,ISC AND MIT,MIT AND Zlib,BSD-3-Clause AND BSD-3-Clause-Clear
