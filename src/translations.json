@@ -1,0 +1,254 @@
+{
+	"ERROR_BRANDNOTFOUND": {
+		"en": "Brand: '{0}' is not present or has been removed",
+		"it": "Marchio: '{0}' non esiste o è stato rimosso"
+	},
+	"NAV_ROUTE_LOGIN": {
+		"en": "/Login",
+		"it": "/Login"
+	},
+	"NAV_ROUTE_LOGOUT": {
+		"en": "/Logout",
+		"it": "/Logout"
+	},
+	"NAV_ROUTE_SIGNUP": {
+		"en": "/Signup",
+		"it": "/Signup"
+	},
+	"NAV_ROUTE_LOGINERROR": {
+		"en": "/LoginError",
+		"it": "/LoginError"
+	},
+	"MAIN_ERRORTITLE": {
+		"en": "Error: ",
+		"it": "Errore: "
+	},
+	"MAIN_REQUESTFAILED": {
+		"en": "Request Failed",
+		"it": "Richiesta Fallita"
+	},
+	"MAIN_SELLSECTION": {
+		"en": "Sell Section",
+		"it": "Vendi"
+	},
+	"MAIN_BUYSECTION": {
+		"en": "Buy Section",
+		"it": "Acquista"
+	},
+	"MAIN_CUSTOMERCARESECTION": {
+		"en": "Customer Care",
+		"it": "Servizio Clienti"
+	},
+	"MAIN_LOGGEDINAS": {
+		"en": "Logged in as",
+		"it": "Hai effettuato l'accesso come"
+	},
+	"MAIN_LANGUAGE": {
+		"en": "Language",
+		"it": "Lingua"
+	},
+	"MAIN_SIGNOUT": {
+		"en": "Sign Out",
+		"it": "Esci"
+	},
+	"MAIN_WELCOME": {
+		"en": "Welcome",
+		"it": "Benvenuto"
+	},
+	"MAIN_HELLO": {
+		"en": "Hello",
+		"it": "Ciao"
+	},
+	"MAIN_PROFILEANDORDERS": {
+		"en": "Profile and Orders",
+		"it": "Profilo e Ordini"
+	},
+	"FOOTER_PAGES": {
+		"en": "Pages",
+		"it": "Pagine"
+	},
+	"FOOTER_PAGESBUY": {
+		"en": "Buy with us",
+		"it": "Acquista con noi"
+	},
+	"FOOTER_PAGESSELL": {
+		"en": "Sell with us",
+		"it": "Vendi con noi"
+	},
+	"FOOTER_PAGESABOUTUS": {
+		"en": "About Us",
+		"it": "Chi Siamo"
+	},
+	"FOOTER_PAGESCUSTOMERCARE": {
+		"en": "Customer Care",
+		"it": "Servizio clienti"
+	},
+	"FOOTER_PAGESBEAPROMOTER": {
+		"en": "Be a Promoter",
+		"it": "Diventa un Promotore"
+	},
+	"FOOTER_POLICY": {
+		"en": "Policy",
+		"it": "Policy"
+	},
+	"FOOTER_POLICYTERMS": {
+		"en": "Policy Terms",
+		"it": "Termini di Utilizzo"
+	},
+	"FOOTER_POLICYPRIVACY": {
+		"en": "Privacy Policy",
+		"it": "Privacy Policy"
+	},
+	"FOOTER_POLICYREFOUND": {
+		"en": "Cookies Policy",
+		"it": "Cookies Policy"
+	},
+	"FOOTER_CATEGORY": {
+		"en": "Categories",
+		"it": "Categorie"
+	},
+	"FOOTER_CATEGORYFOOD": {
+		"en": "Food",
+		"it": "Cibo"
+	},
+	"FOOTER_CATEGORYBEVERAGES": {
+		"en": "Beverages",
+		"it": "Bevande"
+	},
+	"FOOTER_CATEGORYEQUIPMENTS": {
+		"en": "Equipments",
+		"it": "Attrezzature"
+	},
+	"FOOTER_REGISTRATION": {
+		"en": "Newsletter",
+		"it": "Newsletter"
+	},
+	"FOOTER_REGISTRATIONTEXT": {
+		"en": "Do you want to receive infos on how to simplify your business?",
+		"it": "Vuoi ricevere informazioni su come semplificare il tuo lavoro?"
+	},
+	"FOOTER_REGISTRATIONEMAIL": {
+		"en": "Insert your Email",
+		"it": "Inserisci la tua Email"
+	},
+	"FOOTER_REGISTRATIONSEND": {
+		"en": "Send",
+		"it": "Invia"
+	},
+	"FOOTER_ALLRIGHTSRESERVED": {
+		"en": "All Rights Reserved",
+		"it": "Tutti i diritti riservati"
+	},
+	"COMMON_INSERTVALUE": {
+		"en": "Insert Value",
+		"it": "Inserire un valore"
+	},
+	"COMMON_CANCEL": {
+		"en": "Cancel",
+		"it": "Annulla"
+	},
+	"COMMON_SAVE": {
+		"en": "Save",
+		"it": "Salva"
+	},
+	"COMMON_SUBMIT": {
+		"en": "Submit",
+		"it": "Invia"
+	},
+	"COMMON_SUBMITANDADD": {
+		"en": "Submit & Add SKU",
+		"it": "Invia & Aggiungi SKU"
+	},
+	"COMMON_DELETE": {
+		"en": "Delete",
+		"it": "Elimina"
+	},
+	"COMMON_UPDATE": {
+		"en": "Update",
+		"it": "Aggiorna"
+	},
+	"COMMON_CREATE": {
+		"en": "Create",
+		"it": "Crea"
+	},
+	"COMMON_APPLY": {
+		"en": "Apply",
+		"it": "Applica"
+	}, 
+	"COMMON_CLOSE": {
+		"en": "Close",
+		"it": "Chiudi"
+	},
+	"COMMON_ADD": {
+		"en": "Add",
+		"it": "Aggiungi"
+	},
+	"COMMON_CONFIRM": {
+		"en": "Confirm",
+		"it": "Confermare"
+	},
+	"COMMON_EDIT": {
+		"en": "Edit",
+		"it": "Modifica"
+	},
+	"COMMON_EDITMODE": {
+		"en": "Edit mode",
+		"it": "Modalità modifica"
+	},
+	"COMMON_YES": {
+		"en": "Yes",
+		"it": "Si"
+	},
+	"COMMON_NO": {
+		"en": "No",
+		"it": "No"
+	},
+	"COMMON_DISMISS": {
+		"en": "Dismiss",
+		"it": "Ignora"
+	},
+	"COMMON_ABORT": {
+		"en": "Abort",
+		"it": "Scarta"
+	},
+	"COMMON_CLICKHERE": {
+		"en": "Click Here",
+		"it": "Clicca Qui"
+	},
+	"COMMON_SEARCH": {
+		"en": "Search...",
+		"it": "Cerca..."
+	},
+	"LOGINAREA_LOGINMESSAGE": {
+		"en": "-",
+		"it": "-"
+	},
+	"LOGINAREA_LOGINMESSAGEERROR": {
+		"en": "You have attempted to access a resource that requires authentication, to proceed please Log In",
+		"it": "Hai tentato di accedere ad una risorsa che richiede autenticazione, per procedere per favore Accedi"
+	},
+	"LOGINAREA_LOGINMESSAGEGENERICERROR": {
+		"en": "You have attempted to access a resource that requires authentication",
+		"it": "Hai tentato di accedere ad una risorsa che richiede autenticazione"
+	},
+	"LOGINAREA_LOGINMESSAGENEWUSERGENERICERROR": {
+		"en": "If you are a new user please check your email to click on the verification link",
+		"it": "Se sei un nuovo utente controlla la tua e-mail e clicca sul link di verifica"
+	},
+	"LOGINAREA_LOGINMESSAGEPROCEEDGENERICERROR": {
+		"en": "To proceed click on Login",
+		"it": "Per procedere per favore Accedi"
+	},
+	"LOGINAREA_LOGOUTMESSAGE": {
+		"en": "You have successfully logged out!",
+		"it": "Disconnessione effettuata con successo!"
+	},
+	"LOGINAREA_LOGOUTBUTTON": {
+		"en": "Click the button to login again.",
+		"it": "Premi il bottone per accedere di nuovo."
+	},
+	"LOGINAREA_SIGNUPVERIFY": {
+		"en": "Please check your email and validate your user",
+		"it": "Per favore, controlla la tua mail per validare il tuo utente"
+	}
+}

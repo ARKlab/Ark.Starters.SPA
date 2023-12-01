@@ -1,0 +1,143 @@
+@import "../styles/variables.module.scss";
+
+//** SIGNUP VERIFY *************************************
+.signupVerify {
+  display: flex;
+  margin: 35px;
+}
+
+.signupVerifyText {
+  font-size: xxx-large;
+  font-weight: bold;
+}
+
+.signupVerifyImage {
+  display: flex;
+
+  img {
+    align-self: center;
+    grid-area: main;
+    display: grid;
+    max-width: 600px;
+    max-height: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+//** LOGIN *************************************
+.login {
+  display: flex;
+  margin: 35px;
+}
+
+.loginInfo{
+  margin-bottom: 20px;
+}
+
+.loginTextAndButton {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  gap: 2em;
+}
+
+.loginText {
+  font-size: xx-large;
+  font-weight: bold;
+}
+
+.loginButton {
+  justify-content: center;
+}
+
+.loginImage {
+  display: flex;
+
+  img {
+    align-self: center;
+    grid-area: main;
+    display: grid;
+    max-width: 600px;
+    max-height: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+//** LOGOUT *************************************
+.logout {
+  display: flex;
+  margin: 35px;
+}
+
+.logoutTextAndButton {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  gap: 4em;
+}
+
+.logoutText {
+  font-size: xxx-large;
+  font-weight: bold;
+}
+
+.logoutTextAndButton2 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  font-size: large;
+  font-weight: bold;
+}
+
+.logoutButton {
+  justify-content: center;
+  display: flex;
+}
+
+.logoutImage {
+  display: flex;
+
+  img {
+    align-self: center;
+    grid-area: main;
+    display: grid;
+    max-width: 600px;
+    max-height: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media only screen and (max-width: $mediaWidthFull) {
+  //** LOADING
+  .login, .logout {
+    flex-direction: column;
+    gap: 2em;
+  }
+
+  .paymentLoadingText {  
+    margin-top: 2em;
+    text-align: center;
+  }
+
+  .loginImage, .logoutImage {
+    margin-bottom: 2em;
+  
+    img {
+      max-width: 90%; 
+    }
+  }
+}
+
+@media only screen and (max-width: $mediaWidthMedium) {
+
+  .loginText .logoutText {  
+    font-size: xx-large;
+    text-align: center;
+  }
+}
