@@ -23,19 +23,4 @@ export const theme = extendTheme({
     heading: `'PTSansRegular', sans-serif`,
     body: `'PTSansRegular', sans-serif`,
   },
-  components: {
-    WrapItem: {
-      _hover: {
-        background: "brand.primary",
-        color: "brandPalette.900",
-        transitionDuration: "0.4s",
-        transitionTimingFunction: "ease-in-out",
-      },
-    },
-    Button: {
-      baseStyle: {
-        color: "brandPalette.900",
-      },
-    },
-  },
 });

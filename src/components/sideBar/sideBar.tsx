@@ -22,7 +22,6 @@ import { FiMenu } from "react-icons/fi";
 import { mainSections } from "../../siteMap/mainSections";
 import MenuItem from "./menuItem/menuItem";
 import { SubsectionMenuItemType } from "./menuItem/types";
-import { generateUniqueKey } from "../helper";
 
 //#endregion
 

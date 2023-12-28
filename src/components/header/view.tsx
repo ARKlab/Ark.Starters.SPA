@@ -18,7 +18,7 @@ const Header = () => {
       top="0"
       left="0"
       right="0"
-      zIndex="999" // You can adjust the z-index as needed
+      zIndex={"banner"} // You can adjust the z-index as needed
       shadow={"md"}
       borderBottom={"2px"}
       borderColor={"lightgrey"}
