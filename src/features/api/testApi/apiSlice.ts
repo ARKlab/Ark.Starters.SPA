@@ -6,7 +6,7 @@ export const apiSlice = createApi({
     baseUrl: "https://jsonplaceholder.typicode.com/",
   }),
   endpoints: (builder) => ({
-    fetchPosts: builder.query<PostDataType[], unknown>({
+    fetchPosts: builder.query<PostDataType[], null>({
       query: () => "posts",
     }),
     postPosts: builder.mutation({

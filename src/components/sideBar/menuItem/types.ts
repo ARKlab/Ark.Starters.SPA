@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { IconType } from "react-icons";
 import { Action, AnyAction, Dispatch } from "redux";
 
@@ -7,7 +8,7 @@ interface SectionItem {
 }
 
 export interface SubsectionMenuItemType extends SectionItem {
-  component?: (props: { a: Dispatch }) => any;
+  component?: (props: { a: Dispatch }) => ReactNode;
   isInMenu: boolean;
   icon?: IconType;
   isExternal: boolean;

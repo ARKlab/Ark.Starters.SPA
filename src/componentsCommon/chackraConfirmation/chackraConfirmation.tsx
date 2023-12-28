@@ -8,8 +8,8 @@ import {
   AlertDialogOverlay,
   Button,
 } from "@chakra-ui/react";
-import { useDispatch } from "react-redux";
 import { Action } from "redux";
+import { useAppDispatch } from "../../app/hooks";
 
 export const ChackraConfirmation = (props: {
   title: string;
@@ -19,7 +19,7 @@ export const ChackraConfirmation = (props: {
   paramsForConfirmAction: any;
   onClose: () => void;
 }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const cancelRef = useRef<HTMLButtonElement>(null);
   const handleConfirm = () => {
     dispatch(props.confirmAction(props.paramsForConfirmAction));

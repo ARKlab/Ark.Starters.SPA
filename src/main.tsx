@@ -3,7 +3,6 @@ import { useToast } from "@chakra-ui/react";
 import Header from "./components/header/view";
 import Unauthorised from "./unauthorised/view";
 import Footer from "./components/footer/footer";
-import { useSelector } from "react-redux";
 import { Selectors as errorSelectors } from "./redux/modules/errorHandler";
 import {
   resetNotification,
@@ -14,10 +13,9 @@ import { Box } from "@chakra-ui/react";
 
 import SimpleSidebar from "./components/sideBar/sideBar";
 
-import { useDispatch } from "react-redux";
-
 import { ProblemDetailsModal } from "./componentsCommon/problemDetailsModal/problemDetailsModal";
 import TestPage from "./components/testComponents/TestPage";
+import { useAppDispatch, useAppSelector } from "./app/hooks";
 
 const Component = () => {
   return (
@@ -41,9 +39,9 @@ const Component = () => {
 };
 
 const Main = () => {
-  const problemDetails = useSelector(errorSelectors.all);
-  const notification = useSelector(selectNotification);
-  const dispatch = useDispatch();
+  const problemDetails = useAppSelector(errorSelectors.all);
+  const notification = useAppSelector(selectNotification);
+  const dispatch = useAppDispatch();
   var toast = useToast();
   return (
     <>

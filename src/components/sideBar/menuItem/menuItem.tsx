@@ -1,6 +1,6 @@
 import { Link as ReactRouterLink } from "react-router-dom";
 import {
-  Center,
+  Flex,
   Link as ChakraLink,
   Icon,
   Text,
@@ -30,19 +30,24 @@ export default function MenuItem({
           transitionTimingFunction: "ease-in-out",
         }}
       >
-        <Center height={"40px"}>
+        <Flex
+          justifyContent="space-between"
+          alignItems="center"
+          width="100%"
+          height={"2.5em"}
+        >
           <Text mx="5">{label}</Text>
           {icon && (
             <Icon
-              mr="4"
-              fontSize="16"
+              mr="0"
+              fontSize="1em"
               _groupHover={{
                 color: "white",
               }}
               as={icon}
             />
           )}
-        </Center>
+        </Flex>
       </WrapItem>
     </ChakraLink>
   );

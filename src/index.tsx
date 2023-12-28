@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { EnvParams, getEnv } from "./environment";
 import { ChakraProvider } from "@chakra-ui/react";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { theme } from "./theme";
 import { store } from "./app/configureStore";
 import reportWebVitals from "./reportWebVitals";
@@ -62,11 +62,13 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <ChakraProvider theme={theme}>
-        <BrowserRouter>
-          <Index />
-        </BrowserRouter>
-      </ChakraProvider>
+      <BrowserRouter>
+        <ChakraProvider theme={theme}>
+          <Routes>
+            <Route path="/*" element={<Index />} />
+          </Routes>
+        </ChakraProvider>
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>
 );

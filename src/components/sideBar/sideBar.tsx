@@ -1,26 +1,28 @@
 //#region Imports
 import {
+  Accordion,
   AccordionButton,
-  IconButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
   Box,
+  BoxProps,
   CloseButton,
-  Flex,
-  useColorModeValue,
-  Text,
   Drawer,
   DrawerContent,
-  useDisclosure,
-  BoxProps,
+  Flex,
   FlexProps,
-  Accordion,
-  AccordionPanel,
-  AccordionItem,
-  AccordionIcon,
+  IconButton,
+  Text,
+  useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { FiMenu } from "react-icons/fi";
+
 import { mainSections } from "../../siteMap/mainSections";
 import MenuItem from "./menuItem/menuItem";
-import { MainSectionType, SubsectionMenuItemType } from "./menuItem/types";
+import { SubsectionMenuItemType } from "./menuItem/types";
+import { generateUniqueKey } from "../helper";
 
 //#endregion
 
@@ -41,11 +43,16 @@ export default function SimpleSidebar() {
         size="full"
       >
         <DrawerContent>
-          <SidebarContent onClose={onClose} />
+          <SidebarContent onClose={onClose} key={"SideBarContent"} />
         </DrawerContent>
       </Drawer>
 
-      <MobileNav display={{ base: "flex", md: "none" }} onOpen={onOpen} />
+      <MobileNav
+        display={{ base: "flex", md: "none" }}
+        onOpen={onOpen}
+        marginTop={"50px"}
+        marginBottom={"-60px"}
+      />
     </>
   );
 }
@@ -68,12 +75,21 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       <Flex h="10" alignItems="center" mx="8" justifyContent="space-between">
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
-      <Accordion defaultIndex={[0]} allowMultiple my="20px">
-        {mainSections.map((section) => (
-          <AccordionItem key={section.path}>
+      <Accordion
+        defaultIndex={[0]}
+        allowMultiple
+        my="20px"
+        borderStyle={"none"}
+        borderWidth={0}
+      >
+        {mainSections.map((section, index) => (
+          <AccordionItem
+            border="none"
+            key={section.path + "accordionItem" + index}
+          >
             <h2>
               <AccordionButton
-                key={section.path}
+                key={section.path + "accordionButton" + index}
                 _hover={{ background: "brand.primary", color: "white" }}
               >
                 <Box as="span" flex="1" textAlign="left">
@@ -82,14 +98,20 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
                 <AccordionIcon />
               </AccordionButton>
             </h2>
-            <AccordionPanel pb={4} key={section.path}>
-              {section.subsections.map((x) =>
+            <AccordionPanel
+              pb={4}
+              key={section.path + "accordionPanel" + index}
+            >
+              {section.subsections.map((x, indexSub) =>
                 x.isInMenu ? (
                   x.hasSubsections ? (
-                    <InnerAccordionSections section={x} />
+                    <InnerAccordionSections
+                      key={x.path + "innerAccordionSections" + indexSub}
+                      section={x}
+                    />
                   ) : (
                     <MenuItem
-                      key={x.path}
+                      key={x.path + "menuItem" + indexSub}
                       component={x.component}
                       path={x.path}
                       label={x.label}
@@ -111,24 +133,33 @@ const InnerAccordionSections = (props: { section: SubsectionMenuItemType }) => {
   let section = props.section;
   if (section.subsections)
     return (
-      <Accordion defaultIndex={[0]} allowMultiple my="0px" borderStyle={"none"}>
-        <AccordionItem key={section.path}>
+      <Accordion
+        defaultIndex={[0]}
+        allowMultiple
+        my="0px"
+        borderStyle={"hidden"}
+        key={section.path + "accordion"}
+        width={"100%"}
+        mx={"1"}
+        borderWidth={0}
+      >
+        <AccordionItem key={section.path + "AccordionItemInner"} border="none">
           <h2>
             <AccordionButton
-              key={section.path}
+              key={section.path + "AccordionButtonInner"}
               _hover={{ background: "brand.primary", color: "white" }}
             >
               <Box as="span" flex="1" textAlign="left">
                 {section.label}
               </Box>
-              <AccordionIcon />
+              <AccordionIcon mx={-3} />
             </AccordionButton>
           </h2>
-          <AccordionPanel pb={4} key={section.path}>
-            {section.subsections.map((x) =>
+          <AccordionPanel pb={4} key={section.path + "AccordionPanelInner"}>
+            {section.subsections.map((x, index) =>
               x.isInMenu ? (
                 <MenuItem
-                  key={x.path}
+                  key={x.path + "AccordionMenuItemInner" + index}
                   component={x.component}
                   path={x.path}
                   label={x.label}

@@ -41,8 +41,7 @@ const Header = () => {
         <Center marginRight={"20px"}>
           <ChakraLink as={ReactRouterLink} to={"/logout"}>
             <Button
-              bg={"brand.primary"}
-              color="white"
+              colorScheme="brandPalette"
               rightIcon={<FaArrowRightFromBracket />}
               _hover={{ background: "brand.selected" }}
             >

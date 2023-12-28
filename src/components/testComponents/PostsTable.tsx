@@ -1,4 +1,17 @@
-import { Center, Spinner, Td, Tr } from "@chakra-ui/react";
+import {
+  Button,
+  Center,
+  Spinner,
+  Table,
+  TableCaption,
+  TableContainer,
+  Tbody,
+  Td,
+  Tfoot,
+  Th,
+  Thead,
+  Tr,
+} from "@chakra-ui/react";
 import { useFetchPostsQuery } from "../../features/api/testApi/apiSlice";
 import { PostDataType } from "../../features/api/testApi/types";
 import { ChackraPlainTable } from "../tables/plainTable/chackraPlainTable";
@@ -7,39 +20,21 @@ const PostsTable = () => {
     data,
     isLoading,
     isError,
-  } /*This also contains error and isSuccess*/ = useFetchPostsQuery(
-    {
-      //params here like page: page , limit: 20, skip: pagesize * (page - 1)
-    },
-    {
-      pollingInterval: 30000,
-      refetchOnReconnect: true,
-      refetchOnMountOrArgChange: true,
-    }
-  );
+  } /*This also contains error and isSuccess*/ = useFetchPostsQuery(null, {
+    pollingInterval: 30000,
+    refetchOnReconnect: true,
+    refetchOnMountOrArgChange: true,
+  });
   let headers = ["ID", "User ID", "Title", "Body"];
   return (
     <>
+      <Button colorScheme="brandPalette">TestButton </Button>
       <ChackraPlainTable
-        colorscheme="grey.200"
+        colorscheme="teal"
         variant="striped"
-        headers={headers}
-        body={
-          isLoading || isError || !data ? (
-            <Center>
-              <Spinner />
-            </Center>
-          ) : (
-            data.map((post: PostDataType, index: number) => (
-              <Tr key={index}>
-                <Td>{post.id}</Td>
-                <Td>{post.userId}</Td>
-                <Td>{post.title}</Td>
-                <Td>{post.body}</Td>
-              </Tr>
-            ))
-          )
-        }
+        data={data || []}
+        isLoading={isLoading}
+        isError={isError}
       />
     </>
   );

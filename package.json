@@ -8,32 +8,21 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@react-icons/all-files": "^4.1.0",
-    "@reduxjs/toolkit": "2.0.1",
-    "@testing-library/jest-dom": "6.1.5",
-    "@testing-library/react": "14.1.2",
-    "@types/jest": "29.5.11",
-    "@types/node": "20.10.5",
-    "@types/react": "18.2.45",
-    "@types/react-dom": "18.2.18",
+    "@reduxjs/toolkit": "^2.0.1",
     "chakra-dayzed-datepicker": "^0.2.10",
     "date-fns": "^3.0.6",
     "framer-motion": "^10.16.16",
     "ramda": "^0.29.1",
-    "react": "18.2.0",
+    "react": "^18.2.0",
     "react-copy-to-clipboard": "^5.1.0",
-    "react-dom": "18.2.0",
+    "react-dom": "^18.2.0",
     "react-icons": "^4.12.0",
-    "react-redux": "9.0.4",
-    "react-router-dom": "^6.21.0",
-    "react-scripts": "5.0.1",
-    "typescript": "5.3.3",
-    "web-vitals": "3.5.0"
+    "react-redux": "^9.0.4",
+    "react-router-dom": "^6.21.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "r3f-pack start",
+    "build": "r3f-pack build"
   },
   "eslintConfig": {
     "extends": [
@@ -54,7 +43,16 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.1.5",
+    "@testing-library/react": "^14.1.2",
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.10.5",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
     "@types/ramda": "^0.29.9",
-    "@types/react-copy-to-clipboard": "^5.0.7"
+    "@types/react-copy-to-clipboard": "^5.0.7",
+    "r3f-pack": "^2.6.2",
+    "typescript": "^5.3.3",
+    "web-vitals": "^3.5.0"
   }
 }
