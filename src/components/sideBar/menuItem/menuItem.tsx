@@ -25,7 +25,7 @@ export default function MenuItem({
       <WrapItem
         _hover={{
           background: "brand.primary",
-          color: "white",
+          color: "brandPalette.900",
           transitionDuration: "0.4s",
           transitionTimingFunction: "ease-in-out",
         }}
@@ -42,7 +42,7 @@ export default function MenuItem({
               mr="0"
               fontSize="1em"
               _groupHover={{
-                color: "white",
+                color: "brandPalette.900",
               }}
               as={icon}
             />

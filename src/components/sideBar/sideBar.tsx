@@ -90,7 +90,10 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
             <h2>
               <AccordionButton
                 key={section.path + "accordionButton" + index}
-                _hover={{ background: "brand.primary", color: "white" }}
+                _hover={{
+                  background: "brand.primary",
+                  color: "brandPalette.900",
+                }}
               >
                 <Box as="span" flex="1" textAlign="left">
                   {section.label}
@@ -147,7 +150,10 @@ const InnerAccordionSections = (props: { section: SubsectionMenuItemType }) => {
           <h2>
             <AccordionButton
               key={section.path + "AccordionButtonInner"}
-              _hover={{ background: "brand.primary", color: "white" }}
+              _hover={{
+                background: "brand.primary",
+                color: "brandPalette.900",
+              }}
             >
               <Box as="span" flex="1" textAlign="left">
                 {section.label}

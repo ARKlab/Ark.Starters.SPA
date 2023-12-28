@@ -10,7 +10,7 @@ export const theme = extendTheme({
       600: "#104378",
       700: "#FFE6B9",
       800: "#E4572E",
-      900: "#194069",
+      900: "#ffffff",
     },
     brand: {
       primary: "#4094d0",
@@ -27,14 +27,14 @@ export const theme = extendTheme({
     WrapItem: {
       _hover: {
         background: "brand.primary",
-        color: "white",
+        color: "brandPalette.900",
         transitionDuration: "0.4s",
         transitionTimingFunction: "ease-in-out",
       },
     },
     Button: {
       baseStyle: {
-        color: "white",
+        color: "brandPalette.900",
       },
     },
   },
