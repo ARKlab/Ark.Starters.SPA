@@ -12,8 +12,8 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { useFetchPostsQuery } from "../../features/api/testApi/apiSlice";
-import { PostDataType } from "../../features/api/testApi/types";
+import { useFetchPostsQuery } from "../../features/api/jsonPlaceholderAPI/jsonPlaceholderSlice";
+import { PostDataType } from "../../features/api/jsonPlaceholderAPI/jsonPlaceholderTypes";
 import { ChackraPlainTable } from "../tables/plainTable/chackraPlainTable";
 const PostsTable = () => {
   const {

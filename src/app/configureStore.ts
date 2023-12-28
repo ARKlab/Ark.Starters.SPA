@@ -2,16 +2,16 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import notificationsReducer from "../redux/modules/common/notification";
 import errorReducer from "../redux/modules/errorHandler";
-import { apiSlice } from "../features/api/testApi/apiSlice";
+import { jsonPlaceholderSlice } from "../features/api/jsonPlaceholderAPI/jsonPlaceholderSlice";
 
 export const store = configureStore({
   reducer: {
     notifications: notificationsReducer,
     errorHandler: errorReducer,
-    [apiSlice.reducerPath]: apiSlice.reducer,
+    [jsonPlaceholderSlice.reducerPath]: jsonPlaceholderSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiSlice.middleware),
+    getDefaultMiddleware().concat(jsonPlaceholderSlice.middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

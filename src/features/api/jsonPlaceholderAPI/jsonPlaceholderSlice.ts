@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { PostDataType } from "./types";
-export const apiSlice = createApi({
-  reducerPath: "api",
+import { PostDataType } from "./jsonPlaceholderTypes";
+export const jsonPlaceholderSlice = createApi({
+  reducerPath: "jsonPlaceholder",
   baseQuery: fetchBaseQuery({
     baseUrl: "https://jsonplaceholder.typicode.com/",
   }),
@@ -18,4 +18,5 @@ export const apiSlice = createApi({
     }),
   }),
 });
-export const { useFetchPostsQuery, usePostPostsMutation } = apiSlice;
+export const { useFetchPostsQuery, usePostPostsMutation } =
+  jsonPlaceholderSlice;
