@@ -1,5 +1,6 @@
 import { createSlice, Dispatch, PayloadAction } from "@reduxjs/toolkit";
 import * as R from "ramda";
+import { RootState } from "../../app/configureStore";
 
 export type DetailsType = {
   title?: string;
@@ -157,6 +158,6 @@ export const dispatchNetworkError =
     });
   };
 
-export const Selectors: { all: (a: any) => errorModalType } = {
+export const Selectors: { all: (state: RootState) => errorModalType } = {
   all: R.prop(errorSlice.name),
 };
