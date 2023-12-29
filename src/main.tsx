@@ -1,21 +1,22 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
 import Header from "./components/header/view";
-import Unauthorised from "./unauthorised/view";
+import Unauthorised from "./features/unauthorised/view";
 import Footer from "./components/footer/footer";
-import { Selectors as errorSelectors } from "./redux/modules/errorHandler";
+import { Selectors as errorSelectors } from "./features/errorHandler/errorHandler";
 import {
   resetNotification,
   selectNotification,
-} from "./redux/modules/common/notification";
+} from "./features/notifications/notification";
 
 import { Box } from "@chakra-ui/react";
 
 import SimpleSidebar from "./components/sideBar/sideBar";
 
 import { ProblemDetailsModal } from "./componentsCommon/problemDetailsModal/problemDetailsModal";
-import TestPage from "./components/testComponents/TestPage";
+import JsonPlaceHolderView from "./features/jsonPlaceholderAPI/JsonPlaceHolder";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
+import PlaygroundView from "./features/playground/playgroundView";
 
 const Component = () => {
   return (
@@ -23,7 +24,8 @@ const Component = () => {
       <Routes>
         <Route index path="/" element={<Navigate to="/test" />} />
         <Route path="/Unauthorized" element={<Unauthorised />} />
-        <Route path="/test" element={<TestPage />} />
+        <Route path="/jsonplaceholder" element={<JsonPlaceHolderView />} />
+        <Route path="/playground" element={<PlaygroundView />} />
 
         {
           //Understand why with this method :params in path are not being recognized.
@@ -59,6 +61,7 @@ const Main = () => {
           status: notification.status,
           duration: notification.duration,
           isClosable: notification.isClosable,
+          position: notification.position,
         }) &&
         dispatch(resetNotification())}
       <Footer />

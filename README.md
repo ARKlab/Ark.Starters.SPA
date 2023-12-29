@@ -24,7 +24,7 @@ TODO: this section would provide examples on how to run the template and how to 
 
 When styling components, we follow these guidelines:
 
-#### Z-Index usage
+### Z-Index usage
 
 For any need of z-Index, we refer to the zIndices guideline of Chackra UI
 the only accepted values for any zIndex property across the project would be one of the followings:
@@ -47,7 +47,7 @@ const zIndices = {
 };
 ```
 
-#### Distancing
+### Distancing
 
 1. **Use `em` units for font sizes and other measurements related to text**: This makes the design more flexible and accessible, as `em` units adjust automatically to the user's default font size. For example, instead of `fontSize="16px"`, use `fontSize="1em"`.
 

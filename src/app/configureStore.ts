@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import notificationsReducer from "../redux/modules/common/notification";
-import errorReducer from "../redux/modules/errorHandler";
-import { jsonPlaceholderSlice } from "../features/api/jsonPlaceholderAPI/jsonPlaceholderSlice";
+import notificationsReducer from "../features/notifications/notification";
+import errorReducer from "../features/errorHandler/errorHandler";
+import { jsonPlaceholderSlice } from "../features/jsonPlaceholderAPI/jsonPlaceholderSlice";
 
 export const store = configureStore({
   reducer: {

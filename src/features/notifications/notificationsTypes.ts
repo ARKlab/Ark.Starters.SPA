@@ -6,6 +6,14 @@ export enum NotificationDuration {
   VeryLong = 10000, // 10 seconds
 }
 
+export type NotificationPosition =
+  | "top"
+  | "top-right"
+  | "top-left"
+  | "bottom"
+  | "bottom-right"
+  | "bottom-left";
+
 export type NotificationStatus =
   | "loading"
   | "error"
@@ -21,4 +29,5 @@ export type NotificationType = {
   status: NotificationStatus;
   title: string;
   message: string;
+  position: NotificationPosition;
 };

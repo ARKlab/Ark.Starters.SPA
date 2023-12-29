@@ -1,4 +1,7 @@
-import { DetailsType, errorModalType } from "../../redux/modules/errorHandler";
+import {
+  DetailsType,
+  errorModalType,
+} from "../../features/errorHandler/errorHandler";
 import { ChackraUIBaseModal } from "../chackraModal/chackraBaseModal";
 import {
   Accordion,

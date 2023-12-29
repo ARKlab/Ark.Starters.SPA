@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { NotificationType } from "./notificationsTypes";
-import { RootState } from "../../../app/configureStore";
+import { RootState } from "../../app/configureStore";
 
 type State = { notification: NotificationType | null };
 
@@ -37,4 +37,5 @@ export const dispatchNotification = (notification: NotificationType) =>
     status: notification.status,
     isClosable: notification.isClosable,
     message: notification.message,
+    position: notification.position,
   });

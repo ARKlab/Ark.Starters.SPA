@@ -1,5 +1,5 @@
 import { MainSectionType } from "../components/sideBar/menuItem/types";
-import { FaCloudUploadAlt } from "react-icons/fa";
+import { FaCloudUploadAlt, FaPlay } from "react-icons/fa";
 
 /*This is the Main Section ARRAY populate this to populate the main nav menu*/
 export const mainSections: MainSectionType[] = [
@@ -9,9 +9,16 @@ export const mainSections: MainSectionType[] = [
     defaultSubMenuPath: "/manualUpload",
     subsections: [
       {
-        path: "/test",
-        label: "Test",
+        path: "/jsonplaceholder",
+        label: "Posts",
         icon: FaCloudUploadAlt,
+        isInMenu: true,
+        isExternal: false,
+      },
+      {
+        path: "/playground",
+        label: "PlayGround",
+        icon: FaPlay,
         isInMenu: true,
         isExternal: false,
       },
