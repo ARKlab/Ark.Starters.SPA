@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Field, Form, FormRenderProps } from "react-final-form";
 import arrayMutators from "final-form-arrays";
 import { FieldArray } from "react-final-form-arrays";
+import * as R from "ramda";
 import {
   Box,
   Button,
@@ -24,6 +25,7 @@ import {
   FormHelperText,
 } from "@chakra-ui/react";
 import { FaPlus, FaTrash } from "react-icons/fa";
+import { ValidationErrors } from "final-form";
 
 type ValidationErrorType = {
   configData: Employee[];
@@ -52,8 +54,11 @@ const validateForm = (values: { configData: Employee[] }) => {
       employeeErrors.surName = "Required";
     }
 
-    const nameSurnamePair = `${employee.name} ${employee.surName}`;
-    if (nameSurnamePairs[nameSurnamePair] && nameSurnamePair != " ") {
+    const nameSurnamePair =
+      employee.name && employee.surName
+        ? `${employee.name} ${employee.surName}`
+        : "";
+    if (nameSurnamePair != "" && nameSurnamePairs[nameSurnamePair]) {
       employeeErrors.name = "Name and surname pair must be unique";
       employeeErrors.surName = "Name and surname pair must be unique";
     } else {
@@ -64,6 +69,16 @@ const validateForm = (values: { configData: Employee[] }) => {
   });
 
   return errors;
+};
+
+const isInvalidField = (
+  errors: ValidationErrors,
+  index: number,
+  prop: string
+) => {
+  const err = R.pathOr(null, ["configData", index, prop], errors);
+  if (err) return true;
+  return false;
 };
 
 export default function EditableTableExample(props: {
@@ -131,32 +146,28 @@ export default function EditableTableExample(props: {
                 <FieldArray name="configData">
                   {({ fields }) =>
                     fields
-                      .map((employee, index) => (
-                        <Tr key={employee}>
+                      .map((field, index) => (
+                        <Tr key={index + "Row"}>
                           <Td>
                             <Field
-                              name={`${employee}.name`}
+                              name={`${field}.name`}
                               render={({ input, meta }) => (
                                 <Box>
                                   <FormControl>
                                     <Input
                                       {...input}
                                       placeholder="First Name"
-                                      isInvalid={
-                                        errors &&
-                                        errors.configData &&
-                                        errors.configData[index] &&
-                                        errors.configData[index].name
-                                      }
-                                    />
-                                    {errors &&
-                                      errors?.configData &&
-                                      errors.configData[index] &&
-                                      errors.configData[index].name && (
-                                        <FormHelperText>
-                                          {errors.configData[index].name}
-                                        </FormHelperText>
+                                      isInvalid={isInvalidField(
+                                        errors,
+                                        index,
+                                        "name"
                                       )}
+                                    />
+                                    {isInvalidField(errors, index, "name") && (
+                                      <FormHelperText>
+                                        {errors!.configData[index].name}
+                                      </FormHelperText>
+                                    )}
                                   </FormControl>
                                 </Box>
                               )}
@@ -164,28 +175,27 @@ export default function EditableTableExample(props: {
                           </Td>
                           <Td>
                             <Field
-                              name={`${employee}.surName`}
+                              name={`${field}.surName`}
                               render={({ input, meta }) => (
                                 <Box>
                                   <FormControl>
                                     <Input
                                       {...input}
-                                      placeholder="Last Name"
-                                      isInvalid={
-                                        errors &&
-                                        errors.configData &&
-                                        errors.configData[index] &&
-                                        errors.configData[index].surName
-                                      }
-                                    />
-                                    {errors &&
-                                      errors.configData &&
-                                      errors.configData[index] &&
-                                      errors.configData[index].surName && (
-                                        <FormHelperText>
-                                          {errors.configData[index].surName}
-                                        </FormHelperText>
+                                      isInvalid={isInvalidField(
+                                        errors,
+                                        index,
+                                        "surName"
                                       )}
+                                    />
+                                    {isInvalidField(
+                                      errors,
+                                      index,
+                                      "surName"
+                                    ) && (
+                                      <FormHelperText>
+                                        {errors!.configData[index].surName}
+                                      </FormHelperText>
+                                    )}
                                   </FormControl>
                                 </Box>
                               )}
@@ -193,7 +203,7 @@ export default function EditableTableExample(props: {
                           </Td>
                           <Td>
                             <Field
-                              name={`${employee}.employed`}
+                              name={`${field}.employed`}
                               render={({ input }) => (
                                 <Checkbox {...input}>Employed</Checkbox>
                               )}
