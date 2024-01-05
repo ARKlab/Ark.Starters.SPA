@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Field, Form, FormRenderProps } from "react-final-form";
+import React, { useEffect, useState } from "react";
+import { Field, Form, FormRenderProps, useField } from "react-final-form";
 import arrayMutators from "final-form-arrays";
 import { FieldArray } from "react-final-form-arrays";
 import * as R from "ramda";
@@ -23,13 +23,13 @@ import {
   FormErrorMessage,
   FormControl,
   FormHelperText,
+  Spinner,
 } from "@chakra-ui/react";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import { ValidationErrors } from "final-form";
-
-type ValidationErrorType = {
-  configData: Employee[];
-};
+import { z } from "zod";
+import { zod2FieldValidator, zod2FormValidator } from "../../lib/zod2form";
+import { usePostConfigMutation } from "./configTableApi";
 
 export type Employee = {
   name: string;
@@ -37,71 +37,93 @@ export type Employee = {
   employed: boolean;
 };
 
-const onSubmit = async (values: { configData: Employee[] }) => {
-  window.alert(JSON.stringify(values));
-};
+const nameValidator = z
+  .string()
+  .max(10)
+  .refine((x) => !x.endsWith("Kail"), { message: "Kail is not allowed" });
 
-const validateForm = (values: { configData: Employee[] }) => {
-  const errors: ValidationErrorType = { configData: [] };
-  const nameSurnamePairs: { [key: string]: boolean } = {};
+const employedValidator = z.object({
+  name: nameValidator,
+  surName: z.string().nullable(),
+  employed: z.boolean(),
+});
 
-  errors.configData = values.configData.map((employee) => {
-    const employeeErrors: any = {};
-    if (!employee.name) {
-      employeeErrors.name = "Required";
+//This is the "whole set" validator for the form. of course for us is a table but it is in fact a form
+//In our configuration pattern this would be primarily used for primary key validation so i made it generic to accept a list of props
+//to check for combinations of duplicates
+const primaryKeyValidator =
+  (propsToCheck: string[]) => (values: { table: Employee[] }) => {
+    const errors: { table?: { _rowError?: string[] }[] } = {};
+    if (!values.table) {
+      return errors;
     }
-    if (!employee.surName) {
-      employeeErrors.surName = "Required";
+    const propValues = values.table.map((e) =>
+      propsToCheck.map((prop) => e[prop as keyof Employee]).join("|")
+    );
+    const duplicates = propValues.filter(
+      (value, i) => value && propValues.indexOf(value) !== i
+    );
+
+    if (duplicates.length > 0) {
+      errors.table = [];
+      duplicates.forEach((duplicate) => {
+        const duplicateIndexes = propValues.reduce(
+          (dupIndexes: number[], value, i) => {
+            if (value === duplicate) {
+              dupIndexes.push(i);
+            }
+            return dupIndexes;
+          },
+          []
+        );
+        duplicateIndexes.forEach((index) => {
+          if (!errors.table![index]) {
+            errors.table![index] = { _rowError: [] };
+          }
+          errors.table![index]._rowError!.push(
+            `Duplicate ${propsToCheck.join(
+              ", "
+            )} values are not allowed at indexes: ${duplicateIndexes.join(
+              ", "
+            )}`
+          );
+        });
+      });
     }
 
-    const nameSurnamePair =
-      employee.name && employee.surName
-        ? `${employee.name} ${employee.surName}`
-        : "";
-    if (nameSurnamePair != "" && nameSurnamePairs[nameSurnamePair]) {
-      employeeErrors.name = "Name and surname pair must be unique";
-      employeeErrors.surName = "Name and surname pair must be unique";
-    } else {
-      nameSurnamePairs[nameSurnamePair] = true;
-    }
-
-    return employeeErrors;
-  });
-
-  return errors;
-};
-
-const isInvalidField = (
-  errors: ValidationErrors,
-  index: number,
-  prop: string
-) => {
-  const err = R.pathOr(null, ["configData", index, prop], errors);
-  if (err) return true;
-  return false;
-};
+    return errors;
+  };
 
 export default function EditableTableExample(props: {
   title: string;
-  data: Employee[];
+  data: Employee[] | undefined;
+  isLoading: boolean;
 }) {
+  const [postConfig, { isLoading: postConfigIsLoading }] =
+    usePostConfigMutation();
+
+  const onSubmit = async (values: { table: Employee[] }) => {
+    await postConfig(values.table).unwrap();
+  };
+
   return (
     <Form
       onSubmit={onSubmit}
-      initialValues={{ configData: props.data }}
+      initialValues={{ table: props.data }}
       mutators={{
         ...arrayMutators,
       }}
-      validate={validateForm}
+      validate={primaryKeyValidator(["name", "surName"])}
       render={({
         handleSubmit,
         form: {
           mutators: { push, pop },
         },
         form,
+        submitting,
+        pristine,
         hasValidationErrors,
-      }: FormRenderProps<{ configData: Employee[] }>) => {
-        const { pristine, submitting, errors } = form.getState();
+      }: FormRenderProps<{ table: Employee[] }>) => {
         return (
           <VStack as="form" onSubmit={handleSubmit} spacing={6}>
             <Heading>{props.title}</Heading>
@@ -109,7 +131,7 @@ export default function EditableTableExample(props: {
               <Button
                 rightIcon={<FaPlus />}
                 onClick={() =>
-                  push("configData", {
+                  push("table", {
                     name: "",
                     surName: "",
                     employed: false,
@@ -123,6 +145,7 @@ export default function EditableTableExample(props: {
               <Button
                 type="submit"
                 isDisabled={submitting || pristine || hasValidationErrors}
+                isLoading={submitting || postConfigIsLoading}
               >
                 Submit
               </Button>
@@ -143,85 +166,111 @@ export default function EditableTableExample(props: {
                 </Tr>
               </Thead>
               <Tbody>
-                <FieldArray name="configData">
-                  {({ fields }) =>
-                    fields
-                      .map((field, index) => (
-                        <Tr key={index + "Row"}>
-                          <Td>
-                            <Field
-                              name={`${field}.name`}
-                              render={({ input, meta }) => (
-                                <Box>
-                                  <FormControl>
-                                    <Input
-                                      {...input}
-                                      placeholder="First Name"
-                                      isInvalid={isInvalidField(
-                                        errors,
-                                        index,
-                                        "name"
-                                      )}
-                                    />
-                                    {isInvalidField(errors, index, "name") && (
-                                      <FormHelperText>
-                                        {errors!.configData[index].name}
-                                      </FormHelperText>
-                                    )}
-                                  </FormControl>
-                                </Box>
-                              )}
-                            />
-                          </Td>
-                          <Td>
-                            <Field
-                              name={`${field}.surName`}
-                              render={({ input, meta }) => (
-                                <Box>
-                                  <FormControl>
-                                    <Input
-                                      {...input}
-                                      isInvalid={isInvalidField(
-                                        errors,
-                                        index,
-                                        "surName"
-                                      )}
-                                    />
-                                    {isInvalidField(
-                                      errors,
-                                      index,
-                                      "surName"
-                                    ) && (
-                                      <FormHelperText>
-                                        {errors!.configData[index].surName}
-                                      </FormHelperText>
-                                    )}
-                                  </FormControl>
-                                </Box>
-                              )}
-                            />
-                          </Td>
-                          <Td>
-                            <Field
-                              name={`${field}.employed`}
-                              render={({ input }) => (
-                                <Checkbox {...input}>Employed</Checkbox>
-                              )}
-                            />
-                          </Td>
-                          <Td>
-                            <IconButton
-                              icon={<FaTrash />}
-                              onClick={() => fields.remove(index)}
-                              colorScheme="red"
-                              aria-label="Remove Employee"
-                            />
-                          </Td>
-                        </Tr>
-                      ))
-                      .reverse()
-                  }
-                </FieldArray>
+                {props.isLoading ? (
+                  <Spinner />
+                ) : (
+                  <FieldArray<Employee> name="table">
+                    {({ fields, meta: { error } }) =>
+                      fields.map((field, index) => {
+                        return (
+                          <>
+                            <Tr key={index + "Row"}>
+                              <Td>
+                                <Field
+                                  key={index + "RowError"}
+                                  name={`${field}._rowError`}
+                                  render={({
+                                    input,
+                                    meta: { error, modified },
+                                  }) => {
+                                    return (
+                                      <Box>
+                                        <Input hidden={true} {...input} />
+                                      </Box>
+                                    );
+                                  }}
+                                />
+                                <Field
+                                  validate={zod2FieldValidator(nameValidator)}
+                                  name={`${field}.name`}
+                                  render={({
+                                    input,
+                                    meta: { error, touched, modified },
+                                  }) => {
+                                    return (
+                                      <Box>
+                                        <FormControl
+                                          isInvalid={error && touched}
+                                          isDisabled={submitting}
+                                        >
+                                          <Input
+                                            {...input}
+                                            placeholder="First Name"
+                                          />
+                                          <FormErrorMessage>
+                                            {error}
+                                          </FormErrorMessage>
+                                        </FormControl>
+                                      </Box>
+                                    );
+                                  }}
+                                />
+                              </Td>
+                              <Td>
+                                <Field
+                                  name={`${field}.surName`}
+                                  render={({
+                                    input,
+                                    meta: { error, touched },
+                                  }) => (
+                                    <Box>
+                                      <FormControl
+                                        isInvalid={error && touched}
+                                        isDisabled={submitting}
+                                      >
+                                        <Input {...input} />
+                                        <FormErrorMessage>
+                                          {error}
+                                        </FormErrorMessage>
+                                      </FormControl>
+                                    </Box>
+                                  )}
+                                />
+                              </Td>
+                              <Td>
+                                <Field
+                                  name={`${field}.employed`}
+                                  render={({
+                                    input,
+                                    meta: { error, touched },
+                                  }) => (
+                                    <FormControl
+                                      isInvalid={error && touched}
+                                      isDisabled={submitting}
+                                    >
+                                      <Checkbox {...input}>Employed</Checkbox>
+                                      <FormErrorMessage>
+                                        {error}
+                                      </FormErrorMessage>
+                                    </FormControl>
+                                  )}
+                                />
+                              </Td>
+                              <Td>
+                                <IconButton
+                                  icon={<FaTrash />}
+                                  onClick={() => fields.remove(index)}
+                                  colorScheme="red"
+                                  aria-label="Remove Employee"
+                                />
+                              </Td>
+                            </Tr>
+                          </>
+                        );
+                      })
+                    }
+                  </FieldArray>
+                )}
               </Tbody>
             </Table>
           </VStack>
