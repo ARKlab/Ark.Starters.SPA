@@ -7,6 +7,7 @@ const ConfigTableExampleView = () => {
     refetchOnReconnect: true,
     refetchOnMountOrArgChange: true,
   });
+  
   return (
     <Box my="70px">
       <ConfigTable
