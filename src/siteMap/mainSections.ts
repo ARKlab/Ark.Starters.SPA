@@ -1,5 +1,5 @@
 import { MainSectionType } from "../components/sideBar/menuItem/types";
-import { FaCloudUploadAlt, FaPlay } from "react-icons/fa";
+import { FaCloudUploadAlt, FaPlay, FaTable } from "react-icons/fa";
 
 /*This is the Main Section ARRAY populate this to populate the main nav menu*/
 export const mainSections: MainSectionType[] = [
@@ -19,6 +19,13 @@ export const mainSections: MainSectionType[] = [
         path: "/playground",
         label: "PlayGround",
         icon: FaPlay,
+        isInMenu: true,
+        isExternal: false,
+      },
+      {
+        path: "/configTable",
+        label: "Config Table",
+        icon: FaTable,
         isInMenu: true,
         isExternal: false,
       },
