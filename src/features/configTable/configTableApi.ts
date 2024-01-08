@@ -29,11 +29,13 @@ export const configTableApiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "https://myconfigUrlApi.com/",
   }),
+  tagTypes: ["Employee"],
   endpoints: (builder) => ({
     getConfig: builder.query<Employee[], null>({
       queryFn: async () => {
         return { data };
       },
+      providesTags: ["Employee"],
     }),
     postConfig: builder.mutation<void, Employee[]>({
       queryFn: async (body) => {
@@ -43,6 +45,7 @@ export const configTableApiSlice = createApi({
           }, 2000);
         });
       },
+      invalidatesTags: ["Employee"], //each time a post is done the cache is invalidated and the data is fetched again
     }),
   }),
 });
