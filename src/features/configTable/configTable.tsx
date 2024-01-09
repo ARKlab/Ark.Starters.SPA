@@ -141,11 +141,11 @@ export default function EditableTableExample() {
     }
   }, [postConfigSuccess, dispatch]);
 
-  const onSubmit = async (values: { table: Employee[] }) => {
-    await postConfig({ employees: values.table, throwError: false }).unwrap();
-  };
-  const onSubmitError = async (values: { table: Employee[] }) => {
-    await postConfig({ employees: values.table, throwError: true })
+  const onSubmit = async (values: {
+    table: Employee[];
+    throwError: boolean;
+  }) => {
+    await postConfig({ employees: values.table, throwError: values.throwError })
       .unwrap()
       .catch((e) => {
         dispatch(dispatchNetworkError(e));
@@ -169,7 +169,7 @@ export default function EditableTableExample() {
         submitting,
         pristine,
         hasValidationErrors,
-      }: FormRenderProps<{ table: Employee[] }>) => {
+      }: FormRenderProps<{ table: Employee[]; throwError: boolean }>) => {
         return (
           <VStack as="form" onSubmit={handleSubmit} spacing={6}>
             <Heading>Employee</Heading>
@@ -192,13 +192,19 @@ export default function EditableTableExample() {
                 type="submit"
                 isDisabled={submitting || pristine || hasValidationErrors}
                 isLoading={submitting || postConfigIsLoading}
+                onClick={() => {
+                  form.change("throwError", false);
+                }}
               >
                 Submit
               </Button>
               <Button
+                type="submit"
                 isDisabled={submitting || pristine || hasValidationErrors}
                 isLoading={submitting || postConfigIsLoading}
-                onClick={() => onSubmitError(form.getState().values)}
+                onClick={() => {
+                  form.change("throwError", true);
+                }}
               >
                 Submit Error
               </Button>
