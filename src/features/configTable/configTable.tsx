@@ -29,9 +29,11 @@ import { FaPlus, FaTrash } from "react-icons/fa";
 import { ValidationErrors } from "final-form";
 import { z } from "zod";
 import { zod2FieldValidator, zod2FormValidator } from "../../lib/zod2form";
-import { usePostConfigMutation } from "./configTableApi";
+import { useGetConfigQuery, usePostConfigMutation } from "./configTableApi";
 import _ from "lodash";
-import errorHandler from "../errorHandler/errorHandler";
+import errorHandler, {
+  dispatchNetworkError,
+} from "../errorHandler/errorHandler";
 import { dispatchNotification } from "../notifications/notification";
 import { useAppDispatch } from "../../app/hooks";
 import {
@@ -105,15 +107,22 @@ const primaryKeyValidator =
     return errors;
   };
 
-export default function EditableTableExample(props: {
-  title: string;
-  data: Employee[] | undefined;
-  isLoading: boolean;
-}) {
+export default function EditableTableExample() {
   const [
     postConfig,
-    { isLoading: postConfigIsLoading, isSuccess: postConfigSuccess },
+    {
+      isLoading: postConfigIsLoading,
+      isSuccess: postConfigSuccess,
+      isError: postConfigIsError,
+      error: postConfigError,
+    },
   ] = usePostConfigMutation();
+
+  const { data, isLoading: getConfigIsLoading } = useGetConfigQuery(null, {
+    refetchOnReconnect: true,
+    refetchOnMountOrArgChange: true,
+  });
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -133,13 +142,20 @@ export default function EditableTableExample(props: {
   }, [postConfigSuccess, dispatch]);
 
   const onSubmit = async (values: { table: Employee[] }) => {
-    await postConfig(values.table).unwrap();
+    await postConfig({ employees: values.table, throwError: false }).unwrap();
+  };
+  const onSubmitError = async (values: { table: Employee[] }) => {
+    await postConfig({ employees: values.table, throwError: true })
+      .unwrap()
+      .catch((e) => {
+        dispatch(dispatchNetworkError(e));
+      });
   };
 
   return (
     <Form
       onSubmit={onSubmit}
-      initialValues={{ table: props.data }}
+      initialValues={{ table: data }}
       mutators={{
         ...arrayMutators,
       }}
@@ -156,7 +172,7 @@ export default function EditableTableExample(props: {
       }: FormRenderProps<{ table: Employee[] }>) => {
         return (
           <VStack as="form" onSubmit={handleSubmit} spacing={6}>
-            <Heading>{props.title}</Heading>
+            <Heading>Employee</Heading>
             <HStack spacing={4}>
               <Button
                 rightIcon={<FaPlus />}
@@ -180,6 +196,13 @@ export default function EditableTableExample(props: {
                 Submit
               </Button>
               <Button
+                isDisabled={submitting || pristine || hasValidationErrors}
+                isLoading={submitting || postConfigIsLoading}
+                onClick={() => onSubmitError(form.getState().values)}
+              >
+                Submit Error
+              </Button>
+              <Button
                 onClick={() => form.reset()}
                 isDisabled={submitting || pristine}
               >
@@ -196,21 +219,22 @@ export default function EditableTableExample(props: {
                 </Tr>
               </Thead>
               <Tbody>
-                {props.isLoading ? (
-                  <Spinner />
+                {getConfigIsLoading ? (
+                  <Tr>
+                    <Spinner />
+                  </Tr>
                 ) : (
                   <FieldArray<Employee> name="table">
                     {({ fields, meta: { error } }) =>
                       fields.map((field, index) => {
                         return (
-                          <>
-                            <TableRow
-                              name={field}
-                              index={index}
-                              submitting={submitting}
-                              fields={fields}
-                            />
-                          </>
+                          <TableRow
+                            key={index + field + "row"}
+                            name={field}
+                            index={index}
+                            submitting={submitting}
+                            fields={fields}
+                          />
                         );
                       })
                     }
@@ -246,15 +270,10 @@ const TableRow = (props: {
           render={({ input, meta: { error, touched } }) => {
             error = error || rowError;
             return (
-              <Box>
-                <FormControl
-                  isInvalid={error && touched}
-                  isDisabled={submitting}
-                >
-                  <Input {...input} placeholder="First Name" />
-                  <FormErrorMessage>{error}</FormErrorMessage>
-                </FormControl>
-              </Box>
+              <FormControl isInvalid={error && touched} isDisabled={submitting}>
+                <Input {...input} placeholder="First Name" />
+                <FormErrorMessage>{error}</FormErrorMessage>
+              </FormControl>
             );
           }}
         />
@@ -263,12 +282,10 @@ const TableRow = (props: {
         <Field
           name={`${name}.surName`}
           render={({ input, meta: { error, touched } }) => (
-            <Box>
-              <FormControl isInvalid={error && touched} isDisabled={submitting}>
-                <Input {...input} />
-                <FormErrorMessage>{error}</FormErrorMessage>
-              </FormControl>
-            </Box>
+            <FormControl isInvalid={error && touched} isDisabled={submitting}>
+              <Input {...input} />
+              <FormErrorMessage>{error}</FormErrorMessage>
+            </FormControl>
           )}
         />
       </Td>

@@ -65,97 +65,24 @@ type Action = ReturnType<typeof setError> | ReturnType<typeof clearError>;
 export const dispatchNetworkError =
   (err: any) => (dispatch: Dispatch<Action>) => {
     let errorTitle = "An error occurred";
-    let message: any;
     let isValError: boolean = false;
     let displayStatusCode = true;
-    let requestFailedTitle = "An error occurred";
-    if (err === "parser error") {
-      return setError({
-        details: {
-          title: "Response Parsing Error",
-          message:
-            "Server's type response is not compatible with the expected response.",
-          originalTitle: "Response Type",
-          originalDetail: err?.response?.detail,
-          displayStatus: true,
-        },
-      });
-    }
-    if (err.status > 0) {
-      if (err.status >= 400 || err.status <= 500) {
-        const title: string = R.pathOr("", ["response", "title"], err);
-        const statusCode: number = R.pathOr(0, ["response", "status"], err);
-        let errorDetails: ExceptionDetails | null = R.pathOr(
-          null,
-          ["response", "exceptionDetails"],
-          err
-        );
-
-        if (title === "") {
-          message = err.message;
-        } else if (statusCode === 400) {
-          const errorList = R.pathOr([], ["response", "errors"], err);
-          const valueList = R.values(errorList);
-          isValError = true;
-
-          if (valueList != null && valueList.length > 0) {
-            valueList.forEach((element: any) => {
-              message = err.message;
-            });
-          } else message = err.message;
-        } else if (statusCode === 403) {
-          errorTitle = err.message;
-
-          displayStatusCode = false;
-          message = err.message;
-        } else message = err.message;
-
-        return setError({
-          details: {
-            title: errorTitle,
-            message: message,
-            status: err.status,
-            isValidationError: isValError,
-            originalTitle: err?.response?.title,
-            originalDetail: err?.response?.detail,
-            displayStatus: displayStatusCode,
-            exceptionDetails: errorDetails,
-          },
-        });
-      }
-      return setError({
+    let message = err?.data?.message;
+    dispatch(
+      setError({
+        error: true,
         details: {
           title: errorTitle,
-          message: err.message,
+          message: message,
           status: err.status,
+          isValidationError: isValError,
           originalTitle: err?.response?.title,
           originalDetail: err?.response?.detail,
-          displayStatus: true,
+          displayStatus: displayStatusCode,
+          exceptionDetails: null,
         },
-      });
-    }
-
-    if (err.customError) {
-      return setError({
-        details: {
-          title: errorTitle,
-          message: err.errorMessage,
-          status: err.status,
-          originalTitle: err?.response?.title,
-          originalDetail: err?.response?.detail,
-          displayStatus: true,
-        },
-      });
-    }
-    return setError({
-      details: {
-        title: requestFailedTitle,
-        message: err.errorMessage,
-        originalTitle: err?.response?.title,
-        originalDetail: err?.response?.detail,
-        displayStatus: true,
-      },
-    });
+      })
+    );
   };
 
 export const Selectors: { all: (state: RootState) => errorModalType } = {

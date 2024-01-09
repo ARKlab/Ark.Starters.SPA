@@ -3,17 +3,7 @@ import _ from "lodash";
 
 /*
 final form with form array error format:
-{
-  "name": {
-    "3": ["Error message for name at index 3"],
-    "5": ["Error message for name at index 5"]
-  },
-  "surName": {
-    "2": ["Error message for surName at index 2"],
-    "3": ["Error message for surName at index 3"]
-  },
-  "_error": ["FormValidator error message"]
-}
+{ "table": [ { "name": ["error 1"] } ] }
 */
 export const zod2FormValidator =
   <T extends z.ZodType<any, any>>(schema: T) =>
