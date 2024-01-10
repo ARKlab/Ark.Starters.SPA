@@ -227,7 +227,9 @@ export default function EditableTableExample() {
               <Tbody>
                 {getConfigIsLoading ? (
                   <Tr>
-                    <Spinner />
+                    <Td>
+                      <Spinner />
+                    </Td>
                   </Tr>
                 ) : (
                   <FieldArray<Employee> name="table">
@@ -301,7 +303,9 @@ const TableRow = (props: {
           name={`${name}.employed`}
           render={({ input, meta: { error, touched } }) => (
             <FormControl isInvalid={error && touched} isDisabled={submitting}>
-              <Checkbox {...input}>Employed</Checkbox>
+              <Checkbox isChecked={input.checked} onChange={input.onChange}>
+                Employed
+              </Checkbox>
               <FormErrorMessage>{error}</FormErrorMessage>
             </FormControl>
           )}
@@ -309,6 +313,7 @@ const TableRow = (props: {
       </Td>
       <Td>
         <IconButton
+          isDisabled={submitting}
           icon={<FaTrash />}
           onClick={() => fields.remove(index)}
           colorScheme="red"
