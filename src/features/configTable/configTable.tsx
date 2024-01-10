@@ -191,7 +191,7 @@ export default function EditableTableExample() {
               <Button
                 type="submit"
                 isDisabled={submitting || pristine || hasValidationErrors}
-                isLoading={submitting || postConfigIsLoading}
+                isLoading={submitting}
                 onClick={() => {
                   form.change("throwError", false);
                 }}
