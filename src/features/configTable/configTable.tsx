@@ -297,6 +297,7 @@ const TableRow = (props: {
       </Td>
       <Td>
         <Field
+          type="checkbox"
           name={`${name}.employed`}
           render={({ input, meta: { error, touched } }) => (
             <FormControl isInvalid={error && touched} isDisabled={submitting}>
