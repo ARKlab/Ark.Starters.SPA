@@ -1,5 +1,9 @@
 import * as R from "ramda";
 
+export function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+} 
+
 export const normalizeToArray = (val: any, list: any) => {
   const v = R.pathOr(null, [val], list);
 
