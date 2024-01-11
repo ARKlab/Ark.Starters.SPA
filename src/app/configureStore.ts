@@ -5,6 +5,7 @@ import errorReducer from "../features/errorHandler/errorHandler";
 import { jsonPlaceholderSlice } from "../features/jsonPlaceholderAPI/jsonPlaceholderSlice";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { configTableApiSlice } from "../features/configTable/configTableApi";
+import { moviesApiSlice } from "../features/paginatedTable/paginatedTableApi";
 
 export const store = configureStore({
   reducer: {
@@ -12,11 +13,13 @@ export const store = configureStore({
     errorHandler: errorReducer,
     [jsonPlaceholderSlice.reducerPath]: jsonPlaceholderSlice.reducer,
     [configTableApiSlice.reducerPath]: configTableApiSlice.reducer,
+    [moviesApiSlice.reducerPath]: moviesApiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       jsonPlaceholderSlice.middleware,
-      configTableApiSlice.middleware
+      configTableApiSlice.middleware,
+      moviesApiSlice.middleware
     ),
 });
 

@@ -18,6 +18,7 @@ import JsonPlaceHolderView from "./features/jsonPlaceholderAPI/JsonPlaceHolder";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import PlaygroundView from "./features/playground/playgroundView";
 import ConfigTableExampleView from "./features/configTable/configTableExample";
+import MovieTableView from "./features/paginatedTable/moviePage";
 
 const Component = () => {
   return (
@@ -28,6 +29,7 @@ const Component = () => {
         <Route path="/jsonplaceholder" element={<JsonPlaceHolderView />} />
         <Route path="/playground" element={<PlaygroundView />} />
         <Route path="/configTable" element={<ConfigTableExampleView />} />
+        <Route path="/moviesTable" element={<MovieTableView />} />
 
         {
           //Understand why with this method :params in path are not being recognized.
