@@ -1,17 +1,14 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-import { SortingState } from "@tanstack/react-table";
+import { ColumnFiltersState, SortingState } from "@tanstack/react-table";
 import * as R from "ramda";
 import { ListResponse } from "../../lib/apiTypes";
 import { delay } from "../../lib/helper";
 import moviesData, { Movie } from "./fakeMoviesData";
-import { orderBy } from "lodash";
+import { orderBy, every, filter } from "lodash";
 
 type MovieQueryParams = {
-  genre?: string;
-  director?: string;
-  actors?: string;
-  plot?: string;
+  filters?: ColumnFiltersState;
   pageIndex?: number;
   pageSize?: number;
   sorting?: SortingState;
@@ -44,42 +41,25 @@ export const moviesApiSlice = createApi({
 export const { useGetMoviesQuery } = moviesApiSlice;
 
 export const simulatedArkQueryWithParams = (params: MovieQueryParams) => {
-  const {
-    pageIndex: page = 1,
-    pageSize = 10,
-    genre,
-    director,
-    actors,
-    plot,
-    sorting,
-  } = params;
+  const { pageIndex: page = 1, pageSize = 10, filters, sorting } = params;
   const skip = (page - 1) * pageSize;
   const limit = pageSize;
 
   let filteredMovies = moviesData;
 
-  if (genre) {
-    filteredMovies = filteredMovies.filter((movie) =>
-      movie.genre.includes(genre)
-    );
-  }
-
-  if (director) {
-    filteredMovies = filteredMovies.filter((movie) =>
-      movie.director.includes(director)
-    );
-  }
-
-  if (actors) {
-    filteredMovies = filteredMovies.filter((movie) =>
-      movie.actors.includes(actors)
-    );
-  }
-
-  if (plot) {
-    filteredMovies = filteredMovies.filter((movie) =>
-      movie.plot.includes(plot)
-    );
+  if (filters && filters.length > 0) {
+    filteredMovies = filter(filteredMovies, (movie) => {
+      return every(filters, (columnFilter) => {
+        const movieValue = movie[columnFilter.id as keyof Movie];
+        if (
+          typeof movieValue === "string" &&
+          typeof columnFilter.value === "string"
+        ) {
+          return movieValue.includes(columnFilter.value);
+        }
+        return movieValue === columnFilter.value;
+      });
+    });
   }
 
   if (sorting && sorting.length > 0) {
