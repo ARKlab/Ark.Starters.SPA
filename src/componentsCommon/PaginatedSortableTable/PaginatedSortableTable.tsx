@@ -13,9 +13,9 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import React, { FC, useMemo, useState } from "react";
-import ChackraPaginationComponent from "../../componentsCommon/chackraPaginationComponent/chackraTablePagination";
-import { Movie } from "./fakeMoviesData";
-import { useGetMoviesQuery } from "./paginatedTableApi";
+import ChackraPaginationComponent from "../chackraPaginationComponent/chackraTablePagination";
+
+import { useGetMoviesQuery } from "../../features/paginatedTable/paginatedTableApi";
 import {
   Column,
   Table as ReactTable,
@@ -39,43 +39,16 @@ import {
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
-const columnHelper = createColumnHelper<Movie>();
-
-const columns = [
-  columnHelper.accessor((row) => row.title, {
-    id: "title",
-    cell: (info) => info.getValue(),
-    header: () => <span>Title</span>,
-    enableColumnFilter: true,
-  }),
-  columnHelper.accessor((row) => row.director, {
-    id: "director",
-    cell: (info) => info.getValue(),
-    header: () => <span>Director</span>,
-  }),
-  columnHelper.accessor((row) => row.genre, {
-    id: "genre",
-    cell: (info) => info.getValue(),
-    header: () => <span>Genre</span>,
-  }),
-  columnHelper.accessor((row) => row.actors, {
-    id: "actors",
-    cell: (info) => info.getValue(),
-    header: () => <span>Actors</span>,
-  }),
-  columnHelper.accessor((row) => row.plot, {
-    id: "plot",
-    cell: (info) => info.getValue(),
-    header: () => <span>Plot</span>,
-  }),
-  columnHelper.accessor((row) => row.rating, {
-    id: "rating",
-    cell: (info) => "🍿".repeat(info.getValue() as number),
-    header: () => <span>Rating</span>,
-  }),
-] as ColumnDef<Movie>[];
-
-export function MoviesTable() {
+export function PaginatedSortableTable<T>(props: {
+  columns: ColumnDef<T>[];
+  useQueryHook: (args: {
+    pageIndex: number;
+    pageSize: number;
+    sorting: SortingState;
+    filters: ColumnFiltersState;
+  }) => any;
+}) {
+  const { columns, useQueryHook } = props;
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 1,
     pageSize: 10,
@@ -93,14 +66,14 @@ export function MoviesTable() {
   const resetOrder = () =>
     setColumnOrder(columns.map((column) => column.id as string));
 
-  const { data, error, isLoading, isFetching } = useGetMoviesQuery({
+  const { data, error, isLoading, isFetching } = useQueryHook({
     pageIndex,
     pageSize,
     sorting: sortingState,
     filters: columnFilters,
   });
 
-  const tableData: Movie[] = data?.data as Movie[];
+  const tableData: T[] = data?.data as T[];
 
   const sorting = useMemo(() => sortingState, [sortingState]);
 
@@ -113,7 +86,7 @@ export function MoviesTable() {
   );
   const filtering = useMemo(() => columnFilters, [columnFilters]);
 
-  const table = useReactTable<Movie>({
+  const table = useReactTable<T>({
     data: tableData,
     columns,
     getPaginationRowModel: getPaginationRowModel(),
@@ -185,7 +158,7 @@ export function MoviesTable() {
                         </Box>
                         {header.column.getCanFilter() ? (
                           <Box>
-                            <Filter column={header.column} table={table} />
+                            <Filter<T> column={header.column} table={table} />
                           </Box>
                         ) : null}
                       </>
@@ -233,12 +206,12 @@ export function MoviesTable() {
   );
 }
 
-function Filter({
+function Filter<T>({
   column,
   table,
 }: {
-  column: Column<any, unknown>;
-  table: ReactTable<any>;
+  column: Column<T, unknown>;
+  table: ReactTable<T>;
 }) {
   if (table.getPreFilteredRowModel() === undefined) return <></>;
   const firstValue = table
@@ -256,16 +229,12 @@ function Filter({
   );
 
   return typeof firstValue === "number" ? (
-    <div>
-      <div className="flex space-x-2">
+    <Box>
+      <Box>
         <DebouncedInput
           type="number"
-          min={Number(column.getFacetedMinMaxValues()?.[0] ?? "")}
-          max={Number(column.getFacetedMinMaxValues()?.[1] ?? "")}
-          value={(columnFilterValue as [number, number])?.[0] ?? ""}
-          onChange={(value) =>
-            column.setFilterValue((old: [number, number]) => [value, old?.[1]])
-          }
+          value={(columnFilterValue as number) ?? ""}
+          onChange={(value) => column.setFilterValue(value)}
           placeholder={`Min ${
             column.getFacetedMinMaxValues()?.[0]
               ? `(${column.getFacetedMinMaxValues()?.[0]})`
@@ -273,24 +242,9 @@ function Filter({
           }`}
           className="w-24 border shadow rounded"
         />
-        <DebouncedInput
-          type="number"
-          min={Number(column.getFacetedMinMaxValues()?.[0] ?? "")}
-          max={Number(column.getFacetedMinMaxValues()?.[1] ?? "")}
-          value={(columnFilterValue as [number, number])?.[1] ?? ""}
-          onChange={(value) =>
-            column.setFilterValue((old: [number, number]) => [old?.[0], value])
-          }
-          placeholder={`Max ${
-            column.getFacetedMinMaxValues()?.[1]
-              ? `(${column.getFacetedMinMaxValues()?.[1]})`
-              : ""
-          }`}
-          className="w-24 border shadow rounded"
-        />
-      </div>
-      <div className="h-1" />
-    </div>
+      </Box>
+      <Box />
+    </Box>
   ) : (
     <>
       <datalist id={column.id + "list"}>
@@ -306,7 +260,7 @@ function Filter({
         className="w-36 border shadow rounded"
         list={column.id + "list"}
       />
-      <div className="h-1" />
+      <Box className="h-1" />
     </>
   );
 }
@@ -358,17 +312,18 @@ const reorderColumn = (
   return [...columnOrder];
 };
 
-const DraggableColumnHeader: FC<{
-  header: Header<Movie, unknown>;
-  table: ReactTable<Movie>;
-}> = ({ header, table }) => {
+const DraggableColumnHeader = <T,>(props: {
+  header: Header<T, unknown>;
+  table: ReactTable<T>;
+}) => {
+  const { header, table } = props;
   const { getState, setColumnOrder } = table;
   const { columnOrder } = getState();
   const { column } = header;
 
   const [, dropRef] = useDrop({
     accept: "column",
-    drop: (draggedColumn: Column<Movie>) => {
+    drop: (draggedColumn: Column<T>) => {
       const newColumnOrder = reorderColumn(
         draggedColumn.id,
         column.id,
@@ -392,12 +347,12 @@ const DraggableColumnHeader: FC<{
       colSpan={header.colSpan}
       style={{ opacity: isDragging ? 0.5 : 1 }}
     >
-      <div ref={previewRef}>
+      <Box ref={previewRef}>
         {header.isPlaceholder
           ? null
           : flexRender(header.column.columnDef.header, header.getContext())}
         <button ref={dragRef}>🟰</button>
-      </div>
+      </Box>
     </th>
   );
 };

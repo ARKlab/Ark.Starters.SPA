@@ -24,10 +24,11 @@ export const moviesApiSlice = createApi({
       queryFn: async (params: MovieQueryParams) => {
         await delay(2000);
         const { pageIndex: page = 1, pageSize = 10 } = params;
+        let retData = simulatedArkQueryWithParams(params);
         return {
           data: {
-            data: simulatedArkQueryWithParams(params),
-            count: moviesData.length,
+            data: retData.data,
+            count: retData.count,
             page: page,
             limit: pageSize,
           },
@@ -67,5 +68,6 @@ export const simulatedArkQueryWithParams = (params: MovieQueryParams) => {
     const sortOrders = sorting.map((sort) => (sort.desc ? "desc" : "asc"));
     filteredMovies = orderBy(filteredMovies, sortFields, sortOrders);
   }
-  return filteredMovies.slice(skip, skip + limit);
+  let count = filteredMovies.length;
+  return { data: filteredMovies.slice(skip, skip + limit), count: count };
 };
