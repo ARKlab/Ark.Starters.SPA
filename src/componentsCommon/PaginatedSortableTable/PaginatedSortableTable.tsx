@@ -73,7 +73,7 @@ export function PaginatedSortableTable<T>(props: {
     filters: columnFilters,
   });
 
-  const tableData: T[] = data?.data as T[];
+  const tableData: T[] = data && data.data ? (data.data as T[]) : [];
 
   const sorting = useMemo(() => sortingState, [sortingState]);
 
