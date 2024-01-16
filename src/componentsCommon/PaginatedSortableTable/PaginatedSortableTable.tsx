@@ -192,7 +192,7 @@ export function PaginatedSortableTable<T>(
                             <Filter<T>
                               column={header.column}
                               table={table}
-                              isLoading={isLoading}
+                              isLoading={isFetching}
                             />
                           </Box>
                         ) : null}
@@ -234,7 +234,7 @@ export function PaginatedSortableTable<T>(
           count={data?.count || 0}
           onPageChange={onPageIndexChange}
           onPageSizeChange={onPageSizeChange}
-          isLoading={isLoading || isFetching}
+          isLoading={isFetching}
         />
       </Box>
     </DndProvider>

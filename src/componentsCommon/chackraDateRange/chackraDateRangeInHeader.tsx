@@ -8,7 +8,7 @@ export const ChackraDateRangeInHeader = (props: {
   onChange: (e: string[]) => void;
   isLoading: boolean;
 }) => {
-  const { dateFormat, onChange, isLoading } = props;
+  const { dateFormat, onChange, isLoading } = props; 
 
   const [value, setValue] = useState<Date[]>([]);
   const handleOnChange = (e: Date[]) => {
