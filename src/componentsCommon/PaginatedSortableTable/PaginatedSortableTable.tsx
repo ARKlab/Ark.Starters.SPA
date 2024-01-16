@@ -161,13 +161,11 @@ export function PaginatedSortableTable<T>(
                   <Th key={header.id}>
                     {header.isPlaceholder ? null : (
                       <>
-                        <Box
-                          {...{
-                            className: header.column.getCanSort()
-                              ? "cursor-pointer select-none"
-                              : "",
-                            onClick: header.column.getToggleSortingHandler(),
+                        <span
+                          style={{
+                            cursor: header.column.getCanSort() ? "pointer" : "",
                           }}
+                          onClick={header.column.getToggleSortingHandler()}
                         >
                           {isDraggable ? (
                             <DraggableColumnHeader
@@ -185,16 +183,16 @@ export function PaginatedSortableTable<T>(
                             asc: " 🔼",
                             desc: " 🔽",
                           }[header.column.getIsSorted() as string] ?? null}
-                        </Box>
+                        </span>
                         {header.column.getCanFilter() &&
                         !disableHeaderFilters ? (
-                          <Box>
+                          <span>
                             <Filter<T>
                               column={header.column}
                               table={table}
                               isLoading={isFetching}
                             />
-                          </Box>
+                          </span>
                         ) : null}
                       </>
                     )}

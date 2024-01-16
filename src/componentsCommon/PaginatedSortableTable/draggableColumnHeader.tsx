@@ -1,5 +1,3 @@
-import { Box } from "@chakra-ui/react";
-import React from "react";
 import {
   Column,
   ColumnOrderState,
@@ -51,17 +49,13 @@ export const DraggableColumnHeader = <T,>(props: {
   });
 
   return (
-    <th
-      ref={dropRef}
-      colSpan={header.colSpan}
-      style={{ opacity: isDragging ? 0.5 : 1 }}
-    >
-      <Box ref={previewRef}>
+    <span ref={dropRef} style={{ opacity: isDragging ? 0.5 : 1 }}>
+      <span ref={previewRef}>
         {header.isPlaceholder
           ? null
           : flexRender(header.column.columnDef.header, header.getContext())}
         <button ref={dragRef}>🟰</button>
-      </Box>
-    </th>
+      </span>
+    </span>
   );
 };
