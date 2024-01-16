@@ -210,7 +210,7 @@ export function PaginatedSortableTable<T>(
                   </Center>
                 </Td>
               </Tr>
-            ) : (
+            ) : table.getRowModel().rows.length > 0 ? (
               table.getRowModel().rows.map((row) => (
                 <Tr key={row.id}>
                   {row.getVisibleCells().map((cell) => (
@@ -223,6 +223,12 @@ export function PaginatedSortableTable<T>(
                   ))}
                 </Tr>
               ))
+            ) : (
+              <Tr>
+                <Td colSpan={columns.length}>
+                  <Center>No data</Center>
+                </Td>
+              </Tr>
             )}
           </Tbody>
         </Table>
