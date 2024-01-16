@@ -6,6 +6,7 @@ import {
   InputGroup,
   Text,
   InputRightElement,
+  InputProps,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { TiTimes } from "react-icons/ti";
@@ -15,6 +16,10 @@ interface InputWithClearProps {
   handleInputChange: (name: string, value: string) => void;
   title: string;
   propName: string;
+}
+export interface InputHeaderWithClearProps extends InputProps {
+  value: string | number;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }
 
 export const ChackraInputFilterWithClear: React.FC<InputWithClearProps> = ({

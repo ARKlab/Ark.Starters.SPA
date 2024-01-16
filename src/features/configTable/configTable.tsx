@@ -24,6 +24,7 @@ import {
   FormControl,
   FormHelperText,
   Spinner,
+  Center,
 } from "@chakra-ui/react";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import { ValidationErrors } from "final-form";
@@ -227,8 +228,10 @@ export default function EditableTableExample() {
               <Tbody>
                 {getConfigIsLoading ? (
                   <Tr>
-                    <Td>
-                      <Spinner />
+                    <Td colSpan={3}>
+                      <Center>
+                        <Spinner />
+                      </Center>
                     </Td>
                   </Tr>
                 ) : (
