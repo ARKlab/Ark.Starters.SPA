@@ -2,8 +2,6 @@ import {
   Box,
   Button,
   Center,
-  Heading,
-  Input,
   Spinner,
   Table,
   Tbody,
@@ -12,34 +10,32 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import React, { FC, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import ChackraPaginationComponent from "../chackraPaginationComponent/chackraTablePagination";
 
-import { useGetMoviesQuery } from "../../features/paginatedTable/paginatedTableApi";
 import {
   Column,
-  Table as ReactTable,
   ColumnDef,
-  ColumnSort,
-  PaginationState,
-  SortingState,
-  getFilteredRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFacetedMinMaxValues,
-  getPaginationRowModel,
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
   ColumnFiltersState,
   ColumnOrderState,
-  Header,
+  PaginationState,
+  Table as ReactTable,
+  SortingState,
+  flexRender,
+  getCoreRowModel,
+  getFacetedMinMaxValues,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  useReactTable,
 } from "@tanstack/react-table";
-import { DndProvider, useDrag, useDrop } from "react-dnd";
+import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-
-export function PaginatedSortableTable<T>(props: {
+import { DebouncedInputColumnHeader } from "../debouncedInputColumnHeader";
+import { ChackraDateRangeInHeader } from "../chackraDateRange/chackraDateRangeInHeader";
+import { DraggableColumnHeader } from "./draggableColumnHeader";
+type PaginatedSortableTableProps<T> = {
   columns: ColumnDef<T>[];
   useQueryHook: (args: {
     pageIndex: number;
@@ -47,8 +43,23 @@ export function PaginatedSortableTable<T>(props: {
     sorting: SortingState;
     filters: ColumnFiltersState;
   }) => any;
-}) {
-  const { columns, useQueryHook } = props;
+  isDraggable?: boolean;
+  disableHeaderFilters?: boolean;
+  externalFilters?: boolean;
+  externalFiltersState?: ColumnFiltersState;
+};
+
+export function PaginatedSortableTable<T>(
+  props: PaginatedSortableTableProps<T>
+) {
+  const {
+    columns,
+    useQueryHook,
+    isDraggable,
+    disableHeaderFilters,
+    externalFilters,
+    externalFiltersState,
+  } = props;
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 1,
     pageSize: 10,
@@ -57,12 +68,22 @@ export function PaginatedSortableTable<T>(props: {
   const [sortingState, setSorting] = useState<SortingState>([
     { id: "", desc: false },
   ]);
+
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+
+  //When filters are provided externally, we use them instead of the internal state
+  React.useEffect(() => {
+    if (externalFilters) {
+      setColumnFilters(externalFiltersState || []);
+    }
+  }, [externalFilters, externalFiltersState]);
+
   const [columnOrder, setColumnOrder] = React.useState<ColumnOrderState>(
     columns.map((column) => column.id as string) //must start out with populated columnOrder so we can splice
   );
+
   const resetOrder = () =>
     setColumnOrder(columns.map((column) => column.id as string));
 
@@ -75,8 +96,9 @@ export function PaginatedSortableTable<T>(props: {
 
   const tableData: T[] = data && data.data ? (data.data as T[]) : [];
 
+  // useMemo is used here to optimize performance by memoizing the sorting and pagination states.
+  // This avoids unnecessary re-renders and computations if these states do not change between renders.
   const sorting = useMemo(() => sortingState, [sortingState]);
-
   const pagination = useMemo(
     () => ({
       pageIndex,
@@ -84,30 +106,31 @@ export function PaginatedSortableTable<T>(props: {
     }),
     [pageIndex, pageSize]
   );
-  const filtering = useMemo(() => columnFilters, [columnFilters]);
-
   const table = useReactTable<T>({
+    //this is the definition of the table
     data: tableData,
     columns,
     getPaginationRowModel: getPaginationRowModel(),
     pageCount: tableData ? Math.ceil(tableData.length / pageSize) : 0,
+    //this is the state of the table (table.getState()) we take care of it manually to have all features server side and ARK compatibile
     state: {
       pagination,
       sorting,
       columnFilters,
       columnOrder,
     },
+    //these onChanges are the state setters
     onColumnOrderChange: setColumnOrder,
     onColumnFiltersChange: setColumnFilters,
     onPaginationChange: setPagination,
-    getCoreRowModel: getCoreRowModel(),
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(), //this is the core row model, it is used to get the rows that are visible after filtering, sorting and pagination
     getFilteredRowModel: getFilteredRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    manualPagination: true,
+    manualPagination: true, //manual xxx means that Tanstack (React Table v8) expects that we take care of the table state manually
     manualSorting: true,
-    onSortingChange: setSorting,
     enableColumnFilters: true,
     enableFilters: true,
     manualFiltering: true,
@@ -115,6 +138,12 @@ export function PaginatedSortableTable<T>(props: {
 
   const onPageIndexChange = (pageIndex: number) => {
     setPagination((prevState) => ({ ...prevState, pageIndex: pageIndex }));
+    /*
+    this is the solution we found to set the state in a manual pagination system. 
+    normally you would doi something like this: table.setPageIndex(pageIndex) but that is not working 
+    probably because of the manualPagination: true,.
+
+    */
   };
   const onPageSizeChange = (pageSize: number) => {
     setPagination((prevState) => ({ ...prevState, pageSize: pageSize }));
@@ -123,9 +152,8 @@ export function PaginatedSortableTable<T>(props: {
   return (
     <DndProvider backend={HTML5Backend}>
       <Box overflowX="auto">
-        <Heading>Movies</Heading>
-
-        <Table variant="simple" my="30px">
+        <Button onClick={resetOrder}>Reset Columns Order</Button>
+        <Table variant="simple" my="30px" minHeight={"500px"}>
           <Thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <Tr key={headerGroup.id}>
@@ -141,24 +169,31 @@ export function PaginatedSortableTable<T>(props: {
                             onClick: header.column.getToggleSortingHandler(),
                           }}
                         >
-                          {
+                          {isDraggable ? (
                             <DraggableColumnHeader
                               key={header.id}
                               header={header}
                               table={table}
                             />
-                            /*flexRender(
-                          header.column.columnDef.header,
-                          header.getContext())*/
-                          }
+                          ) : (
+                            flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )
+                          )}
                           {{
                             asc: " 🔼",
                             desc: " 🔽",
                           }[header.column.getIsSorted() as string] ?? null}
                         </Box>
-                        {header.column.getCanFilter() ? (
+                        {header.column.getCanFilter() &&
+                        !disableHeaderFilters ? (
                           <Box>
-                            <Filter<T> column={header.column} table={table} />
+                            <Filter<T>
+                              column={header.column}
+                              table={table}
+                              isLoading={isLoading}
+                            />
                           </Box>
                         ) : null}
                       </>
@@ -209,9 +244,11 @@ export function PaginatedSortableTable<T>(props: {
 function Filter<T>({
   column,
   table,
+  isLoading,
 }: {
   column: Column<T, unknown>;
   table: ReactTable<T>;
+  isLoading: boolean;
 }) {
   if (table.getPreFilteredRowModel() === undefined) return <></>;
   const firstValue = table
@@ -228,131 +265,34 @@ function Filter<T>({
     [column.getFacetedUniqueValues()]
   );
 
-  return typeof firstValue === "number" ? (
-    <Box>
-      <Box>
-        <DebouncedInput
-          type="number"
-          value={(columnFilterValue as number) ?? ""}
-          onChange={(value) => column.setFilterValue(value)}
-          placeholder={`Min ${
-            column.getFacetedMinMaxValues()?.[0]
-              ? `(${column.getFacetedMinMaxValues()?.[0]})`
-              : ""
-          }`}
-          className="w-24 border shadow rounded"
+  //You can add all the filters you need and want here, even multiple per column (min max for numbers for example)
+  switch (column.columnDef.meta?.type) {
+    case "date":
+      return (
+        <ChackraDateRangeInHeader
+          onChange={column.setFilterValue}
+          isLoading={isLoading}
         />
-      </Box>
-      <Box />
-    </Box>
-  ) : (
-    <>
-      <datalist id={column.id + "list"}>
-        {sortedUniqueValues.slice(0, 5000).map((value: any) => (
-          <option value={value} key={value} />
-        ))}
-      </datalist>
-      <DebouncedInput
-        type="text"
-        value={(columnFilterValue ?? "") as string}
-        onChange={(value) => column.setFilterValue(value)}
-        placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
-        className="w-36 border shadow rounded"
-        list={column.id + "list"}
-      />
-      <Box className="h-1" />
-    </>
-  );
-}
-
-function DebouncedInput({
-  value: initialValue,
-  onChange,
-  debounce = 500,
-  ...props
-}: {
-  value: string | number;
-  onChange: (value: string | number) => void;
-  debounce?: number;
-} & Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "size">) {
-  const [value, setValue] = React.useState(initialValue);
-
-  React.useEffect(() => {
-    setValue(initialValue);
-  }, [initialValue]);
-
-  React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      onChange(value);
-    }, debounce);
-
-    return () => clearTimeout(timeout);
-  }, [value]);
-
-  return (
-    <Input
-      {...props}
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-      size={"sm"}
-    />
-  );
-}
-
-const reorderColumn = (
-  draggedColumnId: string,
-  targetColumnId: string,
-  columnOrder: string[]
-): ColumnOrderState => {
-  columnOrder.splice(
-    columnOrder.indexOf(targetColumnId),
-    0,
-    columnOrder.splice(columnOrder.indexOf(draggedColumnId), 1)[0] as string
-  );
-  return [...columnOrder];
-};
-
-const DraggableColumnHeader = <T,>(props: {
-  header: Header<T, unknown>;
-  table: ReactTable<T>;
-}) => {
-  const { header, table } = props;
-  const { getState, setColumnOrder } = table;
-  const { columnOrder } = getState();
-  const { column } = header;
-
-  const [, dropRef] = useDrop({
-    accept: "column",
-    drop: (draggedColumn: Column<T>) => {
-      const newColumnOrder = reorderColumn(
-        draggedColumn.id,
-        column.id,
-        columnOrder
       );
-      setColumnOrder(newColumnOrder);
-    },
-  });
-
-  const [{ isDragging }, dragRef, previewRef] = useDrag({
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-    item: () => column,
-    type: "column",
-  });
-
-  return (
-    <th
-      ref={dropRef}
-      colSpan={header.colSpan}
-      style={{ opacity: isDragging ? 0.5 : 1 }}
-    >
-      <Box ref={previewRef}>
-        {header.isPlaceholder
-          ? null
-          : flexRender(header.column.columnDef.header, header.getContext())}
-        <button ref={dragRef}>🟰</button>
-      </Box>
-    </th>
-  );
-};
+    case "number":
+    case "string":
+      return (
+        <>
+          <datalist id={column.id + "list"}>
+            {sortedUniqueValues.slice(0, 5000).map((value: any) => (
+              <option value={value} key={value} />
+            ))}
+          </datalist>
+          <DebouncedInputColumnHeader
+            type="text"
+            value={(columnFilterValue ?? "") as string}
+            onChange={(value) => column.setFilterValue(value)}
+            placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
+            className="w-36 border shadow rounded"
+            list={column.id + "list"}
+          />
+          <Box className="h-1" />
+        </>
+      );
+  }
+}

@@ -16,6 +16,10 @@ interface InputWithClearProps {
   title: string;
   propName: string;
 }
+export interface InputHeaderWithClearProps {
+  value: string | number;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+}
 
 export const ChackraInputFilterWithClear: React.FC<InputWithClearProps> = ({
   value,

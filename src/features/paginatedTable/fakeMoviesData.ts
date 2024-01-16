@@ -1,7 +1,7 @@
 export type Movie = {
   id: number;
   title: string;
-  year: number;
+  releaseDate: string;
   runtime: number;
   genre: string;
   director: string;
@@ -64,7 +64,10 @@ const basePlots = [
 const moviesData: Movie[] = Array.from({ length: 100 }, (_, i) => ({
   id: i + 1,
   title: `${baseMovies[i % baseMovies.length]}${i + 1}`,
-  year: Math.floor(Math.random() * (2022 - 1900 + 1)) + 1900,
+  releaseDate: new Date(
+    Math.floor(Math.random() * (2022 - 1900 + 1)) + 1900,
+    0
+  ).toDateString(),
   runtime: Math.floor(Math.random() * (200 - 80 + 1)) + 80,
   genre: `Genere ${(i % 5) + 1}`,
   director: `${baseDirectors[i % baseDirectors.length]}${i + 1}`,

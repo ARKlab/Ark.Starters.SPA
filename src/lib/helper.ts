@@ -1,8 +1,16 @@
 import * as R from "ramda";
+import { format } from "date-fns";
+
+export const formatDateToString = (date: Date | null, dateFormat?: string) => {
+  if (!dateFormat) {
+    dateFormat = "yyyy-MM-dd";
+  }
+  return date ? format(date, dateFormat) : "";
+};
 
 export function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
-} 
+}
 
 export const normalizeToArray = (val: any, list: any) => {
   const v = R.pathOr(null, [val], list);
