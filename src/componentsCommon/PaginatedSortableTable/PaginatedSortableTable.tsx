@@ -44,6 +44,7 @@ type PaginatedSortableTableProps<T> = {
     filters: ColumnFiltersState;
   }) => any;
   isDraggable?: boolean;
+  isSortable?: boolean;
   disableHeaderFilters?: boolean;
   externalFilters?: boolean;
   externalFiltersState?: ColumnFiltersState;
@@ -59,6 +60,7 @@ export function PaginatedSortableTable<T>(
     disableHeaderFilters,
     externalFilters,
     externalFiltersState,
+    isSortable = true,
   } = props;
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 1,
@@ -131,6 +133,7 @@ export function PaginatedSortableTable<T>(
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
     manualPagination: true, //manual xxx means that Tanstack (React Table v8) expects that we take care of the table state manually
     manualSorting: true,
+    enableSorting: isSortable,
     enableColumnFilters: true,
     enableFilters: true,
     manualFiltering: true,
@@ -152,7 +155,10 @@ export function PaginatedSortableTable<T>(
   return (
     <DndProvider backend={HTML5Backend}>
       <Box overflowX="auto">
-        <Button onClick={resetOrder}>Reset Columns Order</Button>
+        <Button onClick={resetOrder} hidden={!isSortable}>
+          {/*This should be only demostrative and should be outside of the component*/}
+          Reset Columns Order
+        </Button>
         <Table variant="simple" my="30px" minHeight={"500px"}>
           <Thead>
             {table.getHeaderGroups().map((headerGroup) => (

@@ -2,17 +2,11 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import { ColumnFiltersState, SortingState } from "@tanstack/react-table";
 import * as R from "ramda";
-import { ListResponse } from "../../lib/apiTypes";
+import { ArkQueryParameters, ListResponse } from "../../lib/apiTypes";
 import { delay } from "../../lib/helper";
 import moviesData, { Movie } from "./fakeMoviesData";
 import { orderBy, every, filter } from "lodash";
 
-type MovieQueryParams = {
-  filters?: ColumnFiltersState;
-  pageIndex?: number;
-  pageSize?: number;
-  sorting?: SortingState;
-};
 export const moviesApiSlice = createApi({
   reducerPath: "moviesApi",
   baseQuery: fetchBaseQuery({
@@ -20,8 +14,8 @@ export const moviesApiSlice = createApi({
   }),
   tagTypes: ["Movies", "Page"],
   endpoints: (builder) => ({
-    getMovies: builder.query<ListResponse<Movie>, MovieQueryParams>({
-      queryFn: async (params: MovieQueryParams) => {
+    getMovies: builder.query<ListResponse<Movie>, ArkQueryParameters>({
+      queryFn: async (params: ArkQueryParameters) => {
         await delay(500);
         const { pageIndex: page = 1, pageSize = 10 } = params;
         let retData = simulatedArkQueryWithParams(params);
@@ -41,7 +35,7 @@ export const moviesApiSlice = createApi({
 
 export const { useGetMoviesQuery } = moviesApiSlice;
 
-export const simulatedArkQueryWithParams = (params: MovieQueryParams) => {
+export const simulatedArkQueryWithParams = (params: ArkQueryParameters) => {
   const { pageIndex: page = 1, pageSize = 10, filters, sorting } = params;
   const skip = (page - 1) * pageSize;
   const limit = pageSize;

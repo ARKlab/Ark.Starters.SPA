@@ -5,9 +5,11 @@ import {
   InputGroup,
   InputRightElement,
   Select,
+  Spinner,
   Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { MdArrowDropDown } from "react-icons/md";
 import { TiTimes } from "react-icons/ti";
 
 interface SelectWithClearProps {
@@ -15,6 +17,7 @@ interface SelectWithClearProps {
   options: JSX.Element[];
   title: string;
   propName: string;
+  isLoading?: boolean;
 }
 
 const ChackraSelectWithClear: React.FC<SelectWithClearProps> = ({
@@ -22,6 +25,7 @@ const ChackraSelectWithClear: React.FC<SelectWithClearProps> = ({
   options,
   title,
   propName,
+  isLoading,
 }) => {
   const [selectValue, setSelectValue] = useState<string>();
 
@@ -43,7 +47,12 @@ const ChackraSelectWithClear: React.FC<SelectWithClearProps> = ({
         </Text>
       </FormLabel>
       <InputGroup>
-        <Select isRequired={true} value={selectValue} onChange={handleChange}>
+        <Select
+          isRequired={true}
+          value={selectValue}
+          onChange={handleChange}
+          icon={isLoading ? <Spinner /> : <MdArrowDropDown />}
+        >
           {options}
         </Select>
         {selectValue && (

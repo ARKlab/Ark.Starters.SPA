@@ -1,46 +1,34 @@
-import React, { useEffect, useState } from "react";
-import { Field, Form, FormRenderProps, useField } from "react-final-form";
-import arrayMutators from "final-form-arrays";
-import { FieldArray, FieldArrayRenderProps } from "react-final-form-arrays";
-import * as R from "ramda";
 import {
-  Box,
   Button,
-  Checkbox,
-  HStack,
-  FormLabel,
-  Input,
-  VStack,
-  Heading,
-  Spacer,
-  IconButton,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  FormErrorMessage,
-  FormControl,
-  FormHelperText,
-  Spinner,
   Center,
+  Checkbox,
+  FormControl,
+  FormErrorMessage,
+  HStack,
+  Heading,
+  IconButton,
+  Input,
+  Spinner,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+  VStack,
 } from "@chakra-ui/react";
+import arrayMutators from "final-form-arrays";
+import { useEffect } from "react";
+import { Field, Form, FormRenderProps, useField } from "react-final-form";
+import { FieldArray } from "react-final-form-arrays";
 import { FaPlus, FaTrash } from "react-icons/fa";
-import { ValidationErrors } from "final-form";
 import { z } from "zod";
-import { zod2FieldValidator, zod2FormValidator } from "../../lib/zod2form";
-import { useGetConfigQuery, usePostConfigMutation } from "./configTableApi";
-import _ from "lodash";
-import errorHandler, {
-  dispatchNetworkError,
-} from "../errorHandler/errorHandler";
-import { dispatchNotification } from "../notifications/notification";
 import { useAppDispatch } from "../../app/hooks";
-import {
-  NotificationDuration,
-  NotificationPosition,
-} from "../notifications/notificationsTypes";
+import { zod2FieldValidator } from "../../lib/zod2form";
+import { dispatchNetworkError } from "../errorHandler/errorHandler";
+import { dispatchNotification } from "../notifications/notification";
+import { NotificationDuration } from "../notifications/notificationsTypes";
+import { useGetConfigQuery, usePostConfigMutation } from "./configTableApi";
 
 export type Employee = {
   name: string;
@@ -52,11 +40,6 @@ const nameValidator = z
   .string()
   .max(10)
   .refine((x) => !x.endsWith("Kail"), { message: "Kail is not allowed" });
-
-type RowError = {
-  index: number;
-  message: string;
-};
 
 //This is the "whole set" validator for the form. of course for us is a table but it is in fact a form
 //In our configuration pattern this would be primarily used for primary key validation so i made it generic to accept a list of props
