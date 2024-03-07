@@ -10,7 +10,7 @@ export interface ListQueryParams {
   limit: number;
 }
 
-export type ArkQueryParameters = {
+export type ArkPagedQueryParameters = {
   filters?: ColumnFiltersState;
   pageIndex?: number;
   pageSize?: number;

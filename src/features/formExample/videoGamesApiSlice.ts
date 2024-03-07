@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import { ColumnFiltersState, SortingState } from "@tanstack/react-table";
 import * as R from "ramda";
-import { ArkQueryParameters, ListResponse } from "../../lib/apiTypes";
+import { ArkPagedQueryParameters, ListResponse } from "../../lib/apiTypes";
 import { delay } from "../../lib/helper";
 import {
   VideoGameGenre,
@@ -18,8 +18,11 @@ export const videoGameApiSlice = createApi({
   }),
   tagTypes: ["VideoGames", "Page", "Genres"],
   endpoints: (builder) => ({
-    getVideoGames: builder.query<ListResponse<VideoGame>, ArkQueryParameters>({
-      queryFn: async (params: ArkQueryParameters) => {
+    getVideoGames: builder.query<
+      ListResponse<VideoGame>,
+      ArkPagedQueryParameters
+    >({
+      queryFn: async (params: ArkPagedQueryParameters) => {
         await delay(500);
         const { pageIndex: page = 1, pageSize = 10 } = params;
         const skip = (page - 1) * pageSize;
