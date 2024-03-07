@@ -28,7 +28,6 @@ import {
 } from "./videoGamesApiSlice";
 import { VideoGame } from "./videoGamesSampleDataAndTypes";
 const stringValidator = z.string();
-
 const yearValidator = z.string().refine(
   (value) => {
     const year = Number(value);
@@ -50,12 +49,16 @@ const VideoGamesForm = () => {
     { isLoading: insertLoading, isSuccess: insertSuccess },
   ] = useInsertNewVideoGameMutation();
 
+  const [isOpen, setIsOpen] = useState(false);
   const { data: genres, isLoading: genreLoading } =
     useGetVideoGamesGenresQuery();
 
   const onSubmit = async (values: VideoGame, form: FormApi<VideoGame>) => {
     await insertNewVideoGame(values);
-    form.reset();
+    //reset form would not set it at pristine status so it would also
+    //trigger validation errors. restart set it as new and it's what we want here
+    form.restart();
+    setIsOpen(false);
   };
   useEffect(() => {
     if (insertSuccess) {
@@ -74,7 +77,11 @@ const VideoGamesForm = () => {
   }, [insertSuccess, dispatch]);
 
   return (
-    <Accordion allowToggle>
+    <Accordion
+      allowToggle
+      index={isOpen ? 0 : -1}
+      onChange={(index) => setIsOpen(index === 0)}
+    >
       <AccordionItem>
         <AccordionButton>Add videoGame </AccordionButton>
         <AccordionPanel pb={4}>
@@ -82,7 +89,7 @@ const VideoGamesForm = () => {
             onSubmit={(values: VideoGame, form: FormApi<VideoGame>) =>
               onSubmit(values, form)
             }
-            render={({ handleSubmit, form, submitting, pristine, values }) => {
+            render={({ handleSubmit, form, submitting }) => {
               return (
                 <Container maxW="container.md">
                   <form onSubmit={handleSubmit}>
