@@ -1,5 +1,5 @@
 import { MainSectionType } from "../components/sideBar/menuItem/types";
-import { FaCloudUploadAlt, FaPlay, FaTable } from "react-icons/fa";
+import { FaCloudUploadAlt, FaGamepad, FaPlay, FaTable } from "react-icons/fa";
 import { RiMovie2Line } from "react-icons/ri";
 
 /*This is the Main Section ARRAY populate this to populate the main nav menu*/
@@ -34,6 +34,13 @@ export const mainSections: MainSectionType[] = [
         path: "/moviesTable",
         label: "Movie Paginated Table",
         icon: RiMovie2Line,
+        isInMenu: true,
+        isExternal: false,
+      },
+      {
+        path: "/videoGamesTable",
+        label: "VideoGames Table",
+        icon: FaGamepad,
         isInMenu: true,
         isExternal: false,
       },

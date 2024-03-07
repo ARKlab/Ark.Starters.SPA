@@ -109,7 +109,25 @@ const PaginationComponent = ({
           </Stack>
         </>
       ) : (
-        <></>
+        <Stack
+          spacing={4}
+          direction="row"
+          align="center"
+          justifyContent="center"
+          my="20px"
+        >
+          <Select
+            w="8em"
+            value={pageSize}
+            onChange={(e) => onPageSizeChange(Number(e.target.value))}
+          >
+            {[10, 20, 30, 40, 50].map((pageSize) => (
+              <option key={pageSize} value={pageSize}>
+                Show {pageSize}
+              </option>
+            ))}
+          </Select>
+        </Stack>
       )}
     </div>
   );

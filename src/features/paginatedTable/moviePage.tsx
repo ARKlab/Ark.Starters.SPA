@@ -1,5 +1,4 @@
 import { Box, Text, Flex, Heading, Input, Button } from "@chakra-ui/react";
-import { PaginatedSortableTable } from "../../componentsCommon/PaginatedSortableTable/paginatedSortableTable";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -10,6 +9,7 @@ import { useGetMoviesQuery } from "./paginatedTableApi";
 import { DebouncedInputColumnHeader } from "../../componentsCommon/debouncedInputColumnHeader";
 import { useState } from "react";
 import { set } from "ramda";
+import { PaginatedSortableTable } from "../../componentsCommon/PaginatedSortableTable/PaginatedSortableTable";
 
 const columnHelper = createColumnHelper<Movie>();
 
