@@ -12,6 +12,7 @@ import {
   Select,
   Spacer,
   Spinner,
+  useBoolean,
 } from "@chakra-ui/react";
 import { FormApi } from "final-form";
 import { useEffect, useState } from "react";
@@ -49,7 +50,7 @@ const VideoGamesForm = () => {
     { isLoading: insertLoading, isSuccess: insertSuccess },
   ] = useInsertNewVideoGameMutation();
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [flag, setFlag] = useBoolean();
   const { data: genres, isLoading: genreLoading } =
     useGetVideoGamesGenresQuery();
 
@@ -58,7 +59,7 @@ const VideoGamesForm = () => {
     //reset form would not set it at pristine status so it would also
     //trigger validation errors. restart set it as new and it's what we want here
     form.restart();
-    setIsOpen(false);
+    setFlag.toggle();
   };
   useEffect(() => {
     if (insertSuccess) {
@@ -75,13 +76,8 @@ const VideoGamesForm = () => {
       );
     }
   }, [insertSuccess, dispatch]);
-
   return (
-    <Accordion
-      allowToggle
-      index={isOpen ? 0 : -1}
-      onChange={(index) => setIsOpen(index === 0)}
-    >
+    <Accordion allowToggle index={flag ? 0 : -1} onChange={setFlag.toggle}>
       <AccordionItem>
         <AccordionButton>Add videoGame </AccordionButton>
         <AccordionPanel pb={4}>
