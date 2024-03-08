@@ -2,7 +2,7 @@ import { IconType } from "react-icons";
 import { Dispatch } from "redux";
 
 interface SectionItem {
-  path: string;
+  path?: string;
   label: string;
 }
 

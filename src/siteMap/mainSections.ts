@@ -11,7 +11,6 @@ import VideoGamesTableView from "../features/formExample/videoGamesPage";
 It is also used to create all the Routes for the router*/
 export const mainSections: MainSectionType[] = [
   {
-    path: "/main",
     label: "Main Test Section",
     defaultSubMenuPath: "/manualUpload",
     subsections: [
