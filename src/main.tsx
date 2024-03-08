@@ -31,7 +31,9 @@ const Component = () => {
         <Route path="/Unauthorized" element={<Unauthorised />} />
         {mainSections.map((x) =>
           x.subsections.map((s) =>
-            s.component ? <Route path={s.path} element={s.component()} /> : null
+            s.component && s.path ? (
+              <Route path={s.path} element={s.component()} />
+            ) : null
           )
         )}
       </Routes>
