@@ -21,7 +21,7 @@ It is also used to create all the Routes for the router*/
 export const mainSections: MainSectionType[] = [
   {
     label: "Main Test Section",
-    defaultSubMenuPath: "/manualUpload",
+
     subsections: [
       {
         path: "/jsonplaceholder",
@@ -120,6 +120,53 @@ export const mainSections: MainSectionType[] = [
           },
           {
             externalUrl: "https://react.dev/",
+            label: "React",
+            icon: FaExternalLinkAlt,
+            isInMenu: true,
+            isExternal: true,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    label: "External Section",
+    subsections: [
+      {
+        path: "https://www.google.com",
+        label: "Google",
+        icon: FaExternalLinkAlt,
+        isInMenu: true,
+        isExternal: true,
+      },
+      {
+        path: "https://https://react.dev/",
+        label: "React",
+        icon: FaExternalLinkAlt,
+        isInMenu: true,
+        isExternal: true,
+      },
+    ],
+  },
+  {
+    label: "Another Section",
+
+    subsections: [
+      {
+        label: "Sub Subsections",
+        hasSubsections: true,
+        isInMenu: true,
+        isExternal: false,
+        subsections: [
+          {
+            path: "https://www.google.com",
+            label: "Google",
+            icon: FaExternalLinkAlt,
+            isInMenu: true,
+            isExternal: true,
+          },
+          {
+            path: "https://https://react.dev/",
             label: "React",
             icon: FaExternalLinkAlt,
             isInMenu: true,

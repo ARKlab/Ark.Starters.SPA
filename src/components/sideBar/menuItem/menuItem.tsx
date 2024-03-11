@@ -11,10 +11,9 @@ import { SubsectionMenuItemType } from "./types";
 export default function MenuItem({
   label,
   path,
-  component,
   icon,
   isExternal,
-}: Omit<SubsectionMenuItemType, "isInMenu">) {
+}: Omit<SubsectionMenuItemType, "isInMenu" | "component">) {
   return (
     <ChakraLink
       _hover={{ textDecoration: "none" }}
