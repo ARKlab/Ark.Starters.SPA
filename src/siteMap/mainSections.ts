@@ -22,7 +22,7 @@ It is also used to create all the Routes for the router*/
 export const mainSections: MainSectionType[] = [
   {
     label: "Main Test Section",
-
+    path: "/main",
     subsections: [
       {
         path: "/jsonplaceholder",
@@ -132,6 +132,7 @@ export const mainSections: MainSectionType[] = [
   },
   {
     label: "External Section",
+    path: "/ext",
     subsections: [
       {
         externalUrl: "https://www.google.com",
@@ -151,11 +152,11 @@ export const mainSections: MainSectionType[] = [
   },
   {
     label: "Another Section",
-
+    path: "/anotherSection",
     subsections: [
       {
         label: "Sub Subsections",
-        hasSubsections: true,
+        path: "/nested",
         isInMenu: true,
         isExternal: false,
         subsections: [

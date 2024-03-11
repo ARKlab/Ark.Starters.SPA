@@ -31,14 +31,17 @@ const Component = () => {
         <Route path="/Unauthorized" element={<Unauthorised />} />
         {mainSections.map((x) =>
           x.subsections.map((s) => {
-            return s.hasSubsections && s.subsections ? (
+            return s.subsections && s.subsections.length > 0 ? (
               s.subsections.map((sub) => {
                 return sub.component && sub.path ? (
-                  <Route path={sub.path} element={sub.component()} />
+                  <Route
+                    path={x.path + s.path + sub.path}
+                    element={sub.component()}
+                  />
                 ) : null;
               })
             ) : s.component && s.path ? (
-              <Route path={s.path} element={s.component()} />
+              <Route path={x.path + s.path} element={s.component()} />
             ) : null;
           })
         )}
