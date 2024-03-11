@@ -30,11 +30,17 @@ const Component = () => {
         <Route index path="/" element={<Navigate to="/test" />} />
         <Route path="/Unauthorized" element={<Unauthorised />} />
         {mainSections.map((x) =>
-          x.subsections.map((s) =>
-            s.component && s.path ? (
+          x.subsections.map((s) => {
+            return s.hasSubsections && s.subsections ? (
+              s.subsections.map((sub) => {
+                return sub.component && sub.path ? (
+                  <Route path={sub.path} element={sub.component()} />
+                ) : null;
+              })
+            ) : s.component && s.path ? (
               <Route path={s.path} element={s.component()} />
-            ) : null
-          )
+            ) : null;
+          })
         )}
       </Routes>
     </>
