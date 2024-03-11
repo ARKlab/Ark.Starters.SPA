@@ -12,6 +12,7 @@ import PlaygroundView from "../features/playground/playgroundView";
 import ConfigTableExampleView from "../features/configTable/configTableExample";
 import MovieTableView from "../features/paginatedTable/moviePage";
 import VideoGamesTableView from "../features/formExample/videoGamesPage";
+import StaticPage from "../features/staticPage/staticPage";
 
 import StaticPage from "../features/staticPage/staticPage";
 import WizardFormView from "../features/formWizard/formWizard";
@@ -158,6 +159,14 @@ export const mainSections: MainSectionType[] = [
         isInMenu: true,
         isExternal: false,
         subsections: [
+          {
+            path: "/staticPage",
+            label: "Static Page",
+            component: StaticPage,
+            icon: FaTable,
+            isInMenu: true,
+            isExternal: false,
+          },
           {
             externalUrl: "https://www.google.com",
             label: "Google",
