@@ -3,6 +3,7 @@ import {
   FaCloudUploadAlt,
   FaExternalLinkAlt,
   FaGamepad,
+  FaHatWizard,
   FaPlay,
   FaTable,
 } from "react-icons/fa";
@@ -13,10 +14,7 @@ import ConfigTableExampleView from "../features/configTable/configTableExample";
 import MovieTableView from "../features/paginatedTable/moviePage";
 import VideoGamesTableView from "../features/formExample/videoGamesPage";
 import StaticPage from "../features/staticPage/staticPage";
-
-import StaticPage from "../features/staticPage/staticPage";
 import WizardFormView from "../features/formWizard/formWizard";
-
 /*This is the Main Section ARRAY populate this to populate the main nav menu
 It is also used to create all the Routes for the router*/
 export const mainSections: MainSectionType[] = [
