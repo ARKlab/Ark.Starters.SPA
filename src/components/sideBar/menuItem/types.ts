@@ -8,7 +8,6 @@ export interface SubsectionMenuItemType {
   icon?: IconType;
   isExternal: boolean;
   externalUrl?: string;
-  hasSubsections?: boolean;
   subsections?: SubsectionMenuItemType[];
   path?: string;
   label: string;
@@ -16,4 +15,5 @@ export interface SubsectionMenuItemType {
 export interface MainSectionType {
   subsections: SubsectionMenuItemType[];
   label: string;
+  path: string;
 }
