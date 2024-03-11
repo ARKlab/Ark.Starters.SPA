@@ -66,14 +66,14 @@ export const mainSections: MainSectionType[] = [
     label: "External Section",
     subsections: [
       {
-        path: "https://www.google.com",
+        externalUrl: "https://www.google.com",
         label: "Google",
         icon: FaExternalLinkAlt,
         isInMenu: true,
         isExternal: true,
       },
       {
-        path: "https://https://react.dev/",
+        externalUrl: "https://react.dev/",
         label: "React",
         icon: FaExternalLinkAlt,
         isInMenu: true,
@@ -92,14 +92,14 @@ export const mainSections: MainSectionType[] = [
         isExternal: false,
         subsections: [
           {
-            path: "https://www.google.com",
+            externalUrl: "https://www.google.com",
             label: "Google",
             icon: FaExternalLinkAlt,
             isInMenu: true,
             isExternal: true,
           },
           {
-            path: "https://https://react.dev/",
+            externalUrl: "https://react.dev/",
             label: "React",
             icon: FaExternalLinkAlt,
             isInMenu: true,

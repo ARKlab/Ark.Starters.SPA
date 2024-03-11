@@ -115,6 +115,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
                     <MenuItem
                       key={x.path + "menuItem" + indexSub}
                       path={x.path}
+                      externalUrl={x.externalUrl}
                       label={x.label}
                       icon={x.icon}
                       isExternal={x.isExternal}
@@ -165,6 +166,7 @@ const InnerAccordionSections = (props: { section: SubsectionMenuItemType }) => {
                 <MenuItem
                   key={x.path + "AccordionMenuItemInner" + index}
                   path={x.path}
+                  externalUrl={x.externalUrl}
                   label={x.label}
                   icon={x.icon}
                   isExternal={x.isExternal}
