@@ -2,20 +2,18 @@ import { ReactNode } from "react";
 import { IconType } from "react-icons";
 import { Action, AnyAction, Dispatch } from "redux";
 
-interface SectionItem {
-  path: string;
-  label: string;
-}
-
-export interface SubsectionMenuItemType extends SectionItem {
-  component?: (props: { a: Dispatch }) => ReactNode;
+export interface SubsectionMenuItemType {
+  component?: () => ReactNode;
   isInMenu: boolean;
   icon?: IconType;
   isExternal: boolean;
-  hasSubsections?: boolean;
+  externalUrl?: string;
   subsections?: SubsectionMenuItemType[];
+  path?: string;
+  label: string;
 }
-export interface MainSectionType extends SectionItem {
-  defaultSubMenuPath: string;
+export interface MainSectionType {
   subsections: SubsectionMenuItemType[];
+  label: string;
+  path: string;
 }

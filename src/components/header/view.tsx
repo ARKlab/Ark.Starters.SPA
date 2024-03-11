@@ -7,10 +7,13 @@ import {
   Center,
   Button,
   Box,
+  Heading,
+  useColorMode,
 } from "@chakra-ui/react";
 import { FaArrowRightFromBracket } from "react-icons/fa6";
 
 const Header = () => {
+  const { colorMode, toggleColorMode } = useColorMode();
   return (
     <Box
       as="header"
@@ -20,14 +23,12 @@ const Header = () => {
       right="0"
       zIndex={"banner"} // You can adjust the z-index as needed
       shadow={"md"}
-      borderBottom={"2px"}
-      borderColor={"lightgrey"}
       width={"100%"}
       height={"60px"}
-      bg="white" // Set the background color as needed
+      bg="gray.800"
     >
       <Flex>
-        <Center marginLeft={"20px"}>
+        <Center marginLeft={"20px"} paddingTop={"5px"}>
           <Image
             height={"50px"}
             src="https://ark-energy.eu/wp-content/uploads/2022/07/logo-white.png"
@@ -38,6 +39,11 @@ const Header = () => {
         <Spacer />
         <Spacer />
         <Spacer />
+        <Center marginRight={"20px"}>
+          <Button onClick={toggleColorMode}>
+            {colorMode === "light" ? "Dark" : "Light"} Mode
+          </Button>
+        </Center>
         <Center marginRight={"20px"}>
           <ChakraLink as={ReactRouterLink} to={"/logout"}>
             <Button
