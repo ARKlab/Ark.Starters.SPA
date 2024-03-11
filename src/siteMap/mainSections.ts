@@ -1,5 +1,11 @@
 import { MainSectionType } from "../components/sideBar/menuItem/types";
-import { FaCloudUploadAlt, FaGamepad, FaPlay, FaTable } from "react-icons/fa";
+import {
+  FaCloudUploadAlt,
+  FaExternalLinkAlt,
+  FaGamepad,
+  FaPlay,
+  FaTable,
+} from "react-icons/fa";
 import { RiMovie2Line } from "react-icons/ri";
 import JsonPlaceHolderView from "../features/jsonPlaceholderAPI/JsonPlaceHolder";
 import PlaygroundView from "../features/playground/playgroundView";
@@ -12,7 +18,7 @@ It is also used to create all the Routes for the router*/
 export const mainSections: MainSectionType[] = [
   {
     label: "Main Test Section",
-    defaultSubMenuPath: "/manualUpload",
+
     subsections: [
       {
         path: "/jsonplaceholder",
@@ -53,6 +59,53 @@ export const mainSections: MainSectionType[] = [
         isInMenu: true,
         isExternal: false,
         component: VideoGamesTableView,
+      },
+    ],
+  },
+  {
+    label: "External Section",
+    subsections: [
+      {
+        path: "https://www.google.com",
+        label: "Google",
+        icon: FaExternalLinkAlt,
+        isInMenu: true,
+        isExternal: true,
+      },
+      {
+        path: "https://https://react.dev/",
+        label: "React",
+        icon: FaExternalLinkAlt,
+        isInMenu: true,
+        isExternal: true,
+      },
+    ],
+  },
+  {
+    label: "Another Section",
+
+    subsections: [
+      {
+        label: "Sub Subsections",
+        hasSubsections: true,
+        isInMenu: true,
+        isExternal: false,
+        subsections: [
+          {
+            path: "https://www.google.com",
+            label: "Google",
+            icon: FaExternalLinkAlt,
+            isInMenu: true,
+            isExternal: true,
+          },
+          {
+            path: "https://https://react.dev/",
+            label: "React",
+            icon: FaExternalLinkAlt,
+            isInMenu: true,
+            isExternal: true,
+          },
+        ],
       },
     ],
   },
