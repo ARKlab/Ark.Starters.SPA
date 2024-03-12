@@ -18,7 +18,7 @@ import { Wizard, WizardPage } from "../../components/wizard/wizard";
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const onSubmit = async (values: string | number) => {
+const onSubmit = async (values: string | number | boolean) => {
   await sleep(300);
   window.alert(JSON.stringify(values, null, 2));
 };
@@ -27,6 +27,9 @@ const required = z.string().min(1);
 const passwordComplexity = z.string().refine((v) => v.length > 6, {
   message: "Password needs to be at least 6 characters",
 });
+const phoneSchema = z
+  .string()
+  .min(10, "Phone number must be at least 10 digits long");
 
 const WizardFormView = () => (
   <Box my="70px">
@@ -73,50 +76,82 @@ const WizardFormView = () => (
           </Stack>
         </WizardPage>
         <WizardPage>
-          <Field name="phone">
-            {({ input, meta }) => (
-              <FormControl>
-                <FormLabel>Phone</FormLabel>
-                <Input {...input} type="text" placeholder="Phone" />
-              </FormControl>
-            )}
-          </Field>
-          <Field name="billingAddress">
-            {({ input, meta }) => (
-              <FormControl>
-                <FormLabel>Billing Address</FormLabel>
-                <Input {...input} type="text" placeholder="Billing Address" />
-              </FormControl>
-            )}
-          </Field>
-          <Field name="shippingAddress">
-            {({ input, meta }) => (
-              <FormControl>
-                <FormLabel>Shipping Address (Optional)</FormLabel>
-                <Input {...input} type="text" placeholder="Shipping Address" />
-              </FormControl>
-            )}
-          </Field>
+          <Stack spacing={4}>
+            <Field name="phone" validate={zod2FieldValidator(phoneSchema)}>
+              {({ input, meta: { error, touched } }) => (
+                <FormControl isInvalid={error && touched}>
+                  <Input {...input} type="text" placeholder="Phone" />
+                  <FormErrorMessage>{error}</FormErrorMessage>
+                </FormControl>
+              )}
+            </Field>
+            <Field
+              name="billingAddress"
+              validate={zod2FieldValidator(required)}
+            >
+              {({ input, meta: { error, touched } }) => (
+                <FormControl isInvalid={error && touched}>
+                  <Input {...input} type="text" placeholder="Billing Address" />
+                  <FormErrorMessage>{error}</FormErrorMessage>
+                </FormControl>
+              )}
+            </Field>
+            <Field
+              name="shippingAddress"
+              validate={zod2FieldValidator(required)}
+            >
+              {({ input, meta: { error, touched } }) => (
+                <FormControl isInvalid={error && touched}>
+                  <Input
+                    {...input}
+                    type="text"
+                    placeholder="Shipping Address"
+                  />
+                  <FormErrorMessage>{error}</FormErrorMessage>
+                </FormControl>
+              )}
+            </Field>
+          </Stack>
         </WizardPage>
         <WizardPage>
-          <Field name="newsletter" type="checkbox">
-            {({ input, meta }) => (
-              <Checkbox {...input}>Subscribe to Newsletter</Checkbox>
-            )}
-          </Field>
-          <Field name="specialOffers" type="checkbox">
-            {({ input, meta }) => (
-              <Checkbox {...input}>Receive Special Offers via Email</Checkbox>
-            )}
-          </Field>
-          <Field name="smsNotifications" type="checkbox">
-            {({ input, meta }) => (
-              <Checkbox {...input}>Receive SMS Notifications</Checkbox>
-            )}
-          </Field>
-        </WizardPage>
-        <WizardPage>
-          <Text>Review and confirm your details</Text>
+          <Stack spacing={4}>
+            <Field name="newsletter" type="checkbox">
+              {({ input, meta }) => (
+                <Checkbox
+                  {...input}
+                  size="lg"
+                  isChecked={input.checked}
+                  onChange={input.onChange}
+                >
+                  Subscribe to Newsletter
+                </Checkbox>
+              )}
+            </Field>
+            <Field name="specialOffers" type="checkbox">
+              {({ input, meta }) => (
+                <Checkbox
+                  {...input}
+                  size="lg"
+                  isChecked={input.checked}
+                  onChange={input.onChange}
+                >
+                  Receive Special Offers via Email
+                </Checkbox>
+              )}
+            </Field>
+            <Field name="smsNotifications" type="checkbox">
+              {({ input, meta }) => (
+                <Checkbox
+                  {...input}
+                  size="lg"
+                  isChecked={input.checked}
+                  onChange={input.onChange}
+                >
+                  Receive SMS Notifications
+                </Checkbox>
+              )}
+            </Field>
+          </Stack>
         </WizardPage>
       </Wizard>
     </Box>
