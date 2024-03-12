@@ -48,7 +48,6 @@ export const Wizard = ({
                     « Previous
                   </Button>
                 )}
-                àò
                 {!isLastPage && (
                   <>
                     <Button type="submit">Next »</Button>
