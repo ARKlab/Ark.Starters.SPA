@@ -11,15 +11,15 @@ import { SubsectionMenuItemType } from "./types";
 export default function MenuItem({
   label,
   path,
-  component,
   icon,
   isExternal,
-}: Omit<SubsectionMenuItemType, "isInMenu">) {
+  externalUrl,
+}: Omit<SubsectionMenuItemType, "isInMenu" | "component">) {
   return (
     <ChakraLink
       _hover={{ textDecoration: "none" }}
       as={ReactRouterLink}
-      to={path}
+      to={isExternal ? externalUrl : path}
       isExternal={isExternal}
     >
       <WrapItem

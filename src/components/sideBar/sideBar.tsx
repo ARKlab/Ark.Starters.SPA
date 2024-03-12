@@ -84,11 +84,11 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         {mainSections.map((section, index) => (
           <AccordionItem
             border="none"
-            key={section.path + "accordionItem" + index}
+            key={section.label + "accordionItem" + index}
           >
             <h2>
               <AccordionButton
-                key={section.path + "accordionButton" + index}
+                key={section.label + "accordionButton" + index}
                 _hover={{
                   background: "brand.primary",
                   color: "brandPalette.900",
@@ -102,20 +102,21 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
             </h2>
             <AccordionPanel
               pb={4}
-              key={section.path + "accordionPanel" + index}
+              key={section.label + "accordionPanel" + index}
             >
               {section.subsections.map((x, indexSub) =>
                 x.isInMenu ? (
-                  x.hasSubsections ? (
+                  x.subsections && x.subsections?.length > 0 ? (
                     <InnerAccordionSections
                       key={x.path + "innerAccordionSections" + indexSub}
                       section={x}
+                      parentPath={section.path + x.path}
                     />
                   ) : (
                     <MenuItem
                       key={x.path + "menuItem" + indexSub}
-                      component={x.component}
-                      path={x.path}
+                      path={section.path + x.path}
+                      externalUrl={x.externalUrl}
                       label={x.label}
                       icon={x.icon}
                       isExternal={x.isExternal}
@@ -131,7 +132,10 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   );
 };
 
-const InnerAccordionSections = (props: { section: SubsectionMenuItemType }) => {
+const InnerAccordionSections = (props: {
+  section: SubsectionMenuItemType;
+  parentPath: string;
+}) => {
   let section = props.section;
   if (section.subsections)
     return (
@@ -165,8 +169,8 @@ const InnerAccordionSections = (props: { section: SubsectionMenuItemType }) => {
               x.isInMenu ? (
                 <MenuItem
                   key={x.path + "AccordionMenuItemInner" + index}
-                  component={x.component}
-                  path={x.path}
+                  path={props.parentPath + x.path}
+                  externalUrl={x.externalUrl}
                   label={x.label}
                   icon={x.icon}
                   isExternal={x.isExternal}

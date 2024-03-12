@@ -20,6 +20,8 @@ import PlaygroundView from "./features/playground/playgroundView";
 import ConfigTableExampleView from "./features/configTable/configTableExample";
 import MovieTableView from "./features/paginatedTable/moviePage";
 import VideoGamesTableView from "./features/formExample/videoGamesPage";
+import { mainSections } from "./siteMap/mainSections";
+import { useEffect } from "react";
 
 const Component = () => {
   return (
@@ -27,20 +29,22 @@ const Component = () => {
       <Routes>
         <Route index path="/" element={<Navigate to="/test" />} />
         <Route path="/Unauthorized" element={<Unauthorised />} />
-        <Route path="/jsonplaceholder" element={<JsonPlaceHolderView />} />
-        <Route path="/playground" element={<PlaygroundView />} />
-        <Route path="/configTable" element={<ConfigTableExampleView />} />
-        <Route path="/moviesTable" element={<MovieTableView />} />
-        <Route path="/videoGamesTable" element={<VideoGamesTableView />} />
-
-        {
-          //Understand why with this method :params in path are not being recognized.
-          /*mainSections.map((x) =>
-          x.subsections.map((s) => (
-            <Route path={s.path} element={s.component({ a: dispatch })} />
-          ))
-        )*/
-        }
+        {mainSections.map((x) =>
+          x.subsections.map((s) => {
+            return s.subsections && s.subsections.length > 0 ? (
+              s.subsections.map((sub) => {
+                return sub.component && sub.path ? (
+                  <Route
+                    path={x.path + s.path + sub.path}
+                    element={sub.component()}
+                  />
+                ) : null;
+              })
+            ) : s.component && s.path ? (
+              <Route path={x.path + s.path} element={s.component()} />
+            ) : null;
+          })
+        )}
       </Routes>
     </>
   );
@@ -51,6 +55,19 @@ const Main = () => {
   const notification = useAppSelector(selectNotification);
   const dispatch = useAppDispatch();
   var toast = useToast();
+  useEffect(() => {
+    if (notification) {
+      toast({
+        title: notification.title,
+        description: notification.message,
+        status: notification.status,
+        duration: notification.duration,
+        isClosable: notification.isClosable,
+        position: notification.position,
+      });
+      dispatch(resetNotification());
+    }
+  }, [notification, toast, dispatch]);
   return (
     <>
       <Header />
@@ -60,16 +77,6 @@ const Main = () => {
           <Component />
         </Box>
       </Box>
-      {notification &&
-        toast({
-          title: notification.title,
-          description: notification.message,
-          status: notification.status,
-          duration: notification.duration,
-          isClosable: notification.isClosable,
-          position: notification.position,
-        }) &&
-        dispatch(resetNotification())}
       <Footer />
       {problemDetails.error === true ? (
         <ProblemDetailsModal problem={problemDetails} />

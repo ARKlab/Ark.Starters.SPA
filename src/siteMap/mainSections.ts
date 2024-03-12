@@ -1,13 +1,25 @@
 import { MainSectionType } from "../components/sideBar/menuItem/types";
-import { FaCloudUploadAlt, FaGamepad, FaPlay, FaTable } from "react-icons/fa";
+import {
+  FaCloudUploadAlt,
+  FaExternalLinkAlt,
+  FaGamepad,
+  FaPlay,
+  FaTable,
+} from "react-icons/fa";
 import { RiMovie2Line } from "react-icons/ri";
+import JsonPlaceHolderView from "../features/jsonPlaceholderAPI/JsonPlaceHolder";
+import PlaygroundView from "../features/playground/playgroundView";
+import ConfigTableExampleView from "../features/configTable/configTableExample";
+import MovieTableView from "../features/paginatedTable/moviePage";
+import VideoGamesTableView from "../features/formExample/videoGamesPage";
+import StaticPage from "../features/staticPage/staticPage";
 
-/*This is the Main Section ARRAY populate this to populate the main nav menu*/
+/*This is the Main Section ARRAY populate this to populate the main nav menu
+It is also used to create all the Routes for the router*/
 export const mainSections: MainSectionType[] = [
   {
-    path: "/main",
     label: "Main Test Section",
-    defaultSubMenuPath: "/manualUpload",
+    path: "/main",
     subsections: [
       {
         path: "/jsonplaceholder",
@@ -15,6 +27,7 @@ export const mainSections: MainSectionType[] = [
         icon: FaCloudUploadAlt,
         isInMenu: true,
         isExternal: false,
+        component: JsonPlaceHolderView,
       },
       {
         path: "/playground",
@@ -22,6 +35,7 @@ export const mainSections: MainSectionType[] = [
         icon: FaPlay,
         isInMenu: true,
         isExternal: false,
+        component: PlaygroundView,
       },
       {
         path: "/configTable",
@@ -29,6 +43,7 @@ export const mainSections: MainSectionType[] = [
         icon: FaTable,
         isInMenu: true,
         isExternal: false,
+        component: ConfigTableExampleView,
       },
       {
         path: "/moviesTable",
@@ -36,6 +51,7 @@ export const mainSections: MainSectionType[] = [
         icon: RiMovie2Line,
         isInMenu: true,
         isExternal: false,
+        component: MovieTableView,
       },
       {
         path: "/videoGamesTable",
@@ -43,6 +59,63 @@ export const mainSections: MainSectionType[] = [
         icon: FaGamepad,
         isInMenu: true,
         isExternal: false,
+        component: VideoGamesTableView,
+      },
+    ],
+  },
+  {
+    label: "External Section",
+    path: "/ext",
+    subsections: [
+      {
+        externalUrl: "https://www.google.com",
+        label: "Google",
+        icon: FaExternalLinkAlt,
+        isInMenu: true,
+        isExternal: true,
+      },
+      {
+        externalUrl: "https://react.dev/",
+        label: "React",
+        icon: FaExternalLinkAlt,
+        isInMenu: true,
+        isExternal: true,
+      },
+    ],
+  },
+  {
+    label: "Another Section",
+    path: "/anotherSection",
+    subsections: [
+      {
+        label: "Sub Subsections",
+        path: "/nested",
+        isInMenu: true,
+        isExternal: false,
+        subsections: [
+          {
+            path: "/staticPage",
+            label: "Static Page",
+            component: StaticPage,
+            icon: FaTable,
+            isInMenu: true,
+            isExternal: false,
+          },
+          {
+            externalUrl: "https://www.google.com",
+            label: "Google",
+            icon: FaExternalLinkAlt,
+            isInMenu: true,
+            isExternal: true,
+          },
+          {
+            externalUrl: "https://react.dev/",
+            label: "React",
+            icon: FaExternalLinkAlt,
+            isInMenu: true,
+            isExternal: true,
+          },
+        ],
       },
     ],
   },
