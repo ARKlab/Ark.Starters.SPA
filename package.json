@@ -64,6 +64,6 @@
     "@types/react-copy-to-clipboard": "^5.0.7",
     "r3f-pack": "^2.7.3",
     "typescript": "^5.3.3",
-    "web-vitals": "^3.5.0"
+    "web-vitals": "^3.5.2"
   }
 }
