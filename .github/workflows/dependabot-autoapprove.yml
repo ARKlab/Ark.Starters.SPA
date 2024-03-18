@@ -19,7 +19,7 @@ jobs:
         env:
           SUPER_SECRET: ${{ secrets.KAIL_AUTOAPPROVE_TOKEN }}
         run: |
-          example-command "$SUPER_SECRET"
+          echo "$SUPER_SECRET"
       - name: Approve PR
         if: steps.metadata.outputs.update-type == 'version-update:semver-patch' || steps.metadata.outputs.update-type == 'version-update:semver-minor'
         run: gh pr review --approve "$PR_URL"
