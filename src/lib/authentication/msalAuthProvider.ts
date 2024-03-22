@@ -1,13 +1,8 @@
 import * as msal from "@azure/msal-browser";
 import { AccountInfo } from "@azure/msal-browser";
 import { AuthProvider } from "./authProviderInterface";
-import {
-  StatusEnum,
-  MSALConfig,
-  UserAccountInfo,
-  LoginStatus,
-} from "./authTypes";
-import { debug } from "console";
+import { LoginStatus, MSALConfig, UserAccountInfo } from "./authTypes";
+import * as R from "ramda";
 
 export const scopes = [""];
 export const staticMsalConfig: msal.Configuration = {
@@ -66,7 +61,7 @@ export class MsalAuthProvider implements AuthProvider {
   private silentProfileRequest: msal.SilentRequest;
   private profileRequest: msal.PopupRequest;
   private profileRedirectRequest: msal.RedirectRequest;
-
+  private idTokenClaims: msal.IdTokenClaims | null = null;
   constructor(config: msal.Configuration, scopes: string[]) {
     this.config = { msalConfig: config, scopes: scopes };
 
@@ -99,6 +94,7 @@ export class MsalAuthProvider implements AuthProvider {
   ): Promise<string | null> {
     try {
       const response = await this.myMSALObj.acquireTokenSilent(silentRequest);
+
       return response.accessToken;
     } catch (e) {
       if (e instanceof msal.InteractionRequiredAuthError) {
@@ -114,11 +110,10 @@ export class MsalAuthProvider implements AuthProvider {
 
   private handleResponse(response: msal.AuthenticationResult | null) {
     if (response !== null) {
-      let accounts = this.getAccounts();
-      this.account = accounts ? accounts[0] : null;
-      // this.account = response.account;
+      this.account = response.account;
     } else {
       let accounts = this.getAccounts();
+
       this.account = accounts ? accounts[0] : null;
     }
   }
@@ -130,11 +125,10 @@ export class MsalAuthProvider implements AuthProvider {
       );
     } else {
       this.myMSALObj.setActiveAccount(currentAccounts[0]);
-      const response = await this.myMSALObj.acquireTokenSilent(
+      const resp = await this.myMSALObj.acquireTokenSilent(
         this.silentProfileRequest
       );
-      console.log("IDTOKEN ", response);
-      console.log("Account detected", currentAccounts[0] as AccountInfo);
+      this.idTokenClaims = resp.idTokenClaims;
       return { username: currentAccounts[0].username } as UserAccountInfo;
     }
   }
@@ -143,11 +137,11 @@ export class MsalAuthProvider implements AuthProvider {
   }
   private getAccounts(): AccountInfo[] | null {
     const currentAccounts = this.myMSALObj.getAllAccounts();
+
     if (currentAccounts === null) {
       this.setLoginStatus(LoginStatus.NotLogged);
       return null;
     } else {
-      console.log("Account detected", currentAccounts[0] as AccountInfo);
       this.setLoginStatus(LoginStatus.Logged);
       return currentAccounts;
     }
@@ -160,7 +154,6 @@ export class MsalAuthProvider implements AuthProvider {
       if (account.length === 0) {
         await this.login();
       } else {
-        console.log("RESP: ", resp);
         this.handleResponse(resp);
         this.setLoginStatus(LoginStatus.Logged);
       }
@@ -198,7 +191,15 @@ export class MsalAuthProvider implements AuthProvider {
     return await this.getProfileTokenRedirect();
   }
   hasPermission(permission: string, audience?: string) {
-    return true;
+    if (this.idTokenClaims) {
+      var permissions = R.pathOr(
+        "",
+        ["extension_Scope"],
+        this.idTokenClaims
+      ).split(" ");
+      return permissions.includes(permission);
+    }
+    return false;
   }
   getLoginStatus(): LoginStatus {
     return this.loginStatus;

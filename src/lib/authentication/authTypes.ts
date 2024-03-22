@@ -45,6 +45,7 @@ export type UserAccountInfo = {
   groups: string[] | null;
 };
 export type AuthStoreType = {
+  //To be implemented with needed infos about the user depending on the situation.
   userInfo: UserAccountInfo | null;
   token: string | null;
 };

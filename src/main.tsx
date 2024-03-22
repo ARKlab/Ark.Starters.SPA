@@ -1,4 +1,4 @@
-import { Spinner, useToast } from "@chakra-ui/react";
+import { Center, Spinner, useToast } from "@chakra-ui/react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Footer from "./components/footer/footer";
 import Header from "./components/header/view";
@@ -107,9 +107,16 @@ const Main = () => {
     switch (loginstatus) {
       case LoginStatus.NotLogged:
         return (
-          <Box my={"100px"}>
-            <Spinner />
-          </Box>
+          <Center h="97vh" flexDir="column">
+            <Center
+              position="fixed"
+              inset={0}
+              bg="rgba(0,0,0,0.9)"
+              zIndex="tooltip"
+            >
+              <Spinner size="xl" color="blue.400" />
+            </Center>
+          </Center>
         );
       case LoginStatus.Logged:
         return <Component />;

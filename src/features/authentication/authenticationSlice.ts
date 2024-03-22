@@ -12,7 +12,9 @@ import {
   staticMsalConfig,
   scopes,
 } from "../../lib/authentication/msalAuthProvider";
+import { m } from "framer-motion";
 
+//export const authProvider = new Auth0AuthProvider(authConfig);
 export const authProvider = new MsalAuthProvider(staticMsalConfig, scopes);
 
 export const Init = createAsyncThunk("auth/init", async () => {
@@ -49,7 +51,6 @@ export const authSlice = createSlice({
     isError: false,
     error: {} as unknown,
     data: null as AuthStoreType | null,
-    tokenData: null as any,
   },
   reducers: {
     tokenReceived: (state, action) => {

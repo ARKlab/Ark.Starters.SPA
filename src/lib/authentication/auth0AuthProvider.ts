@@ -16,7 +16,7 @@ export const authConfig: Auth0ClientOptions = {
 };
 export const baseurl = "";
 
-const claimsUrl = "";
+const claimsUrl = "http://ark-energy.eu/claims/";
 export class Auth0AuthProvider implements AuthProvider {
   private loginStatus: LoginStatus = LoginStatus.NotLogged;
   private auth0Client: Auth0Client = {} as any;
@@ -34,7 +34,9 @@ export class Auth0AuthProvider implements AuthProvider {
 
   async login(): Promise<void> {
     await this.auth0Client.loginWithRedirect({
-      appState: { targetUrl: window.location.origin },
+      appState: {
+        targetUrl: window.location.pathname,
+      },
     });
   }
 
@@ -47,7 +49,7 @@ export class Auth0AuthProvider implements AuthProvider {
 
   async getToken() {
     var token = await this.auth0Client?.getTokenSilently();
-    // Retrieves the authentication token information
+
     return token;
   }
   async isAuthenticated(): Promise<boolean> {
@@ -62,10 +64,15 @@ export class Auth0AuthProvider implements AuthProvider {
       this.setLoginStatus(LoginStatus.Logged);
     } else {
       const query = window.location.search;
+
       if (query.includes("code=") && query.includes("state=")) {
         try {
-          await this.auth0Client.handleRedirectCallback().then(() => {
+          await this.auth0Client.handleRedirectCallback().then((result) => {
             this.setLoginStatus(LoginStatus.Logged);
+            window.location.pathname =
+              result.appState && result.appState.targetUrl
+                ? result.appState.targetUrl
+                : "/";
           });
         } catch (error) {
           console.debug("Error during login redirection:", error);
@@ -80,7 +87,6 @@ export class Auth0AuthProvider implements AuthProvider {
     const claims = await this.auth0Client.getIdTokenClaims();
     const groups = claims && claims[claimsUrl + "groups"];
     const permissions = claims && claims[claimsUrl + "permissions"];
-    console.log("Claims", claims);
 
     if (currentAccounts === null) {
       return null;
