@@ -1,33 +1,43 @@
+import { Spinner, useToast } from "@chakra-ui/react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { useToast } from "@chakra-ui/react";
-import Header from "./components/header/view";
-import Unauthorised from "./features/unauthorised/view";
 import Footer from "./components/footer/footer";
-import { Selectors as errorSelectors } from "./features/errorHandler/errorHandler";
+import Header from "./components/header/view";
+import {
+  Selectors as errorSelectors,
+  setError,
+} from "./features/errorHandler/errorHandler";
 import {
   resetNotification,
   selectNotification,
 } from "./features/notifications/notification";
+import Unauthorised from "./features/unauthorised/view";
 
 import { Box } from "@chakra-ui/react";
 
 import SimpleSidebar from "./components/sideBar/sideBar";
 
-import { ProblemDetailsModal } from "./componentsCommon/problemDetailsModal/problemDetailsModal";
-import JsonPlaceHolderView from "./features/jsonPlaceholderAPI/JsonPlaceHolder";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "./app/configureStore";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
-import PlaygroundView from "./features/playground/playgroundView";
-import ConfigTableExampleView from "./features/configTable/configTableExample";
-import MovieTableView from "./features/paginatedTable/moviePage";
-import VideoGamesTableView from "./features/formExample/videoGamesPage";
+import { ProblemDetailsModal } from "./componentsCommon/problemDetailsModal/problemDetailsModal";
+import {
+  Login,
+  getLoginStatus,
+  Init,
+} from "./features/authentication/authenticationSlice";
+import { LoginStatus } from "./lib/authentication/authTypes";
 import { mainSections } from "./siteMap/mainSections";
-import { useEffect } from "react";
 
 const Component = () => {
   return (
     <>
       <Routes>
-        <Route index path="/" element={<Navigate to="/test" />} />
+        <Route
+          index
+          path="/"
+          element={<Navigate to="/main/jsonplaceholder" />}
+        />
         <Route path="/Unauthorized" element={<Unauthorised />} />
         {mainSections.map((x) =>
           x.subsections.map((s) => {
@@ -51,10 +61,34 @@ const Component = () => {
 };
 
 const Main = () => {
-  const problemDetails = useAppSelector(errorSelectors.all);
   const notification = useAppSelector(selectNotification);
   const dispatch = useAppDispatch();
+  const auth = useSelector((state: RootState) => state.auth);
+  const user = auth.data;
+  const [loginstatus, setLoginStatus] = useState(LoginStatus.NotLogged);
   var toast = useToast();
+  useEffect(() => {
+    const initializeAuth = async () => {
+      await dispatch(Init()).then(async () => {
+        if (!user) {
+          await dispatch(Login()).unwrap();
+          const status = await dispatch(getLoginStatus()).unwrap();
+          setLoginStatus(status);
+        }
+      });
+    };
+
+    initializeAuth();
+  }, [user, dispatch]);
+  if (auth.isError) {
+    dispatch(
+      setError({
+        error: true,
+        details: { title: "Authentication Error", message: auth.error },
+      })
+    );
+  }
+  const problemDetails = useAppSelector(errorSelectors.all);
   useEffect(() => {
     if (notification) {
       toast({
@@ -68,13 +102,31 @@ const Main = () => {
       dispatch(resetNotification());
     }
   }, [notification, toast, dispatch]);
+
+  const MainComponent = () => {
+    switch (loginstatus) {
+      case LoginStatus.NotLogged:
+        return (
+          <Box my={"100px"}>
+            <Spinner />
+          </Box>
+        );
+      case LoginStatus.Logged:
+        return <Component />;
+      case LoginStatus.Error:
+        return <Unauthorised />;
+      default:
+        return <></>;
+    }
+  };
+
   return (
     <>
       <Header />
       <Box minH="70vh">
         <SimpleSidebar />
         <Box ml={{ base: 0, md: 60 }} p="4">
-          <Component />
+          {MainComponent()}
         </Box>
       </Box>
       <Footer />

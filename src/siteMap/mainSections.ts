@@ -3,6 +3,7 @@ import {
   FaCloudUploadAlt,
   FaExternalLinkAlt,
   FaGamepad,
+  FaKey,
   FaPlay,
   FaTable,
 } from "react-icons/fa";
@@ -13,6 +14,7 @@ import ConfigTableExampleView from "../features/configTable/configTableExample";
 import MovieTableView from "../features/paginatedTable/moviePage";
 import VideoGamesTableView from "../features/formExample/videoGamesPage";
 import StaticPage from "../features/staticPage/staticPage";
+import AuthPlayground from "../features/authPlaygroundAPI/authPlayground";
 
 /*This is the Main Section ARRAY populate this to populate the main nav menu
 It is also used to create all the Routes for the router*/
@@ -60,6 +62,14 @@ export const mainSections: MainSectionType[] = [
         isInMenu: true,
         isExternal: false,
         component: VideoGamesTableView,
+      },
+      {
+        path: "/authPlayground",
+        label: "Auth Playground",
+        icon: FaKey,
+        isInMenu: true,
+        isExternal: false,
+        component: AuthPlayground,
       },
     ],
   },

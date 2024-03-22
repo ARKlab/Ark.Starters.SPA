@@ -7,6 +7,8 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import { configTableApiSlice } from "../features/configTable/configTableApi";
 import { moviesApiSlice } from "../features/paginatedTable/paginatedTableApi";
 import { videoGameApiSlice } from "../features/formExample/videoGamesApiSlice";
+import { authSlice } from "../features/authentication/authenticationSlice";
+import { authPlaygroundApi } from "../features/authPlaygroundAPI/authPlaygroundApiSlice";
 
 export const store = configureStore({
   reducer: {
@@ -16,13 +18,16 @@ export const store = configureStore({
     [configTableApiSlice.reducerPath]: configTableApiSlice.reducer,
     [moviesApiSlice.reducerPath]: moviesApiSlice.reducer,
     [videoGameApiSlice.reducerPath]: videoGameApiSlice.reducer,
+    [authSlice.reducerPath]: authSlice.reducer,
+    [authPlaygroundApi.reducerPath]: authPlaygroundApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       jsonPlaceholderSlice.middleware,
       configTableApiSlice.middleware,
       moviesApiSlice.middleware,
-      videoGameApiSlice.middleware
+      videoGameApiSlice.middleware,
+      authPlaygroundApi.middleware
     ),
 });
 

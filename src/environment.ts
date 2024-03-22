@@ -1,3 +1,5 @@
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
 export type EnvParams = {
   clientID: string;
   domain: string;
@@ -13,7 +15,7 @@ const staticConfig: EnvParams = {
   scopes: "",
   knownAuthorities: "",
   signUpSignInPolicyId: "B2C_1_SignUpSignIn1",
-  serviceUrl: "https://www.yourserviceurl.com", //CHANGE THIS WITH YOUR REAL SERVICE
+  serviceUrl: "",
 };
 
 const fetchConnectionStrings = async (): Promise<EnvParams> => {
@@ -30,13 +32,34 @@ export const getEnv = async (): Promise<EnvParams> => {
     return staticConfig;
   } else {
     try {
-      const connectionStrings = await fetchConnectionStrings();
-      return {
-        ...connectionStrings,
-      };
+      return await fetchConnectionStrings();
     } catch (error) {
       console.error("Failed to fetch connection strings", error);
       return staticConfig;
     }
   }
 };
+
+export const fetchEnvParams = createAsyncThunk("env/fetch", async () => {
+  const envParams = await getEnv();
+  return envParams;
+});
+
+export const envSlice = createSlice({
+  name: "env",
+  initialState: { data: {}, status: "idle", error: null },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchEnvParams.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchEnvParams.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.data = action.payload;
+      })
+      .addCase(fetchEnvParams.rejected, (state, action) => {
+        state.status = "failed";
+      });
+  },
+});
