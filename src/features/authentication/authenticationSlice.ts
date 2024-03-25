@@ -7,6 +7,7 @@ import { Auth0AuthProvider } from "../../lib/authentication/auth0AuthProvider";
 import { MsalAuthProvider } from "../../lib/authentication/msalAuthProvider";
 import { m } from "framer-motion";
 import { staticMsalConfig, scopes } from "./staticConfigs";
+import { RootState } from "../../app/configureStore";
 
 //export const authProvider = new Auth0AuthProvider(authConfig);
 export const authProvider = new MsalAuthProvider(staticMsalConfig, scopes);
@@ -128,3 +129,5 @@ export const authSlice = createSlice({
   },
 });
 export const { tokenReceived, loggedOut } = authSlice.actions;
+
+export const authSelector = (state: RootState) => state.auth.data?.token;

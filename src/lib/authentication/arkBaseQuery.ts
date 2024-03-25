@@ -9,6 +9,7 @@ import { authProvider } from "../../features/authentication/authenticationSlice"
 import {
   tokenReceived,
   loggedOut,
+  authSelector,
 } from "../../features/authentication/authenticationSlice";
 import { RootState } from "../../app/configureStore";
 
@@ -16,8 +17,7 @@ function GetBaseQuery(baseUrl: string) {
   return fetchBaseQuery({
     baseUrl: baseUrl,
     prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).auth.data?.token;
-
+      const token = authSelector(getState() as RootState);
       // If we have a token set in state, let's assume that we should be passing it.
       if (token) {
         headers.set("authorization", `Bearer ${token}`);
