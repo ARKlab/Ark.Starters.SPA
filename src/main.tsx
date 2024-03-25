@@ -28,6 +28,14 @@ import {
 } from "./features/authentication/authenticationSlice";
 import { LoginStatus } from "./lib/authentication/authTypes";
 import { mainSections } from "./siteMap/mainSections";
+import {
+  scopes,
+  staticMsalConfig,
+} from "./features/authentication/staticConfigs";
+import { MsalAuthProvider } from "./lib/authentication/msalAuthProvider";
+
+//export const authProvider = new Auth0AuthProvider(authConfig);
+export const authProvider = new MsalAuthProvider(staticMsalConfig, scopes);
 
 const Component = () => {
   return (
@@ -67,6 +75,7 @@ const Main = () => {
   const user = auth.data;
   const [loginstatus, setLoginStatus] = useState(LoginStatus.NotLogged);
   var toast = useToast();
+
   useEffect(() => {
     const initializeAuth = async () => {
       await dispatch(Init()).then(async () => {

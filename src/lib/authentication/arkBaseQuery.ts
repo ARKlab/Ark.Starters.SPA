@@ -1,17 +1,16 @@
-import { fetchBaseQuery } from "@reduxjs/toolkit/query";
 import type {
-  BaseQueryApi,
   BaseQueryFn,
   FetchArgs,
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query";
-import { authProvider } from "../../features/authentication/authenticationSlice";
-import {
-  tokenReceived,
-  loggedOut,
-  authSelector,
-} from "../../features/authentication/authenticationSlice";
+import { fetchBaseQuery } from "@reduxjs/toolkit/query";
 import { RootState } from "../../app/configureStore";
+import {
+  authSelector,
+  loggedOut,
+  tokenReceived,
+} from "../../features/authentication/authenticationSlice";
+import { authProvider } from "../../main";
 
 function GetBaseQuery(baseUrl: string) {
   return fetchBaseQuery({

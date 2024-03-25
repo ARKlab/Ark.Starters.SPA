@@ -1,27 +1,23 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../../app/configureStore";
 import {
   AuthStoreType,
   AuthenticationSteps,
 } from "../../lib/authentication/authTypes";
-import { Auth0AuthProvider } from "../../lib/authentication/auth0AuthProvider";
-import { MsalAuthProvider } from "../../lib/authentication/msalAuthProvider";
-import { m } from "framer-motion";
-import { staticMsalConfig, scopes } from "./staticConfigs";
-import { RootState } from "../../app/configureStore";
+import { authProvider } from "../../main";
 
-//export const authProvider = new Auth0AuthProvider(authConfig);
-export const authProvider = new MsalAuthProvider(staticMsalConfig, scopes);
+const authProviderInstance = authProvider;
 
 export const Init = createAsyncThunk("auth/init", async () => {
-  await authProvider.init();
+  await authProviderInstance.init();
 });
 
 export const Logout = createAsyncThunk("auth/logout", async () => {
-  await authProvider.logout();
+  await authProviderInstance.logout();
 });
 export const Login = createAsyncThunk("auth/redirectHandle", async () => {
-  return await authProvider.handleLoginRedirect().then(async () => {
-    var user = await authProvider.getUserDetail();
+  return await authProviderInstance.handleLoginRedirect().then(async () => {
+    var user = await authProviderInstance.getUserDetail();
     if (!user) return null;
     return {
       userInfo: user,
@@ -33,7 +29,7 @@ export const Login = createAsyncThunk("auth/redirectHandle", async () => {
 export const getLoginStatus = createAsyncThunk(
   "auth/getLoginStatus",
   async () => {
-    const status = authProvider.getLoginStatus();
+    const status = authProviderInstance.getLoginStatus();
     return status;
   }
 );
