@@ -1,5 +1,6 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/query";
 import type {
+  BaseQueryApi,
   BaseQueryFn,
   FetchArgs,
   FetchBaseQueryError,
@@ -37,7 +38,7 @@ export function GetArkReauthQuery(baseUrl: string) {
     let result = await baseQuery(args, api, extraOptions);
     if (result.error && result.error.status === 401) {
       // try to get a new token
-      const refreshResult = await authProvider.getToken();
+      const refreshResult = await authProvider.getToken(baseUrl);
       if (refreshResult) {
         // store the new token
         api.dispatch(tokenReceived(refreshResult));

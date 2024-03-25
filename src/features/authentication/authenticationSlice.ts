@@ -3,16 +3,10 @@ import {
   AuthStoreType,
   AuthenticationSteps,
 } from "../../lib/authentication/authTypes";
-import {
-  Auth0AuthProvider,
-  authConfig,
-} from "../../lib/authentication/auth0AuthProvider";
-import {
-  MsalAuthProvider,
-  staticMsalConfig,
-  scopes,
-} from "../../lib/authentication/msalAuthProvider";
+import { Auth0AuthProvider } from "../../lib/authentication/auth0AuthProvider";
+import { MsalAuthProvider } from "../../lib/authentication/msalAuthProvider";
 import { m } from "framer-motion";
+import { staticMsalConfig, scopes } from "./staticConfigs";
 
 //export const authProvider = new Auth0AuthProvider(authConfig);
 export const authProvider = new MsalAuthProvider(staticMsalConfig, scopes);

@@ -1,22 +1,14 @@
 import { Auth0Client, RedirectLoginOptions } from "@auth0/auth0-spa-js";
 import { AuthProvider } from "./authProviderInterface";
-import { LoginStatus, Auth0Config, UserAccountInfo } from "./authTypes";
+import { LoginStatus, UserAccountInfo } from "./authTypes";
 import { Auth0ClientOptions } from "@auth0/auth0-spa-js";
 
-export const audience = "";
-export const authConfig: Auth0ClientOptions = {
-  domain: "",
-  clientId: "",
-  cacheLocation: "localstorage",
-  authorizationParams: {
-    redirect_uri: window.location.origin,
-    audience: audience,
-    scope: "openid profile email",
-  },
-};
-export const baseurl = "";
-
 const claimsUrl = "http://ark-energy.eu/claims/";
+
+export type Auth0Config = {
+  auth0Config: Auth0ClientOptions;
+};
+
 export class Auth0AuthProvider implements AuthProvider {
   private loginStatus: LoginStatus = LoginStatus.NotLogged;
   private auth0Client: Auth0Client = {} as any;
