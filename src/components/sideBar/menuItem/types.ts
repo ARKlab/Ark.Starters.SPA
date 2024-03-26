@@ -11,9 +11,11 @@ export interface SubsectionMenuItemType {
   subsections?: SubsectionMenuItemType[];
   path?: string;
   label: string;
+  authorizedOnly: boolean;
 }
 export interface MainSectionType {
   subsections: SubsectionMenuItemType[];
   label: string;
   path: string;
+  authorizedOnly: boolean;
 }

@@ -11,9 +11,12 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import { FaArrowRightFromBracket } from "react-icons/fa6";
+import { Logout } from "../../features/authentication/authenticationSlice";
+import { useAppDispatch } from "../../app/hooks";
 
 const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
+  var dispatch = useAppDispatch();
   return (
     <Box
       as="header"
@@ -45,15 +48,14 @@ const Header = () => {
           </Button>
         </Center>
         <Center marginRight={"20px"}>
-          <ChakraLink as={ReactRouterLink} to={"/logout"}>
-            <Button
-              colorScheme="brandPalette"
-              rightIcon={<FaArrowRightFromBracket />}
-              _hover={{ background: "brand.selected" }}
-            >
-              Exit
-            </Button>
-          </ChakraLink>
+          <Button
+            onClick={() => dispatch(Logout())}
+            colorScheme="brandPalette"
+            rightIcon={<FaArrowRightFromBracket />}
+            _hover={{ background: "brand.selected" }}
+          >
+            Exit
+          </Button>
         </Center>
       </Flex>
     </Box>
