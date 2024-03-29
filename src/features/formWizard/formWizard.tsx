@@ -15,7 +15,7 @@ import {
 import { z } from "zod";
 import { zod2FieldValidator } from "../../lib/zod2form";
 import { Wizard, WizardPage } from "../../components/wizard/wizard";
-import { CharkaCheckBoxFinalForm } from "../../componentsCommon/ReactFinalFormControls";
+import { CharkaCheckBoxFinalFormField } from "../../componentsCommon/ReactFinalFormControls";
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -116,30 +116,20 @@ const WizardFormView = () => (
         </WizardPage>
         <WizardPage>
           <Stack spacing={4}>
-            <Field name="newsletter" type="checkbox">
-              {({ input, meta: { error, touched } }) => (
-                <CharkaCheckBoxFinalForm
-                  name="newsletter"
-                  label="Subscribe to Newsletter"
-                />
-              )}
-            </Field>
-            <Field name="specialOffers" type="checkbox">
-              {({ input, meta: { error, touched } }) => (
-                <CharkaCheckBoxFinalForm
-                  name="specialOffers"
-                  label="  Receive Special Offers via Email"
-                />
-              )}
-            </Field>
-            <Field name="smsNotifications" type="checkbox">
-              {({ input, meta: { error, touched } }) => (
-                <CharkaCheckBoxFinalForm
-                  name="smsNotifications"
-                  label=" Receive SMS Notifications"
-                />
-              )}
-            </Field>
+            <CharkaCheckBoxFinalFormField
+              name="newsletter"
+              label="Subscribe to Newsletter"
+            />
+
+            <CharkaCheckBoxFinalFormField
+              name="specialOffers"
+              label="  Receive Special Offers via Email"
+            />
+
+            <CharkaCheckBoxFinalFormField
+              name="smsNotifications"
+              label=" Receive SMS Notifications"
+            />
           </Stack>
         </WizardPage>
       </Wizard>

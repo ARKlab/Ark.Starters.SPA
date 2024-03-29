@@ -60,7 +60,7 @@ export const InputControl = ({
   );
 };
 
-export const CharkaCheckBoxFinalForm = ({
+export const CharkaCheckBoxFinalFormField = ({
   label,
   name,
 }: {
