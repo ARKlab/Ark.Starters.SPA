@@ -9,7 +9,7 @@
     "@emotion/styled": "^11.11.0",
     "@react-icons/all-files": "^4.1.0",
     "@reduxjs/toolkit": "^2.2.3",
-    "@tanstack/react-table": "^8.15.0",
+    "@tanstack/react-table": "^8.15.3",
     "chakra-dayzed-datepicker": "^0.2.10",
     "date-fns": "^3.6.0",
     "dayzed": "^3.2.3",
