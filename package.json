@@ -59,7 +59,7 @@
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.30",
     "@types/react": "^18.2.70",
-    "@types/react-dom": "^18.2.22",
+    "@types/react-dom": "^18.2.23",
     "@types/ramda": "^0.29.11",
     "@types/react-copy-to-clipboard": "^5.0.7",
     "r3f-pack": "^2.7.3",
