@@ -21,7 +21,6 @@ export const AuthenticationComponent = (props: {
           response.userInfo &&
           response.userInfo.username !== ""
         ) {
-          debugger;
           setComponent(props.entryPoint);
         }
       });

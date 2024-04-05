@@ -13,8 +13,8 @@ import {
 } from "../../features/authentication/authenticationSlice";
 import { RootState } from "../..";
 import { AuthProvider } from "./authProviderInterface";
+import { baseUrlSelector } from "../../features/authentication/envSlice";
 
-const baseurl = "";
 export function ArkBaseQuery(
   args: string | FetchArgs,
   api: BaseQueryApi,
@@ -23,14 +23,17 @@ export function ArkBaseQuery(
   // Now you can use extraArgument
   const authProviderInstance = (extra as ExtraType).authProvider;
 
-  return ArkReauthQuery(baseurl, authProviderInstance)(args, api, extra);
+  return ArkReauthQuery(authProviderInstance)(args, api, extra);
 }
 
-function BaseQuery(baseUrl: string) {
+function BaseQuery(api: BaseQueryApi) {
+  const baseUrl = baseUrlSelector(api.getState() as RootState);
   return fetchBaseQuery({
-    baseUrl: baseUrl,
+    baseUrl,
     prepareHeaders: (headers, { getState }) => {
       const token = tokenSelector(getState() as RootState);
+      const baseUrl = baseUrlSelector(getState() as RootState);
+
       // If we have a token set in state, let's assume that we should be passing it.
       if (token) {
         headers.set("authorization", `Bearer ${token}`);
@@ -41,16 +44,17 @@ function BaseQuery(baseUrl: string) {
   });
 }
 
-export function ArkReauthQuery(baseUrl: string, authProvider: AuthProvider) {
+export function ArkReauthQuery(authProvider: AuthProvider) {
   const baseQueryWithReauth: BaseQueryFn<
     string | FetchArgs,
     unknown,
     FetchBaseQueryError
   > = async (args, api, extraOptions) => {
-    let baseQuery = BaseQuery(baseUrl);
+    let baseQuery = BaseQuery(api);
     let result = await baseQuery(args, api, extraOptions);
     if (result.error && result.error.status === 401) {
       // try to get a new token
+      const baseUrl = baseUrlSelector(api.getState() as RootState);
       const refreshResult = await authProvider.getToken(baseUrl);
       if (refreshResult) {
         // store the new token

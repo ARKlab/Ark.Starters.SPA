@@ -1,20 +1,16 @@
-import React, { useEffect, useState } from "react";
+import { ChakraProvider } from "@chakra-ui/react";
+import { setupListeners } from "@reduxjs/toolkit/query";
+import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
-import { EnvParams, getEnv } from "./environment";
-import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { theme } from "./theme";
-import reportWebVitals from "./reportWebVitals";
-import Main from "./main";
 import { initStore } from "./app/configureStore";
-import { AuthProvider } from "./lib/authentication/authProviderInterface";
-import { setupListeners } from "@reduxjs/toolkit/query";
-import { MsalAuthProvider } from "./lib/authentication/msalAuthProvider";
+import Main from "./main";
+import reportWebVitals from "./reportWebVitals";
+import { theme } from "./theme";
 
-import AuthenticationProviderContext from "./lib/authentication/authenticationContext";
-import { AuthenticationComponent } from "./lib/authentication/authenticationComponent";
 import Auth0AuthProvider from "./lib/authentication/auth0AuthProvider";
+import AuthenticationProviderContext from "./lib/authentication/authenticationContext";
 const env = window.customSettings;
 console.log(env);
 const authProvider = new Auth0AuthProvider(env);
