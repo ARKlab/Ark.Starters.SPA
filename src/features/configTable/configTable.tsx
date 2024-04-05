@@ -253,10 +253,9 @@ const TableRow = (props: {
   var {
     meta: { error },
   } = useField(name + "_rowError");
-  var color = error ? "red.100" : "white";
   var rowError = error;
   return (
-    <Tr key={index + name} bgColor={color}>
+    <Tr key={index + name}>
       <Td>
         <Field
           validate={zod2FieldValidator(nameValidator)}
