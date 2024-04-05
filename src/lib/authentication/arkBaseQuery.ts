@@ -12,7 +12,7 @@ import {
 import { RootState } from "../..";
 import { AuthProvider } from "./authProviderInterface";
 
-function GetBaseQuery(baseUrl: string) {
+function ArkBaseQuery(baseUrl: string) {
   return fetchBaseQuery({
     baseUrl: baseUrl,
     prepareHeaders: (headers, { getState }) => {
@@ -27,13 +27,13 @@ function GetBaseQuery(baseUrl: string) {
   });
 }
 
-export function GetArkReauthQuery(baseUrl: string, authProvider: AuthProvider) {
+export function ArkReauthQuery(baseUrl: string, authProvider: AuthProvider) {
   const baseQueryWithReauth: BaseQueryFn<
     string | FetchArgs,
     unknown,
     FetchBaseQueryError
   > = async (args, api, extraOptions) => {
-    let baseQuery = GetBaseQuery(baseUrl);
+    let baseQuery = ArkBaseQuery(baseUrl);
     let result = await baseQuery(args, api, extraOptions);
     if (result.error && result.error.status === 401) {
       // try to get a new token
