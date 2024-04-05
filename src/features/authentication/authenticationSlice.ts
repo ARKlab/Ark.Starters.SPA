@@ -18,7 +18,7 @@ export const Init = createAsyncThunk("auth/init", async (_, thunkAPI) => {
   });
 });
 
-type ExtraType = {
+export type ExtraType = {
   authProvider: AuthProvider;
 };
 
