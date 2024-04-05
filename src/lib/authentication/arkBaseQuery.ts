@@ -1,4 +1,5 @@
 import type {
+  BaseQueryApi,
   BaseQueryFn,
   FetchArgs,
   FetchBaseQueryError,
@@ -8,11 +9,20 @@ import {
   tokenSelector,
   loggedOut,
   tokenReceived,
+  ExtraType,
 } from "../../features/authentication/authenticationSlice";
 import { RootState } from "../..";
 import { AuthProvider } from "./authProviderInterface";
 
-function ArkBaseQuery(baseUrl: string) {
+const baseurl = "";
+export function ArkBaseQuery(args: any, api: BaseQueryApi, extra: {}) {
+  // Now you can use extraArgument
+  const authProviderInstance = (extra as ExtraType).authProvider;
+
+  return ArkReauthQuery(baseurl, authProviderInstance)(args, api, extra);
+}
+
+function BaseQuery(baseUrl: string) {
   return fetchBaseQuery({
     baseUrl: baseUrl,
     prepareHeaders: (headers, { getState }) => {
@@ -33,7 +43,7 @@ export function ArkReauthQuery(baseUrl: string, authProvider: AuthProvider) {
     unknown,
     FetchBaseQueryError
   > = async (args, api, extraOptions) => {
-    let baseQuery = ArkBaseQuery(baseUrl);
+    let baseQuery = BaseQuery(baseUrl);
     let result = await baseQuery(args, api, extraOptions);
     if (result.error && result.error.status === 401) {
       // try to get a new token
