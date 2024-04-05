@@ -15,7 +15,11 @@ import { RootState } from "../..";
 import { AuthProvider } from "./authProviderInterface";
 
 const baseurl = "";
-export function ArkBaseQuery(args: any, api: BaseQueryApi, extra: {}) {
+export function ArkBaseQuery(
+  args: string | FetchArgs,
+  api: BaseQueryApi,
+  extra: {}
+) {
   // Now you can use extraArgument
   const authProviderInstance = (extra as ExtraType).authProvider;
 
