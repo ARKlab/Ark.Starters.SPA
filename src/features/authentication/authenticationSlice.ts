@@ -1,22 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { RootState } from "../../app/configureStore";
+import { RootState } from "../..";
 import {
   AuthStoreType,
   AuthenticationSteps,
 } from "../../lib/authentication/authTypes";
-import { authProvider } from "../../main";
+import { AuthProvider } from "../../lib/authentication/authProviderInterface";
 
-const authProviderInstance = authProvider;
-
-export const Init = createAsyncThunk("auth/init", async () => {
-  await authProviderInstance.init();
-});
-
-export const Logout = createAsyncThunk("auth/logout", async () => {
-  await authProviderInstance.logout();
-});
-export const Login = createAsyncThunk("auth/redirectHandle", async () => {
-  return await authProviderInstance.handleLoginRedirect().then(async () => {
+export const Init = createAsyncThunk("auth/init", async (_, thunkAPI) => {
+  const authProviderInstance = (thunkAPI.extra as ExtraType).authProvider;
+  return authProviderInstance.handleLoginRedirect().then(async () => {
     var user = await authProviderInstance.getUserDetail();
     if (!user) return null;
     return {
@@ -26,9 +18,41 @@ export const Login = createAsyncThunk("auth/redirectHandle", async () => {
   });
 });
 
+type ExtraType = {
+  authProvider: AuthProvider;
+};
+
+export const DetectLoggedInUser = createAsyncThunk(
+  "auth/setLoggedUser",
+  async (_, thunkAPI) => {
+    const authProviderInstance = (thunkAPI.extra as ExtraType).authProvider;
+    var user = await authProviderInstance.getUserDetail();
+
+    if (!user) return null;
+    return {
+      userInfo: user,
+      token: "",
+    } as AuthStoreType;
+  }
+);
+
+export const Logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
+  const authProviderInstance = (thunkAPI.extra as ExtraType).authProvider;
+  await authProviderInstance.logout();
+});
+
+export const Login = createAsyncThunk(
+  "auth/redirectHandle",
+  async (_, thunkAPI) => {
+    const authProviderInstance = (thunkAPI.extra as ExtraType).authProvider;
+    authProviderInstance.login();
+  }
+);
+
 export const getLoginStatus = createAsyncThunk(
   "auth/getLoginStatus",
-  async () => {
+  async (_, thunkAPI) => {
+    const authProviderInstance = (thunkAPI.extra as ExtraType).authProvider;
     const status = authProviderInstance.getLoginStatus();
     return status;
   }
@@ -53,14 +77,26 @@ export const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(Init.pending, (state) => {
+      .addCase(DetectLoggedInUser.pending, (state) => {
         return { ...state, status: AuthenticationSteps.Init, isLoading: true };
       })
-      .addCase(Init.fulfilled, (state) => {
+      .addCase(DetectLoggedInUser.fulfilled, (state, action) => {
         return {
           ...state,
           status: AuthenticationSteps.InitComplete,
           isLoading: false,
+          data: action.payload,
+        };
+      })
+      .addCase(Init.pending, (state) => {
+        return { ...state, status: AuthenticationSteps.Init, isLoading: true };
+      })
+      .addCase(Init.fulfilled, (state, action) => {
+        return {
+          ...state,
+          status: AuthenticationSteps.InitComplete,
+          isLoading: false,
+          data: action.payload,
         };
       })
       .addCase(Init.rejected, (state, action) => {
@@ -84,7 +120,6 @@ export const authSlice = createSlice({
           ...state,
           status: AuthenticationSteps.LoginComplete,
           isLoading: false,
-          data: action.payload,
         };
       })
       .addCase(Login.rejected, (state, action) => {
@@ -126,4 +161,4 @@ export const authSlice = createSlice({
 });
 export const { tokenReceived, loggedOut } = authSlice.actions;
 
-export const authSelector = (state: RootState) => state.auth.data?.token;
+export const tokenSelector = (state: RootState) => state.auth.data?.token;

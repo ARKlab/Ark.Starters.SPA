@@ -40,7 +40,7 @@ export const mainSections: MainSectionType[] = [
         isInMenu: true,
         isExternal: false,
         component: PlaygroundView,
-        authorizedOnly: true,
+        authorizedOnly: false,
       },
       {
         path: "/configTable",

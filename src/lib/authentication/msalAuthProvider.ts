@@ -3,6 +3,7 @@ import { AccountInfo } from "@azure/msal-browser";
 import { AuthProvider } from "./authProviderInterface";
 import { LoginStatus, UserAccountInfo } from "./authTypes";
 import * as R from "ramda";
+import { CustomSettingsType } from "../../global";
 
 export type MSALConfig = {
   msalConfig: msal.Configuration;
@@ -20,7 +21,53 @@ export class MsalAuthProvider implements AuthProvider {
   private profileRequest: msal.PopupRequest;
   private profileRedirectRequest: msal.RedirectRequest;
   private idTokenClaims: msal.IdTokenClaims | null = null;
-  constructor(config: msal.Configuration, scopes: string[]) {
+  constructor(env: CustomSettingsType) {
+    const scopes = env.scopes.split(",");
+    const config: msal.Configuration = {
+      auth: {
+        clientId: env.clientID,
+        authority: env.authority,
+
+        knownAuthorities: env.knownAuthorities.split(","),
+        redirectUri: "http://localhost:3000/",
+      },
+      cache: {
+        cacheLocation: "localStorage",
+        storeAuthStateInCookie: false, // Set this to "true" if you are having issues on IE11 or Edge
+      },
+      system: {
+        loggerOptions: {
+          loggerCallback: (
+            level: msal.LogLevel,
+            message: string,
+            containsPii: boolean
+          ): void => {
+            if (containsPii) {
+              return;
+            }
+            switch (level) {
+              case msal.LogLevel.Error:
+                console.error(message);
+                return;
+              case msal.LogLevel.Info:
+                console.info(message);
+                return;
+              case msal.LogLevel.Verbose:
+                console.debug(message);
+                return;
+              case msal.LogLevel.Warning:
+                console.warn(message);
+                return;
+            }
+          },
+          piiLoggingEnabled: false,
+        },
+        windowHashTimeout: 60000,
+        iframeHashTimeout: 6000,
+        loadFrameTimeout: 0,
+        asyncPopups: false,
+      },
+    };
     this.config = { msalConfig: config, scopes: scopes };
 
     this.loginRequest = {
@@ -90,17 +137,13 @@ export class MsalAuthProvider implements AuthProvider {
       return { username: currentAccounts[0].username } as UserAccountInfo;
     }
   }
-  private setLoginStatus(status: LoginStatus) {
-    return (this.loginStatus = status);
-  }
+
   private getAccounts(): AccountInfo[] | null {
     const currentAccounts = this.myMSALObj.getAllAccounts();
 
     if (currentAccounts === null) {
-      this.setLoginStatus(LoginStatus.NotLogged);
       return null;
     } else {
-      this.setLoginStatus(LoginStatus.Logged);
       return currentAccounts;
     }
   }
@@ -108,12 +151,13 @@ export class MsalAuthProvider implements AuthProvider {
     try {
       const resp: msal.AuthenticationResult | null =
         await this.myMSALObj.handleRedirectPromise();
-      const account = this.myMSALObj.getAllAccounts();
-      if (account.length === 0) {
-        await this.login();
-      } else {
-        this.handleResponse(resp);
-        this.setLoginStatus(LoginStatus.Logged);
+      if (resp) {
+        const account = this.myMSALObj.getAllAccounts();
+        if (account.length === 0) {
+          await this.login();
+        } else {
+          this.handleResponse(resp);
+        }
       }
     } catch (e: any) {
       throw new Error(e);
@@ -129,11 +173,10 @@ export class MsalAuthProvider implements AuthProvider {
     );
   }
   public async init(): Promise<void> {
-    await msal.PublicClientApplication.createPublicClientApplication(
-      this.config.msalConfig
-    ).then((instance) => {
-      this.myMSALObj = instance;
-    });
+    this.myMSALObj =
+      await msal.PublicClientApplication.createPublicClientApplication(
+        this.config.msalConfig
+      );
   }
   public async login(): Promise<void> {
     try {
@@ -160,6 +203,13 @@ export class MsalAuthProvider implements AuthProvider {
     return false;
   }
   getLoginStatus(): LoginStatus {
-    return this.loginStatus;
+    if (this.myMSALObj) {
+      let isLoggedIn = this.myMSALObj.getAllAccounts().length > 0;
+      this.loginStatus = isLoggedIn
+        ? LoginStatus.Logged
+        : LoginStatus.NotLogged;
+      return this.loginStatus;
+    }
+    return LoginStatus.NotLogged;
   }
 }

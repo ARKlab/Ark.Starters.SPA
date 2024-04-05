@@ -1,11 +1,8 @@
-import { Center, Spinner, useToast } from "@chakra-ui/react";
+import { Center, Spinner, Toast, useToast } from "@chakra-ui/react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Footer from "./components/footer/footer";
 import Header from "./components/header/view";
-import {
-  Selectors as errorSelectors,
-  setError,
-} from "./features/errorHandler/errorHandler";
+import { Selectors as errorSelectors } from "./features/errorHandler/errorHandler";
 import {
   resetNotification,
   selectNotification,
@@ -16,87 +13,94 @@ import { Box } from "@chakra-ui/react";
 
 import SimpleSidebar from "./components/sideBar/sideBar";
 
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "./app/configureStore";
+import { ReactElement, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { ProblemDetailsModal } from "./componentsCommon/problemDetailsModal/problemDetailsModal";
-import {
-  Login,
-  getLoginStatus,
-  Init,
-} from "./features/authentication/authenticationSlice";
 import { LoginStatus } from "./lib/authentication/authTypes";
 import { mainSections } from "./siteMap/mainSections";
-import {
-  scopes,
-  staticMsalConfig,
-} from "./features/authentication/staticConfigs";
-import { MsalAuthProvider } from "./lib/authentication/msalAuthProvider";
+import { useAuthContext } from "./lib/authentication/authenticationContext";
+import { init } from "ramda";
+import { AuthenticationComponent } from "./lib/authentication/authenticationComponent";
+import { useSelector } from "react-redux";
+import { RootState } from ".";
+import { DetectLoggedInUser } from "./features/authentication/authenticationSlice";
+import JsonPlaceHolderView from "./features/jsonPlaceholderAPI/JsonPlaceHolder";
 
 //export const authProvider = new Auth0AuthProvider(authConfig);
-export const authProvider = new MsalAuthProvider(staticMsalConfig, scopes);
+
+function initPath(
+  path: string,
+  element: () => React.ReactNode,
+  authorizedOnly: boolean = true,
+  userIsLogged: boolean = true
+): ReactElement {
+  const routeElement = element();
+  const finalElement =
+    (authorizedOnly && userIsLogged) || !authorizedOnly ? (
+      routeElement
+    ) : (
+      <Unauthorised />
+    );
+  return <Route path={path} element={finalElement} />;
+}
 
 const Component = () => {
+  const { context, isLogged } = useAuthContext();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(DetectLoggedInUser());
+  }, [dispatch]);
+
+  const routes = [] as React.ReactNode[];
+  mainSections.forEach((x) =>
+    x.subsections.forEach((s) => {
+      if (s.subsections && s.subsections.length > 0) {
+        s.subsections.forEach((sub) => {
+          if (sub.component && sub.path) {
+            routes.push(
+              initPath(
+                x.path + s.path + sub.path,
+                sub.component,
+                sub.authorizedOnly,
+                isLogged
+              )
+            );
+          }
+        });
+      } else if (s.component && s.path) {
+        routes.push(
+          initPath(x.path + s.path, s.component, s.authorizedOnly, isLogged)
+        );
+      }
+    })
+  );
+
   return (
     <>
       <Routes>
         <Route
           index
           path="/"
-          element={<Navigate to="/main/jsonplaceholder" />}
+          element={
+            <AuthenticationComponent
+              entryPoint={<JsonPlaceHolderView />} //Change this to your preffered entry point
+              fallBack={<Unauthorised />}
+            />
+          }
         />
         <Route path="/Unauthorized" element={<Unauthorised />} />
-        {mainSections.map((x) =>
-          x.subsections.map((s) => {
-            return s.subsections && s.subsections.length > 0 ? (
-              s.subsections.map((sub) => {
-                return sub.component && sub.path ? (
-                  <Route
-                    path={x.path + s.path + sub.path}
-                    element={sub.component()}
-                  />
-                ) : null;
-              })
-            ) : s.component && s.path ? (
-              <Route path={x.path + s.path} element={s.component()} />
-            ) : null;
-          })
-        )}
+        {routes}
       </Routes>
     </>
   );
 };
 
 const Main = () => {
-  const notification = useAppSelector(selectNotification);
-  const dispatch = useAppDispatch();
-  const auth = useSelector((state: RootState) => state.auth);
-  const user = auth.data;
-  const [loginstatus, setLoginStatus] = useState(LoginStatus.NotLogged);
   var toast = useToast();
 
-  useEffect(() => {
-    const initializeAuth = async () => {
-      await dispatch(Init()).then(async () => {
-        if (!user) {
-          await dispatch(Login()).unwrap();
-          const status = await dispatch(getLoginStatus()).unwrap();
-          setLoginStatus(status);
-        }
-      });
-    };
-
-    initializeAuth();
-  }, [user, dispatch]);
-  if (auth.isError) {
-    dispatch(
-      setError({
-        error: true,
-        details: { title: "Authentication Error", message: auth.error },
-      })
-    );
-  }
+  const dispatch = useAppDispatch();
+  const notification = useAppSelector(selectNotification);
   const problemDetails = useAppSelector(errorSelectors.all);
   useEffect(() => {
     if (notification) {
@@ -112,37 +116,13 @@ const Main = () => {
     }
   }, [notification, toast, dispatch]);
 
-  const MainComponent = () => {
-    switch (loginstatus) {
-      case LoginStatus.NotLogged:
-        return (
-          <Center h="97vh" flexDir="column">
-            <Center
-              position="fixed"
-              inset={0}
-              bg="rgba(0,0,0,0.9)"
-              zIndex="tooltip"
-            >
-              <Spinner size="xl" color="blue.400" />
-            </Center>
-          </Center>
-        );
-      case LoginStatus.Logged:
-        return <Component />;
-      case LoginStatus.Error:
-        return <Unauthorised />;
-      default:
-        return <></>;
-    }
-  };
-
   return (
     <>
       <Header />
       <Box minH="70vh">
         <SimpleSidebar />
         <Box ml={{ base: 0, md: 60 }} p="4">
-          {MainComponent()}
+          {Component()}
         </Box>
       </Box>
       <Footer />

@@ -4,19 +4,19 @@ import type {
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query";
 import { fetchBaseQuery } from "@reduxjs/toolkit/query";
-import { RootState } from "../../app/configureStore";
 import {
-  authSelector,
+  tokenSelector,
   loggedOut,
   tokenReceived,
 } from "../../features/authentication/authenticationSlice";
-import { authProvider } from "../../main";
+import { RootState } from "../..";
+import { AuthProvider } from "./authProviderInterface";
 
 function GetBaseQuery(baseUrl: string) {
   return fetchBaseQuery({
     baseUrl: baseUrl,
     prepareHeaders: (headers, { getState }) => {
-      const token = authSelector(getState() as RootState);
+      const token = tokenSelector(getState() as RootState);
       // If we have a token set in state, let's assume that we should be passing it.
       if (token) {
         headers.set("authorization", `Bearer ${token}`);
@@ -27,7 +27,7 @@ function GetBaseQuery(baseUrl: string) {
   });
 }
 
-export function GetArkReauthQuery(baseUrl: string) {
+export function GetArkReauthQuery(baseUrl: string, authProvider: AuthProvider) {
   const baseQueryWithReauth: BaseQueryFn<
     string | FetchArgs,
     unknown,

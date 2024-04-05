@@ -1,4 +1,4 @@
-import { StatusEnum } from "./authTypes";
+import { UserAccountInfo } from "./authTypes";
 
 type TokenResponse = {};
 type ProblemDetails = {};
@@ -10,7 +10,7 @@ export interface AuthProvider {
    * Initializes the authentication module with configuration data,
    * typically fetched from Azure, and stores it in the Redux store.
    */
-  init: () => void;
+  init: () => Promise<void>;
   /**
    * Initiates the login process.
    */
@@ -24,6 +24,7 @@ export interface AuthProvider {
    *  if token is not valid token will be refreshed silently
    * @returns The authentication token information.
    */
+  handleLoginRedirect: () => Promise<void>;
   getToken: (audience?: string) => TokenResponse;
   /*
    * Checks whether the current user has the specified permission.
@@ -43,4 +44,5 @@ export interface AuthProvider {
    * including whether the process is loading, any data retrieved,
    * and any encountered errors.
    */
+  getUserDetail: () => Promise<UserAccountInfo | null>;
 }

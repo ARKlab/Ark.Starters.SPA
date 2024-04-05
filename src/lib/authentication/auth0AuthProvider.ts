@@ -1,7 +1,7 @@
-import { Auth0Client, RedirectLoginOptions } from "@auth0/auth0-spa-js";
+import { Auth0Client, Auth0ClientOptions } from "@auth0/auth0-spa-js";
+import { CustomSettingsType } from "../../global";
 import { AuthProvider } from "./authProviderInterface";
 import { LoginStatus, UserAccountInfo } from "./authTypes";
-import { Auth0ClientOptions } from "@auth0/auth0-spa-js";
 
 const claimsUrl = "http://ark-energy.eu/claims/";
 
@@ -14,7 +14,17 @@ export class Auth0AuthProvider implements AuthProvider {
   private auth0Client: Auth0Client = {} as any;
   private config: Auth0Config;
 
-  constructor(config: any) {
+  constructor(env: CustomSettingsType) {
+    const config: Auth0ClientOptions = {
+      domain: env.domain,
+      clientId: env.clientID,
+      cacheLocation: "localstorage",
+      authorizationParams: {
+        redirect_uri: window.location.origin,
+        audience: env.audience,
+        scope: "openid profile email",
+      },
+    };
     this.config = { auth0Config: config };
   }
   async init() {
@@ -69,8 +79,6 @@ export class Auth0AuthProvider implements AuthProvider {
         } catch (error) {
           console.debug("Error during login redirection:", error);
         }
-      } else {
-        await this.login();
       }
     }
   }
@@ -92,7 +100,7 @@ export class Auth0AuthProvider implements AuthProvider {
   }
   public hasPermission(permission: string, audience?: string): boolean {
     // Checks whether the current user has the specified permission
-    this.auth0Client.getIdTokenClaims().then((claims) => {
+    this.auth0Client.getIdTokenClaims().then((claims: any) => {
       const permissions = claims && claims[claimsUrl + "permissions"];
       return permissions.includes(permission);
     });

@@ -267,13 +267,23 @@ function Filter<T>({
 
   const columnFilterValue = column.getFilterValue();
 
-  const sortedUniqueValues = React.useMemo(
-    () =>
-      typeof firstValue === "number"
-        ? []
-        : Array.from(column.getFacetedUniqueValues().keys()).sort(),
-    [column.getFacetedUniqueValues()]
-  );
+  const sortedUniqueValues = React.useMemo(() => {
+    switch (column.columnDef.meta?.type) {
+      case "date":
+        return [];
+      case "number":
+      case "string":
+        return typeof firstValue === "number"
+          ? []
+          : Array.from(column.getFacetedUniqueValues().keys()).sort();
+      default:
+        return [];
+    }
+  }, [
+    column.getFacetedUniqueValues(),
+    column.columnDef.meta?.type,
+    firstValue,
+  ]);
 
   //You can add all the filters you need and want here, even multiple per column (min max for numbers for example)
   switch (column.columnDef.meta?.type) {

@@ -5,71 +5,47 @@ import { EnvParams, getEnv } from "./environment";
 import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { theme } from "./theme";
-import { store } from "./app/configureStore";
 import reportWebVitals from "./reportWebVitals";
 import Main from "./main";
+import { initStore } from "./app/configureStore";
+import { AuthProvider } from "./lib/authentication/authProviderInterface";
+import { setupListeners } from "@reduxjs/toolkit/query";
+import { MsalAuthProvider } from "./lib/authentication/msalAuthProvider";
 
-const Index = () => {
-  const [env, setEnv] = useState<EnvParams | null>(null);
+import AuthenticationProviderContext from "./lib/authentication/authenticationContext";
+import { AuthenticationComponent } from "./lib/authentication/authenticationComponent";
+import Auth0AuthProvider from "./lib/authentication/auth0AuthProvider";
+const env = window.customSettings;
+console.log(env);
+const authProvider = new Auth0AuthProvider(env);
+const store = initStore(authProvider);
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+setupListeners(store.dispatch);
 
-  useEffect(() => {
-    const fetchEnv = async () => {
-      try {
-        const env = await getEnv();
-        setEnv(env);
-      } catch (error) {
-        console.error("Failed to get environment", error);
-      }
-    };
+async function initApplication() {
+  await authProvider.init();
+  const root = ReactDOM.createRoot(
+    document.getElementById("root") as HTMLElement
+  );
 
-    fetchEnv();
-  }, []);
+  root.render(
+    <React.StrictMode>
+      <AuthenticationProviderContext authProvider={authProvider}>
+        <Provider store={store}>
+          <BrowserRouter>
+            <ChakraProvider theme={theme}>
+              <Routes>
+                <Route path="/*" element={<Main />} />
+              </Routes>
+            </ChakraProvider>
+          </BrowserRouter>
+        </Provider>
+      </AuthenticationProviderContext>
+    </React.StrictMode>
+  );
 
-  if (!env) {
-    return null;
-  }
-  return <Main />;
+  reportWebVitals();
+}
 
-  /* 
-  
-  let policy = env.signUpSignInPolicyId;
-  const authority = `${env.knownAuthorities}/${env.domain}/${policy}`;
-  const scopes = [`${env.scopes}`];
-
-  const msalInstance = new msal.PublicClientApplication({
-    auth: {
-      clientId: env.clientID,
-      authority: authority,
-      knownAuthorities: [env.knownAuthorities],
-      redirectUri: window.location.origin,
-    },
-    cache: {
-      cacheLocation: "localStorage",
-      storeAuthStateInCookie: false,
-    },
-  });
-
-  const authHelpers = createAuthHelpers(msalInstance);
-
-  const request = createService({
-    baseUrl: `${env.serviceUrl}`,
-  });*/
-};
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
-);
-
-root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <ChakraProvider theme={theme}>
-          <Routes>
-            <Route path="/*" element={<Index />} />
-          </Routes>
-        </ChakraProvider>
-      </BrowserRouter>
-    </Provider>
-  </React.StrictMode>
-);
-reportWebVitals();
+initApplication();
