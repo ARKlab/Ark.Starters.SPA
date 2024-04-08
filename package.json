@@ -64,7 +64,6 @@
     "@types/react-dom": "^18.2.23",
     "@types/ramda": "^0.29.12",
     "@types/react-copy-to-clipboard": "^5.0.7",
-    "@types/react-dom": "^18.2.22",
     "concurrently": "^7.6.0",
     "cross-env": "^7.0.3",
     "r3f-pack": "^2.7.3",

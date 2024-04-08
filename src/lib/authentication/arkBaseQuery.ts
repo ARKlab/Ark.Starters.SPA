@@ -32,7 +32,6 @@ function BaseQuery(api: BaseQueryApi) {
     baseUrl,
     prepareHeaders: (headers, { getState }) => {
       const token = tokenSelector(getState() as RootState);
-      const baseUrl = baseUrlSelector(getState() as RootState);
 
       // If we have a token set in state, let's assume that we should be passing it.
       if (token) {
