@@ -4,7 +4,7 @@ import { Init } from "../../features/authentication/authenticationSlice";
 import { useAuthContext } from "./authenticationContext";
 import { AuthStoreType } from "./authTypes";
 
-export const AuthenticationComponent = (props: {
+export const AuthenticationCallback = (props: {
   entryPoint: ReactNode;
   fallBack: ReactNode;
 }) => {

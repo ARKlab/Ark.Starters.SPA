@@ -1,5 +1,5 @@
-import { Center, Spinner, Toast, useToast } from "@chakra-ui/react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { useToast } from "@chakra-ui/react";
+import { Route, Routes } from "react-router-dom";
 import Footer from "./components/footer/footer";
 import Header from "./components/header/view";
 import { Selectors as errorSelectors } from "./features/errorHandler/errorHandler";
@@ -13,18 +13,14 @@ import { Box } from "@chakra-ui/react";
 
 import SimpleSidebar from "./components/sideBar/sideBar";
 
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { ProblemDetailsModal } from "./componentsCommon/problemDetailsModal/problemDetailsModal";
-import { LoginStatus } from "./lib/authentication/authTypes";
-import { mainSections } from "./siteMap/mainSections";
-import { useAuthContext } from "./lib/authentication/authenticationContext";
-import { init } from "ramda";
-import { AuthenticationComponent } from "./lib/authentication/authenticationComponent";
-import { useSelector } from "react-redux";
-import { RootState } from ".";
 import { DetectLoggedInUser } from "./features/authentication/authenticationSlice";
 import JsonPlaceHolderView from "./features/jsonPlaceholderAPI/JsonPlaceHolder";
+import { AuthenticationCallback } from "./lib/authentication/authenticationCallback";
+import { useAuthContext } from "./lib/authentication/authenticationContext";
+import { mainSections } from "./siteMap/mainSections";
 
 //export const authProvider = new Auth0AuthProvider(authConfig);
 
@@ -83,7 +79,7 @@ const Component = () => {
           index
           path="/"
           element={
-            <AuthenticationComponent
+            <AuthenticationCallback
               entryPoint={<JsonPlaceHolderView />} //Change this to your preffered entry point
               fallBack={<Unauthorised />}
             />
