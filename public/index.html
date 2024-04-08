@@ -25,7 +25,15 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Ark SPA Starter Project</title>
-    <script src="http://localhost:4000/connectionStrings.js"></script>
+    <script>
+      var script = document.createElement('script');
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        script.src = "http://localhost:4000/connectionStrings.js";
+      } else {
+        script.src = "connectionStrings.js";
+      }
+      document.head.appendChild(script);
+    </script>
 
   </head>
   <body>
