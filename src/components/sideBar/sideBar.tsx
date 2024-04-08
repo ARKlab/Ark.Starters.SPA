@@ -36,9 +36,8 @@ export default function SimpleSidebar() {
   //the choice in our example is either to show the menu items or not while preventing the user from accessing the page
   //this are the lines to have the logged status of the user:
   /*
-  const authcontext = useAuthContext();
-  const userIsLogged =
-    authcontext.authProvider.getLoginStatus() === LoginStatus.Logged;
+  const { context, isLogged } = useAuthContext();
+
 */
 
   return (
