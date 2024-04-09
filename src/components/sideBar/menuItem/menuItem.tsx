@@ -14,7 +14,10 @@ export default function MenuItem({
   icon,
   isExternal,
   externalUrl,
-}: Omit<SubsectionMenuItemType, "isInMenu" | "component" | "authorizedOnly">) {
+}: Omit<
+  SubsectionMenuItemType,
+  "isInMenu" | "component" | "authenticatedOnly"
+>) {
   return (
     <ChakraLink
       _hover={{ textDecoration: "none" }}

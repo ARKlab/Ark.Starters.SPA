@@ -27,12 +27,12 @@ import { mainSections } from "./siteMap/mainSections";
 function initPath(
   path: string,
   element: () => React.ReactNode,
-  authorizedOnly: boolean = true,
+  authenticatedOnly: boolean = true,
   userIsLogged: boolean = true
 ): ReactElement {
   const routeElement = element();
   const finalElement =
-    (authorizedOnly && userIsLogged) || !authorizedOnly ? (
+    (authenticatedOnly && userIsLogged) || !authenticatedOnly ? (
       routeElement
     ) : (
       <Unauthorised />
@@ -58,7 +58,7 @@ const Component = () => {
               initPath(
                 x.path + s.path + sub.path,
                 sub.component,
-                sub.authorizedOnly,
+                sub.authenticatedOnly,
                 isLogged
               )
             );
@@ -66,7 +66,7 @@ const Component = () => {
         });
       } else if (s.component && s.path) {
         routes.push(
-          initPath(x.path + s.path, s.component, s.authorizedOnly, isLogged)
+          initPath(x.path + s.path, s.component, s.authenticatedOnly, isLogged)
         );
       }
     })

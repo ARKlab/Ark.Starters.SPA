@@ -23,7 +23,7 @@ export const mainSections: MainSectionType[] = [
   {
     label: "Main Test Section",
     path: "/main",
-    authorizedOnly: true,
+    authenticatedOnly: true,
     subsections: [
       {
         path: "/jsonplaceholder",
@@ -32,7 +32,7 @@ export const mainSections: MainSectionType[] = [
         isInMenu: true,
         isExternal: false,
         component: JsonPlaceHolderView,
-        authorizedOnly: true,
+        authenticatedOnly: true,
       },
       {
         path: "/playground",
@@ -41,7 +41,7 @@ export const mainSections: MainSectionType[] = [
         isInMenu: true,
         isExternal: false,
         component: PlaygroundView,
-        authorizedOnly: false,
+        authenticatedOnly: false,
       },
       {
         path: "/configTable",
@@ -50,7 +50,7 @@ export const mainSections: MainSectionType[] = [
         isInMenu: true,
         isExternal: false,
         component: ConfigTableExampleView,
-        authorizedOnly: true,
+        authenticatedOnly: true,
       },
       {
         path: "/moviesTable",
@@ -59,7 +59,7 @@ export const mainSections: MainSectionType[] = [
         isInMenu: true,
         isExternal: false,
         component: MovieTableView,
-        authorizedOnly: true,
+        authenticatedOnly: true,
       },
       {
         path: "/videoGamesTable",
@@ -68,7 +68,7 @@ export const mainSections: MainSectionType[] = [
         isInMenu: true,
         isExternal: false,
         component: VideoGamesTableView,
-        authorizedOnly: true,
+        authenticatedOnly: true,
       },
 
       {
@@ -78,14 +78,14 @@ export const mainSections: MainSectionType[] = [
         isInMenu: true,
         isExternal: false,
         component: WizardFormView,
-        authorizedOnly: true,
+        authenticatedOnly: true,
       },
     ],
   },
   {
     label: "External Section",
     path: "/ext",
-    authorizedOnly: false,
+    authenticatedOnly: false,
     subsections: [
       {
         externalUrl: "https://www.google.com",
@@ -93,7 +93,7 @@ export const mainSections: MainSectionType[] = [
         icon: FaExternalLinkAlt,
         isInMenu: true,
         isExternal: true,
-        authorizedOnly: false,
+        authenticatedOnly: false,
       },
       {
         externalUrl: "https://react.dev/",
@@ -101,21 +101,21 @@ export const mainSections: MainSectionType[] = [
         icon: FaExternalLinkAlt,
         isInMenu: true,
         isExternal: true,
-        authorizedOnly: false,
+        authenticatedOnly: false,
       },
     ],
   },
   {
     label: "Another Section",
     path: "/anotherSection",
-    authorizedOnly: true,
+    authenticatedOnly: true,
     subsections: [
       {
         label: "Sub Subsections",
         path: "/nested",
         isInMenu: true,
         isExternal: false,
-        authorizedOnly: false,
+        authenticatedOnly: false,
         subsections: [
           {
             path: "/staticPage",
@@ -124,7 +124,7 @@ export const mainSections: MainSectionType[] = [
             icon: FaTable,
             isInMenu: true,
             isExternal: false,
-            authorizedOnly: true,
+            authenticatedOnly: true,
           },
           {
             externalUrl: "https://www.google.com",
@@ -132,7 +132,7 @@ export const mainSections: MainSectionType[] = [
             icon: FaExternalLinkAlt,
             isInMenu: true,
             isExternal: true,
-            authorizedOnly: false,
+            authenticatedOnly: false,
           },
           {
             externalUrl: "https://react.dev/",
@@ -140,7 +140,7 @@ export const mainSections: MainSectionType[] = [
             icon: FaExternalLinkAlt,
             isInMenu: true,
             isExternal: true,
-            authorizedOnly: false,
+            authenticatedOnly: false,
           },
         ],
       },
