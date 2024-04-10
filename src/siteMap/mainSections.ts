@@ -1,21 +1,20 @@
-import { MainSectionType } from "../components/sideBar/menuItem/types";
+import { ReactNode } from "react";
 import {
   FaCloudUploadAlt,
   FaExternalLinkAlt,
   FaGamepad,
-  FaKey,
-  FaHatWizard,
   FaPlay,
   FaTable,
 } from "react-icons/fa";
 import { RiMovie2Line } from "react-icons/ri";
-import JsonPlaceHolderView from "../features/jsonPlaceholderAPI/JsonPlaceHolder";
-import PlaygroundView from "../features/playground/playgroundView";
+import { MainSectionType } from "../components/sideBar/menuItem/types";
+import NoEntryPoint from "../features/NoEntryPoint/staticPage";
 import ConfigTableExampleView from "../features/configTable/configTableExample";
-import MovieTableView from "../features/paginatedTable/moviePage";
 import VideoGamesTableView from "../features/formExample/videoGamesPage";
-import StaticPage from "../features/staticPage/staticPage";
 import WizardFormView from "../features/formWizard/formWizard";
+import JsonPlaceHolderView from "../features/jsonPlaceholderAPI/JsonPlaceHolder";
+import MovieTableView from "../features/paginatedTable/moviePage";
+import PlaygroundView from "../features/playground/playgroundView";
 
 /*This is the Main Section ARRAY populate this to populate the main nav menu
 It is also used to create all the Routes for the router*/
@@ -33,6 +32,7 @@ export const mainSections: MainSectionType[] = [
         isExternal: false,
         component: JsonPlaceHolderView,
         authenticatedOnly: true,
+        isEntryPoint: true,
       },
       {
         path: "/playground",
@@ -120,7 +120,7 @@ export const mainSections: MainSectionType[] = [
           {
             path: "/staticPage",
             label: "Static Page",
-            component: StaticPage,
+            component: NoEntryPoint,
             icon: FaTable,
             isInMenu: true,
             isExternal: false,
@@ -147,3 +147,17 @@ export const mainSections: MainSectionType[] = [
     ],
   },
 ];
+
+export function getEntryPointPath(sections: MainSectionType[]): string {
+  for (const section of sections) {
+    for (const subsection of section.subsections) {
+      if (subsection.path === "/") {
+        return "/";
+      }
+      if (subsection.isEntryPoint) {
+        return section.path + subsection.path || "/";
+      }
+    }
+  }
+  return "/";
+}

@@ -78,6 +78,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
     <Box
       bg={useColorModeValue("white", "gray.900")}
       borderRight="1px"
+      my="-20px"
       borderRightColor={useColorModeValue("gray.200", "gray.700")}
       w={{ base: "full", md: 60 }}
       pos="fixed"
@@ -90,7 +91,6 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       <Accordion
         defaultIndex={[0]}
         allowMultiple
-        my="20px"
         borderStyle={"none"}
         borderWidth={0}
       >

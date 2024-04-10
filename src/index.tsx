@@ -1,4 +1,4 @@
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, createLocalStorageManager } from "@chakra-ui/react";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import React from "react";
 import ReactDOM from "react-dom/client";
@@ -24,13 +24,14 @@ async function initApplication() {
   const root = ReactDOM.createRoot(
     document.getElementById("root") as HTMLElement
   );
+  const colorModeManager = createLocalStorageManager("appName-ColorMode"); //change the name of the application
 
   root.render(
     <React.StrictMode>
       <AuthenticationProviderContext authProvider={authProvider}>
         <Provider store={store}>
           <BrowserRouter>
-            <ChakraProvider theme={theme}>
+            <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
               <Routes>
                 <Route path="/*" element={<Main />} />
               </Routes>

@@ -3,14 +3,11 @@ import { useAppDispatch } from "../../app/hooks";
 import { Init } from "../../features/authentication/authenticationSlice";
 import { useAuthContext } from "./authenticationContext";
 import { AuthStoreType } from "./authTypes";
+import { Navigate, Outlet, redirect } from "react-router-dom";
 
-export const AuthenticationCallback = (props: {
-  entryPoint: ReactNode;
-  fallBack: ReactNode;
-}) => {
+export const AuthenticationCallback = (props: { redirectTo: string }) => {
   const dispatch = useAppDispatch();
   const { context, isLogged } = useAuthContext();
-  const [component, setComponent] = useState<ReactNode>(props.fallBack);
 
   useEffect(() => {
     if (!isLogged) {
@@ -21,13 +18,13 @@ export const AuthenticationCallback = (props: {
           response.userInfo &&
           response.userInfo.username !== ""
         ) {
-          setComponent(props.entryPoint);
         }
       });
-    } else {
-      setComponent(props.entryPoint);
     }
-  }, [dispatch, isLogged, props.entryPoint]);
+  }, [dispatch, isLogged]);
 
-  return <>{component}</>;
+  if (isLogged) {
+    return <Navigate to={props.redirectTo} replace />;
+  }
+  return <></>;
 };

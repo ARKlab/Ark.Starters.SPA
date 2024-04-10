@@ -1,5 +1,5 @@
 import { useToast } from "@chakra-ui/react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Outlet } from "react-router-dom";
 import Footer from "./components/footer/footer";
 import Header from "./components/header/view";
 import { Selectors as errorSelectors } from "./features/errorHandler/errorHandler";
@@ -7,7 +7,7 @@ import {
   resetNotification,
   selectNotification,
 } from "./features/notifications/notification";
-import Unauthorised from "./features/unauthorised/view";
+import Unauthorized from "./features/unauthorized/view";
 
 import { Box } from "@chakra-ui/react";
 
@@ -20,10 +20,11 @@ import { DetectLoggedInUser } from "./features/authentication/authenticationSlic
 import JsonPlaceHolderView from "./features/jsonPlaceholderAPI/JsonPlaceHolder";
 import { AuthenticationCallback } from "./lib/authentication/authenticationCallback";
 import { useAuthContext } from "./lib/authentication/authenticationContext";
-import { mainSections } from "./siteMap/mainSections";
+import { getEntryPointPath, mainSections } from "./siteMap/mainSections";
+import NoEntryPoint from "./features/NoEntryPoint/staticPage";
+import { AuthenticatedOnly } from "./lib/authentication/authenticationComponents";
 
-//export const authProvider = new Auth0AuthProvider(authConfig);
-
+//export const authProvider = new Auth0AuthProvider(authConfig);x
 function initPath(
   path: string,
   element: () => React.ReactNode,
@@ -35,7 +36,7 @@ function initPath(
     (authenticatedOnly && userIsLogged) || !authenticatedOnly ? (
       routeElement
     ) : (
-      <Unauthorised />
+      <Unauthorized />
     );
   return <Route path={path} element={finalElement} />;
 }
@@ -55,37 +56,33 @@ const Component = () => {
         s.subsections.forEach((sub) => {
           if (sub.component && sub.path) {
             routes.push(
-              initPath(
-                x.path + s.path + sub.path,
-                sub.component,
-                sub.authenticatedOnly,
-                isLogged
-              )
+              <Route
+                path={x.path + s.path + sub.path}
+                element={<AuthenticatedOnly component={sub.component} />}
+              />
             );
           }
         });
       } else if (s.component && s.path) {
         routes.push(
-          initPath(x.path + s.path, s.component, s.authenticatedOnly, isLogged)
+          <Route
+            path={x.path + s.path}
+            element={<AuthenticatedOnly component={s.component} />}
+          />
         );
       }
     })
   );
-
+  const entryPoint = getEntryPointPath(mainSections);
   return (
     <>
       <Routes>
         <Route
           index
           path="/"
-          element={
-            <AuthenticationCallback
-              entryPoint={<JsonPlaceHolderView />} //Change this to your preffered entry point
-              fallBack={<Unauthorised />}
-            />
-          }
+          element={<AuthenticationCallback redirectTo={entryPoint} />}
         />
-        <Route path="/Unauthorized" element={<Unauthorised />} />
+        <Route path="/Unauthorized" element={<Unauthorized />} />
         {routes}
       </Routes>
     </>
@@ -117,7 +114,7 @@ const Main = () => {
       <Header />
       <Box minH="70vh">
         <SimpleSidebar />
-        <Box ml={{ base: 0, md: 60 }} p="4">
+        <Box ml={{ base: 0, md: 60 }} p="4" my={"70px"}>
           {Component()}
         </Box>
       </Box>

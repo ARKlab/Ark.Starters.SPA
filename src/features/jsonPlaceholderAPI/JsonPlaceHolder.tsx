@@ -5,7 +5,7 @@ import JsonPlaceholderPostsTable from "./JsonPlaceholderPostsTable";
 
 const JsonPlaceHolderView = () => {
   return (
-    <Box my="70px">
+    <Box>
       <JsonPlaceholderPostsTable />
     </Box>
   );

@@ -5,7 +5,7 @@ import AuthPlaygroundTable from "./authPlaygroundTable";
 
 const AuthPlayground = () => {
   return (
-    <Box my="70px">
+    <Box>
       <AuthPlaygroundTable />
     </Box>
   );

@@ -4,7 +4,7 @@ import { useGetConfigQuery } from "./configTableApi";
 
 const ConfigTableExampleView = () => {
   return (
-    <Box my="70px">
+    <Box>
       <ConfigTable />
     </Box>
   );

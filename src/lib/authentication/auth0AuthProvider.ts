@@ -35,11 +35,7 @@ export class Auth0AuthProvider implements AuthProvider {
   }
 
   async login(): Promise<void> {
-    await this.auth0Client.loginWithRedirect({
-      appState: {
-        targetUrl: window.location.pathname,
-      },
-    });
+    await this.auth0Client.loginWithRedirect();
   }
 
   logout(): void {
@@ -77,7 +73,7 @@ export class Auth0AuthProvider implements AuthProvider {
                 : "/";
           });
         } catch (error) {
-          console.debug("Error during login redirection:", error);
+          throw error;
         }
       }
     }

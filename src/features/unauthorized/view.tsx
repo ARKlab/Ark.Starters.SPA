@@ -5,7 +5,7 @@ import { LoginStatus } from "../../lib/authentication/authTypes";
 import { useAppDispatch } from "../../app/hooks";
 import { Login } from "../authentication/authenticationSlice";
 
-const Unauthorised = () => {
+const Unauthorized = () => {
   const { context, isLogged } = useAuthContext();
 
   const dispatch = useAppDispatch();
@@ -13,7 +13,7 @@ const Unauthorised = () => {
     dispatch(Login());
   }
   return (
-    <Box my="70px">
+    <Box>
       <Heading as="h2" size="xl">
         Unauthorized
       </Heading>
@@ -35,4 +35,4 @@ const Unauthorised = () => {
   );
 };
 
-export default Unauthorised;
+export default Unauthorized;
