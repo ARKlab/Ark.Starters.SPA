@@ -25,21 +25,6 @@ import NoEntryPoint from "./features/NoEntryPoint/staticPage";
 import { AuthenticatedOnly } from "./lib/authentication/authenticationComponents";
 
 //export const authProvider = new Auth0AuthProvider(authConfig);x
-function initPath(
-  path: string,
-  element: () => React.ReactNode,
-  authenticatedOnly: boolean = true,
-  userIsLogged: boolean = true
-): ReactElement {
-  const routeElement = element();
-  const finalElement =
-    (authenticatedOnly && userIsLogged) || !authenticatedOnly ? (
-      routeElement
-    ) : (
-      <Unauthorized />
-    );
-  return <Route path={path} element={finalElement} />;
-}
 
 const Component = () => {
   const { context, isLogged } = useAuthContext();
