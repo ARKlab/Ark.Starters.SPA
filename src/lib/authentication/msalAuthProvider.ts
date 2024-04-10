@@ -29,7 +29,7 @@ export class MsalAuthProvider implements AuthProvider {
         authority: env.authority,
 
         knownAuthorities: env.knownAuthorities.split(","),
-        redirectUri: "http://localhost:3000/",
+        redirectUri: env.redirectUri,
       },
       cache: {
         cacheLocation: "localStorage",
