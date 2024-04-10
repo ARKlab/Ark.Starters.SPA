@@ -12,7 +12,6 @@ import { theme } from "./theme";
 import Auth0AuthProvider from "./lib/authentication/auth0AuthProvider";
 import AuthenticationProviderContext from "./lib/authentication/authenticationContext";
 const env = window.customSettings;
-console.log(env);
 const authProvider = new Auth0AuthProvider(env);
 const store = initStore(authProvider);
 export type RootState = ReturnType<typeof store.getState>;
