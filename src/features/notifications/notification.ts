@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { NotificationType } from "./notificationsTypes";
-import { RootState } from "../../app/configureStore";
 
 type State = { notification: NotificationType | null };
 
@@ -17,6 +16,9 @@ const notificationsSlice = createSlice({
       state.notification = null;
     },
   },
+  selectors: {
+    selectNotification: s => s.notification
+  }
 });
 
 export const { showNotification, resetNotification } =
@@ -24,9 +26,8 @@ export const { showNotification, resetNotification } =
 
 export default notificationsSlice.reducer;
 
-// Selettori
-export const selectNotification = (state: RootState) =>
-  state.notifications.notification;
+export const selectNotificationsState = notificationsSlice.selectSlice;
+export const { selectNotification } = notificationsSlice.selectors;
 
 // Azione dispatch
 export const dispatchNotification = (notification: NotificationType) =>
