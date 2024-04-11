@@ -2,6 +2,7 @@ import { Auth0Client, Auth0ClientOptions } from "@auth0/auth0-spa-js";
 import { CustomSettingsType } from "../../global";
 import { AuthProvider } from "./authProviderInterface";
 import { LoginStatus, UserAccountInfo } from "./authTypes";
+import { debug } from "console";
 
 const claimsUrl = "http://ark-energy.eu/claims/";
 
@@ -84,7 +85,7 @@ export class Auth0AuthProvider implements AuthProvider {
     const groups = claims && claims[claimsUrl + "groups"];
     const permissions = claims && claims[claimsUrl + "permissions"];
 
-    if (currentAccounts === null) {
+    if (!currentAccounts) {
       return null;
     } else {
       this.setLoginStatus(LoginStatus.Logged);
