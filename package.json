@@ -67,7 +67,7 @@
     "concurrently": "^7.6.0",
     "cross-env": "^7.0.3",
     "r3f-pack": "^2.7.3",
-    "typescript": "^5.4.3",
+    "typescript": "^5.4.5",
     "web-vitals": "^3.5.2"
   },
   "engineStrict": true,
