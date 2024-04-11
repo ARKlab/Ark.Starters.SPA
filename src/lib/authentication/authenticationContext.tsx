@@ -27,5 +27,17 @@ export function useAuthContext() {
       "useAuthContext must be used within a AuthenticationProvider"
     );
   }
-  return { context: context, isLogged: context.getLoginStatus() === "Logged" };
+
+  const [isLogged, setIsLogged] = useState(
+    context.getLoginStatus() === "Logged"
+  );
+
+  useEffect(() => {
+    const unsubscribe = context.subscribe((status) => {
+      setIsLogged(status === "Logged");
+    });
+    return unsubscribe;
+  }, [context]);
+
+  return { context: context, isLogged: isLogged };
 }

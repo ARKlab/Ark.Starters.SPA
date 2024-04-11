@@ -45,4 +45,11 @@ export interface AuthProvider {
    * and any encountered errors.
    */
   getUserDetail: () => Promise<UserAccountInfo | null>;
+  /*
+   * Subscribes to changes in the login status.
+   *
+   * @param subscriber - The subscriber to notify when the login status changes.
+   * @returns A function that unsubscribes the subscriber from further notifications.
+   */
+  subscribe: (subscriber: (status: LoginStatus) => void) => () => void;
 }
