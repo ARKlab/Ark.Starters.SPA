@@ -1,75 +1,47 @@
-import React, { useEffect, useState } from "react";
+import { ChakraProvider, createLocalStorageManager } from "@chakra-ui/react";
+import { setupListeners } from "@reduxjs/toolkit/query";
+import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
-import { EnvParams, getEnv } from "./environment";
-import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { theme } from "./theme";
-import { store } from "./app/configureStore";
-import reportWebVitals from "./reportWebVitals";
+import { initStore } from "./app/configureStore";
 import Main from "./main";
+import reportWebVitals from "./reportWebVitals";
+import { theme } from "./theme";
 
-const Index = () => {
-  const [env, setEnv] = useState<EnvParams | null>(null);
+import Auth0AuthProvider from "./lib/authentication/auth0AuthProvider";
+import AuthenticationProviderContext from "./lib/authentication/authenticationContext";
+const env = window.customSettings;
+const authProvider = new Auth0AuthProvider(env);
+const store = initStore(authProvider);
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+setupListeners(store.dispatch);
 
-  useEffect(() => {
-    const fetchEnv = async () => {
-      try {
-        const env = await getEnv();
-        setEnv(env);
-      } catch (error) {
-        console.error("Failed to get environment", error);
-      }
-    };
+async function initApplication() {
+  await authProvider.init();
+  const root = ReactDOM.createRoot(
+    document.getElementById("root") as HTMLElement
+  );
+  const colorModeManager = createLocalStorageManager("appName-ColorMode"); //change the name of the application
 
-    fetchEnv();
-  }, []);
+  root.render(
+    <React.StrictMode>
+      <AuthenticationProviderContext authProvider={authProvider}>
+        <Provider store={store}>
+          <BrowserRouter>
+            <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
+              <Routes>
+                <Route path="/*" element={<Main />} />
+              </Routes>
+            </ChakraProvider>
+          </BrowserRouter>
+        </Provider>
+      </AuthenticationProviderContext>
+    </React.StrictMode>
+  );
 
-  if (!env) {
-    return null;
-  }
-  return <Main />;
+  reportWebVitals();
+}
 
-  /* 
-  
-  let policy = env.signUpSignInPolicyId;
-  const authority = `${env.knownAuthorities}/${env.domain}/${policy}`;
-  const scopes = [`${env.scopes}`];
-
-  const msalInstance = new msal.PublicClientApplication({
-    auth: {
-      clientId: env.clientID,
-      authority: authority,
-      knownAuthorities: [env.knownAuthorities],
-      redirectUri: window.location.origin,
-    },
-    cache: {
-      cacheLocation: "localStorage",
-      storeAuthStateInCookie: false,
-    },
-  });
-
-  const authHelpers = createAuthHelpers(msalInstance);
-
-  const request = createService({
-    baseUrl: `${env.serviceUrl}`,
-  });*/
-};
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
-);
-
-root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <ChakraProvider theme={theme}>
-          <Routes>
-            <Route path="/*" element={<Index />} />
-          </Routes>
-        </ChakraProvider>
-      </BrowserRouter>
-    </Provider>
-  </React.StrictMode>
-);
-reportWebVitals();
+initApplication();

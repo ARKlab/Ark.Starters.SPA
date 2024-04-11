@@ -78,7 +78,7 @@ const VideoGamesTableView = () => {
   ] as ColumnDef<VideoGame>[];
 
   return (
-    <Box my="70px">
+    <Box>
       <Heading>Video Games</Heading>
       <VideoGamesForm />
       <PaginatedSortableTable<VideoGame>

@@ -7,28 +7,38 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import { configTableApiSlice } from "../features/configTable/configTableApi";
 import { moviesApiSlice } from "../features/paginatedTable/paginatedTableApi";
 import { videoGameApiSlice } from "../features/formExample/videoGamesApiSlice";
+import { authSlice } from "../features/authentication/authenticationSlice";
+import { authPlaygroundApi } from "../features/authPlaygroundAPI/authPlaygroundApiSlice";
+import { AuthProvider } from "../lib/authentication/authProviderInterface";
+import { envSlice } from "../features/authentication/envSlice";
 
-export const store = configureStore({
-  reducer: {
-    notifications: notificationsReducer,
-    errorHandler: errorReducer,
-    [jsonPlaceholderSlice.reducerPath]: jsonPlaceholderSlice.reducer,
-    [configTableApiSlice.reducerPath]: configTableApiSlice.reducer,
-    [moviesApiSlice.reducerPath]: moviesApiSlice.reducer,
-    [videoGameApiSlice.reducerPath]: videoGameApiSlice.reducer,
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(
-      jsonPlaceholderSlice.middleware,
-      configTableApiSlice.middleware,
-      moviesApiSlice.middleware,
-      videoGameApiSlice.middleware
-    ),
-});
-
-// Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
-export type AppDispatch = typeof store.dispatch;
-
-setupListeners(store.dispatch);
+export function initStore(authProviderInstance: AuthProvider) {
+  return configureStore({
+    reducer: {
+      notifications: notificationsReducer,
+      errorHandler: errorReducer,
+      [jsonPlaceholderSlice.reducerPath]: jsonPlaceholderSlice.reducer,
+      [configTableApiSlice.reducerPath]: configTableApiSlice.reducer,
+      [moviesApiSlice.reducerPath]: moviesApiSlice.reducer,
+      [videoGameApiSlice.reducerPath]: videoGameApiSlice.reducer,
+      [authSlice.reducerPath]: authSlice.reducer,
+      [authPlaygroundApi.reducerPath]: authPlaygroundApi.reducer,
+      [envSlice.reducerPath]: envSlice.reducer,
+    },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        thunk: {
+          extraArgument: {
+            authProvider: authProviderInstance,
+          },
+          serializableCheck: false,
+        },
+      }).concat(
+        jsonPlaceholderSlice.middleware,
+        configTableApiSlice.middleware,
+        moviesApiSlice.middleware,
+        videoGameApiSlice.middleware,
+        authPlaygroundApi.middleware
+      ),
+  });
+}

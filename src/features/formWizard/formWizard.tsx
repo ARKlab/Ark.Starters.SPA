@@ -33,7 +33,7 @@ const phoneSchema = z
   .min(10, "Phone number must be at least 10 digits long");
 
 const WizardFormView = () => (
-  <Box my="70px">
+  <Box>
     <Heading>Wizard Form🧙‍♂️ </Heading>
     <Box marginTop={"20px"}>
       <Wizard onSubmit={onSubmit}>

@@ -30,7 +30,7 @@ const PlaygroundView = () => {
   };
 
   return (
-    <Box my="70px">
+    <Box>
       <Heading>PlayGround</Heading>
       <Box>
         <Heading size="md" my={"20px"}>

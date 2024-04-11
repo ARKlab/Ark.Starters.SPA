@@ -22,11 +22,24 @@ import { FiMenu } from "react-icons/fi";
 import { mainSections } from "../../siteMap/mainSections";
 import MenuItem from "./menuItem/menuItem";
 import { SubsectionMenuItemType } from "./menuItem/types";
+import { useAuthContext } from "../../lib/authentication/authenticationContext";
+import { LoginStatus } from "../../lib/authentication/authTypes";
 
 //#endregion
 
 export default function SimpleSidebar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  //With the useAuthContext hook you can get the user's authentication status and hide\show the menu items accordingly
+  //in this Template we will not hide the menu items that require authentication but this is just an example.
+  //if you show the menu items the Router will redirect the user to the unauthorized page
+  //the choice in our example is either to show the menu items or not while preventing the user from accessing the page
+  //this are the lines to have the logged status of the user:
+  /*
+  const { context, isLogged } = useAuthContext();
+
+*/
+
   return (
     <>
       <SidebarContent
@@ -65,6 +78,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
     <Box
       bg={useColorModeValue("white", "gray.900")}
       borderRight="1px"
+      my="-20px"
       borderRightColor={useColorModeValue("gray.200", "gray.700")}
       w={{ base: "full", md: 60 }}
       pos="fixed"
@@ -77,7 +91,6 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       <Accordion
         defaultIndex={[0]}
         allowMultiple
-        my="20px"
         borderStyle={"none"}
         borderWidth={0}
       >

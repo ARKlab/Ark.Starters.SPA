@@ -1,19 +1,104 @@
-import { Link as ReactRouterLink } from "react-router-dom";
 import {
-  Link as ChakraLink,
-  Image,
-  Flex,
-  Spacer,
-  Center,
-  Button,
+  Avatar,
   Box,
-  Heading,
+  Center,
+  Flex,
+  Image,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuGroup,
+  MenuItem,
+  MenuList,
+  Spacer,
+  Switch,
+  WrapItem,
   useColorMode,
 } from "@chakra-ui/react";
-import { FaArrowRightFromBracket } from "react-icons/fa6";
+import { useState } from "react";
+import { useAppDispatch } from "../../app/hooks";
+import {
+  Login,
+  Logout,
+} from "../../features/authentication/authenticationSlice";
+import { LoginStatus } from "../../lib/authentication/authTypes";
+import { useAuthContext } from "../../lib/authentication/authenticationContext";
+import { MdQuestionMark } from "react-icons/md";
+import { useSelector } from "react-redux";
+import { RootState } from "../..";
+
+const UserMenu = () => {
+  var dispatch = useAppDispatch();
+  const { context, isLogged } = useAuthContext();
+
+  const authStore = useSelector((state: RootState) => state.auth);
+  const user = authStore.data;
+  const { colorMode, toggleColorMode } = useColorMode();
+  const [isChecked, setIsChecked] = useState<boolean>(colorMode === "dark");
+  const toggleColorModeWithDelay = () => {
+    setIsChecked(!isChecked);
+    setTimeout(toggleColorMode, 200); // 200ms delay
+  };
+  function login() {
+    dispatch(Login());
+  }
+  if (!isLogged) {
+    return (
+      <Menu>
+        <MenuButton mr="20px">
+          <Avatar icon={<MdQuestionMark />} />
+        </MenuButton>
+        <MenuList>
+          <MenuGroup title="Options">
+            <MenuItem
+              as={Switch}
+              onChange={toggleColorModeWithDelay}
+              isChecked={isChecked}
+            >
+              Dark Mode
+            </MenuItem>
+          </MenuGroup>
+          <MenuDivider />
+          <MenuGroup title="Account">
+            <WrapItem>
+              <MenuItem onClick={login}>Login</MenuItem>
+            </WrapItem>
+            <WrapItem>
+              <MenuItem onClick={() => dispatch(Logout())}>Exit</MenuItem>
+            </WrapItem>
+          </MenuGroup>
+        </MenuList>
+      </Menu>
+    );
+  }
+  return (
+    <Menu>
+      <MenuButton mr="20px">
+        <Avatar name={user?.userInfo?.username || "User"} src="avatarSource" />
+      </MenuButton>
+      <MenuList>
+        <MenuGroup title="Options">
+          <MenuItem
+            as={Switch}
+            onChange={toggleColorModeWithDelay}
+            isChecked={isChecked}
+          >
+            Dark Mode
+          </MenuItem>
+        </MenuGroup>
+        <MenuDivider />
+        <MenuGroup title="Account">
+          <WrapItem>
+            <MenuItem>{user?.userInfo?.username || "User"}</MenuItem>
+          </WrapItem>
+          <MenuItem onClick={() => dispatch(Logout())}>Exit</MenuItem>
+        </MenuGroup>
+      </MenuList>
+    </Menu>
+  );
+};
 
 const Header = () => {
-  const { colorMode, toggleColorMode } = useColorMode();
   return (
     <Box
       as="header"
@@ -28,7 +113,7 @@ const Header = () => {
       bg="gray.800"
     >
       <Flex>
-        <Center marginLeft={"20px"} paddingTop={"5px"}>
+        <Center ml={"20px"} paddingTop={"5px"}>
           <Image
             height={"50px"}
             src="https://ark-energy.eu/wp-content/uploads/2022/07/logo-white.png"
@@ -39,21 +124,8 @@ const Header = () => {
         <Spacer />
         <Spacer />
         <Spacer />
-        <Center marginRight={"20px"}>
-          <Button onClick={toggleColorMode}>
-            {colorMode === "light" ? "Dark" : "Light"} Mode
-          </Button>
-        </Center>
-        <Center marginRight={"20px"}>
-          <ChakraLink as={ReactRouterLink} to={"/logout"}>
-            <Button
-              colorScheme="brandPalette"
-              rightIcon={<FaArrowRightFromBracket />}
-              _hover={{ background: "brand.selected" }}
-            >
-              Exit
-            </Button>
-          </ChakraLink>
+        <Center>
+          <UserMenu />
         </Center>
       </Flex>
     </Box>

@@ -73,7 +73,7 @@ const MovieTableView = () => {
   };
 
   return (
-    <Box my="70px">
+    <Box>
       <Heading>Movies</Heading>
       {/* 
           The next lines are an example of one external filter (the column title)
