@@ -87,6 +87,7 @@ export class Auth0AuthProvider implements AuthProvider {
     if (currentAccounts === null) {
       return null;
     } else {
+      this.setLoginStatus(LoginStatus.Logged);
       return {
         username: currentAccounts?.name || "",
         permissions: permissions,
