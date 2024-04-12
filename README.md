@@ -141,6 +141,27 @@ data: {
 
 **externalFiltersState:** _ColumnFiltersState_ object with the state of external filters (this is mandatory if **externalFilters** is true
 
+## Environment (env)
+
+The application initializes itself by reading environmental variables and injecting them into the Redux store (env). Additionally, the Authentication provider constructor receives _env_ as a parameter, containing all the necessary configurations.
+_env_ is an object of type **CustomSettingsType** defined as it follows:
+
+```typescript
+type CustomSettingsType = {
+  clientID: string;
+  domain: string;
+  scopes: string;
+  knownAuthorities: string;
+  signUpSignInPolicyId: string;
+  serviceUrl: string;
+  redirectUri: string;
+  authority: string;
+  audience: string;
+};
+```
+
+This will be used as globals configuration and can be implemented to support more features (ex: subsidiaries).
+
 ## Authentication
 
 This project is implemented with a flexible authentication provider that can support multiple providers.
@@ -155,21 +176,23 @@ const  authProvider  =  new  Auth0AuthProvider(env);
 ```
 
 in this case we choose the **Auth0** implementation.
-_env_ is the enviroment and it must contains all the data needed to authenticate with the provider.
+_env_ is the enviroment and it must contains all the data needed to authenticate with the provider(all details in the specific implementations below).
 For this reason make sure that the **connectionStrings.js** file is aligned with the deploy environments you are using.
 In order to make this works locally you must create a **.env.local** file in the root of your project with all the env variables needed by connectionStrings.js and your AuthProvider implementation.
-example for **Auth0** :
 
-### .env.local
+### Auth0:
+
+#### .env.local
 
 ```javascript
 AUTH0_ClientId = "yourclientId";
 AUTH0_Domain = "yourDomain";
 AUTH0_Audience = "https://yourAudience.auth0.com/api/v2/";
 AUTH0_RedirectUri = "yourRedirectUri";
+SERVICE_URL = "yourApi.com";
 ```
 
-### connectionStrings.js
+#### connectionStrings.js
 
 ```javascript
 var http = require("http");
@@ -186,14 +209,55 @@ http
 		domain: "${process.env["AUTH0_Domain"]}",
 		audience: "${process.env["AUTH0_Audience"]}",
 		redirectUri: "${process.env["AUTH0_RedirectUri"]}",
-		serviceUrl: "randomserviceurl.com",
+		serviceUrl: "${process.env["SERVICE_URL"]}",
 		};
 	`);
   })
   .listen(port);
 ```
 
-## Adding providers
+### MSAL
+
+#### .env.local
+
+```javascript
+PORT = 4000;
+MSAL_ClientId = "yourclientId";
+MSAL_Domain = "yourDomain";
+MSAL_Scopes = "YourScopes";
+MSAL_knownAuthorities = "yourKnownAutorities";
+MSAL_authority = "YourMsalAutority";
+MSAL_RedirectUri = "yourRedirectUri";
+SERVICE_URL = "yourApi.com";
+```
+
+#### connectionStrings.js
+
+```javascript
+var http = require("http");
+var port = process.env.port;
+if (process.env.NODE_ENV === "development") {
+  require("dotenv").config({ path: ".env.local" });
+}
+http
+  .createServer(function (req, res) {
+    res.writeHead(200, { "Content-Type": "text/javascript" });
+    res.end(`
+		window.customSettings = {
+		clientID: "${process.env["MSAL_ClientId"]}",
+		domain: "${process.env["MSAL_Domain"]}",
+		scopes: "${process.env["MSAL_Scopes"]}",
+		authority:"${process.env["MSAL_authority"]}",
+		knownAuthorities:"${process.env["MSAL_knownAuthorities"]}",
+		redirectUri: "${process.env["MSAL_RedirectUri"]}",
+		serviceUrl: "${process.env["SERVICE_URL"]}",
+		};
+	`);
+  })
+  .listen(port);
+```
+
+### Adding providers
 
 In order to add support for more providers you will implement your own version of the AuthProvider interface.
 Here is the interface:

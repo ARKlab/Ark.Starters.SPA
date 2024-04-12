@@ -63,7 +63,7 @@ export class Auth0AuthProvider implements AuthProvider {
       return false;
     }
   }
-  subscribe(subscriber: (status: string) => void) {
+  onLoginStatus(subscriber: (status: string) => void) {
     this.subscribers.add(subscriber);
     return () => {
       this.subscribers.delete(subscriber);

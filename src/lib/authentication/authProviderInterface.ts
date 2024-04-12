@@ -51,5 +51,5 @@ export interface AuthProvider {
    * @param subscriber - The subscriber to notify when the login status changes.
    * @returns A function that unsubscribes the subscriber from further notifications.
    */
-  subscribe: (subscriber: (status: LoginStatus) => void) => () => void;
+  onLoginStatus: (subscriber: (status: LoginStatus) => void) => () => void;
 }

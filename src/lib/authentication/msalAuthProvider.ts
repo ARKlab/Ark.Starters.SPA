@@ -220,7 +220,7 @@ export class MsalAuthProvider implements AuthProvider {
     }
     return LoginStatus.NotLogged;
   }
-  subscribe(subscriber: (status: string) => void) {
+  onLoginStatus(subscriber: (status: string) => void) {
     this.subscribers.add(subscriber);
     return () => {
       this.subscribers.delete(subscriber);
