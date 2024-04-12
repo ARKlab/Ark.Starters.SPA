@@ -49,7 +49,7 @@ export function ArkReauthQuery(authProvider: AuthProvider) {
     unknown,
     FetchBaseQueryError
   > = async (args, api, extraOptions) => {
-    let baseQuery = BaseQuery(api);
+    const baseQuery = BaseQuery(api);
     let result = await baseQuery(args, api, extraOptions);
     if (result.error && result.error.status === 401) {
       // try to get a new token

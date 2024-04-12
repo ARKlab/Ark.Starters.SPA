@@ -1,6 +1,7 @@
 {
   "name": "ark.starters.spa",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "dependencies": {
     "@auth0/auth0-spa-js": "^2.1.3",
@@ -33,15 +34,14 @@
     "zod-i18n-map": "^2.27.0"
   },
   "scripts": {
-    "start": "concurrently \"npm run localStart\" \"cross-env NODE_ENV=development PORT=4000 node public/connectionStrings.js\"",
-    "localStart": "r3f-pack start",
-    "build": "r3f-pack build"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "start": "concurrently \"npm run localSettings\" \"npm run localStart\"",
+    "localSettings": "cross-env NODE_ENV=development PORT=4000 node public/connectionStrings.cjs",
+    "localStart": "vite",
+    "build": "tsc && vite build",
+    "preview": "concurrently \"npm run localSettings\" \"npm run vite-preview\"",
+    "vite-preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "test": "vitest"
   },
   "browserslist": {
     "production": [
@@ -60,14 +60,23 @@
     "@testing-library/react": "^15.0.0",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.7",
-    "@types/react": "^18.2.70",
-    "@types/react-dom": "^18.2.23",
     "@types/ramda": "^0.29.12",
+    "@types/react": "^18.2.70",
     "@types/react-copy-to-clipboard": "^5.0.7",
+    "@types/react-dom": "^18.2.23",
+    "@typescript-eslint/eslint-plugin": "^7.6.0",
+    "@typescript-eslint/parser": "^7.6.0",
+    "@vitejs/plugin-react": "^4.2.1",
     "concurrently": "^7.6.0",
     "cross-env": "^7.0.3",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
     "r3f-pack": "^2.7.3",
     "typescript": "^5.4.5",
+    "vite": "^5.2.8",
+    "vite-plugin-eslint": "^1.8.1",
+    "vitest": "^1.4.0",
     "web-vitals": "^3.5.2"
   },
   "engineStrict": true,

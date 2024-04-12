@@ -9,7 +9,7 @@ import { useEffect } from "react";
 
 const NotificationView = () => {
 
-    var toast = useToast();
+    const toast = useToast();
 
     const dispatch = useAppDispatch();
     const notification = useAppSelector(selectNotification);

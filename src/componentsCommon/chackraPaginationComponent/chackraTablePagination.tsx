@@ -1,12 +1,10 @@
 import {
   Button,
-  FormControl,
-  FormHelperText,
-  FormLabel,
   Select,
   Stack,
 } from "@chakra-ui/react";
 import * as R from "ramda";
+import { MouseEventHandler } from "react";
 import {
   MdChevronLeft,
   MdChevronRight,
@@ -18,8 +16,8 @@ type PaginationComponentTypes = {
   count: number;
   page: number;
   pageSize: number;
-  onPageChange: (page: number) => any;
-  onPageSizeChange: (pageSize: number) => any;
+  onPageChange: (page: number) => unknown;
+  onPageSizeChange: (pageSize: number) => unknown;
   isLoading: boolean;
 };
 
@@ -35,9 +33,9 @@ const PaginationComponent = ({
   const pageMinRange = 3;
   const pageMinRangeVal = R.gt(page, pageMinRange)
     ? R.min(
-        R.subtract(page, pageMinRange),
-        R.subtract(totalPages, pageMinRange)
-      )
+      R.subtract(page, pageMinRange),
+      R.subtract(totalPages, pageMinRange)
+    )
     : 0;
 
   const pageMaxRange = 2;
@@ -82,7 +80,7 @@ const PaginationComponent = ({
               title="Previous"
               value={<MdChevronLeft />}
             />
-            {pageRange.map((p: any, i: number) => {
+            {pageRange.map((p: number, i: number) => {
               const pVal = R.add(1, p);
               return (
                 <PageItem
@@ -137,7 +135,7 @@ export default PaginationComponent;
 
 type PageItemsTypes = {
   display: boolean;
-  onChange: any;
+  onChange: MouseEventHandler<HTMLButtonElement>;
   title?: string;
   disable?: boolean;
   currentPage?: boolean;
@@ -153,7 +151,7 @@ const PageItem = ({
   value,
 }: PageItemsTypes) =>
   R.ifElse(
-    (x: any) => x === true,
+    (x: unknown) => x === true,
     () => (
       <Button
         isDisabled={disable}

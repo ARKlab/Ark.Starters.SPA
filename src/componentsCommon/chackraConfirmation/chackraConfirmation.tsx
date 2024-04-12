@@ -15,8 +15,8 @@ export const ChackraConfirmation = (props: {
   title: string;
   message: string;
   isOpen: boolean;
-  confirmAction: (p: any) => Action;
-  paramsForConfirmAction: any;
+  confirmAction: (p: unknown) => Action;
+  paramsForConfirmAction: unknown;
   onClose: () => void;
 }) => {
   const dispatch = useAppDispatch();

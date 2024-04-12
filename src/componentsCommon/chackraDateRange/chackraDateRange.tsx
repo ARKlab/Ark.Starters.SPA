@@ -12,13 +12,13 @@ import { TiTimes } from "react-icons/ti";
 import { formatDateToString } from "../../lib/helper";
 
 export const ChackraDateRange = (props: {
-  handleInputChange: (name: string, value: any) => void;
+  handleInputChange: (name: string, value: unknown) => void;
   propForm: string;
   propTo: string;
   label: string;
   dateFormat?: string;
 }) => {
-  
+
   const [fromToRange, setFromToRange] = useState<Date[]>([]);
 
   const handleFromToDataRangeChange = async (
@@ -64,7 +64,7 @@ export const ChackraDateRange = (props: {
               rounded={"full"}
               h="1rem"
               size="xs"
-              onClick={(e) =>
+              onClick={(_) =>
                 handleFromToDataRangeChange([], props.propForm, props.propTo)
               }
             >

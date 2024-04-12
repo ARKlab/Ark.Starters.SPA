@@ -25,7 +25,8 @@ export const ChackraPlainTable = <T,>({
   isLoading,
   isError,
 }: PlainTablePropsType<T>) => {
-  const headers = Object.keys(data[0] || {});
+  type TK = keyof T;
+  const headers = Object.keys(data[0] || {}) as TK[];
 
   return (
     <TableContainer my="30px">
@@ -33,7 +34,7 @@ export const ChackraPlainTable = <T,>({
         <Thead>
           <Tr>
             {headers.map((header) => (
-              <Th key={header}>{header}</Th>
+              <Th key={String(header)}>{String(header)}</Th>
             ))}
           </Tr>
         </Thead>
@@ -50,7 +51,7 @@ export const ChackraPlainTable = <T,>({
             data.map((row, rowIndex) => (
               <Tr key={rowIndex}>
                 {headers.map((header) => (
-                  <Td key={header}>{(row as any)[header]}</Td>
+                  <Td key={String(header)}>{row[header] as any}</Td> // eslint-disable-line @typescript-eslint/no-explicit-any
                 ))}
               </Tr>
             ))

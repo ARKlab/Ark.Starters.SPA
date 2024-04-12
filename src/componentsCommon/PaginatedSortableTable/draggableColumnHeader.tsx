@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-table";
 import { useDrag, useDrop } from "react-dnd";
 
-export const reorderColumn = (
+const reorderColumn = (
   draggedColumnId: string,
   targetColumnId: string,
   columnOrder: string[]
@@ -19,6 +19,7 @@ export const reorderColumn = (
   );
   return [...columnOrder];
 };
+
 export const DraggableColumnHeader = <T,>(props: {
   header: Header<T, unknown>;
   table: ReactTable<T>;

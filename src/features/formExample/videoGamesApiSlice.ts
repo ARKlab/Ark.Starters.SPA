@@ -1,7 +1,4 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
-import { ColumnFiltersState, SortingState } from "@tanstack/react-table";
-import * as R from "ramda";
 import { ArkPagedQueryParameters, ListResponse } from "../../lib/apiTypes";
 import { delay } from "../../lib/helper";
 import {
@@ -27,7 +24,7 @@ export const videoGameApiSlice = createApi({
         const { pageIndex: page = 1, pageSize = 10 } = params;
         const skip = (page - 1) * pageSize;
         const limit = pageSize;
-        let retData = {
+        const retData = {
           data: videoGamesSampleData.slice(skip, skip + limit),
           count: videoGamesSampleData.length,
         };

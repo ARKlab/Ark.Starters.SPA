@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import { IconType } from "react-icons";
-import { Action, AnyAction, Dispatch } from "redux";
 
 export interface SubsectionMenuItemType {
   isInMenu: boolean;

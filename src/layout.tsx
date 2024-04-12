@@ -8,7 +8,6 @@ import { Box } from "@chakra-ui/react";
 import SimpleSidebar from "./components/sideBar/sideBar";
 
 import { ProblemDetailsModal } from "./componentsCommon/problemDetailsModal/problemDetailsModal";
-import Notification from "./features/notifications/notificationView";
 import NotificationView from "./features/notifications/notificationView";
 
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as z from "zod";
 import _ from "lodash";
 
@@ -7,10 +8,10 @@ final form with form array error format:
 */
 export const zod2FormValidator =
   <T extends z.ZodType<any, any>>(schema: T) =>
-  (values: Record<string, any>) => {
-    var res = schema.safeParse(values);
+  (values: Record<string, unknown>) => {
+    const res = schema.safeParse(values);
     if (!res.success) {
-      var errors = {};
+      const errors = {};
       for (const err of res.error.errors) {
         _.set(errors, err.path, [err.message]);
       }
@@ -22,7 +23,7 @@ export const zod2FormValidator =
 export const zod2FieldValidator =
   <T extends z.ZodType<any, any>>(schema: T) =>
   (value: unknown) => {
-    var res = schema.safeParse(value);
+    const res = schema.safeParse(value);
     if (!res.success) {
       return res.error.formErrors.formErrors;
     }

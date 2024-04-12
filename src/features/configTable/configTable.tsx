@@ -59,7 +59,7 @@ const primaryKeyValidator =
     );
     const duplicates: string[] = [];
 
-    propValues.forEach((value, i) => {
+    propValues.forEach((value) => {
       const duplicateIndexes = propValues.reduce(
         (indexes, propValue, index) => {
           if (propValue === value) {
@@ -96,9 +96,7 @@ export default function EditableTableExample() {
     postConfig,
     {
       isLoading: postConfigIsLoading,
-      isSuccess: postConfigSuccess,
-      isError: postConfigIsError,
-      error: postConfigError,
+      isSuccess: postConfigSuccess
     },
   ] = usePostConfigMutation();
 
@@ -147,7 +145,7 @@ export default function EditableTableExample() {
       render={({
         handleSubmit,
         form: {
-          mutators: { push, pop },
+          mutators: { push },
         },
         form,
         submitting,
@@ -219,7 +217,7 @@ export default function EditableTableExample() {
                   </Tr>
                 ) : (
                   <FieldArray<Employee> name="table">
-                    {({ fields, meta: { error } }) =>
+                    {({ fields }) =>
                       fields.map((field, index) => {
                         return (
                           <TableRow
@@ -227,7 +225,7 @@ export default function EditableTableExample() {
                             name={field}
                             index={index}
                             submitting={submitting}
-                            fields={fields}
+                            onDelete={() => fields.remove(index)}
                           />
                         );
                       })
@@ -247,13 +245,13 @@ const TableRow = (props: {
   name: string;
   index: number;
   submitting: boolean;
-  fields: any;
+  onDelete: () => void;
 }) => {
-  const { name, index, submitting, fields } = props;
-  var {
+  const { name, index, submitting, onDelete } = props;
+  const {
     meta: { error },
   } = useField(name + "_rowError");
-  var rowError = error;
+  const rowError = error;
   return (
     <Tr key={index + name}>
       <Td>
@@ -300,7 +298,7 @@ const TableRow = (props: {
         <IconButton
           isDisabled={submitting}
           icon={<FaTrash />}
-          onClick={() => fields.remove(index)}
+          onClick={onDelete}
           colorScheme="red"
           aria-label="Remove Employee"
         />

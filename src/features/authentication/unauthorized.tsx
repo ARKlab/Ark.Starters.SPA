@@ -5,7 +5,7 @@ import { useAppDispatch } from "../../app/hooks";
 import { Login } from "./authenticationSlice";
 
 const Unauthorized = () => {
-  const { context, isLogged } = useAuthContext();
+  const { isLogged } = useAuthContext();
 
   const dispatch = useAppDispatch();
   function login() {

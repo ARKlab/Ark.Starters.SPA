@@ -1,11 +1,10 @@
 
-import { Route, Routes, Outlet } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Unauthorized from "./features/authentication/unauthorized";
-import { ReactElement, useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "./app/hooks";
+import { useEffect } from "react";
+import { useAppDispatch } from "./app/hooks";
 import { DetectLoggedInUser } from "./features/authentication/authenticationSlice";
 import { AuthenticationCallback } from "./lib/authentication/authenticationCallback";
-import { useAuthContext } from "./lib/authentication/authenticationContext";
 import { getEntryPointPath, mainSections } from "./siteMap/mainSections";
 import { AuthenticatedOnly } from "./lib/authentication/authenticationComponents";
 import Layout from "./layout";

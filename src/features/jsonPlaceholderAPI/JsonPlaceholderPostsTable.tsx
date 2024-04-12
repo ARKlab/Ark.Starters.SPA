@@ -13,7 +13,7 @@ const JsonPlaceholderPostsTable = () => {
   });
   return (
     <>
-      <Button colorScheme="brandPalette">TestButton </Button>
+      <Button colorScheme="brandPalette">TestButton</Button>
       <ChackraPlainTable
         colorscheme="teal"
         variant="striped"

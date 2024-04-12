@@ -1,9 +1,4 @@
 import { AccountInfo, PublicClientApplication } from "@azure/msal-browser";
-import * as R from "ramda";
-
-export function permissionSelector(token: any): string[] {
-  return R.split(" ", token["extension_permissions"]);
-}
 
 export function createAuthHelpers(auth: PublicClientApplication) {
   const getUserAccounts = () => auth.getAllAccounts();
@@ -25,6 +20,7 @@ export function createAuthHelpers(auth: PublicClientApplication) {
         throw new Error("Can't acquire token");
       } else {
         await loginWithRedirect(scopes);
+        return;
       }
     }
   };

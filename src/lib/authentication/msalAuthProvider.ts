@@ -13,7 +13,7 @@ export type MSALConfig = {
 export class MsalAuthProvider implements AuthProvider {
   private config: MSALConfig;
   private account: AccountInfo | null;
-  private myMSALObj: msal.IPublicClientApplication = {} as any;
+  private myMSALObj?: msal.IPublicClientApplication;
   private loginStatus: LoginStatus = LoginStatus.NotLogged;
   private loginRedirectRequest: msal.RedirectRequest;
   private loginRequest: msal.PopupRequest;
@@ -98,12 +98,12 @@ export class MsalAuthProvider implements AuthProvider {
     interactiveRequest: msal.RedirectRequest
   ): Promise<string | null> {
     try {
-      const response = await this.myMSALObj.acquireTokenSilent(silentRequest);
+      const response = await this.myMSALObj!.acquireTokenSilent(silentRequest);
 
       return response.accessToken;
     } catch (e) {
       if (e instanceof msal.InteractionRequiredAuthError) {
-        this.myMSALObj.acquireTokenRedirect(interactiveRequest).catch((e) => {
+        this.myMSALObj!.acquireTokenRedirect(interactiveRequest).catch((e) => {
           throw new Error(e);
         });
       } else {
@@ -117,20 +117,20 @@ export class MsalAuthProvider implements AuthProvider {
     if (response !== null) {
       this.account = response.account;
     } else {
-      let accounts = this.getAccounts();
+      const accounts = this.getAccounts();
 
       this.account = accounts ? accounts[0] : null;
     }
   }
   public async getUserDetail(): Promise<UserAccountInfo | null> {
-    const currentAccounts = this.myMSALObj.getAllAccounts();
+    const currentAccounts = this.myMSALObj!.getAllAccounts();
     if (currentAccounts === null || currentAccounts.length === 0) {
       return (
         this.account && ({ username: this.account.username } as UserAccountInfo)
       );
     } else {
-      this.myMSALObj.setActiveAccount(currentAccounts[0]);
-      const resp = await this.myMSALObj.acquireTokenSilent(
+      this.myMSALObj!.setActiveAccount(currentAccounts[0]);
+      const resp = await this.myMSALObj!.acquireTokenSilent(
         this.silentProfileRequest
       );
       this.idTokenClaims = resp.idTokenClaims;
@@ -139,7 +139,7 @@ export class MsalAuthProvider implements AuthProvider {
   }
 
   private getAccounts(): AccountInfo[] | null {
-    const currentAccounts = this.myMSALObj.getAllAccounts();
+    const currentAccounts = this.myMSALObj!.getAllAccounts();
 
     if (currentAccounts === null) {
       return null;
@@ -150,17 +150,17 @@ export class MsalAuthProvider implements AuthProvider {
   public async handleLoginRedirect(): Promise<void> {
     try {
       const resp: msal.AuthenticationResult | null =
-        await this.myMSALObj.handleRedirectPromise();
+        await this.myMSALObj!.handleRedirectPromise();
       if (resp) {
-        const account = this.myMSALObj.getAllAccounts();
+        const account = this.myMSALObj!.getAllAccounts();
         if (account.length === 0) {
           await this.login();
         } else {
           this.handleResponse(resp);
         }
       }
-    } catch (e: any) {
-      throw new Error(e);
+    } catch (e) {
+      throw new Error(String(e));
     }
   }
   async getProfileTokenRedirect(): Promise<string | null> {
@@ -180,20 +180,20 @@ export class MsalAuthProvider implements AuthProvider {
   }
   public async login(): Promise<void> {
     try {
-      await this.myMSALObj.loginRedirect(this.loginRedirectRequest);
+      await this.myMSALObj!.loginRedirect(this.loginRedirectRequest);
     } catch (e) {
       throw new Error(e as string);
     }
   }
   logout() {
-    return this.myMSALObj.logoutRedirect();
+    return this.myMSALObj!.logoutRedirect();
   }
   async getToken(audience?: string) {
     return await this.getProfileTokenRedirect();
   }
   hasPermission(permission: string, audience?: string) {
     if (this.idTokenClaims) {
-      var permissions = R.pathOr(
+      const permissions = R.pathOr(
         "",
         ["extension_Scope"],
         this.idTokenClaims
@@ -204,7 +204,7 @@ export class MsalAuthProvider implements AuthProvider {
   }
   getLoginStatus(): LoginStatus {
     if (this.myMSALObj) {
-      let isLoggedIn = this.myMSALObj.getAllAccounts().length > 0;
+      const isLoggedIn = this.myMSALObj.getAllAccounts().length > 0;
       this.loginStatus = isLoggedIn
         ? LoginStatus.Logged
         : LoginStatus.NotLogged;

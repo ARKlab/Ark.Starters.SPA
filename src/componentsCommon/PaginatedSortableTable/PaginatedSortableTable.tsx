@@ -35,6 +35,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { DebouncedInputColumnHeader } from "../debouncedInputColumnHeader";
 import { ChackraDateRangeInHeader } from "../chackraDateRange/chackraDateRangeInHeader";
 import { DraggableColumnHeader } from "./draggableColumnHeader";
+import { ListResponse } from "../../lib/apiTypes";
 type PaginatedSortableTableProps<T> = {
   columns: ColumnDef<T>[];
   useQueryHook: (args: {
@@ -42,7 +43,7 @@ type PaginatedSortableTableProps<T> = {
     pageSize: number;
     sorting: SortingState;
     filters: ColumnFiltersState;
-  }) => any;
+  }) => { data?: ListResponse<T>, isLoading: boolean, isFetching: boolean };
   isDraggable?: boolean;
   isSortable?: boolean;
   disableHeaderFilters?: boolean;
@@ -89,7 +90,7 @@ export function PaginatedSortableTable<T>(
   const resetOrder = () =>
     setColumnOrder(columns.map((column) => column.id as string));
 
-  const { data, error, isLoading, isFetching } = useQueryHook({
+  const { data, isLoading, isFetching } = useQueryHook({
     pageIndex,
     pageSize,
     sorting: sortingState,
@@ -191,7 +192,7 @@ export function PaginatedSortableTable<T>(
                           }[header.column.getIsSorted() as string] ?? null}
                         </span>
                         {header.column.getCanFilter() &&
-                        !disableHeaderFilters ? (
+                          !disableHeaderFilters ? (
                           <span>
                             <Filter<T>
                               column={header.column}
@@ -260,12 +261,13 @@ function Filter<T>({
   table: ReactTable<T>;
   isLoading: boolean;
 }) {
-  if (table.getPreFilteredRowModel() === undefined) return <></>;
+
   const firstValue = table
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id);
 
   const columnFilterValue = column.getFilterValue();
+  const columnFacetedUniqueValues = column.getFacetedUniqueValues();
 
   const sortedUniqueValues = React.useMemo(() => {
     switch (column.columnDef.meta?.type) {
@@ -275,14 +277,14 @@ function Filter<T>({
       case "string":
         return typeof firstValue === "number"
           ? []
-          : Array.from(column.getFacetedUniqueValues().keys()).sort();
+          : Array.from(columnFacetedUniqueValues.keys()).sort();
       default:
         return [];
     }
   }, [
-    column.getFacetedUniqueValues(),
-    column.columnDef.meta?.type,
-    firstValue,
+    column,
+    columnFacetedUniqueValues,
+    firstValue
   ]);
 
   //You can add all the filters you need and want here, even multiple per column (min max for numbers for example)
@@ -299,7 +301,7 @@ function Filter<T>({
       return (
         <>
           <datalist id={column.id + "list"}>
-            {sortedUniqueValues.slice(0, 5000).map((value: any) => (
+            {sortedUniqueValues.slice(0, 5000).map((value) => (
               <option value={value} key={value} />
             ))}
           </datalist>
@@ -314,5 +316,7 @@ function Filter<T>({
           <Box className="h-1" />
         </>
       );
+    default:
+      return (<></>);
   }
 }

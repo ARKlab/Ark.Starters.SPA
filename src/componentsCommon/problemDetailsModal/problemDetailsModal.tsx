@@ -14,11 +14,9 @@ import {
   Card,
   Code,
   Flex,
-  useDisclosure,
   AccordionButton,
   AccordionPanel,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
 
 export const ProblemDetailsModal = () => {
   const problem = useAppSelector(selectError);
@@ -26,7 +24,7 @@ export const ProblemDetailsModal = () => {
   const therIsError =
     problem.error !== undefined ? problem.error : false;
   const problemDetails = problem.details;
-  
+
   return (
     <ChackraUIBaseModal
       size={"xl"}

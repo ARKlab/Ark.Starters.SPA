@@ -22,8 +22,6 @@ import { FiMenu } from "react-icons/fi";
 import { mainSections } from "../../siteMap/mainSections";
 import MenuItem from "./menuItem/menuItem";
 import { SubsectionMenuItemType } from "./menuItem/types";
-import { useAuthContext } from "../../lib/authentication/authenticationContext";
-import { LoginStatus } from "../../lib/authentication/authTypes";
 
 //#endregion
 
@@ -149,7 +147,7 @@ const InnerAccordionSections = (props: {
   section: SubsectionMenuItemType;
   parentPath: string;
 }) => {
-  let section = props.section;
+  const section = props.section;
   if (section.subsections)
     return (
       <Accordion

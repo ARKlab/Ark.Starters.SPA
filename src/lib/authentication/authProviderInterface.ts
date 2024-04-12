@@ -1,9 +1,6 @@
 import { UserAccountInfo } from "./authTypes";
 
 type TokenResponse = {};
-type ProblemDetails = {};
-type LoginDataType = {};
-type AuthStatusEnum = "idle" | "loading" | "succeeded" | "failed";
 type LoginStatus = {};
 export interface AuthProvider {
   /**

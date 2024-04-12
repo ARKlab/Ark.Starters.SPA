@@ -1,7 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-import { ColumnFiltersState, SortingState } from "@tanstack/react-table";
-import * as R from "ramda";
 import { ArkPagedQueryParameters, ListResponse } from "../../lib/apiTypes";
 import { delay } from "../../lib/helper";
 import moviesData, { Movie } from "./fakeMoviesData";
@@ -18,7 +16,7 @@ export const moviesApiSlice = createApi({
       queryFn: async (params: ArkPagedQueryParameters) => {
         await delay(500);
         const { pageIndex: page = 1, pageSize = 10 } = params;
-        let retData = simulatedArkQueryWithParams(params);
+        const retData = simulatedArkQueryWithParams(params);
         return {
           data: {
             data: retData.data,
@@ -47,7 +45,7 @@ export const simulatedArkQueryWithParams = (
   if (filters && filters.length > 0) {
     filteredMovies = filter(filteredMovies, (movie) => {
       return every(filters, (columnFilter) => {
-        let movieValue = movie[columnFilter.id as keyof Movie];
+        const movieValue = movie[columnFilter.id as keyof Movie];
         if (
           columnFilter.id === "releaseDate" &&
           Array.isArray(columnFilter.value)
@@ -89,7 +87,7 @@ export const simulatedArkQueryWithParams = (
     const sortOrders = sorting.map((sort) => (sort.desc ? "desc" : "asc"));
     filteredMovies = orderBy(filteredMovies, sortFields, sortOrders);
   }
-  let count = filteredMovies.length;
+  const count = filteredMovies.length;
   let data = filteredMovies.slice(skip, skip + limit);
   data = data.map((movie) => ({
     ...movie,
