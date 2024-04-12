@@ -8,5 +8,6 @@ export function AuthenticatedOnly({
   component: () => ReactNode;
 }): ReactNode {
   const { isLogged } = useAuthContext();
-  return isLogged ? component() : <Unauthorized />;
+  const Component = component;
+  return isLogged ? <Component /> : <Unauthorized />;
 }
