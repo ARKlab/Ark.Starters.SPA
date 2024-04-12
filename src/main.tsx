@@ -1,33 +1,16 @@
-import { useToast } from "@chakra-ui/react";
 import { Route, Routes, Outlet } from "react-router-dom";
-import Footer from "./components/footer/footer";
-import Header from "./components/header/view";
-import { Selectors as errorSelectors } from "./features/errorHandler/errorHandler";
-import {
-  resetNotification,
-  selectNotification,
-} from "./features/notifications/notification";
-import Unauthorized from "./features/unauthorized/view";
-
-import { Box } from "@chakra-ui/react";
-
-import SimpleSidebar from "./components/sideBar/sideBar";
-
+import Unauthorized from "./features/authentication/unauthorized";
 import { ReactElement, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
-import { ProblemDetailsModal } from "./componentsCommon/problemDetailsModal/problemDetailsModal";
 import { DetectLoggedInUser } from "./features/authentication/authenticationSlice";
-import JsonPlaceHolderView from "./features/jsonPlaceholderAPI/JsonPlaceHolder";
 import { AuthenticationCallback } from "./lib/authentication/authenticationCallback";
 import { useAuthContext } from "./lib/authentication/authenticationContext";
 import { getEntryPointPath, mainSections } from "./siteMap/mainSections";
-import NoEntryPoint from "./features/NoEntryPoint/staticPage";
 import { AuthenticatedOnly } from "./lib/authentication/authenticationComponents";
+import Layout from "./layout";
+import PageNotFound from "./componentsCommon/pageNotFound";
 
-//export const authProvider = new Auth0AuthProvider(authConfig);x
-
-const Component = () => {
-  const { context, isLogged } = useAuthContext();
+const Main = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -76,58 +59,17 @@ const Component = () => {
   return (
     <>
       <Routes>
-        <Route
-          key={"authenticationCallbackRoute"}
-          index
-          path="/"
-          element={<AuthenticationCallback redirectTo={entryPoint} />}
-        />
-        <Route
-          key={"UnauthorizedComponentRoute"}
-          path="/Unauthorized"
-          element={<Unauthorized />}
-        />
-        {routes}
+        <Route element={<Layout />}>
+          <Route
+            index
+            path="/"
+            element={<AuthenticationCallback redirectTo={entryPoint} />}
+          />
+          <Route path="/Unauthorized" element={<Unauthorized />} />
+          {routes}
+          <Route path="*" element={<PageNotFound />} />
+        </Route>
       </Routes>
-    </>
-  );
-};
-
-const Main = () => {
-  var toast = useToast();
-
-  const dispatch = useAppDispatch();
-  const notification = useAppSelector(selectNotification);
-  const problemDetails = useAppSelector(errorSelectors.all);
-  useEffect(() => {
-    if (notification) {
-      toast({
-        title: notification.title,
-        description: notification.message,
-        status: notification.status,
-        duration: notification.duration,
-        isClosable: notification.isClosable,
-        position: notification.position,
-      });
-      dispatch(resetNotification());
-    }
-  }, [notification, toast, dispatch]);
-
-  return (
-    <>
-      <Header />
-      <Box minH="70vh">
-        <SimpleSidebar />
-        <Box ml={{ base: 0, md: 60 }} p="4" my={"70px"}>
-          {Component()}
-        </Box>
-      </Box>
-      <Footer />
-      {problemDetails.error === true ? (
-        <ProblemDetailsModal problem={problemDetails} />
-      ) : (
-        <></>
-      )}
     </>
   );
 };

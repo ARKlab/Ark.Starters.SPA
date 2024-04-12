@@ -11,8 +11,11 @@ import { theme } from "./theme";
 
 import Auth0AuthProvider from "./lib/authentication/auth0AuthProvider";
 import AuthenticationProviderContext from "./lib/authentication/authenticationContext";
+
+
 const env = window.customSettings;
 const authProvider = new Auth0AuthProvider(env);
+
 const store = initStore(authProvider);
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
@@ -31,9 +34,7 @@ async function initApplication() {
         <Provider store={store}>
           <BrowserRouter>
             <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
-              <Routes>
-                <Route path="/*" element={<Main />} />
-              </Routes>
+              <Main />
             </ChakraProvider>
           </BrowserRouter>
         </Provider>

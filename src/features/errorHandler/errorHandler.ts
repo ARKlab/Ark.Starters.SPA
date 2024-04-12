@@ -85,6 +85,4 @@ export const dispatchNetworkError =
     );
   };
 
-export const Selectors: { all: (state: RootState) => errorModalType } = {
-  all: R.prop(errorSlice.name),
-};
+export const selectError = errorSlice.selectSlice ;

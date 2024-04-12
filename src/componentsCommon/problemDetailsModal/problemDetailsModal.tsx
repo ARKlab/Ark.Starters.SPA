@@ -1,6 +1,8 @@
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import {
   DetailsType,
-  errorModalType,
+  selectError,
+  clearError
 } from "../../features/errorHandler/errorHandler";
 import { ChackraUIBaseModal } from "../chackraModal/chackraBaseModal";
 import {
@@ -18,22 +20,18 @@ import {
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 
-export const ProblemDetailsModal = (props: { problem: errorModalType }) => {
+export const ProblemDetailsModal = () => {
+  const problem = useAppSelector(selectError);
+  const dispatch = useAppDispatch();
   const therIsError =
-    props.problem.error !== undefined ? props.problem.error : false;
-  const problemDetails = props.problem.details;
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  useEffect(() => {
-    if (therIsError === true) {
-      onOpen();
-    }
-  }, [therIsError, onOpen]);
+    problem.error !== undefined ? problem.error : false;
+  const problemDetails = problem.details;
+  
   return (
     <ChackraUIBaseModal
       size={"xl"}
-      isOpen={isOpen}
-      onOpen={onOpen}
-      onClose={onClose}
+      isOpen={therIsError}
+      onClose={() => { dispatch(clearError()); }}
       title={problemDetails?.title || ""}
       body={<ProblemDetailsModalBody problem={problemDetails} />}
       blurredOverlay={true}

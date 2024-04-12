@@ -11,7 +11,6 @@ import {
 
 export const ChackraUIBaseModal = (props: {
   isOpen: boolean;
-  onOpen?: () => void;
   onClose?: () => void;
   onSubmit?: () => void;
   submitButton?: boolean;

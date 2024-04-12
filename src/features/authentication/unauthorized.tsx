@@ -1,9 +1,8 @@
 import React from "react";
 import { Box, Heading, Text, Button } from "@chakra-ui/react";
 import { useAuthContext } from "../../lib/authentication/authenticationContext";
-import { LoginStatus } from "../../lib/authentication/authTypes";
 import { useAppDispatch } from "../../app/hooks";
-import { Login } from "../authentication/authenticationSlice";
+import { Login } from "./authenticationSlice";
 
 const Unauthorized = () => {
   const { context, isLogged } = useAuthContext();

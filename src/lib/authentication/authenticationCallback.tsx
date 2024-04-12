@@ -1,9 +1,9 @@
-import { ReactNode, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAppDispatch } from "../../app/hooks";
 import { Init } from "../../features/authentication/authenticationSlice";
 import { useAuthContext } from "./authenticationContext";
 import { AuthStoreType } from "./authTypes";
-import { Navigate, Outlet, redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 export const AuthenticationCallback = (props: { redirectTo: string }) => {
   const dispatch = useAppDispatch();
