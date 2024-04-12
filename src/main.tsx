@@ -43,7 +43,13 @@ const Component = () => {
             routes.push(
               <Route
                 path={x.path + s.path + sub.path}
-                element={<AuthenticatedOnly component={sub.component} />}
+                element={
+                  sub.authenticatedOnly ? (
+                    <AuthenticatedOnly component={sub.component} />
+                  ) : (
+                    <sub.component />
+                  )
+                }
               />
             );
           }
@@ -52,7 +58,13 @@ const Component = () => {
         routes.push(
           <Route
             path={x.path + s.path}
-            element={<AuthenticatedOnly component={s.component} />}
+            element={
+              s.authenticatedOnly ? (
+                <AuthenticatedOnly component={s.component} />
+              ) : (
+                <s.component />
+              )
+            }
           />
         );
       }
