@@ -1,4 +1,3 @@
-
 import { Route, Routes, Outlet } from "react-router-dom";
 import Unauthorized from "./features/authentication/unauthorized";
 import { ReactElement, useEffect } from "react";
@@ -10,7 +9,6 @@ import { getEntryPointPath, mainSections } from "./siteMap/mainSections";
 import { AuthenticatedOnly } from "./lib/authentication/authenticationComponents";
 import Layout from "./layout";
 import PageNotFound from "./componentsCommon/pageNotFound";
-
 
 const Main = () => {
   const dispatch = useAppDispatch();
@@ -27,8 +25,17 @@ const Main = () => {
           if (sub.component && sub.path) {
             routes.push(
               <Route
+                key={x.path + s.path + sub.path}
                 path={x.path + s.path + sub.path}
-                element={<AuthenticatedOnly component={sub.component} />}
+                element={
+                  sub.authenticatedOnly ? (
+                    <AuthenticatedOnly>
+                      <sub.component />
+                    </AuthenticatedOnly>
+                  ) : (
+                    <sub.component />
+                  )
+                }
               />
             );
           }
@@ -36,8 +43,17 @@ const Main = () => {
       } else if (s.component && s.path) {
         routes.push(
           <Route
+            key={x.path + s.path}
             path={x.path + s.path}
-            element={<AuthenticatedOnly component={s.component} />}
+            element={
+              s.authenticatedOnly ? (
+                <AuthenticatedOnly>
+                  <s.component />
+                </AuthenticatedOnly>
+              ) : (
+                <s.component />
+              )
+            }
           />
         );
       }

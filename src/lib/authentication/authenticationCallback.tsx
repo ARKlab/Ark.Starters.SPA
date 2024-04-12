@@ -21,7 +21,7 @@ export const AuthenticationCallback = (props: { redirectTo: string }) => {
         }
       });
     }
-  }, [dispatch, isLogged]);
+  }, [dispatch, context, isLogged]);
 
   if (isLogged) {
     return <Navigate to={props.redirectTo} replace />;
