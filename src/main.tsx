@@ -29,7 +29,9 @@ const Main = () => {
                 path={x.path + s.path + sub.path}
                 element={
                   sub.authenticatedOnly ? (
-                    <AuthenticatedOnly component={sub.component} />
+                    <AuthenticatedOnly>
+                      <sub.component />
+                    </AuthenticatedOnly>
                   ) : (
                     <sub.component />
                   )
@@ -45,7 +47,9 @@ const Main = () => {
             path={x.path + s.path}
             element={
               s.authenticatedOnly ? (
-                <AuthenticatedOnly component={s.component} />
+                <AuthenticatedOnly>
+                  <s.component />
+                </AuthenticatedOnly>
               ) : (
                 <s.component />
               )
