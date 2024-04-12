@@ -42,6 +42,7 @@ const Component = () => {
           if (sub.component && sub.path) {
             routes.push(
               <Route
+                key={x.path + s.path + sub.path}
                 path={x.path + s.path + sub.path}
                 element={
                   sub.authenticatedOnly ? (
@@ -57,6 +58,7 @@ const Component = () => {
       } else if (s.component && s.path) {
         routes.push(
           <Route
+            key={x.path + s.path}
             path={x.path + s.path}
             element={
               s.authenticatedOnly ? (
@@ -75,11 +77,16 @@ const Component = () => {
     <>
       <Routes>
         <Route
+          key={"authenticationCallbackRoute"}
           index
           path="/"
           element={<AuthenticationCallback redirectTo={entryPoint} />}
         />
-        <Route path="/Unauthorized" element={<Unauthorized />} />
+        <Route
+          key={"UnauthorizedComponentRoute"}
+          path="/Unauthorized"
+          element={<Unauthorized />}
+        />
         {routes}
       </Routes>
     </>
