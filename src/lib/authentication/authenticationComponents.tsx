@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { useAuthContext } from "./authenticationContext";
+import { useAuthContext } from "./useAuthContext";
 import Unauthorized from "../../features/authentication/unauthorized";
 
 export function AuthenticatedOnly({

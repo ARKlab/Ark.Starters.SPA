@@ -21,7 +21,7 @@ import {
   Login,
   Logout,
 } from "../../features/authentication/authenticationSlice";
-import { useAuthContext } from "../../lib/authentication/authenticationContext";
+import { useAuthContext } from "../../lib/authentication/useAuthContext";
 import { MdQuestionMark } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { RootState } from "../..";

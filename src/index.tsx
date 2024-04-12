@@ -10,7 +10,7 @@ import reportWebVitals from "./reportWebVitals";
 import { theme } from "./theme";
 
 import Auth0AuthProvider from "./lib/authentication/auth0AuthProvider";
-import AuthenticationProviderContext from "./lib/authentication/authenticationContext";
+import AuthenticationProviderContext from "./lib/authentication/AuthenticationProviderContext";
 
 
 const env = window.customSettings;

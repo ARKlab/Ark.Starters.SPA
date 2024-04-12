@@ -29,6 +29,7 @@
     "./src"
   ],
   "files": [
-    "./vitest.setup.ts"
+    "./vitest.setup.ts",
+    "./src/lib/authentication/useAuthContext.tsx"
   ]
 }
