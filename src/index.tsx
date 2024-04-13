@@ -3,7 +3,6 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
 import { initStore } from "./app/configureStore";
 import Main from "./main";
 import reportWebVitals from "./reportWebVitals";
@@ -32,11 +31,9 @@ async function initApplication() {
     <React.StrictMode>
       <AuthenticationProviderContext authProvider={authProvider}>
         <Provider store={store}>
-          <BrowserRouter>
-            <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
+          <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
               <Main />
-            </ChakraProvider>
-          </BrowserRouter>
+          </ChakraProvider>
         </Provider>
       </AuthenticationProviderContext>
     </React.StrictMode>

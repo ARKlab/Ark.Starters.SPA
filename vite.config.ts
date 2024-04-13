@@ -28,9 +28,15 @@ export default defineConfig({
         chunkSizeWarningLimit: 2048,
         rollupOptions: {
             output: {
-              manualChunks: manualChunks
-          }
-      }
+                manualChunks: {
+                    router: ['react-router-dom'],
+                    rtk: ['@reduxjs/toolkit'],
+                    redux: ['react-redux'],
+                    chakra: ['@chakra-ui/react'],
+              }
+           }
+        },
+        sourcemap: true
     },
     server: {
         port: 3000,

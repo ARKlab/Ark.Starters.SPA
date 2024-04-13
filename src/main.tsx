@@ -1,5 +1,5 @@
 
-import { Route, Routes } from "react-router-dom";
+import { Route, RouterProvider, Routes, createBrowserRouter, createRoutesFromChildren } from "react-router-dom";
 import Unauthorized from "./features/authentication/unauthorized";
 import { useEffect } from "react";
 import { useAppDispatch } from "./app/hooks";
@@ -19,6 +19,7 @@ const Main = () => {
   }, [dispatch]);
 
   const routes = [] as React.ReactNode[];
+
   mainSections.forEach((x) =>
     x.subsections.forEach((s) => {
       if (s.subsections && s.subsections.length > 0) {
@@ -43,22 +44,21 @@ const Main = () => {
     })
   );
   const entryPoint = getEntryPointPath(mainSections);
-  return (
-    <>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route
-            index
-            path="/"
-            element={<AuthenticationCallback redirectTo={entryPoint} />}
-          />
-          <Route path="/Unauthorized" element={<Unauthorized />} />
-          {routes}
-          <Route path="*" element={<PageNotFound />} />
-        </Route>
-      </Routes>
-    </>
-  );
+  const router = createBrowserRouter(createRoutesFromChildren(
+    <Routes>
+      <Route element={<Layout />}>
+        <Route
+          index
+          path="/"
+          element={<AuthenticationCallback redirectTo={entryPoint} />}
+        />
+        <Route path="/Unauthorized" element={<Unauthorized />} />
+        {routes}
+        <Route path="*" element={<PageNotFound />} />
+      </Route>
+    </Routes>
+  ));
+  return (<RouterProvider router={router} />);
 };
 
 export default Main;
