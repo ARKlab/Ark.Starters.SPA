@@ -13,6 +13,7 @@ import { Else, If, Then } from "react-if";
 import { MainSectionType, SubsectionMenuItemType } from "./components/sideBar/menuItem/types";
 import { ErrorDisplay } from "./componentsCommon/errorDisplay";
 import SEO from "./componentsCommon/seo";
+import useLocalizeDocumentAttributes from "./lib/i18n/useLocalizeDocumentAttributes";
 
 const Main = () => {
   const dispatch = useAppDispatch();
@@ -20,6 +21,8 @@ const Main = () => {
   useEffect(() => {
     dispatch(DetectLoggedInUser());
   }, [dispatch]);
+
+  useLocalizeDocumentAttributes();
 
   const wrapComponent = (x: MainSectionType) => {
     return (<>

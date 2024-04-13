@@ -7,10 +7,10 @@ import {
   Input,
   Stack,
 } from "@chakra-ui/react";
-import { z } from "zod";
-import { zod2FieldValidator } from "../../lib/zod2form";
+import { zod2FieldValidator } from "../../lib/zod2FormValidator";
 import { Wizard, WizardPage } from "../../components/wizard/wizard";
 import { CharkaCheckBoxFinalFormField } from "../../componentsCommon/reactFinalFormControls";
+import z from "../../lib/zod";
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 

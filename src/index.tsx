@@ -1,6 +1,6 @@
-import { ChakraProvider, createLocalStorageManager } from "@chakra-ui/react";
+import { Center, ChakraProvider, Spinner, createLocalStorageManager } from "@chakra-ui/react";
 import { setupListeners } from "@reduxjs/toolkit/query";
-import React from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { initStore } from "./app/configureStore";
@@ -13,6 +13,7 @@ import AuthenticationProviderContext from "./lib/authentication/AuthenticationPr
 import { HelmetProvider } from "react-helmet-async";
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary'
 import SEO from "./componentsCommon/seo";
+import "./lib/i18n/config";
 
 
 const env = window.customSettings;
@@ -48,7 +49,7 @@ async function initApplication() {
   const root = ReactDOM.createRoot(
     document.getElementById("root") as HTMLElement
   );
-  const colorModeManager = createLocalStorageManager("appName-ColorMode"); //change the name of the application
+  const colorModeManager = createLocalStorageManager(import.meta.env.VITE_APP_TITLE + "-ColorMode"); //change the name of the application
 
   root.render(
     <React.StrictMode>
@@ -58,7 +59,9 @@ async function initApplication() {
             <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
               <HelmetProvider>
                 <SEO title={import.meta.env.VITE_APP_TITLE} description={import.meta.env.VITE_APP_DESCRIPTION} name={import.meta.env.VITE_APP_COMPANY} />
-                <Main />
+                <Suspense fallback={<Center minHeight="100vh" ><Spinner /></Center>}>
+                  <Main />
+                </Suspense>
               </HelmetProvider>
             </ChakraProvider>
           </Provider>

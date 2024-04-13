@@ -25,7 +25,6 @@ export const mainSections: MainSectionType[] = [
         icon: FaCloudUploadAlt,
         isInMenu: true,
         component: <LazyLoad loader={() => import("../features/jsonPlaceholderAPI/JsonPlaceHolder")} />,
-        authenticatedOnly: true,
         isEntryPoint: true,
       },
       {
@@ -34,7 +33,6 @@ export const mainSections: MainSectionType[] = [
         icon: FaPlay,
         isInMenu: true,
         component: <LazyLoad loader={() => import("../features/playground/playgroundView")} />,
-        authenticatedOnly: false,
       },
       {
         path: "configTable",
@@ -42,7 +40,6 @@ export const mainSections: MainSectionType[] = [
         icon: FaTable,
         isInMenu: true,
         component: <LazyLoad loader={() => import("../features/configTable/configTableExample")} />,
-        authenticatedOnly: true,
       },
       {
         path: "moviesTable",
@@ -50,7 +47,6 @@ export const mainSections: MainSectionType[] = [
         icon: RiMovie2Line,
         isInMenu: true,
         component: <LazyLoad loader={() => import("../features/paginatedTable/moviePage")} />,
-        authenticatedOnly: true,
       },
       {
         path: "videoGamesTable",
@@ -58,7 +54,6 @@ export const mainSections: MainSectionType[] = [
         icon: FaGamepad,
         isInMenu: true,
         component: <LazyLoad loader={() => import("../features/formExample/videoGamesPage")} />,
-        authenticatedOnly: true,
       },
 
       {
@@ -67,7 +62,6 @@ export const mainSections: MainSectionType[] = [
         icon: FaTable,
         isInMenu: true,
         component: <LazyLoad loader={() => import("../features/formWizard/formWizard")} />,
-        authenticatedOnly: true,
       },
       {
         path: "bomb",
@@ -109,8 +103,8 @@ export const mainSections: MainSectionType[] = [
         authenticatedOnly: false,
         subsections: [
           {
-            path: "staticPage",
-            label: "Static Page",
+            path: "authonly",
+            label: "Auth Only",
             component: <NoEntryPoint />,
             icon: FaTable,
             isInMenu: true,

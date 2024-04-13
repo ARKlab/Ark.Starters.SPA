@@ -22,13 +22,13 @@ import { useEffect } from "react";
 import { Field, Form, FormRenderProps, useField } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
 import { FaPlus, FaTrash } from "react-icons/fa";
-import { z } from "zod";
 import { useAppDispatch } from "../../app/hooks";
-import { zod2FieldValidator } from "../../lib/zod2form";
+import { zod2FieldValidator } from "../../lib/zod2FormValidator";
 import { dispatchNetworkError } from "../errorHandler/errorHandler";
 import { dispatchNotification } from "../notifications/notification";
 import { NotificationDuration } from "../notifications/notificationsTypes";
 import { useGetConfigQuery, usePostConfigMutation } from "./configTableApi";
+import z from "../../lib/zod";
 
 export type Employee = {
   name: string;

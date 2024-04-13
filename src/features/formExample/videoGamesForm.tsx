@@ -18,9 +18,8 @@ import { FormApi } from "final-form";
 import { useEffect } from "react";
 import { Field, Form } from "react-final-form";
 import { MdArrowDropDown } from "react-icons/md";
-import { z } from "zod";
 import { useAppDispatch } from "../../app/hooks";
-import { zod2FieldValidator } from "../../lib/zod2form";
+import { zod2FieldValidator } from "../../lib/zod2FormValidator";
 import { dispatchNotification } from "../notifications/notification";
 import { NotificationDuration } from "../notifications/notificationsTypes";
 import {
@@ -28,6 +27,8 @@ import {
   useInsertNewVideoGameMutation,
 } from "./videoGamesApiSlice";
 import { VideoGame } from "./videoGamesSampleDataAndTypes";
+import z from "../../lib/zod";
+
 const stringValidator = z.string();
 const yearValidator = z.string().refine(
   (value) => {
