@@ -1,4 +1,4 @@
-import {  Field } from "react-final-form";
+import { Field } from "react-final-form";
 import {
   Box,
   FormControl,
@@ -10,7 +10,7 @@ import {
 import { z } from "zod";
 import { zod2FieldValidator } from "../../lib/zod2form";
 import { Wizard, WizardPage } from "../../components/wizard/wizard";
-import { CharkaCheckBoxFinalFormField } from "../../componentsCommon/ReactFinalFormControls";
+import { CharkaCheckBoxFinalFormField } from "../../componentsCommon/reactFinalFormControls";
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 

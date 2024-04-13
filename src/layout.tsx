@@ -9,6 +9,7 @@ import SimpleSidebar from "./components/sideBar/sideBar";
 
 import { ProblemDetailsModal } from "./componentsCommon/problemDetailsModal/problemDetailsModal";
 import NotificationView from "./features/notifications/notificationView";
+import { ErrorBoundary } from "./componentsCommon/errorBoundary";
 
 
 const Layout = () => {
@@ -18,7 +19,9 @@ const Layout = () => {
       <Box minH="70vh">
         <SimpleSidebar />
         <Box ml={{ base: 0, md: 60 }} p="4" my={"70px"}>
-          <Outlet />
+          <ErrorBoundary>
+            <Outlet />
+          </ErrorBoundary>
         </Box>
       </Box>
       <Footer />

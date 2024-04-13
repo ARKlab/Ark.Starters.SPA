@@ -1,5 +1,5 @@
 
-import { Outlet, Route, RouterProvider, createBrowserRouter, createRoutesFromChildren } from "react-router-dom";
+import { Outlet, Route, RouterProvider, createBrowserRouter, createRoutesFromChildren, isRouteErrorResponse, useRouteError } from "react-router-dom";
 import Unauthorized from "./features/authentication/unauthorized";
 import { useEffect } from "react";
 import { useAppDispatch } from "./app/hooks";
@@ -12,6 +12,7 @@ import PageNotFound from "./componentsCommon/pageNotFound";
 import { Helmet } from "react-helmet-async";
 import { Else, If, Then } from "react-if";
 import { MainSectionType, SubsectionMenuItemType } from "./components/sideBar/menuItem/types";
+import { ErrorDisplay } from "./componentsCommon/errorDisplay";
 
 const Main = () => {
   const dispatch = useAppDispatch();
@@ -31,7 +32,7 @@ const Main = () => {
           {() => (<AuthenticatedOnly>{x.component ?? <Outlet />}</AuthenticatedOnly>)}
         </Then>
         <Else>
-          {x.component ?? <Outlet />}
+          {() => (<>{x.component ?? <Outlet />}</>)}
         </Else>
       </If>
     </>);
@@ -51,17 +52,29 @@ const Main = () => {
     </Route>
   );
 
+  const ErrorFallback = () => {
+    const error = useRouteError();
+    if (isRouteErrorResponse(error)) {
+      return <ErrorDisplay name={String(error.status)} message={error.statusText} />
+    } else if (error instanceof Error)
+      return <ErrorDisplay name={error.name} message={error.message} stack={error.stack} />
+    else
+      return <ErrorDisplay />
+  }
+
   const entryPoint = getEntryPointPath(mainSections);
   const router = createBrowserRouter(createRoutesFromChildren(
-    <Route element={<Layout />}>
-      <Route
-        index
-        path="/"
-        element={<AuthenticationCallback redirectTo={entryPoint} />}
-      />
-      <Route path="/Unauthorized" element={<Unauthorized />} />
-      {routes}
-      <Route path="*" element={<PageNotFound />} />
+    <Route path="/" element={<Layout />} >
+      <Route errorElement={<ErrorFallback />} >
+        <Route
+          index
+          path=""
+          element={<AuthenticationCallback redirectTo={entryPoint} />}
+        />
+        <Route path="Unauthorized" element={<Unauthorized />} />
+        {routes}
+        <Route path="*" element={<PageNotFound />} />
+      </Route>
     </Route>
   ));
   return (<RouterProvider router={router} />);

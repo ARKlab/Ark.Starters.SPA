@@ -30,6 +30,6 @@
   ],
   "files": [
     "./vitest.setup.ts",
-    "./src/lib/authentication/useAuthContext.tsx"
+    "src/componentsCommon/Bomb.tsx"
   ]
 }

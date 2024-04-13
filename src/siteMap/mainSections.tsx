@@ -1,4 +1,5 @@
 import {
+  FaBomb,
   FaCloudUploadAlt,
   FaExternalLinkAlt,
   FaGamepad,
@@ -9,14 +10,14 @@ import { RiMovie2Line } from "react-icons/ri";
 import { MainSectionType } from "../components/sideBar/menuItem/types";
 import NoEntryPoint from "../features/NoEntryPoint/staticPage";
 import LazyLoad from "../componentsCommon/lazyLoad";
-
+import { Bomb } from "../componentsCommon/Bomb";
 
 /*This is the Main Section ARRAY populate this to populate the main nav menu
 It is also used to create all the Routes for the router*/
 export const mainSections: MainSectionType[] = [
   {
     label: "Main Test Section",
-    path: "/main",
+    path: "main",
     subsections: [
       {
         path: "jsonplaceholder",
@@ -68,11 +69,18 @@ export const mainSections: MainSectionType[] = [
         component: <LazyLoad loader={() => import("../features/formWizard/formWizard")} />,
         authenticatedOnly: true,
       },
+      {
+        path: "bomb",
+        label: "Throw Error",
+        icon: FaBomb,
+        isInMenu: true,
+        component: <Bomb />
+      }
     ],
   },
   {
     label: "External Section",
-    path: "/ext",
+    path: "ext",
     subsections: [
       {
         externalUrl: "https://www.google.com",
@@ -92,7 +100,7 @@ export const mainSections: MainSectionType[] = [
   },
   {
     label: "Another Section",
-    path: "/anotherSection",
+    path: "anotherSection",
     subsections: [
       {
         label: "Sub Subsections",

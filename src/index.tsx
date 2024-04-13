@@ -11,6 +11,7 @@ import { theme } from "./theme";
 import Auth0AuthProvider from "./lib/authentication/auth0AuthProvider";
 import AuthenticationProviderContext from "./lib/authentication/AuthenticationProviderContext";
 import { HelmetProvider } from "react-helmet-async";
+import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary'
 
 
 const env = window.customSettings;
@@ -21,6 +22,26 @@ export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 setupListeners(store.dispatch);
 
+
+/**
+ * ReactErrorBoundary at this level renders a Chakra-less/Redux-less context as they failed.
+ * A nicer ReactErrorBoundary is used by the Application's Layout so this is really a last resort
+ * for the user to take a screenshot and send to someone. 
+ * The only alternative would be an blank-page, which isn't nicer ...
+ * 
+ * Important: use only basic DOM/Style, UI Toolkit nor ReduxToolkit are available!
+ */
+function fallbackRender({ error }: { error: Error }) {
+  return (
+    <div role="alert">
+      <p>Fatal error. Reload the Browser (F5)</p>
+      <pre style={{ color: "red" }}>{error.message}</pre>
+      <pre style={{ color: "red" }}>{error.stack}</pre>
+    </div>
+  );
+}
+
+
 async function initApplication() {
   await authProvider.init();
   const root = ReactDOM.createRoot(
@@ -30,16 +51,18 @@ async function initApplication() {
 
   root.render(
     <React.StrictMode>
-      <AuthenticationProviderContext authProvider={authProvider}>
-        <Provider store={store}>
-          <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
-            <HelmetProvider>
-              <Main />
-            </HelmetProvider>
-          </ChakraProvider>
-        </Provider>
-      </AuthenticationProviderContext>
-    </React.StrictMode>
+      <ReactErrorBoundary fallbackRender={fallbackRender}>
+        <AuthenticationProviderContext authProvider={authProvider}>
+          <Provider store={store}>
+            <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
+              <HelmetProvider>
+                <Main />
+              </HelmetProvider>
+            </ChakraProvider>
+          </Provider>
+        </AuthenticationProviderContext>
+      </ReactErrorBoundary>
+    </React.StrictMode >
   );
 
   reportWebVitals();

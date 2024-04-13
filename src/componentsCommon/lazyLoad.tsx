@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AbsoluteCenter, Flex, Spinner } from "@chakra-ui/react";
+import { Flex, Spinner } from "@chakra-ui/react";
 import { ComponentProps, ComponentType, lazy, Suspense, useMemo } from "react";
 
 type Props<C extends ComponentType<any>> = {
