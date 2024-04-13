@@ -1,5 +1,6 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthenticationContext } from "./authenticationContext";
+
 
 
 export function useAuthContext() {
@@ -9,5 +10,17 @@ export function useAuthContext() {
             "useAuthContext must be used within a AuthenticationProvider"
         );
     }
-    return { context: context, isLogged: context.getLoginStatus() === "Logged" };
+
+    const [isLogged, setIsLogged] = useState(
+        context.getLoginStatus() === "Logged"
+    );
+
+    useEffect(() => {
+        const unsubscribe = context.onLoginStatus((status) => {
+            setIsLogged(status === "Logged");
+        });
+        return unsubscribe;
+    }, [context]);
+
+    return { context: context, isLogged: isLogged };
 }

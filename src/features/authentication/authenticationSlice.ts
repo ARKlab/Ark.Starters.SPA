@@ -28,7 +28,7 @@ export const DetectLoggedInUser = createAsyncThunk(
     const authProviderInstance = (thunkAPI.extra as ExtraType).authProvider;
     const user = await authProviderInstance.getUserDetail();
 
-    if (!user) return null;
+    if (!user || user.username === "") return null;
     return {
       userInfo: user,
       token: "",

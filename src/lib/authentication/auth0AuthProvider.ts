@@ -11,6 +11,8 @@ export type Auth0Config = {
 
 export class Auth0AuthProvider implements AuthProvider {
   private loginStatus: LoginStatus = LoginStatus.NotLogged;
+  private subscribers = new Set<(status: string) => void>();
+
   private auth0Client: Auth0Client;
   private config: Auth0Config;
 
@@ -35,7 +37,11 @@ export class Auth0AuthProvider implements AuthProvider {
   async login() {
     await this.auth0Client?.loginWithRedirect();
   }
-
+  private notifySubscribers() {
+    for (const subscriber of this.subscribers) {
+      subscriber(this.loginStatus);
+    }
+  }
   logout(): void {
     this.auth0Client?.logout();
   }
@@ -51,6 +57,12 @@ export class Auth0AuthProvider implements AuthProvider {
     } catch (error) {
       return false;
     }
+  }
+  onLoginStatus(subscriber: (status: string) => void) {
+    this.subscribers.add(subscriber);
+    return () => {
+      this.subscribers.delete(subscriber);
+    };
   }
   async handleLoginRedirect(): Promise<void> {
     if (await this.isAuthenticated()) {
@@ -75,7 +87,7 @@ export class Auth0AuthProvider implements AuthProvider {
     const groups = claims && claims[claimsUrl + "groups"];
     const permissions = claims && claims[claimsUrl + "permissions"];
 
-    if (currentAccounts === null) {
+    if (!currentAccounts) {
       return null;
     } else {
       this.setLoginStatus(LoginStatus.Logged);
@@ -100,7 +112,8 @@ export class Auth0AuthProvider implements AuthProvider {
   }
 
   setLoginStatus(status: LoginStatus) {
-    return (this.loginStatus = status);
+    this.loginStatus = status;
+    this.notifySubscribers();
   }
 }
 

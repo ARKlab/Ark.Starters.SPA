@@ -21,6 +21,8 @@ export class MsalAuthProvider implements AuthProvider {
   private profileRequest: msal.PopupRequest;
   private profileRedirectRequest: msal.RedirectRequest;
   private idTokenClaims: msal.IdTokenClaims | null = null;
+  private subscribers = new Set<(status: string) => void>();
+
   constructor(env: CustomSettingsType) {
     const scopes = env.scopes.split(",");
     const config: msal.Configuration = {
@@ -92,7 +94,11 @@ export class MsalAuthProvider implements AuthProvider {
       redirectStartPage: window.location.href,
     };
   }
-
+  private notifySubscribers() {
+    for (const subscriber of this.subscribers) {
+      subscriber(this.loginStatus);
+    }
+  }
   private async getTokenRedirect(
     silentRequest: msal.SilentRequest,
     interactiveRequest: msal.RedirectRequest
@@ -208,8 +214,16 @@ export class MsalAuthProvider implements AuthProvider {
       this.loginStatus = isLoggedIn
         ? LoginStatus.Logged
         : LoginStatus.NotLogged;
+      this.notifySubscribers();
+
       return this.loginStatus;
     }
     return LoginStatus.NotLogged;
+  }
+  onLoginStatus(subscriber: (status: string) => void) {
+    this.subscribers.add(subscriber);
+    return () => {
+      this.subscribers.delete(subscriber);
+    };
   }
 }
