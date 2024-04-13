@@ -5,12 +5,6 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import eslint from 'vite-plugin-eslint';
 
-function manualChunks(id) {
-	if (id.includes('node_modules')) {
-		return 'vendor';
-	}
-}
-
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [react(), eslint({ cache: true, fix: true })],
@@ -29,10 +23,10 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 manualChunks: {
-                    router: ['react-router-dom'],
-                    rtk: ['@reduxjs/toolkit'],
-                    redux: ['react-redux'],
-                    chakra: ['@chakra-ui/react'],
+                    react: ['react', 'react-router-dom', '@react-icons/all-files', 'react-dom', 'react-icons','react-error-boundary'],
+                    rtk: ['@reduxjs/toolkit', 'react-redux'],
+                    chakra: ['@chakra-ui/react', '@chakra-ui/icons', '@emotion/react', 'framer-motion'],
+                    i18n: ['i18next', 'zod-i18n-map']
               }
            }
         },

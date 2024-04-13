@@ -70,4 +70,9 @@ async function initApplication() {
   reportWebVitals();
 }
 
+// 
+window.addEventListener('vite:preloadError', () => {
+  window.location.reload()
+})
+
 initApplication();
