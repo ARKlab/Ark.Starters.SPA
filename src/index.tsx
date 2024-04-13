@@ -12,6 +12,7 @@ import Auth0AuthProvider from "./lib/authentication/auth0AuthProvider";
 import AuthenticationProviderContext from "./lib/authentication/AuthenticationProviderContext";
 import { HelmetProvider } from "react-helmet-async";
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary'
+import SEO from "./componentsCommon/seo";
 
 
 const env = window.customSettings;
@@ -56,6 +57,7 @@ async function initApplication() {
           <Provider store={store}>
             <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
               <HelmetProvider>
+                <SEO title={import.meta.env.VITE_APP_TITLE} description={import.meta.env.VITE_APP_DESCRIPTION} name={import.meta.env.VITE_APP_COMPANY} />
                 <Main />
               </HelmetProvider>
             </ChakraProvider>

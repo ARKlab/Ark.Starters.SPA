@@ -9,10 +9,10 @@ import { getEntryPointPath, mainSections } from "./siteMap/mainSections";
 import { AuthenticatedOnly } from "./lib/authentication/authenticationComponents";
 import Layout from "./layout";
 import PageNotFound from "./componentsCommon/pageNotFound";
-import { Helmet } from "react-helmet-async";
 import { Else, If, Then } from "react-if";
 import { MainSectionType, SubsectionMenuItemType } from "./components/sideBar/menuItem/types";
 import { ErrorDisplay } from "./componentsCommon/errorDisplay";
+import SEO from "./componentsCommon/seo";
 
 const Main = () => {
   const dispatch = useAppDispatch();
@@ -23,10 +23,7 @@ const Main = () => {
 
   const wrapComponent = (x: MainSectionType) => {
     return (<>
-      <Helmet>
-        <title>{x.label}</title>
-        <meta property="og:title" content={x.label} />
-      </Helmet>
+      <SEO title={x.label} />
       <If condition={x.authenticatedOnly}>
         <Then>
           {() => (<AuthenticatedOnly>{x.component ?? <Outlet />}</AuthenticatedOnly>)}
