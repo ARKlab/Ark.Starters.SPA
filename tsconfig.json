@@ -29,7 +29,6 @@
     "./src"
   ],
   "files": [
-    "./vitest.setup.ts",
-    "src/componentsCommon/Bomb.tsx"
+    "./vitest.setup.ts"
   ]
 }
