@@ -10,6 +10,7 @@ import { theme } from "./theme";
 
 import Auth0AuthProvider from "./lib/authentication/auth0AuthProvider";
 import AuthenticationProviderContext from "./lib/authentication/AuthenticationProviderContext";
+import { HelmetProvider } from "react-helmet-async";
 
 
 const env = window.customSettings;
@@ -32,7 +33,9 @@ async function initApplication() {
       <AuthenticationProviderContext authProvider={authProvider}>
         <Provider store={store}>
           <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
+            <HelmetProvider>
               <Main />
+            </HelmetProvider>
           </ChakraProvider>
         </Provider>
       </AuthenticationProviderContext>

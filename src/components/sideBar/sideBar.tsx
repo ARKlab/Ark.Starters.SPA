@@ -115,22 +115,21 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
               pb={4}
               key={section.label + "accordionPanel" + index}
             >
-              {section.subsections.map((x, indexSub) =>
+              {section.subsections?.map((x, indexSub) =>
                 x.isInMenu ? (
                   x.subsections && x.subsections?.length > 0 ? (
                     <InnerAccordionSections
                       key={x.path + "innerAccordionSections" + indexSub}
                       section={x}
-                      parentPath={section.path + x.path}
+                      parentPath={[section.path, x.path].join('/')}
                     />
                   ) : (
                     <MenuItem
                       key={x.path + "menuItem" + indexSub}
-                      path={section.path + x.path}
+                      path={[section.path, x.path].join('/')}
                       externalUrl={x.externalUrl}
                       label={x.label}
                       icon={x.icon}
-                      isExternal={x.isExternal}
                     />
                   )
                 ) : null
@@ -180,11 +179,10 @@ const InnerAccordionSections = (props: {
               x.isInMenu ? (
                 <MenuItem
                   key={x.path + "AccordionMenuItemInner" + index}
-                  path={props.parentPath + x.path}
+                  path={[props.parentPath, x.path].join('/')}
                   externalUrl={x.externalUrl}
                   label={x.label}
                   icon={x.icon}
-                  isExternal={x.isExternal}
                 />
               ) : null
             )}

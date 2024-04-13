@@ -12,7 +12,6 @@ export default function MenuItem({
   label,
   path,
   icon,
-  isExternal,
   externalUrl,
 }: Omit<
   SubsectionMenuItemType,
@@ -22,8 +21,8 @@ export default function MenuItem({
     <ChakraLink
       _hover={{ textDecoration: "none" }}
       as={ReactRouterLink}
-      to={isExternal ? externalUrl : path}
-      isExternal={isExternal}
+      to={externalUrl ?? path}
+      isExternal={!!externalUrl}
     >
       <WrapItem
         _hover={{
