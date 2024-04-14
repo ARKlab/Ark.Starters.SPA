@@ -27,7 +27,7 @@ import {
   useInsertNewVideoGameMutation,
 } from "./videoGamesApiSlice";
 import { VideoGame } from "./videoGamesSampleDataAndTypes";
-import z from "../../lib/zod";
+import z from "zod";
 
 const stringValidator = z.string();
 const yearValidator = z.string().refine(

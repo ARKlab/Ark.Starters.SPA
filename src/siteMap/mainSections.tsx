@@ -2,6 +2,7 @@ import {
   FaBomb,
   FaCloudUploadAlt,
   FaExternalLinkAlt,
+  FaFlag,
   FaGamepad,
   FaPlay,
   FaTable,
@@ -62,6 +63,13 @@ export const mainSections: MainSectionType[] = [
         icon: FaTable,
         isInMenu: true,
         component: <LazyLoad loader={() => import("../features/formWizard/formWizard")} />,
+      },
+      {
+        path: "translation",
+        label: "Translation Sample",
+        icon: FaFlag,
+        isInMenu: true,
+        component: <LazyLoad loader={() => import("../features/localization/localizationPage")} />,
       },
       {
         path: "bomb",

@@ -28,7 +28,7 @@ import { dispatchNetworkError } from "../errorHandler/errorHandler";
 import { dispatchNotification } from "../notifications/notification";
 import { NotificationDuration } from "../notifications/notificationsTypes";
 import { useGetConfigQuery, usePostConfigMutation } from "./configTableApi";
-import z from "../../lib/zod";
+import z from "zod";
 
 export type Employee = {
   name: string;

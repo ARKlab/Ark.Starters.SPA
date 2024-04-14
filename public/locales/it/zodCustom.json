@@ -1,0 +1,7 @@
+{
+    "custom_error": "Questo è un messaggio custom.",
+    "custom_error_with_path": "'{{- path}}' non va bene. Questo è un messaggio custom.",
+    "paths": {
+        "customErrorInline": "Il Nome Del Field Tradotto"
+    }
+}

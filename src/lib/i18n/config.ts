@@ -2,10 +2,13 @@ import i18n from "i18next";
 import HttpApi from "i18next-http-backend";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
+import z from "zod";
+import { makeZodI18nMap } from "zod-i18n-map";
+
 
 export const supportedLngs = {
-  en: "English",
-  it: "Italiano",
+  "en": "English",
+  "it": "Italiano",
 };
 
 i18n
@@ -29,10 +32,11 @@ i18n
       // missing in the active locale. Again, use your
       // preferred locale here. 
       fallbackLng: "en",
+      supportedLngs: Object.keys(supportedLngs),
 
       // Enables useful output in the browser’s
       // dev console.
-      debug: true,
+      debug: import.meta.env.DEV,
 
       // Normally, we want `escapeValue: true` as it
       // ensures that i18next escapes any code in
@@ -44,8 +48,15 @@ i18n
         escapeValue: false,
       },
 
-      ns: ['translation', 'zod']
+      ns: ['translation', 'zod', 'zodCustom']
 
     });
+
+z.setErrorMap(makeZodI18nMap({
+  ns: ['zodCustom', 'zod'],
+  handlePath: {
+    keyPrefix: "paths",
+  }
+}));
 
 export default i18n;
