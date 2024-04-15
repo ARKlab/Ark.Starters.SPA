@@ -13,7 +13,7 @@ export class Auth0AuthProvider implements AuthProvider {
   private loginStatus: LoginStatus = LoginStatus.NotLogged;
   private subscribers = new Set<(status: string) => void>();
 
-  private auth0Client: Auth0Client = {} as any;
+  private auth0Client: Auth0Client;
   private config: Auth0Config;
 
   constructor(env: CustomSettingsType) {
@@ -28,16 +28,14 @@ export class Auth0AuthProvider implements AuthProvider {
       },
     };
     this.config = { auth0Config: config };
+    this.auth0Client = new Auth0Client(this.config.auth0Config);
   }
   async init() {
-    // Initialize authentication module
-    let auth0Instance: Auth0Client;
-    await (auth0Instance = new Auth0Client(this.config.auth0Config));
-    this.auth0Client = auth0Instance;
+
   }
 
-  async login(): Promise<void> {
-    await this.auth0Client.loginWithRedirect();
+  async login() {
+    await this.auth0Client?.loginWithRedirect();
   }
   private notifySubscribers() {
     for (const subscriber of this.subscribers) {
@@ -45,20 +43,17 @@ export class Auth0AuthProvider implements AuthProvider {
     }
   }
   logout(): void {
-    const options: any = {
-      returnTo: window.location.origin, // Redirect to the application's homepage after logout
-    };
-    this.auth0Client.logout(options);
+    this.auth0Client?.logout();
   }
 
   async getToken() {
-    var token = await this.auth0Client?.getTokenSilently();
+    const token = await this.auth0Client?.getTokenSilently();
 
     return token;
   }
   async isAuthenticated(): Promise<boolean> {
     try {
-      return await this.auth0Client.isAuthenticated();
+      return await this.auth0Client?.isAuthenticated();
     } catch (error) {
       return false;
     }
@@ -76,17 +71,13 @@ export class Auth0AuthProvider implements AuthProvider {
       const query = window.location.search;
 
       if (query.includes("code=") && query.includes("state=")) {
-        try {
-          await this.auth0Client.handleRedirectCallback().then((result) => {
-            this.setLoginStatus(LoginStatus.Logged);
-            window.location.pathname =
-              result.appState && result.appState.targetUrl
-                ? result.appState.targetUrl
-                : "/";
-          });
-        } catch (error) {
-          throw error;
-        }
+        await this.auth0Client.handleRedirectCallback().then((result) => {
+          this.setLoginStatus(LoginStatus.Logged);
+          window.location.pathname =
+            result.appState && result.appState.targetUrl
+              ? result.appState.targetUrl
+              : "/";
+        });
       }
     }
   }
@@ -107,9 +98,9 @@ export class Auth0AuthProvider implements AuthProvider {
       } as UserAccountInfo;
     }
   }
-  public hasPermission(permission: string, audience?: string): boolean {
+  public hasPermission(permission: string, audience?: string): boolean { // eslint-disable-line @typescript-eslint/no-unused-vars
     // Checks whether the current user has the specified permission
-    this.auth0Client.getIdTokenClaims().then((claims: any) => {
+    this.auth0Client.getIdTokenClaims().then((claims) => {
       const permissions = claims && claims[claimsUrl + "permissions"];
       return permissions.includes(permission);
     });

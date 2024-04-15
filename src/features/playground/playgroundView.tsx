@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Box, Button, Heading, Spacer, Wrap, WrapItem } from "@chakra-ui/react";
+import { Box, Button, Heading, Wrap, WrapItem } from "@chakra-ui/react";
 import {
   NotificationDuration,
   NotificationPosition,

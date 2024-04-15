@@ -15,12 +15,11 @@ import {
   useBoolean,
 } from "@chakra-ui/react";
 import { FormApi } from "final-form";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Field, Form } from "react-final-form";
 import { MdArrowDropDown } from "react-icons/md";
-import { z } from "zod";
 import { useAppDispatch } from "../../app/hooks";
-import { zod2FieldValidator } from "../../lib/zod2form";
+import { zod2FieldValidator } from "../../lib/zod2FormValidator";
 import { dispatchNotification } from "../notifications/notification";
 import { NotificationDuration } from "../notifications/notificationsTypes";
 import {
@@ -28,6 +27,8 @@ import {
   useInsertNewVideoGameMutation,
 } from "./videoGamesApiSlice";
 import { VideoGame } from "./videoGamesSampleDataAndTypes";
+import z from "zod";
+
 const stringValidator = z.string();
 const yearValidator = z.string().refine(
   (value) => {
@@ -47,7 +48,7 @@ const VideoGamesForm = () => {
   const dispatch = useAppDispatch();
   const [
     insertNewVideoGame,
-    { isLoading: insertLoading, isSuccess: insertSuccess },
+    { isSuccess: insertSuccess },
   ] = useInsertNewVideoGameMutation();
 
   const [flag, setFlag] = useBoolean();
@@ -85,7 +86,7 @@ const VideoGamesForm = () => {
             onSubmit={(values: VideoGame, form: FormApi<VideoGame>) =>
               onSubmit(values, form)
             }
-            render={({ handleSubmit, form, submitting }) => {
+            render={({ handleSubmit, submitting }) => {
               return (
                 <Container maxW="container.md">
                   <form onSubmit={handleSubmit}>
@@ -112,8 +113,7 @@ const VideoGamesForm = () => {
                       <Spacer height="20px" />
                       <Field
                         name="genre"
-                        render={({ input, meta: { error, touched } }) => {
-                          error = error;
+                        render={({ input }) => {
                           return (
                             <FormControl>
                               <Select

@@ -1,12 +1,11 @@
 import { createSlice, Dispatch, PayloadAction } from "@reduxjs/toolkit";
-import * as R from "ramda";
-import { RootState } from "../../app/configureStore";
+import { ReactNode } from "react";
 
 export type DetailsType = {
   title?: string;
-  message?: any;
-  btnTitle?: any;
-  status?: any;
+  message?: string;
+  btnTitle?: ReactNode;
+  status?: string;
   displayStatus?: boolean;
   isValidationError?: boolean;
   originalTitle?: string;
@@ -63,11 +62,11 @@ export default errorSlice.reducer;
 type Action = ReturnType<typeof setError> | ReturnType<typeof clearError>;
 
 export const dispatchNetworkError =
-  (err: any) => (dispatch: Dispatch<Action>) => {
-    let errorTitle = "An error occurred";
-    let isValError: boolean = false;
-    let displayStatusCode = true;
-    let message = err?.data?.message;
+  (err: any) => (dispatch: Dispatch<Action>) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+    const errorTitle = "An error occurred";
+    const isValError: boolean = false;
+    const displayStatusCode = true;
+    const message = err?.data?.message;
     dispatch(
       setError({
         error: true,

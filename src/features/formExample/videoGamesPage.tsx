@@ -2,11 +2,9 @@ import { Box, Heading } from "@chakra-ui/react";
 
 import {
   ColumnDef,
-  ColumnFiltersState,
   createColumnHelper,
 } from "@tanstack/react-table";
 
-import { useState } from "react";
 import { PaginatedSortableTable } from "../../componentsCommon/PaginatedSortableTable/PaginatedSortableTable";
 import {
   useGetVideoGamesGenresQuery,
@@ -18,7 +16,7 @@ import VideoGamesForm from "./videoGamesForm";
 const columnHelper = createColumnHelper<VideoGame>();
 
 const VideoGamesTableView = () => {
-  const { data: genres, isLoading: genreLoading } =
+  const { data: genres } =
     useGetVideoGamesGenresQuery();
 
   const columns = [

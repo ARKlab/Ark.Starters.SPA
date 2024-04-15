@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Code, Heading, Text } from "@chakra-ui/react";
+import { Box, Code, Heading } from "@chakra-ui/react";
 
 const NoEntryPoint = () => {
   return (

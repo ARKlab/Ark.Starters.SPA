@@ -1,7 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Employee } from "./configTable";
 import { delay } from "../../lib/helper";
-import { dispatchNetworkError } from "../errorHandler/errorHandler";
 
 const data = [
   { name: "Mario", surName: "Rossi", employed: true },
@@ -44,7 +43,7 @@ export const configTableApiSlice = createApi({
       void,
       { employees: Employee[]; throwError: boolean }
     >({
-      queryFn: async ({ employees, throwError }) => {
+      queryFn: async ({ throwError }) => {
         await delay(2000);
         if (throwError) {
           return {

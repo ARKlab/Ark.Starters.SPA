@@ -23,7 +23,7 @@ export function DebouncedInputColumnHeader({
     }, debounce);
 
     return () => clearTimeout(timeout);
-  }, [value]);
+  }, [onChange, debounce, value]);
 
   return (
     <ChackraInputHeaderFilterWithClear

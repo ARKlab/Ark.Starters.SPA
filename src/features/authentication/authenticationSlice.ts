@@ -9,7 +9,7 @@ import { AuthProvider } from "../../lib/authentication/authProviderInterface";
 export const Init = createAsyncThunk("auth/init", async (_, thunkAPI) => {
   const authProviderInstance = (thunkAPI.extra as ExtraType).authProvider;
   return authProviderInstance.handleLoginRedirect().then(async () => {
-    var user = await authProviderInstance.getUserDetail();
+    const user = await authProviderInstance.getUserDetail();
     if (!user) return null;
     return {
       userInfo: user,
@@ -26,7 +26,8 @@ export const DetectLoggedInUser = createAsyncThunk(
   "auth/setLoggedUser",
   async (_, thunkAPI) => {
     const authProviderInstance = (thunkAPI.extra as ExtraType).authProvider;
-    var user = await authProviderInstance.getUserDetail();
+    const user = await authProviderInstance.getUserDetail();
+
     if (!user || user.username === "") return null;
     return {
       userInfo: user,
@@ -72,7 +73,7 @@ export const authSlice = createSlice({
         state.data.token = action.payload;
       }
     },
-    loggedOut: (state) => {},
+    loggedOut: () => {},
   },
   extraReducers: (builder) => {
     builder
@@ -114,7 +115,7 @@ export const authSlice = createSlice({
           isLoading: true,
         };
       })
-      .addCase(Login.fulfilled, (state, action) => {
+      .addCase(Login.fulfilled, (state) => {
         return {
           ...state,
           status: AuthenticationSteps.LoginComplete,

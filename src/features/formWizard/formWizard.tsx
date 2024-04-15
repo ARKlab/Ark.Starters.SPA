@@ -1,21 +1,16 @@
-import React, { useState, ReactNode } from "react";
-import { Form, Field } from "react-final-form";
+import { Field } from "react-final-form";
 import {
   Box,
-  Button,
-  Checkbox,
   FormControl,
   FormErrorMessage,
-  FormLabel,
   Heading,
   Input,
-  Text,
   Stack,
 } from "@chakra-ui/react";
-import { z } from "zod";
-import { zod2FieldValidator } from "../../lib/zod2form";
+import { zod2FieldValidator } from "../../lib/zod2FormValidator";
 import { Wizard, WizardPage } from "../../components/wizard/wizard";
-import { CharkaCheckBoxFinalFormField } from "../../componentsCommon/ReactFinalFormControls";
+import { CharkaCheckBoxFinalFormField } from "../../componentsCommon/reactFinalFormControls";
+import z from "zod";
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 function UseMenuCloseListener(options: {
   close: () => void;
@@ -14,7 +14,7 @@ function UseMenuCloseListener(options: {
     return () => {
       document.body.removeEventListener("click", listener);
     };
-  }, []);
+  }, [options]);
 }
 
 export default UseMenuCloseListener;

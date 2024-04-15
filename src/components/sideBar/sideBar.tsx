@@ -22,8 +22,6 @@ import { FiMenu } from "react-icons/fi";
 import { mainSections } from "../../siteMap/mainSections";
 import MenuItem from "./menuItem/menuItem";
 import { SubsectionMenuItemType } from "./menuItem/types";
-import { useAuthContext } from "../../lib/authentication/authenticationContext";
-import { LoginStatus } from "../../lib/authentication/authTypes";
 
 //#endregion
 
@@ -117,22 +115,21 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
               pb={4}
               key={section.label + "accordionPanel" + index}
             >
-              {section.subsections.map((x, indexSub) =>
+              {section.subsections?.map((x, indexSub) =>
                 x.isInMenu ? (
                   x.subsections && x.subsections?.length > 0 ? (
                     <InnerAccordionSections
                       key={x.path + "innerAccordionSections" + indexSub}
                       section={x}
-                      parentPath={section.path + x.path}
+                      parentPath={[section.path, x.path].join('/')}
                     />
                   ) : (
                     <MenuItem
                       key={x.path + "menuItem" + indexSub}
-                      path={section.path + x.path}
+                      path={[section.path, x.path].join('/')}
                       externalUrl={x.externalUrl}
                       label={x.label}
                       icon={x.icon}
-                      isExternal={x.isExternal}
                     />
                   )
                 ) : null
@@ -149,7 +146,7 @@ const InnerAccordionSections = (props: {
   section: SubsectionMenuItemType;
   parentPath: string;
 }) => {
-  let section = props.section;
+  const section = props.section;
   if (section.subsections)
     return (
       <Accordion
@@ -182,11 +179,10 @@ const InnerAccordionSections = (props: {
               x.isInMenu ? (
                 <MenuItem
                   key={x.path + "AccordionMenuItemInner" + index}
-                  path={props.parentPath + x.path}
+                  path={[props.parentPath, x.path].join('/')}
                   externalUrl={x.externalUrl}
                   label={x.label}
                   icon={x.icon}
-                  isExternal={x.isExternal}
                 />
               ) : null
             )}

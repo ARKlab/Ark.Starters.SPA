@@ -1,7 +1,8 @@
-import { ReactNode } from "react";
 import {
+  FaBomb,
   FaCloudUploadAlt,
   FaExternalLinkAlt,
+  FaFlag,
   FaGamepad,
   FaPlay,
   FaTable,
@@ -9,90 +10,85 @@ import {
 import { RiMovie2Line } from "react-icons/ri";
 import { MainSectionType } from "../components/sideBar/menuItem/types";
 import NoEntryPoint from "../features/NoEntryPoint/staticPage";
-import ConfigTableExampleView from "../features/configTable/configTableExample";
-import VideoGamesTableView from "../features/formExample/videoGamesPage";
-import WizardFormView from "../features/formWizard/formWizard";
-import JsonPlaceHolderView from "../features/jsonPlaceholderAPI/JsonPlaceHolder";
-import MovieTableView from "../features/paginatedTable/moviePage";
-import PlaygroundView from "../features/playground/playgroundView";
+import LazyLoad from "../componentsCommon/lazyLoad";
+import { Bomb } from "../componentsCommon/Bomb";
 
 /*This is the Main Section ARRAY populate this to populate the main nav menu
 It is also used to create all the Routes for the router*/
 export const mainSections: MainSectionType[] = [
   {
     label: "Main Test Section",
-    path: "/main",
-    authenticatedOnly: true,
+    path: "main",
     subsections: [
       {
-        path: "/jsonplaceholder",
+        path: "jsonplaceholder",
         label: "Posts",
         icon: FaCloudUploadAlt,
         isInMenu: true,
-        isExternal: false,
-        component: JsonPlaceHolderView,
-        authenticatedOnly: true,
+        component: <LazyLoad loader={() => import("../features/jsonPlaceholderAPI/JsonPlaceHolder")} />,
         isEntryPoint: true,
       },
       {
-        path: "/playground",
+        path: "playground",
         label: "PlayGround",
         icon: FaPlay,
         isInMenu: true,
-        isExternal: false,
-        component: PlaygroundView,
-        authenticatedOnly: false,
+        component: <LazyLoad loader={() => import("../features/playground/playgroundView")} />,
       },
       {
-        path: "/configTable",
+        path: "configTable",
         label: "Config Table",
         icon: FaTable,
         isInMenu: true,
-        isExternal: false,
-        component: ConfigTableExampleView,
-        authenticatedOnly: true,
+        component: <LazyLoad loader={() => import("../features/configTable/configTableExample")} />,
       },
       {
-        path: "/moviesTable",
+        path: "moviesTable",
         label: "Movie Paginated Table",
         icon: RiMovie2Line,
         isInMenu: true,
-        isExternal: false,
-        component: MovieTableView,
-        authenticatedOnly: true,
+        component: <LazyLoad loader={() => import("../features/paginatedTable/moviePage")} />,
       },
       {
-        path: "/videoGamesTable",
+        path: "videoGamesTable",
         label: "VideoGames Table",
         icon: FaGamepad,
         isInMenu: true,
-        isExternal: false,
-        component: VideoGamesTableView,
-        authenticatedOnly: true,
+        component: <LazyLoad loader={() => import("../features/formExample/videoGamesPage")} />,
       },
 
       {
-        path: "/wizardForm",
+        path: "wizardForm",
         label: "Wizard Form",
         icon: FaTable,
         isInMenu: true,
-        isExternal: false,
-        component: WizardFormView,
-        authenticatedOnly: true,
+        component: <LazyLoad loader={() => import("../features/formWizard/formWizard")} />,
       },
+      {
+        path: "translation",
+        label: "Translation Sample",
+        icon: FaFlag,
+        isInMenu: true,
+        component: <LazyLoad loader={() => import("../features/localization/localizationPage")} />,
+      },
+      {
+        path: "bomb",
+        label: "Throw Error",
+        icon: FaBomb,
+        isInMenu: true,
+        component: <Bomb />
+      }
     ],
   },
   {
     label: "External Section",
-    path: "/ext",
-    authenticatedOnly: false,
+    path: "ext",
     subsections: [
       {
         externalUrl: "https://www.google.com",
         label: "Google",
         icon: FaExternalLinkAlt,
         isInMenu: true,
-        isExternal: true,
         authenticatedOnly: false,
       },
       {
@@ -100,30 +96,26 @@ export const mainSections: MainSectionType[] = [
         label: "React",
         icon: FaExternalLinkAlt,
         isInMenu: true,
-        isExternal: true,
         authenticatedOnly: false,
       },
     ],
   },
   {
     label: "Another Section",
-    path: "/anotherSection",
-    authenticatedOnly: true,
+    path: "anotherSection",
     subsections: [
       {
         label: "Sub Subsections",
-        path: "/nested",
+        path: "nested",
         isInMenu: true,
-        isExternal: false,
         authenticatedOnly: false,
         subsections: [
           {
-            path: "/staticPage",
-            label: "Static Page",
-            component: NoEntryPoint,
+            path: "authonly",
+            label: "Auth Only",
+            component: <NoEntryPoint />,
             icon: FaTable,
             isInMenu: true,
-            isExternal: false,
             authenticatedOnly: true,
           },
           {
@@ -131,7 +123,6 @@ export const mainSections: MainSectionType[] = [
             label: "Google",
             icon: FaExternalLinkAlt,
             isInMenu: true,
-            isExternal: true,
             authenticatedOnly: false,
           },
           {
@@ -139,7 +130,6 @@ export const mainSections: MainSectionType[] = [
             label: "React",
             icon: FaExternalLinkAlt,
             isInMenu: true,
-            isExternal: true,
             authenticatedOnly: false,
           },
         ],
@@ -150,12 +140,12 @@ export const mainSections: MainSectionType[] = [
 
 export function getEntryPointPath(sections: MainSectionType[]): string {
   for (const section of sections) {
-    for (const subsection of section.subsections) {
+    for (const subsection of section.subsections ?? []) {
       if (subsection.path === "/") {
         return "/";
       }
       if (subsection.isEntryPoint) {
-        return section.path + subsection.path || "/";
+        return (section.path ?? "" + subsection.path) || "/";
       }
     }
   }

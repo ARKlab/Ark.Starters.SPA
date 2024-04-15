@@ -1,6 +1,5 @@
 import { Box } from "@chakra-ui/react";
-import ConfigTable, { Employee } from "./configTable";
-import { useGetConfigQuery } from "./configTableApi";
+import ConfigTable from "./configTable";
 
 const ConfigTableExampleView = () => {
   return (

@@ -1,22 +1,17 @@
 import { ReactNode } from "react";
 import { IconType } from "react-icons";
-import { Action, AnyAction, Dispatch } from "redux";
 
-export interface SubsectionMenuItemType {
-  isInMenu: boolean;
-  label: string;
-  authenticatedOnly: boolean;
-  isExternal: boolean;
-  icon?: IconType;
-  component?: () => ReactNode;
-  externalUrl?: string;
+export type MainSectionType = {
   subsections?: SubsectionMenuItemType[];
-  path?: string;
-  isEntryPoint?: boolean;
-}
-export interface MainSectionType {
-  subsections: SubsectionMenuItemType[];
   label: string;
-  path: string;
-  authenticatedOnly: boolean;
+  path?: string;
+  authenticatedOnly?: boolean;
+  component?: ReactNode;
 }
+
+export type SubsectionMenuItemType = {
+  isInMenu: boolean;
+  icon?: IconType;
+  externalUrl?: string;
+  isEntryPoint?: boolean;
+} & MainSectionType;

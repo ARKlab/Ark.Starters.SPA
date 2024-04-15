@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as R from "ramda";
 import { format } from "date-fns";
 
@@ -12,20 +13,20 @@ export function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export const normalizeToArray = (val: any, list: any) => {
+export const normalizeToArray = (val: string|number, list: any) => {
   const v = R.pathOr(null, [val], list);
 
   if (R.isNil(v)) return null;
   return R.isEmpty(v) || Array.isArray(v) ? v : [v];
 };
 
-export const queryStringBuilder = ({ filters }: { filters: any }) =>
+export const queryStringBuilder = ({ filters }: { filters: object }) =>
   R.pipe(
     R.keys,
-    R.map((key: any) =>
+    R.map((key) =>
       builder({ key, data: filters, equator: "eq", join: "or" })
     ),
-    R.filter((x: any) => x),
+    R.filter((x) => !!x),
     R.join(" and "),
     encodeURIComponent,
     R.unless(R.isEmpty, (x) => `&$filter=${x}`)
@@ -34,10 +35,9 @@ export const queryStringBuilder = ({ filters }: { filters: any }) =>
 export const searchBuilder = ({ filters }: { filters: any }) =>
   R.pipe(
     R.keys,
-    R.map((key: any) =>
+    R.map((key) =>
       builder({ key, data: filters, equator: "=", join: "&" })
     ),
-    R.filter((x: any) => x),
     R.join("&"),
     R.unless(R.isEmpty, (x) => `&${x}`),
     R.unless(R.isEmpty, (x) => R.replace(/\B\s+|\s+\B/g, "", x))
@@ -49,7 +49,7 @@ const builder = ({
   equator,
   join,
 }: {
-  key: string;
+  key: string | number | symbol;
   data: any;
   equator: string;
   join: string;
@@ -65,15 +65,15 @@ const builder = ({
       const res = R.equals(equator, "eq")
         ? `'${val}'`
         : encodeURIComponent(val);
-      return R.isEmpty(val) ? "" : `${key} ${equator} ${res}`;
+      return R.isEmpty(val) ? "" : `${String(key)} ${equator} ${res}`;
     }
     default:
       return "";
   }
 };
 
-const keyType = ({ key, data }: { key: string; data: any }) =>
-  R.pipe(R.prop<any, any>(key, data), R.type)(data);
+const keyType = ({ key, data }: { key: string | number | symbol; data: any }) =>
+  R.pipe(R.prop(key, data), R.type)(data);
 
 const objDataBuilder = ({
   data,
@@ -86,7 +86,7 @@ const objDataBuilder = ({
 }) =>
   R.pipe(
     R.keys,
-    R.map((key: any) => `${key} ${equator} '${R.prop(key, data)}'`),
+    R.map((key) => `${String(key)} ${equator} '${R.prop(key, data)}'`),
     R.join(` ${join} `)
   )(data);
 
@@ -96,17 +96,17 @@ const arrDataBuilder = ({
   equator,
   join,
 }: {
-  key: string;
-  data: any;
+  key: string | number | symbol;
+  data: Array<any>;
   equator: string;
   join: string;
 }) => {
   switch (R.type(data[0])) {
     case "Object":
       return R.pipe(
-        R.map(({ value }: { value: string }) => {
+        R.map(({ value }) => {
           const val = R.equals(equator, "eq") ? `'${value}'` : value;
-          return `${key} ${equator} ${val}`;
+          return `${String(key)} ${equator} ${val}`;
         }),
         R.values,
         R.join(` ${join} `)
@@ -114,9 +114,9 @@ const arrDataBuilder = ({
     case "Number":
     case "String":
       return R.pipe(
-        R.map((value: any) => {
+        R.map((value: number | string) => {
           const val = R.equals(equator, "eq") ? `'${value}'` : value;
-          return `${key} ${equator} ${val}`;
+          return `${String(key)} ${equator} ${val}`;
         }),
         R.join(` ${join} `)
       )(data);

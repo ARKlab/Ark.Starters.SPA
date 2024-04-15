@@ -21,15 +21,14 @@ import {
   Login,
   Logout,
 } from "../../features/authentication/authenticationSlice";
-import { LoginStatus } from "../../lib/authentication/authTypes";
-import { useAuthContext } from "../../lib/authentication/authenticationContext";
+import { useAuthContext } from "../../lib/authentication/useAuthContext";
 import { MdQuestionMark } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { RootState } from "../..";
 
 const UserMenu = () => {
-  var dispatch = useAppDispatch();
-  const { context, isLogged } = useAuthContext();
+  const dispatch = useAppDispatch();
+  const { isLogged } = useAuthContext();
 
   const authStore = useSelector((state: RootState) => state.auth);
   const user = authStore.data;
