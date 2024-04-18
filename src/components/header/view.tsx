@@ -29,7 +29,6 @@ import { RootState } from "../..";
 const UserMenu = () => {
   const dispatch = useAppDispatch();
   const { isLogged } = useAuthContext();
-
   const authStore = useSelector((state: RootState) => state.auth);
   const user = authStore.data;
   const { colorMode, toggleColorMode } = useColorMode();

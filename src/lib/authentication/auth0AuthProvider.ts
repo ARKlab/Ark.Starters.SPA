@@ -30,41 +30,36 @@ export class Auth0AuthProvider implements AuthProvider {
     this.config = { auth0Config: config };
     this.auth0Client = new Auth0Client(this.config.auth0Config);
   }
-  async init() {
-
-  }
-
-  async login() {
-    await this.auth0Client?.loginWithRedirect();
-  }
   private notifySubscribers() {
     for (const subscriber of this.subscribers) {
       subscriber(this.loginStatus);
     }
   }
-  logout(): void {
+  public async init() {}
+
+  public async login() {
+    await this.auth0Client?.loginWithRedirect();
+  }
+
+  public logout(): void {
     this.auth0Client?.logout();
   }
 
-  async getToken() {
+  public async getToken() {
     const token = await this.auth0Client?.getTokenSilently();
 
     return token;
   }
-  async isAuthenticated(): Promise<boolean> {
-    try {
-      return await this.auth0Client?.isAuthenticated();
-    } catch (error) {
-      return false;
-    }
+  public getLoginStatus(): LoginStatus {
+    return this.loginStatus;
   }
-  onLoginStatus(subscriber: (status: string) => void) {
+  public onLoginStatus(subscriber: (status: string) => void) {
     this.subscribers.add(subscriber);
     return () => {
       this.subscribers.delete(subscriber);
     };
   }
-  async handleLoginRedirect(): Promise<void> {
+  public async handleLoginRedirect(): Promise<void> {
     if (await this.isAuthenticated()) {
       this.setLoginStatus(LoginStatus.Logged);
     } else {
@@ -98,7 +93,8 @@ export class Auth0AuthProvider implements AuthProvider {
       } as UserAccountInfo;
     }
   }
-  public hasPermission(permission: string, audience?: string): boolean { // eslint-disable-line @typescript-eslint/no-unused-vars
+  public hasPermission(permission: string): boolean {
+    // eslint-disable-line @typescript-eslint/no-unused-vars
     // Checks whether the current user has the specified permission
     this.auth0Client.getIdTokenClaims().then((claims) => {
       const permissions = claims && claims[claimsUrl + "permissions"];
@@ -106,14 +102,17 @@ export class Auth0AuthProvider implements AuthProvider {
     });
     return false;
   }
-
-  getLoginStatus(): LoginStatus {
-    return this.loginStatus;
-  }
-
-  setLoginStatus(status: LoginStatus) {
+  //PRIVATE METHODS
+  private setLoginStatus(status: LoginStatus) {
     this.loginStatus = status;
     this.notifySubscribers();
+  }
+  private async isAuthenticated(): Promise<boolean> {
+    try {
+      return await this.auth0Client?.isAuthenticated();
+    } catch (error) {
+      return false;
+    }
   }
 }
 
