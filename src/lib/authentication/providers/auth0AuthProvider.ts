@@ -1,7 +1,7 @@
 import { Auth0Client, Auth0ClientOptions } from "@auth0/auth0-spa-js";
-import { CustomSettingsType } from "../../global";
+import { CustomSettingsType } from "../../../global";
+import { LoginStatus, UserAccountInfo } from "../authTypes";
 import { AuthProvider } from "./authProviderInterface";
-import { LoginStatus, UserAccountInfo } from "./authTypes";
 
 const claimsUrl = "http://ark-energy.eu/claims/";
 
@@ -30,9 +30,7 @@ export class Auth0AuthProvider implements AuthProvider {
     this.config = { auth0Config: config };
     this.auth0Client = new Auth0Client(this.config.auth0Config);
   }
-  async init() {
-
-  }
+  async init() {}
 
   async login() {
     await this.auth0Client?.loginWithRedirect();
@@ -98,7 +96,8 @@ export class Auth0AuthProvider implements AuthProvider {
       } as UserAccountInfo;
     }
   }
-  public hasPermission(permission: string, audience?: string): boolean { // eslint-disable-line @typescript-eslint/no-unused-vars
+  public hasPermission(permission: string): boolean {
+    // eslint-disable-line @typescript-eslint/no-unused-vars
     // Checks whether the current user has the specified permission
     this.auth0Client.getIdTokenClaims().then((claims) => {
       const permissions = claims && claims[claimsUrl + "permissions"];

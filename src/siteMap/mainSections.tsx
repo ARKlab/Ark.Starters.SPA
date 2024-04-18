@@ -9,9 +9,9 @@ import {
 } from "react-icons/fa";
 import { RiMovie2Line } from "react-icons/ri";
 import { MainSectionType } from "../components/sideBar/menuItem/types";
-import NoEntryPoint from "../features/NoEntryPoint/staticPage";
-import LazyLoad from "../componentsCommon/lazyLoad";
-import { Bomb } from "../componentsCommon/Bomb";
+import NoEntryPoint from "../features/staticPageExample/staticPage";
+import LazyLoad from "../components/lazyLoad";
+import { Bomb } from "../components/Bomb";
 
 /*This is the Main Section ARRAY populate this to populate the main nav menu
 It is also used to create all the Routes for the router*/
@@ -25,7 +25,11 @@ export const mainSections: MainSectionType[] = [
         label: "Posts",
         icon: FaCloudUploadAlt,
         isInMenu: true,
-        component: <LazyLoad loader={() => import("../features/jsonPlaceholderAPI/JsonPlaceHolder")} />,
+        component: (
+          <LazyLoad
+            loader={() => import("../features/fetchApiExample/JsonPlaceHolder")}
+          />
+        ),
         isEntryPoint: true,
       },
       {
@@ -33,28 +37,44 @@ export const mainSections: MainSectionType[] = [
         label: "PlayGround",
         icon: FaPlay,
         isInMenu: true,
-        component: <LazyLoad loader={() => import("../features/playground/playgroundView")} />,
+        component: (
+          <LazyLoad
+            loader={() => import("../features/playground/playgroundView")}
+          />
+        ),
       },
       {
         path: "configTable",
         label: "Config Table",
         icon: FaTable,
         isInMenu: true,
-        component: <LazyLoad loader={() => import("../features/configTable/configTableExample")} />,
+        component: (
+          <LazyLoad
+            loader={() => import("../features/configTable/configTableExample")}
+          />
+        ),
       },
       {
         path: "moviesTable",
         label: "Movie Paginated Table",
         icon: RiMovie2Line,
         isInMenu: true,
-        component: <LazyLoad loader={() => import("../features/paginatedTable/moviePage")} />,
+        component: (
+          <LazyLoad
+            loader={() => import("../features/paginatedTable/moviePage")}
+          />
+        ),
       },
       {
         path: "videoGamesTable",
         label: "VideoGames Table",
         icon: FaGamepad,
         isInMenu: true,
-        component: <LazyLoad loader={() => import("../features/formExample/videoGamesPage")} />,
+        component: (
+          <LazyLoad
+            loader={() => import("../features/formExample/videoGamesPage")}
+          />
+        ),
       },
 
       {
@@ -62,22 +82,30 @@ export const mainSections: MainSectionType[] = [
         label: "Wizard Form",
         icon: FaTable,
         isInMenu: true,
-        component: <LazyLoad loader={() => import("../features/formWizard/formWizard")} />,
+        component: (
+          <LazyLoad
+            loader={() => import("../features/formWizard/formWizard")}
+          />
+        ),
       },
       {
         path: "translation",
         label: "Translation Sample",
         icon: FaFlag,
         isInMenu: true,
-        component: <LazyLoad loader={() => import("../features/localization/localizationPage")} />,
+        component: (
+          <LazyLoad
+            loader={() => import("../features/localization/localizationPage")}
+          />
+        ),
       },
       {
         path: "bomb",
         label: "Throw Error",
         icon: FaBomb,
         isInMenu: true,
-        component: <Bomb />
-      }
+        component: <Bomb />,
+      },
     ],
   },
   {

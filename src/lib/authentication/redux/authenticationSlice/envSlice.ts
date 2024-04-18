@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { RootState } from "../..";
-import { CustomSettingsType } from "../../global";
+import { RootState } from "../../../..";
+import { CustomSettingsType } from "../../../../global";
 
 const initialState: CustomSettingsType = window.customSettings;
 

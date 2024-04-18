@@ -1,9 +1,10 @@
 import * as msal from "@azure/msal-browser";
 import { AccountInfo } from "@azure/msal-browser";
-import { AuthProvider } from "./authProviderInterface";
-import { LoginStatus, UserAccountInfo } from "./authTypes";
+
 import * as R from "ramda";
-import { CustomSettingsType } from "../../global";
+import { AuthProvider } from "./authProviderInterface";
+import { LoginStatus, UserAccountInfo } from "../authTypes";
+import { CustomSettingsType } from "../../../global";
 
 export type MSALConfig = {
   msalConfig: msal.Configuration;
@@ -29,7 +30,6 @@ export class MsalAuthProvider implements AuthProvider {
       auth: {
         clientId: env.clientID,
         authority: env.authority,
-
         knownAuthorities: env.knownAuthorities.split(","),
         redirectUri: env.redirectUri,
       },
@@ -131,10 +131,10 @@ export class MsalAuthProvider implements AuthProvider {
   public async getUserDetail(): Promise<UserAccountInfo | null> {
     const currentAccounts = this.myMSALObj!.getAllAccounts();
     if (currentAccounts === null || currentAccounts.length === 0) {
-      return (
-        this.account && ({ username: this.account.username } as UserAccountInfo)
-      );
+      return null;
     } else {
+      this.loginStatus = LoginStatus.Logged;
+      this.notifySubscribers();
       this.myMSALObj!.setActiveAccount(currentAccounts[0]);
       const resp = await this.myMSALObj!.acquireTokenSilent(
         this.silentProfileRequest
@@ -146,7 +146,6 @@ export class MsalAuthProvider implements AuthProvider {
 
   private getAccounts(): AccountInfo[] | null {
     const currentAccounts = this.myMSALObj!.getAllAccounts();
-
     if (currentAccounts === null) {
       return null;
     } else {
@@ -194,10 +193,10 @@ export class MsalAuthProvider implements AuthProvider {
   logout() {
     return this.myMSALObj!.logoutRedirect();
   }
-  async getToken(audience?: string) {
+  async getToken() {
     return await this.getProfileTokenRedirect();
   }
-  hasPermission(permission: string, audience?: string) {
+  hasPermission(permission: string) {
     if (this.idTokenClaims) {
       const permissions = R.pathOr(
         "",

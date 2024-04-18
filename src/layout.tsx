@@ -1,4 +1,3 @@
-
 import { Outlet } from "react-router-dom";
 import Footer from "./components/footer/footer";
 import Header from "./components/header/view";
@@ -7,10 +6,9 @@ import { Box } from "@chakra-ui/react";
 
 import SimpleSidebar from "./components/sideBar/sideBar";
 
-import { ProblemDetailsModal } from "./componentsCommon/problemDetailsModal/problemDetailsModal";
-import NotificationView from "./features/notifications/notificationView";
-import { ErrorBoundary } from "./componentsCommon/errorBoundary";
-
+import { ProblemDetailsModal } from "./components/problemDetailsModal/problemDetailsModal";
+import NotificationView from "./features/notificationsSample/notificationView";
+import { ErrorBoundary } from "./components/errorBoundary";
 
 const Layout = () => {
   return (

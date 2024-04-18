@@ -10,17 +10,16 @@ import {
   loggedOut,
   tokenReceived,
   ExtraType,
-} from "../../features/authentication/authenticationSlice";
+} from "./redux/authenticationSlice/authenticationSlice";
 import { RootState } from "../..";
-import { AuthProvider } from "./authProviderInterface";
-import { baseUrlSelector } from "../../features/authentication/envSlice";
+import { AuthProvider } from "./providers/authProviderInterface";
+import { baseUrlSelector } from "./redux/authenticationSlice/envSlice";
 
 export function ArkBaseQuery(
   args: string | FetchArgs,
   api: BaseQueryApi,
-  extra: {}
+  extra: ExtraType
 ) {
-  // Now you can use extraArgument
   const authProviderInstance = (extra as ExtraType).authProvider;
 
   return ArkReauthQuery(authProviderInstance)(args, api, extra);
