@@ -7,10 +7,10 @@ import {
   isRouteErrorResponse,
   useRouteError,
 } from "react-router-dom";
-import Unauthorized from "./lib/authentication/redux/authenticationSlice/unauthorized";
+import Unauthorized from "./lib/authentication/unauthorized";
 import { useEffect } from "react";
 import { useAppDispatch } from "./app/hooks";
-import { DetectLoggedInUser } from "./lib/authentication/redux/authenticationSlice/authenticationSlice";
+import { DetectLoggedInUser } from "./lib/authentication/authenticationSlice";
 import { AuthenticationCallback } from "./lib/authentication/components/authenticationCallback";
 import { getEntryPointPath, mainSections } from "./siteMap/mainSections";
 import { AuthenticatedOnly } from "./lib/authentication/components/authenticationComponents";

@@ -3,10 +3,6 @@
     "password_complexity": "password needs to be at least 6 characters long",
     "custom_error_with_path": "'{{- path}}' is not valid. This is a custom error.",
     "paths": {
-        "customErrorInline": "The Translated Field Name",
-        "phone": "Invalid Phone Number",
-        "email": "Invalid Email Address",
-        "password": "Invalid Password",
-        "billingaddress": "Invalid Billing Address"
+        "customErrorInline": "The Translated Field Name"
     }
 }

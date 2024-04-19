@@ -10,10 +10,10 @@ import {
   loggedOut,
   tokenReceived,
   ExtraType,
-} from "./redux/authenticationSlice/authenticationSlice";
+} from "./authenticationSlice";
 import { RootState } from "../..";
 import { AuthProvider } from "./providers/authProviderInterface";
-import { baseUrlSelector } from "./redux/authenticationSlice/envSlice";
+import { baseUrlSelector } from "./envSlice";
 
 export function ArkBaseQuery(
   args: string | FetchArgs,

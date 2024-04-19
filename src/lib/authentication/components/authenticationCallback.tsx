@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useAppDispatch } from "../../../app/hooks";
-import { Init } from "../redux/authenticationSlice/authenticationSlice";
+import { Init } from "../authenticationSlice";
 import { useAuthContext } from "./useAuthContext";
 import { Navigate } from "react-router-dom";
 

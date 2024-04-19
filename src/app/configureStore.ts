@@ -6,9 +6,9 @@ import { jsonPlaceholderSlice } from "../features/fetchApiExample/jsonPlaceholde
 import { configTableApiSlice } from "../features/configTable/configTableApi";
 import { moviesApiSlice } from "../features/paginatedTable/paginatedTableApi";
 import { videoGameApiSlice } from "../features/formExample/videoGamesApiSlice";
-import { authSlice } from "../lib/authentication/redux/authenticationSlice/authenticationSlice";
+import { authSlice } from "../lib/authentication/authenticationSlice";
 import { AuthProvider } from "../lib/authentication/providers/authProviderInterface";
-import { envSlice } from "../lib/authentication/redux/authenticationSlice/envSlice";
+import { envSlice } from "../lib/authentication/envSlice";
 
 export function initStore(authProviderInstance: AuthProvider) {
   return configureStore({

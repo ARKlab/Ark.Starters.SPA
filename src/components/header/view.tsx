@@ -17,10 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useAppDispatch } from "../../app/hooks";
-import {
-  Login,
-  Logout,
-} from "../../lib/authentication/redux/authenticationSlice/authenticationSlice";
+import { Login, Logout } from "../../lib/authentication/authenticationSlice";
 import { useAuthContext } from "../../lib/authentication/components/useAuthContext";
 import { MdQuestionMark } from "react-icons/md";
 import { useSelector } from "react-redux";
