@@ -4,6 +4,7 @@ import {
   FaExternalLinkAlt,
   FaFlag,
   FaGamepad,
+  FaLock,
   FaPlay,
   FaTable,
 } from "react-icons/fa";
@@ -12,14 +13,23 @@ import { MainSectionType } from "../components/sideBar/menuItem/types";
 import NoEntryPoint from "../features/NoEntryPoint/staticPage";
 import LazyLoad from "../componentsCommon/lazyLoad";
 import { Bomb } from "../componentsCommon/Bomb";
+import { Navigate } from "react-router-dom";
+import { Heading } from "@chakra-ui/react";
 
 /*This is the Main Section ARRAY populate this to populate the main nav menu
 It is also used to create all the Routes for the router*/
 export const mainSections: MainSectionType[] = [
   {
     label: "Main Test Section",
-    path: "main",
+    path: '',
     subsections: [
+      {
+        path: '',
+        label: 'index',
+        isInMenu: false,
+        component: <Navigate to="jsonplaceholder" />,
+        isEntryPoint: true,
+      },
       {
         path: "jsonplaceholder",
         label: "Posts",
@@ -70,6 +80,14 @@ export const mainSections: MainSectionType[] = [
         icon: FaFlag,
         isInMenu: true,
         component: <LazyLoad loader={() => import("../features/localization/localizationPage")} />,
+      },
+      {
+        path: "authonly",
+        label: "Auth Only",
+        icon: FaLock,
+        isInMenu: true,
+        authenticatedOnly: true,
+        component: <Heading as='h1'>Auth Only</Heading>
       },
       {
         path: "bomb",

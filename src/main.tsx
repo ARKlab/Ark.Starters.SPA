@@ -39,18 +39,30 @@ const Main = () => {
   }
 
   const renderSections = (s?: SubsectionMenuItemType[]) => {
-    return s?.filter(x => !!x.path).map((x, i) =>
+    return s
+      ?.filter((x) => x.path !== undefined)
+      .map((x, i) =>
+        x.path === '' && !x.subsections ? ( // index route, shall not have children
+          <Route key={i} index element={wrapComponent(x)} />
+        ) : (
       <Route key={i} path={x.path} element={wrapComponent(x)}>
         {renderSections(x.subsections)}
       </Route>
-    );
+        ),
+      )
   }
 
-  const routes = mainSections.filter(x => !!x.path).map((x, i) =>
-    <Route key={i} path={x.path} element={wrapComponent(x)} >
+  const routes = mainSections
+    .filter((x) => x.path !== undefined)
+    .map((x, i) =>
+      x.path === '' && !x.subsections ? ( // index route, shall not have children
+        <Route key={i} index element={wrapComponent(x)} />
+      ) : (
+        <Route key={i} path={x.path} element={wrapComponent(x)}>
       {renderSections(x.subsections)}
     </Route>
-  );
+      ),
+    )
 
   const ErrorFallback = () => {
     const error = useRouteError();
@@ -67,8 +79,7 @@ const Main = () => {
     <Route path="/" element={<Layout />} >
       <Route errorElement={<ErrorFallback />} >
         <Route
-          index
-          path=""
+            path="auth-callback"
           element={<AuthenticationCallback redirectTo={entryPoint} />}
         />
         <Route path="Unauthorized" element={<Unauthorized />} />

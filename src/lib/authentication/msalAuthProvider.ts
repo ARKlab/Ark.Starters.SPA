@@ -194,10 +194,10 @@ export class MsalAuthProvider implements AuthProvider {
   logout() {
     return this.myMSALObj!.logoutRedirect();
   }
-  async getToken(audience?: string) {
+  async getToken(_audience?: string) { // eslint-disable-line @typescript-eslint/no-unused-vars
     return await this.getProfileTokenRedirect();
   }
-  hasPermission(permission: string, audience?: string) {
+  hasPermission(permission: string, _audience?: string) { // eslint-disable-line @typescript-eslint/no-unused-vars
     if (this.idTokenClaims) {
       const permissions = R.pathOr(
         "",

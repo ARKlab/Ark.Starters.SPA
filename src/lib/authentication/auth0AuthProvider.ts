@@ -22,7 +22,7 @@ export class Auth0AuthProvider implements AuthProvider {
       clientId: env.clientID,
       cacheLocation: "localstorage",
       authorizationParams: {
-        redirect_uri: window.location.origin,
+        redirect_uri: env.redirectUri,
         audience: env.audience,
         scope: "openid profile email",
       },
@@ -73,10 +73,10 @@ export class Auth0AuthProvider implements AuthProvider {
       if (query.includes("code=") && query.includes("state=")) {
         await this.auth0Client.handleRedirectCallback().then((result) => {
           this.setLoginStatus(LoginStatus.Logged);
-          window.location.pathname =
-            result.appState && result.appState.targetUrl
-              ? result.appState.targetUrl
-              : "/";
+          const target = result.appState && result.appState.targetUrl
+            ? result.appState.targetUrl
+            : "/";
+          window.history.pushState({}, "", target);
         });
       }
     }
