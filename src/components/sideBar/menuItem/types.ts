@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { IconType } from "react-icons";
+import type { ReactNode } from "react";
+import type { IconType } from "react-icons";
 
 export type MainSectionType = {
   subsections?: SubsectionMenuItemType[];

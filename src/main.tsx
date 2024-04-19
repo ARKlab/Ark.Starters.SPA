@@ -1,41 +1,54 @@
+import { useEffect } from 'react'
+import { Else, If, Then } from 'react-if'
+import {
+  Outlet,
+  Route,
+  RouterProvider,
+  createBrowserRouter,
+  createRoutesFromChildren,
+  isRouteErrorResponse,
+  useRouteError,
+} from 'react-router-dom'
 
-import { Outlet, Route, RouterProvider, createBrowserRouter, createRoutesFromChildren, isRouteErrorResponse, useRouteError } from "react-router-dom";
-import Unauthorized from "./features/authentication/unauthorized";
-import { useEffect } from "react";
-import { useAppDispatch } from "./app/hooks";
-import { DetectLoggedInUser } from "./features/authentication/authenticationSlice";
-import { AuthenticationCallback } from "./lib/authentication/authenticationCallback";
-import { getEntryPointPath, mainSections } from "./siteMap/mainSections";
-import { AuthenticatedOnly } from "./lib/authentication/authenticationComponents";
-import Layout from "./layout";
-import PageNotFound from "./componentsCommon/pageNotFound";
-import { Else, If, Then } from "react-if";
-import { MainSectionType, SubsectionMenuItemType } from "./components/sideBar/menuItem/types";
-import { ErrorDisplay } from "./componentsCommon/errorDisplay";
-import SEO from "./componentsCommon/seo";
-import useLocalizeDocumentAttributes from "./lib/i18n/useLocalizeDocumentAttributes";
+import { useAppDispatch } from './app/hooks'
+import type {
+  MainSectionType,
+  SubsectionMenuItemType,
+} from './components/sideBar/menuItem/types'
+import { ErrorDisplay } from './componentsCommon/errorDisplay'
+import PageNotFound from './componentsCommon/pageNotFound'
+import SEO from './componentsCommon/seo'
+import { DetectLoggedInUser } from './features/authentication/authenticationSlice'
+import Unauthorized from './features/authentication/unauthorized'
+import Layout from './layout'
+import { AuthenticationCallback } from './lib/authentication/authenticationCallback'
+import { AuthenticatedOnly } from './lib/authentication/authenticationComponents'
+import useLocalizeDocumentAttributes from './lib/i18n/useLocalizeDocumentAttributes'
+import { getEntryPointPath, mainSections } from './siteMap/mainSections'
 
 const Main = () => {
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
-    dispatch(DetectLoggedInUser());
-  }, [dispatch]);
+    dispatch(DetectLoggedInUser())
+  }, [dispatch])
 
-  useLocalizeDocumentAttributes();
+  useLocalizeDocumentAttributes()
 
   const wrapComponent = (x: MainSectionType) => {
-    return (<>
-      <SEO title={x.label} />
-      <If condition={x.authenticatedOnly}>
-        <Then>
-          {() => (<AuthenticatedOnly>{x.component ?? <Outlet />}</AuthenticatedOnly>)}
-        </Then>
-        <Else>
-          {() => (<>{x.component ?? <Outlet />}</>)}
-        </Else>
-      </If>
-    </>);
+    return (
+      <>
+        <SEO title={x.label} />
+        <If condition={x.authenticatedOnly}>
+          <Then>
+            {() => (
+              <AuthenticatedOnly>{x.component ?? <Outlet />}</AuthenticatedOnly>
+            )}
+          </Then>
+          <Else>{() => <>{x.component ?? <Outlet />}</>}</Else>
+        </If>
+      </>
+    )
   }
 
   const renderSections = (s?: SubsectionMenuItemType[]) => {
@@ -45,9 +58,9 @@ const Main = () => {
         x.path === '' && !x.subsections ? ( // index route, shall not have children
           <Route key={i} index element={wrapComponent(x)} />
         ) : (
-      <Route key={i} path={x.path} element={wrapComponent(x)}>
-        {renderSections(x.subsections)}
-      </Route>
+          <Route key={i} path={x.path} element={wrapComponent(x)}>
+            {renderSections(x.subsections)}
+          </Route>
         ),
       )
   }
@@ -59,36 +72,45 @@ const Main = () => {
         <Route key={i} index element={wrapComponent(x)} />
       ) : (
         <Route key={i} path={x.path} element={wrapComponent(x)}>
-      {renderSections(x.subsections)}
-    </Route>
+          {renderSections(x.subsections)}
+        </Route>
       ),
     )
 
   const ErrorFallback = () => {
-    const error = useRouteError();
+    const error = useRouteError()
     if (isRouteErrorResponse(error)) {
-      return <ErrorDisplay name={String(error.status)} message={error.statusText} />
+      return (
+        <ErrorDisplay name={String(error.status)} message={error.statusText} />
+      )
     } else if (error instanceof Error)
-      return <ErrorDisplay name={error.name} message={error.message} stack={error.stack} />
-    else
-      return <ErrorDisplay />
+      return (
+        <ErrorDisplay
+          name={error.name}
+          message={error.message}
+          stack={error.stack}
+        />
+      )
+    else return <ErrorDisplay />
   }
 
-  const entryPoint = getEntryPointPath(mainSections);
-  const router = createBrowserRouter(createRoutesFromChildren(
-    <Route path="/" element={<Layout />} >
-      <Route errorElement={<ErrorFallback />} >
-        <Route
+  const entryPoint = getEntryPointPath(mainSections)
+  const router = createBrowserRouter(
+    createRoutesFromChildren(
+      <Route path="/" element={<Layout />}>
+        <Route errorElement={<ErrorFallback />}>
+          <Route
             path="auth-callback"
-          element={<AuthenticationCallback redirectTo={entryPoint} />}
-        />
-        <Route path="Unauthorized" element={<Unauthorized />} />
-        {routes}
-        <Route path="*" element={<PageNotFound />} />
-      </Route>
-    </Route>
-  ));
-  return (<RouterProvider router={router} />);
-};
+            element={<AuthenticationCallback redirectTo={entryPoint} />}
+          />
+          <Route path="Unauthorized" element={<Unauthorized />} />
+          {routes}
+          <Route path="*" element={<PageNotFound />} />
+        </Route>
+      </Route>,
+    ),
+  )
+  return <RouterProvider router={router} />
+}
 
-export default Main;
+export default Main

@@ -1,33 +1,35 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { NotificationType } from "./notificationsTypes";
+import type { PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 
-type State = { notification: NotificationType | null };
+import type { NotificationType } from './notificationsTypes'
 
-const initialState: State = { notification: null };
+type State = { notification: NotificationType | null }
+
+const initialState: State = { notification: null }
 
 const notificationsSlice = createSlice({
-  name: "notifications",
+  name: 'notifications',
   initialState,
   reducers: {
     showNotification: (state, action: PayloadAction<NotificationType>) => {
-      state.notification = action.payload;
+      state.notification = action.payload
     },
     resetNotification: (state) => {
-      state.notification = null;
+      state.notification = null
     },
   },
   selectors: {
-    selectNotification: s => s.notification
-  }
-});
+    selectNotification: (s) => s.notification,
+  },
+})
 
 export const { showNotification, resetNotification } =
-  notificationsSlice.actions;
+  notificationsSlice.actions
 
-export default notificationsSlice.reducer;
+export default notificationsSlice.reducer
 
-export const selectNotificationsState = notificationsSlice.selectSlice;
-export const { selectNotification } = notificationsSlice.selectors;
+export const selectNotificationsState = notificationsSlice.selectSlice
+export const { selectNotification } = notificationsSlice.selectors
 
 // Azione dispatch
 export const dispatchNotification = (notification: NotificationType) =>
@@ -39,4 +41,4 @@ export const dispatchNotification = (notification: NotificationType) =>
     isClosable: notification.isClosable,
     message: notification.message,
     position: notification.position,
-  });
+  })

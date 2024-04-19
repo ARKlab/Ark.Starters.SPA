@@ -1,7 +1,7 @@
-import { createContext } from "react";
+import { createContext } from 'react'
 
-import { AuthProvider } from "./authProviderInterface";
+import type { AuthProvider } from './authProviderInterface'
 
-export const AuthenticationContext = createContext<AuthProvider>({} as AuthProvider);
-
-
+export const AuthenticationContext = createContext<AuthProvider>(
+  {} as AuthProvider,
+)

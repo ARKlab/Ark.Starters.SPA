@@ -1,6 +1,8 @@
-import { Button } from "@chakra-ui/react";
-import { ChackraPlainTable } from "../../components/tables/plainTable/chackraPlainTable";
-import { useFetchPostsQuery } from "./jsonPlaceholderSlice";
+import { Button } from '@chakra-ui/react'
+
+import { ChackraPlainTable } from '../../components/tables/plainTable/chackraPlainTable'
+
+import { useFetchPostsQuery } from './jsonPlaceholderSlice'
 const JsonPlaceholderPostsTable = () => {
   const {
     data,
@@ -10,7 +12,7 @@ const JsonPlaceholderPostsTable = () => {
     pollingInterval: 30000,
     refetchOnReconnect: true,
     refetchOnMountOrArgChange: true,
-  });
+  })
   return (
     <>
       <Button colorScheme="brandPalette">TestButton</Button>
@@ -22,7 +24,7 @@ const JsonPlaceholderPostsTable = () => {
         isError={isError}
       />
     </>
-  );
-};
+  )
+}
 
-export default JsonPlaceholderPostsTable;
+export default JsonPlaceholderPostsTable

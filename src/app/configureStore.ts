@@ -1,14 +1,14 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore } from '@reduxjs/toolkit'
 
-import notificationsReducer from "../features/notifications/notification";
-import errorReducer from "../features/errorHandler/errorHandler";
-import { jsonPlaceholderSlice } from "../features/jsonPlaceholderAPI/jsonPlaceholderSlice";
-import { configTableApiSlice } from "../features/configTable/configTableApi";
-import { moviesApiSlice } from "../features/paginatedTable/paginatedTableApi";
-import { videoGameApiSlice } from "../features/formExample/videoGamesApiSlice";
-import { authSlice } from "../features/authentication/authenticationSlice";
-import { AuthProvider } from "../lib/authentication/authProviderInterface";
-import { envSlice } from "../features/authentication/envSlice";
+import { authSlice } from '../features/authentication/authenticationSlice'
+import { envSlice } from '../features/authentication/envSlice'
+import { configTableApiSlice } from '../features/configTable/configTableApi'
+import errorReducer from '../features/errorHandler/errorHandler'
+import { videoGameApiSlice } from '../features/formExample/videoGamesApiSlice'
+import { jsonPlaceholderSlice } from '../features/jsonPlaceholderAPI/jsonPlaceholderSlice'
+import notificationsReducer from '../features/notifications/notification'
+import { moviesApiSlice } from '../features/paginatedTable/paginatedTableApi'
+import type { AuthProvider } from '../lib/authentication/authProviderInterface'
 
 export function initStore(authProviderInstance: AuthProvider) {
   return configureStore({
@@ -36,5 +36,5 @@ export function initStore(authProviderInstance: AuthProvider) {
         moviesApiSlice.middleware,
         videoGameApiSlice.middleware,
       ),
-  });
+  })
 }

@@ -1,4 +1,4 @@
-import { AccountInfo, PublicClientApplication } from "@azure/msal-browser";
+import type { AccountInfo, PublicClientApplication } from "@azure/msal-browser";
 
 export function createAuthHelpers(auth: PublicClientApplication) {
   const getUserAccounts = () => auth.getAllAccounts();

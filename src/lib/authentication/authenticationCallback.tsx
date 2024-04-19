@@ -1,21 +1,23 @@
-import { useEffect } from "react";
-import { useAppDispatch } from "../../app/hooks";
-import { Init } from "../../features/authentication/authenticationSlice";
-import { useAuthContext } from "./useAuthContext";
-import { Navigate } from "react-router-dom";
+import { useEffect } from 'react'
+import { Navigate } from 'react-router-dom'
+
+import { useAppDispatch } from '../../app/hooks'
+import { Init } from '../../features/authentication/authenticationSlice'
+
+import { useAuthContext } from './useAuthContext'
 
 export const AuthenticationCallback = (props: { redirectTo: string }) => {
-  const dispatch = useAppDispatch();
-  const { isLogged } = useAuthContext();
+  const dispatch = useAppDispatch()
+  const { isLogged } = useAuthContext()
 
   useEffect(() => {
     if (!isLogged) {
       dispatch(Init())
     }
-  }, [dispatch, isLogged]);
+  }, [dispatch, isLogged])
 
   if (isLogged) {
-    return <Navigate to={props.redirectTo} replace />;
+    return <Navigate to={props.redirectTo} replace />
   }
-  return <></>;
-};
+  return <></>
+}

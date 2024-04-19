@@ -1,4 +1,4 @@
-import { UserAccountInfo } from "./authTypes";
+import type { UserAccountInfo } from "./authTypes";
 
 type TokenResponse = {};
 type LoginStatus = {};

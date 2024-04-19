@@ -1,65 +1,64 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { RootState } from "../..";
-import {
-  AuthStoreType,
-  AuthenticationSteps,
-} from "../../lib/authentication/authTypes";
-import { AuthProvider } from "../../lib/authentication/authProviderInterface";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
-export const Init = createAsyncThunk("auth/init", async (_, thunkAPI) => {
-  const authProviderInstance = (thunkAPI.extra as ExtraType).authProvider;
+import type { RootState } from '../..'
+import type { AuthProvider } from '../../lib/authentication/authProviderInterface'
+import type { AuthStoreType } from '../../lib/authentication/authTypes'
+import { AuthenticationSteps } from '../../lib/authentication/authTypes'
+
+export const Init = createAsyncThunk('auth/init', async (_, thunkAPI) => {
+  const authProviderInstance = (thunkAPI.extra as ExtraType).authProvider
   return authProviderInstance.handleLoginRedirect().then(async () => {
-    const user = await authProviderInstance.getUserDetail();
-    if (!user) return null;
+    const user = await authProviderInstance.getUserDetail()
+    if (!user) return null
     return {
       userInfo: user,
-      token: "",
-    } as AuthStoreType;
-  });
-});
+      token: '',
+    } as AuthStoreType
+  })
+})
 
 export type ExtraType = {
-  authProvider: AuthProvider;
-};
+  authProvider: AuthProvider
+}
 
 export const DetectLoggedInUser = createAsyncThunk(
-  "auth/setLoggedUser",
+  'auth/setLoggedUser',
   async (_, thunkAPI) => {
-    const authProviderInstance = (thunkAPI.extra as ExtraType).authProvider;
-    const user = await authProviderInstance.getUserDetail();
+    const authProviderInstance = (thunkAPI.extra as ExtraType).authProvider
+    const user = await authProviderInstance.getUserDetail()
 
-    if (!user || user.username === "") return null;
+    if (!user || user.username === '') return null
     return {
       userInfo: user,
-      token: "",
-    } as AuthStoreType;
-  }
-);
+      token: '',
+    } as AuthStoreType
+  },
+)
 
-export const Logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
-  const authProviderInstance = (thunkAPI.extra as ExtraType).authProvider;
-  await authProviderInstance.logout();
-});
+export const Logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
+  const authProviderInstance = (thunkAPI.extra as ExtraType).authProvider
+  authProviderInstance.logout()
+})
 
 export const Login = createAsyncThunk(
-  "auth/redirectHandle",
+  'auth/redirectHandle',
   async (_, thunkAPI) => {
-    const authProviderInstance = (thunkAPI.extra as ExtraType).authProvider;
-    authProviderInstance.login();
-  }
-);
+    const authProviderInstance = (thunkAPI.extra as ExtraType).authProvider
+    authProviderInstance.login()
+  },
+)
 
 export const getLoginStatus = createAsyncThunk(
-  "auth/getLoginStatus",
+  'auth/getLoginStatus',
   async (_, thunkAPI) => {
-    const authProviderInstance = (thunkAPI.extra as ExtraType).authProvider;
-    const status = authProviderInstance.getLoginStatus();
-    return status;
-  }
-);
+    const authProviderInstance = (thunkAPI.extra as ExtraType).authProvider
+    const status = authProviderInstance.getLoginStatus()
+    return status
+  },
+)
 
 export const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState: {
     status: AuthenticationSteps.NotStarted,
     isLoading: false,
@@ -70,7 +69,7 @@ export const authSlice = createSlice({
   reducers: {
     tokenReceived: (state, action) => {
       if (state.data) {
-        state.data.token = action.payload;
+        state.data.token = action.payload
       }
     },
     loggedOut: () => {},
@@ -78,7 +77,7 @@ export const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(DetectLoggedInUser.pending, (state) => {
-        return { ...state, status: AuthenticationSteps.Init, isLoading: true };
+        return { ...state, status: AuthenticationSteps.Init, isLoading: true }
       })
       .addCase(DetectLoggedInUser.fulfilled, (state, action) => {
         return {
@@ -86,10 +85,10 @@ export const authSlice = createSlice({
           status: AuthenticationSteps.InitComplete,
           isLoading: false,
           data: action.payload,
-        };
+        }
       })
       .addCase(Init.pending, (state) => {
-        return { ...state, status: AuthenticationSteps.Init, isLoading: true };
+        return { ...state, status: AuthenticationSteps.Init, isLoading: true }
       })
       .addCase(Init.fulfilled, (state, action) => {
         return {
@@ -97,7 +96,7 @@ export const authSlice = createSlice({
           status: AuthenticationSteps.InitComplete,
           isLoading: false,
           data: action.payload,
-        };
+        }
       })
       .addCase(Init.rejected, (state, action) => {
         return {
@@ -106,21 +105,21 @@ export const authSlice = createSlice({
           isLoading: false,
           isError: true,
           error: action.error,
-        };
+        }
       })
       .addCase(Login.pending, (state) => {
         return {
           ...state,
           status: AuthenticationSteps.HandlingRedirect,
           isLoading: true,
-        };
+        }
       })
       .addCase(Login.fulfilled, (state) => {
         return {
           ...state,
           status: AuthenticationSteps.LoginComplete,
           isLoading: false,
-        };
+        }
       })
       .addCase(Login.rejected, (state, action) => {
         return {
@@ -129,7 +128,7 @@ export const authSlice = createSlice({
           isLoading: false,
           isError: true,
           error: action.error,
-        };
+        }
       })
       .addCase(Logout.rejected, (state, action) => {
         return {
@@ -138,27 +137,27 @@ export const authSlice = createSlice({
           isLoading: false,
           isError: true,
           error: action.error,
-        };
+        }
       })
       .addCase(getLoginStatus.pending, (state) => {
-        return { ...state, status: AuthenticationSteps.Login, isLoading: true };
+        return { ...state, status: AuthenticationSteps.Login, isLoading: true }
       })
       .addCase(getLoginStatus.fulfilled, (state) => {
         return {
           ...state,
           status: AuthenticationSteps.Login,
           isLoading: false,
-        };
+        }
       })
       .addCase(getLoginStatus.rejected, (state) => {
         return {
           ...state,
           status: AuthenticationSteps.LoginError,
           isLoading: false,
-        };
-      });
+        }
+      })
   },
-});
-export const { tokenReceived, loggedOut } = authSlice.actions;
+})
+export const { tokenReceived, loggedOut } = authSlice.actions
 
-export const tokenSelector = (state: RootState) => state.auth.data?.token;
+export const tokenSelector = (state: RootState) => state.auth.data?.token

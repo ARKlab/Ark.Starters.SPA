@@ -1,79 +1,76 @@
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Heading } from '@chakra-ui/react'
+import type { ColumnDef } from '@tanstack/react-table'
+import { createColumnHelper } from '@tanstack/react-table'
 
-import {
-  ColumnDef,
-  createColumnHelper,
-} from "@tanstack/react-table";
+import { PaginatedSortableTable } from '../../componentsCommon/PaginatedSortableTable/PaginatedSortableTable'
 
-import { PaginatedSortableTable } from "../../componentsCommon/PaginatedSortableTable/PaginatedSortableTable";
 import {
   useGetVideoGamesGenresQuery,
   useGetVideoGamesQuery,
-} from "./videoGamesApiSlice";
-import { VideoGame } from "./videoGamesSampleDataAndTypes";
-import VideoGamesForm from "./videoGamesForm";
+} from './videoGamesApiSlice'
+import VideoGamesForm from './videoGamesForm'
+import type { VideoGame } from './videoGamesSampleDataAndTypes'
 
-const columnHelper = createColumnHelper<VideoGame>();
+const columnHelper = createColumnHelper<VideoGame>()
 
 const VideoGamesTableView = () => {
-  const { data: genres } =
-    useGetVideoGamesGenresQuery();
+  const { data: genres } = useGetVideoGamesGenresQuery()
 
   const columns = [
     columnHelper.accessor((row) => row.title, {
-      id: "title",
+      id: 'title',
       cell: (info) => info.getValue(),
       header: () => <span>Title</span>,
-      meta: { type: "string" },
+      meta: { type: 'string' },
       enableColumnFilter: false,
     }),
     columnHelper.accessor((row) => row.releaseYear, {
-      id: "releaseYear",
+      id: 'releaseYear',
       cell: (info) => info.getValue(),
       header: () => <span>Release Year</span>,
-      meta: { type: "number" },
+      meta: { type: 'number' },
       enableColumnFilter: false,
     }),
     columnHelper.accessor((row) => row.developer, {
-      id: "developer",
+      id: 'developer',
       cell: (info) => info.getValue(),
       header: () => <span>Developer</span>,
-      meta: { type: "string" },
+      meta: { type: 'string' },
       enableColumnFilter: false,
     }),
     columnHelper.accessor((row) => row.rating, {
-      id: "rating",
-      cell: (info) => "🎮 " + info.getValue(),
+      id: 'rating',
+      cell: (info) => '🎮 ' + info.getValue(),
       header: () => <span>Rating</span>,
-      meta: { type: "number" },
+      meta: { type: 'number' },
       enableColumnFilter: false,
     }),
     columnHelper.accessor((row) => row.platform, {
-      id: "platform",
+      id: 'platform',
       cell: (info) => info.getValue(),
       header: () => <span>Platform</span>,
-      meta: { type: "string" },
+      meta: { type: 'string' },
       enableColumnFilter: false,
     }),
     columnHelper.accessor((row) => row.salesMillions, {
-      id: "salesMillions",
+      id: 'salesMillions',
       cell: (info) => info.getValue(),
       header: () => <span>Sales (Millions)</span>,
-      meta: { type: "number" },
+      meta: { type: 'number' },
       enableColumnFilter: false,
     }),
     columnHelper.accessor((row) => row.genre, {
-      id: "genre",
+      id: 'genre',
       cell: (info) => {
-        const genreId = info.getValue();
-        const matchingGenre = genres?.find((x) => x.id === genreId);
-        return matchingGenre ? matchingGenre.name : "Unknown";
+        const genreId = info.getValue()
+        const matchingGenre = genres?.find((x) => x.id === genreId)
+        return matchingGenre ? matchingGenre.name : 'Unknown'
       },
       header: () => <span>Genre</span>,
-      meta: { type: "number" },
+      meta: { type: 'number' },
       enableColumnFilter: false,
     }),
-  ] as ColumnDef<VideoGame>[];
+  ] as ColumnDef<VideoGame>[]
 
   return (
     <Box>
@@ -86,7 +83,7 @@ const VideoGamesTableView = () => {
         isSortable={false}
       />
     </Box>
-  );
-};
+  )
+}
 
-export default VideoGamesTableView;
+export default VideoGamesTableView

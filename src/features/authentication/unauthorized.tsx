@@ -1,15 +1,17 @@
-import React from "react";
-import { Box, Heading, Text, Button } from "@chakra-ui/react";
-import { useAuthContext } from "../../lib/authentication/useAuthContext";
-import { useAppDispatch } from "../../app/hooks";
-import { Login } from "./authenticationSlice";
+import { Box, Heading, Text, Button } from '@chakra-ui/react'
+import React from 'react'
+
+import { useAppDispatch } from '../../app/hooks'
+import { useAuthContext } from '../../lib/authentication/useAuthContext'
+
+import { Login } from './authenticationSlice'
 
 const Unauthorized = () => {
-  const { isLogged } = useAuthContext();
+  const { isLogged } = useAuthContext()
 
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch()
   function login() {
-    dispatch(Login());
+    dispatch(Login())
   }
   return (
     <Box>
@@ -31,7 +33,7 @@ const Unauthorized = () => {
         </Text>
       )}
     </Box>
-  );
-};
+  )
+}
 
-export default Unauthorized;
+export default Unauthorized

@@ -1,18 +1,20 @@
-import React from "react";
-import { AuthProvider } from "./authProviderInterface";
-import { AuthenticationContext } from "./authenticationContext";
+import React from 'react'
+
+import { AuthenticationContext } from './authenticationContext'
+import type { AuthProvider } from './authProviderInterface'
 
 type AuthContextChildrens = {
-    children: React.ReactNode;
-    authProvider: AuthProvider;
-};
+  children: React.ReactNode
+  authProvider: AuthProvider
+}
 
 export default function AuthenticationProviderContext({
-    children, authProvider: instance,
+  children,
+  authProvider: instance,
 }: AuthContextChildrens) {
-    return (
-        <AuthenticationContext.Provider value={instance}>
-            {children}
-        </AuthenticationContext.Provider>
-    );
+  return (
+    <AuthenticationContext.Provider value={instance}>
+      {children}
+    </AuthenticationContext.Provider>
+  )
 }

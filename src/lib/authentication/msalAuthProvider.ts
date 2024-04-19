@@ -1,9 +1,12 @@
 import * as msal from "@azure/msal-browser";
-import { AccountInfo } from "@azure/msal-browser";
-import { AuthProvider } from "./authProviderInterface";
-import { LoginStatus, UserAccountInfo } from "./authTypes";
+import type { AccountInfo } from "@azure/msal-browser";
 import * as R from "ramda";
-import { CustomSettingsType } from "../../global";
+
+import type { CustomSettingsType } from "../../global";
+
+import type { AuthProvider } from "./authProviderInterface";
+import type { UserAccountInfo } from "./authTypes";
+import { LoginStatus } from "./authTypes";
 
 export type MSALConfig = {
   msalConfig: msal.Configuration;
@@ -191,13 +194,13 @@ export class MsalAuthProvider implements AuthProvider {
       throw new Error(e as string);
     }
   }
-  logout() {
+  async logout() {
     return this.myMSALObj!.logoutRedirect();
   }
-  async getToken(_audience?: string) { // eslint-disable-line @typescript-eslint/no-unused-vars
-    return await this.getProfileTokenRedirect();
+  async getToken(_audience?: string) {  
+    return this.getProfileTokenRedirect();
   }
-  hasPermission(permission: string, _audience?: string) { // eslint-disable-line @typescript-eslint/no-unused-vars
+  hasPermission(permission: string, _audience?: string) {  
     if (this.idTokenClaims) {
       const permissions = R.pathOr(
         "",

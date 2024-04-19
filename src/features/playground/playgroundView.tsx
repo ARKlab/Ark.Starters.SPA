@@ -1,64 +1,62 @@
-import React from "react";
+import { Box, Button, Heading, Wrap, WrapItem } from '@chakra-ui/react'
+import React from 'react'
 
-import { Box, Button, Heading, Wrap, WrapItem } from "@chakra-ui/react";
-import {
-  NotificationDuration,
-  NotificationPosition,
-} from "../notifications/notificationsTypes";
-import { dispatchNotification } from "../notifications/notification";
-import { useAppDispatch } from "../../app/hooks";
+import { useAppDispatch } from '../../app/hooks'
+import { dispatchNotification } from '../notifications/notification'
+import type { NotificationPosition } from '../notifications/notificationsTypes'
+import { NotificationDuration } from '../notifications/notificationsTypes'
 
 const PlaygroundView = () => {
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch()
   const sendNotification = (
     id: string,
     message: string,
     duration: NotificationDuration,
-    position: NotificationPosition
+    position: NotificationPosition,
   ) => {
     dispatch(
       dispatchNotification({
         id: id,
-        title: "Test Notification",
+        title: 'Test Notification',
         message: message,
-        status: "success",
+        status: 'success',
         duration: duration,
         isClosable: true,
         position: position,
-      })
-    );
-  };
+      }),
+    )
+  }
 
   return (
     <Box>
       <Heading>PlayGround</Heading>
       <Box>
-        <Heading size="md" my={"20px"}>
+        <Heading size="md" my={'20px'}>
           Notifications
         </Heading>
-        <Wrap spacing={1} my={"20px"}>
+        <Wrap spacing={1} my={'20px'}>
           <WrapItem>
             <Button
               onClick={() =>
                 sendNotification(
-                  "1",
+                  '1',
                   "Here's your notification!",
                   NotificationDuration.VeryShort,
-                  "top"
+                  'top',
                 )
               }
             >
-              Top Very Short Norification{" "}
+              Top Very Short Norification{' '}
             </Button>
           </WrapItem>
           <WrapItem>
             <Button
               onClick={() =>
                 sendNotification(
-                  "2",
+                  '2',
                   "Here's your notification!",
                   NotificationDuration.Short,
-                  "top-left"
+                  'top-left',
                 )
               }
             >
@@ -69,10 +67,10 @@ const PlaygroundView = () => {
             <Button
               onClick={() =>
                 sendNotification(
-                  "3",
+                  '3',
                   "Here's your notification!",
                   NotificationDuration.Medium,
-                  "top-right"
+                  'top-right',
                 )
               }
             >
@@ -83,10 +81,10 @@ const PlaygroundView = () => {
             <Button
               onClick={() =>
                 sendNotification(
-                  "4",
+                  '4',
                   "Here's your notification!",
                   NotificationDuration.Long,
-                  "bottom-left"
+                  'bottom-left',
                 )
               }
             >
@@ -97,10 +95,10 @@ const PlaygroundView = () => {
             <Button
               onClick={() =>
                 sendNotification(
-                  "5",
+                  '5',
                   "Here's your notification!",
                   NotificationDuration.VeryLong,
-                  "bottom-right"
+                  'bottom-right',
                 )
               }
             >
@@ -111,10 +109,10 @@ const PlaygroundView = () => {
             <Button
               onClick={() =>
                 sendNotification(
-                  "6",
+                  '6',
                   "Here's your notification!",
                   NotificationDuration.VeryLong,
-                  "bottom"
+                  'bottom',
                 )
               }
             >
@@ -124,7 +122,7 @@ const PlaygroundView = () => {
         </Wrap>
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default PlaygroundView;
+export default PlaygroundView

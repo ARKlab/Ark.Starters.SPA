@@ -1,10 +1,3 @@
-import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import {
-  DetailsType,
-  selectError,
-  clearError
-} from "../../features/errorHandler/errorHandler";
-import { ChackraUIBaseModal } from "../chackraModal/chackraBaseModal";
 import {
   Accordion,
   AccordionItem,
@@ -16,29 +9,38 @@ import {
   Flex,
   AccordionButton,
   AccordionPanel,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react'
+
+import { useAppSelector, useAppDispatch } from '../../app/hooks'
+import type { DetailsType } from '../../features/errorHandler/errorHandler'
+import {
+  selectError,
+  clearError,
+} from '../../features/errorHandler/errorHandler'
+import { ChackraUIBaseModal } from '../chackraModal/chackraBaseModal'
 
 export const ProblemDetailsModal = () => {
-  const problem = useAppSelector(selectError);
-  const dispatch = useAppDispatch();
-  const therIsError =
-    problem.error !== undefined ? problem.error : false;
-  const problemDetails = problem.details;
+  const problem = useAppSelector(selectError)
+  const dispatch = useAppDispatch()
+  const therIsError = problem.error !== undefined ? problem.error : false
+  const problemDetails = problem.details
 
   return (
     <ChackraUIBaseModal
-      size={"xl"}
+      size={'xl'}
       isOpen={therIsError}
-      onClose={() => { dispatch(clearError()); }}
-      title={problemDetails?.title || ""}
+      onClose={() => {
+        dispatch(clearError())
+      }}
+      title={problemDetails?.title || ''}
       body={<ProblemDetailsModalBody problem={problemDetails} />}
       blurredOverlay={true}
     />
-  );
-};
+  )
+}
 
 const ProblemDetailsModalBody = (props: { problem: DetailsType | null }) => {
-  const problem = props.problem;
+  const problem = props.problem
 
   return (
     <>
@@ -68,11 +70,11 @@ const ProblemDetailsModalBody = (props: { problem: DetailsType | null }) => {
             <AccordionPanel pb={4}>
               {problem?.exceptionDetails
                 ? problem?.exceptionDetails[0].raw
-                : "No StackTrace found"}
+                : 'No StackTrace found'}
             </AccordionPanel>
           </AccordionItem>
         </Accordion>
       </Flex>
     </>
-  );
-};
+  )
+}

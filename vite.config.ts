@@ -18,7 +18,7 @@ export default defineConfig({
             ],
             hook: 'buildStart'
         }),
-        eslint({ cache: true, fix: true })],
+        eslint({ fix: true })],
     test: {
         globals: true,
         environment: "jsdom",

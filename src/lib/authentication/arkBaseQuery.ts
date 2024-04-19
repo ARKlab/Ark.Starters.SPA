@@ -5,15 +5,18 @@ import type {
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query";
 import { fetchBaseQuery } from "@reduxjs/toolkit/query";
+
+import type { RootState } from "../..";
+import type {
+  ExtraType} from "../../features/authentication/authenticationSlice";
 import {
   tokenSelector,
   loggedOut,
-  tokenReceived,
-  ExtraType,
+  tokenReceived
 } from "../../features/authentication/authenticationSlice";
-import { RootState } from "../..";
-import { AuthProvider } from "./authProviderInterface";
 import { baseUrlSelector } from "../../features/authentication/envSlice";
+
+import type { AuthProvider } from "./authProviderInterface";
 
 export function ArkBaseQuery(
   args: string | FetchArgs,
