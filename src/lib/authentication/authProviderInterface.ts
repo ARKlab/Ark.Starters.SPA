@@ -1,7 +1,6 @@
-import type { UserAccountInfo } from "./authTypes";
+import type { LoginStatus, UserAccountInfo } from "./authTypes";
 
-type TokenResponse = {};
-type LoginStatus = {};
+type TokenResponse = string | null;
 export interface AuthProvider {
   /**
    * Initializes the authentication module with configuration data,
@@ -22,7 +21,7 @@ export interface AuthProvider {
    * @returns The authentication token information.
    */
   handleLoginRedirect: () => Promise<void>;
-  getToken: (audience?: string) => TokenResponse;
+  getToken: (audience?: string) => Promise<TokenResponse>;
   /*
    * Checks whether the current user has the specified permission.
    *

@@ -4,7 +4,6 @@ import {
   Spinner,
   createLocalStorageManager,
 } from '@chakra-ui/react'
-import { setupListeners } from '@reduxjs/toolkit/query'
 import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary'
@@ -20,14 +19,12 @@ import reportWebVitals from './reportWebVitals'
 import { theme } from './theme'
 
 import './lib/i18n/config'
+import { AuthProvider } from './lib/authentication/authProviderInterface'
 
 const env = window.customSettings
-const authProvider = new Auth0AuthProvider(env)
+const authProvider: AuthProvider = new Auth0AuthProvider(env)
 
 const store = initStore(authProvider)
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
-setupListeners(store.dispatch)
 
 /**
  * ReactErrorBoundary at this level renders a Chakra-less/Redux-less context as they failed.

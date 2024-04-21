@@ -14,6 +14,24 @@ module.exports = {
     },
     plugins: ['react-refresh', 'react-hooks', 'jsx-a11y', 'import', 'prettier'],
     rules: {
+        "@typescript-eslint/no-restricted-imports": [
+            2,
+            {
+                "paths": [
+                    {
+                        "name": "react-redux",
+                        "importNames": ["useSelector", "useStore", "useDispatch"],
+                        "message": "Please use pre-typed versions from `src/app/hooks.ts` instead."
+                    },
+
+                    {
+                        "name": "'@reduxjs/toolkit'",
+                        "importNames": ["createSlice"],
+                        "message": "Please use thunk-able versions from `src/app/createAppSlice.ts` instead."
+                    }
+                ]
+            }
+        ],
         'react-refresh/only-export-components': [
             'error',
             { allowConstantExport: true },

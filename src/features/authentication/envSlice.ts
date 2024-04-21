@@ -1,15 +1,16 @@
-import { createSlice } from '@reduxjs/toolkit'
-
-import type { RootState } from '../..'
+import { createAppSlice } from '../../app/createAppSlice'
 import type { CustomSettingsType } from '../../global'
 
 const initialState: CustomSettingsType = window.customSettings
 
-export const envSlice = createSlice({
+export const envSlice = createAppSlice({
   name: 'env',
   initialState: initialState,
   reducers: {},
+  selectors: {
+    baseUrlSelector: s => s.serviceUrl
+  }
 })
 
-export const selectCustomSettings = (state: RootState) => state.env
-export const baseUrlSelector = (state: RootState) => state.env.serviceUrl
+export const customSettingsSelector = envSlice.selectSlice;
+export const { baseUrlSelector } = envSlice.selectors;

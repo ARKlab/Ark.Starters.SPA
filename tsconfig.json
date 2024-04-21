@@ -29,7 +29,6 @@
     "./src"
   ],
   "files": [
-    "./vitest.setup.ts",
-    "./src/componentsCommon/PaginatedSortableTable/ColumnSorter.tsx"
+    "./vitest.setup.ts"
   ]
 }

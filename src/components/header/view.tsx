@@ -17,13 +17,12 @@ import {
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { MdQuestionMark } from 'react-icons/md'
-import { useSelector } from 'react-redux'
 
-import type { RootState } from '../..'
-import { useAppDispatch } from '../../app/hooks'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import {
   Login,
   Logout,
+  authSelector
 } from '../../features/authentication/authenticationSlice'
 import { useAuthContext } from '../../lib/authentication/useAuthContext'
 
@@ -31,7 +30,7 @@ const UserMenu = () => {
   const dispatch = useAppDispatch()
   const { isLogged } = useAuthContext()
 
-  const authStore = useSelector((state: RootState) => state.auth)
+  const authStore = useAppSelector(authSelector);
   const user = authStore.data
   const { colorMode, toggleColorMode } = useColorMode()
   const [isChecked, setIsChecked] = useState<boolean>(colorMode === 'dark')

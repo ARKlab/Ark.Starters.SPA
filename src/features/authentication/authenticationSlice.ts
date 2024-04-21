@@ -1,7 +1,7 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk } from '@reduxjs/toolkit'
 
-import type { RootState } from '../..'
-import type { AuthProvider } from '../../lib/authentication/authProviderInterface'
+import type { ExtraType } from '../../app/configureStore'
+import { createAppSlice } from '../../app/createAppSlice'
 import type { AuthStoreType } from '../../lib/authentication/authTypes'
 import { AuthenticationSteps } from '../../lib/authentication/authTypes'
 
@@ -16,10 +16,6 @@ export const Init = createAsyncThunk('auth/init', async (_, thunkAPI) => {
     } as AuthStoreType
   })
 })
-
-export type ExtraType = {
-  authProvider: AuthProvider
-}
 
 export const DetectLoggedInUser = createAsyncThunk(
   'auth/setLoggedUser',
@@ -57,7 +53,7 @@ export const getLoginStatus = createAsyncThunk(
   },
 )
 
-export const authSlice = createSlice({
+export const authSlice = createAppSlice({
   name: 'auth',
   initialState: {
     status: AuthenticationSteps.NotStarted,
@@ -66,14 +62,14 @@ export const authSlice = createSlice({
     error: {} as unknown,
     data: null as AuthStoreType | null,
   },
-  reducers: {
-    tokenReceived: (state, action) => {
+  reducers: c => ({
+    tokenReceived: c.reducer<string|null>((state, action) => {
       if (state.data) {
         state.data.token = action.payload
       }
-    },
+    }),
     loggedOut: () => {},
-  },
+  }),
   extraReducers: (builder) => {
     builder
       .addCase(DetectLoggedInUser.pending, (state) => {
@@ -157,7 +153,11 @@ export const authSlice = createSlice({
         }
       })
   },
+  selectors: {
+    tokenSelector: (state) => state.data?.token
+  }
 })
 export const { tokenReceived, loggedOut } = authSlice.actions
 
-export const tokenSelector = (state: RootState) => state.auth.data?.token
+export const { tokenSelector } = authSlice.selectors;
+export const authSelector = authSlice.selectSlice;

@@ -6,9 +6,7 @@ import type {
 } from "@reduxjs/toolkit/query";
 import { fetchBaseQuery } from "@reduxjs/toolkit/query";
 
-import type { RootState } from "../..";
-import type {
-  ExtraType} from "../../features/authentication/authenticationSlice";
+import type { RootState , ExtraType } from "../../app/configureStore";
 import {
   tokenSelector,
   loggedOut,
@@ -21,10 +19,10 @@ import type { AuthProvider } from "./authProviderInterface";
 export function ArkBaseQuery(
   args: string | FetchArgs,
   api: BaseQueryApi,
-  extra: {}
+  extra: ExtraType
 ) {
   // Now you can use extraArgument
-  const authProviderInstance = (extra as ExtraType).authProvider;
+  const authProviderInstance = extra.authProvider;
 
   return ArkReauthQuery(authProviderInstance)(args, api, extra);
 }

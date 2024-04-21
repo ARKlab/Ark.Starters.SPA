@@ -24,7 +24,7 @@ export class MsalAuthProvider implements AuthProvider {
   private profileRequest: msal.PopupRequest;
   private profileRedirectRequest: msal.RedirectRequest;
   private idTokenClaims: msal.IdTokenClaims | null = null;
-  private subscribers = new Set<(status: string) => void>();
+  private subscribers = new Set<(status: LoginStatus) => void>();
 
   constructor(env: CustomSettingsType) {
     const scopes = env.scopes.split(",");
@@ -223,7 +223,7 @@ export class MsalAuthProvider implements AuthProvider {
     }
     return LoginStatus.NotLogged;
   }
-  onLoginStatus(subscriber: (status: string) => void) {
+  onLoginStatus(subscriber: (status: LoginStatus) => void) {
     this.subscribers.add(subscriber);
     return () => {
       this.subscribers.delete(subscriber);

@@ -15,7 +15,7 @@ export type Auth0Config = {
 
 export class Auth0AuthProvider implements AuthProvider {
   private loginStatus: LoginStatus = LoginStatus.NotLogged
-  private subscribers = new Set<(status: string) => void>()
+  private subscribers = new Set<(status: LoginStatus) => void>()
 
   private auth0Client: Auth0Client
   private config: Auth0Config
@@ -60,7 +60,7 @@ export class Auth0AuthProvider implements AuthProvider {
       return false
     }
   }
-  onLoginStatus(subscriber: (status: string) => void) {
+  onLoginStatus(subscriber: (status: LoginStatus) => void) {
     this.subscribers.add(subscriber)
     return () => {
       this.subscribers.delete(subscriber)

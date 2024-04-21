@@ -6,7 +6,7 @@ export function createAuthHelpers(auth: PublicClientApplication) {
 
   const loginWithRedirect = async (scopes: string[]) => {
     storePathname();
-    await storeManagementToken();
+    storeManagementToken();
     const options = buildScope({ scopes });
     await auth.loginRedirect(options);
   };
