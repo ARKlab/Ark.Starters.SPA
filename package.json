@@ -21,7 +21,7 @@
     "framer-motion": "^11.0.28",
     "i18next": "^23.11.1",
     "i18next-browser-languagedetector": "^7.2.1",
-    "i18next-http-backend": "^2.5.0",
+    "i18next-http-backend": "^2.5.1",
     "ramda": "^0.29.1",
     "react": "^18.2.0",
     "react-copy-to-clipboard": "^5.1.0",
