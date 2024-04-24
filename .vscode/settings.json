@@ -2,7 +2,7 @@
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true,
     "editor.formatOnType": true,
-     "workbench.colorCustomizations": {
-        "editorError.background": "#ff8b2d9d"
+    "workbench.colorCustomizations": {
+        "editorError.background": "#ff581171"
     }
 }

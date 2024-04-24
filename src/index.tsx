@@ -12,17 +12,15 @@ import { initStore } from "./app/configureStore";
 import Main from "./main";
 import reportWebVitals from "./reportWebVitals";
 import { theme } from "./theme";
-
-//mport Auth0AuthProvider from "./lib/authentication/providers/auth0AuthProvider";
-import AuthenticationProviderContext from "./lib/authentication/components/AuthenticationProviderContext";
+import AuthenticationProviderContext from "./lib/authentication/AuthenticationProviderContext";
 import { HelmetProvider } from "react-helmet-async";
 import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
-import SEO from "./components/seo";
+import SEO from "./componentsCommon/seo";
 import "./lib/i18n/config";
-import Auth0AuthProvider from "./lib/authentication/providers/auth0AuthProvider";
+import { MsalAuthProvider } from "./lib/authentication/msalAuthProvider";
 
 const env = window.customSettings;
-const authProvider = new Auth0AuthProvider(env);
+const authProvider = new MsalAuthProvider(env);
 
 const store = initStore(authProvider);
 export type RootState = ReturnType<typeof store.getState>;
