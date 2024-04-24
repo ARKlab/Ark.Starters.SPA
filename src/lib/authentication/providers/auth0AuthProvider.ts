@@ -1,7 +1,8 @@
 import { Auth0Client, Auth0ClientOptions } from "@auth0/auth0-spa-js";
-import { CustomSettingsType } from "../../global";
+
 import { AuthProvider } from "./authProviderInterface";
-import { LoginStatus, UserAccountInfo } from "./authTypes";
+import { LoginStatus, UserAccountInfo } from "../authTypes";
+import { CustomSettingsType } from "../../../global";
 
 const claimsUrl = "http://ark-energy.eu/claims/";
 

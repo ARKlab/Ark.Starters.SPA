@@ -12,13 +12,13 @@ import { initStore } from "./app/configureStore";
 import Main from "./main";
 import reportWebVitals from "./reportWebVitals";
 import { theme } from "./theme";
-import AuthenticationProviderContext from "./lib/authentication/AuthenticationProviderContext";
+
 import { HelmetProvider } from "react-helmet-async";
 import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
-import SEO from "./componentsCommon/seo";
+import { MsalAuthProvider } from "./lib/authentication/providers/msalAuthProvider";
 import "./lib/i18n/config";
-import { MsalAuthProvider } from "./lib/authentication/msalAuthProvider";
-
+import AuthenticationProviderContext from "./lib/authentication/components/AuthenticationProviderContext";
+import SEO from "./components/seo";
 const env = window.customSettings;
 const authProvider = new MsalAuthProvider(env);
 
