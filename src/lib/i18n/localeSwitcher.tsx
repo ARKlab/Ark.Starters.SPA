@@ -15,6 +15,9 @@ export const LocaleSwitcher = () => {
     [i18n]
   );
 
+  if (Object.entries(supportedLngs).length < 2) {
+    return <></>;
+  }
   return (
     <Menu>
       {({ isOpen }) => (
