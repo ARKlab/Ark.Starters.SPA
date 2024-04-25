@@ -7,58 +7,60 @@ import {
 import { Movie } from "./fakeMoviesData";
 import { useGetMoviesQuery } from "./paginatedTableApi";
 import { useState } from "react";
-import { PaginatedSortableTable } from "../../componentsCommon/PaginatedSortableTable/PaginatedSortableTable";
+import { PaginatedSortableTable } from "../../components/PaginatedSortableTable/PaginatedSortableTable";
+import { useTranslation } from "react-i18next";
 
 const columnHelper = createColumnHelper<Movie>();
 
-const columns = [
-  columnHelper.accessor((row) => row.title, {
-    id: "title",
-    cell: (info) => info.getValue(),
-    header: () => <span>Title</span>,
-    meta: { type: "string" }, //meta is custom data, if you want to expand this you can in the ex.ts file and add your custom properties.
-    //enableColumnFilter: false, //Specify false if you don't want the filter
-    enableColumnFilter: false,
-  }),
-  columnHelper.accessor((row) => row.director, {
-    id: "director",
-    cell: (info) => info.getValue(),
-    header: () => <span>Director</span>,
-    meta: { type: "string" },
-  }),
-  columnHelper.accessor((row) => row.genre, {
-    id: "genre",
-    cell: (info) => info.getValue(),
-    header: () => <span>Genre</span>,
-    meta: { type: "string" },
-  }),
-  columnHelper.accessor((row) => row.actors, {
-    id: "actors",
-    cell: (info) => info.getValue(),
-    header: () => <span>Actors</span>,
-    meta: { type: "string" },
-  }),
-  columnHelper.accessor((row) => row.plot, {
-    id: "plot",
-    cell: (info) => info.getValue(),
-    header: () => <span>Plot</span>,
-    meta: { type: "string" },
-  }),
-  columnHelper.accessor((row) => row.rating, {
-    id: "rating",
-    cell: (info) => "🍿".repeat(info.getValue() as number),
-    header: () => <span>Rating</span>,
-    meta: { type: "number" },
-  }),
-  columnHelper.accessor((row) => row.releaseDate, {
-    id: "releaseDate",
-    cell: (info) => info.getValue(),
-    header: () => <span>Release</span>,
-    meta: { type: "date" },
-  }),
-] as ColumnDef<Movie>[];
-
 const MovieTableView = () => {
+  const { t } = useTranslation();
+
+  const columns = [
+    columnHelper.accessor((row) => row.title, {
+      id: "title",
+      cell: (info) => info.getValue(),
+      header: () => <span>{t("movies_title")}</span>,
+      meta: { type: "string" }, //meta is custom data, if you want to expand this you can in the ex.ts file and add your custom properties.
+      //enableColumnFilter: false, //Specify false if you don't want the filter
+      enableColumnFilter: false,
+    }),
+    columnHelper.accessor((row) => row.director, {
+      id: "director",
+      cell: (info) => info.getValue(),
+      header: () => <span>{t("movies_director")}</span>,
+      meta: { type: "string" },
+    }),
+    columnHelper.accessor((row) => row.genre, {
+      id: "genre",
+      cell: (info) => info.getValue(),
+      header: () => <span>{t("movies_genre")}</span>,
+      meta: { type: "string" },
+    }),
+    columnHelper.accessor((row) => row.actors, {
+      id: "actors",
+      cell: (info) => info.getValue(),
+      header: () => <span>{t("movies_actors")}</span>,
+      meta: { type: "string" },
+    }),
+    columnHelper.accessor((row) => row.plot, {
+      id: "plot",
+      cell: (info) => info.getValue(),
+      header: () => <span>{t("movies_plot")}</span>,
+      meta: { type: "string" },
+    }),
+    columnHelper.accessor((row) => row.rating, {
+      id: "rating",
+      cell: (info) => "🍿".repeat(info.getValue() as number),
+      header: () => <span>{t("movies_rating")}</span>,
+      meta: { type: "number" },
+    }),
+    columnHelper.accessor((row) => row.releaseDate, {
+      id: "releaseDate",
+      cell: (info) => info.getValue(),
+      header: () => <span>{t("movies_release")}</span>,
+      meta: { type: "date" },
+    }),
+  ] as ColumnDef<Movie>[];
   const [filters, setFilters] = useState<ColumnFiltersState>([]);
   const [title, setTitle] = useState<string>("");
   const applyExtraFilter = () => {
@@ -72,7 +74,7 @@ const MovieTableView = () => {
 
   return (
     <Box>
-      <Heading>Movies</Heading>
+      <Heading>{t("movies_movies")}</Heading>
       {/* 
           The next lines are an example of one external filter (the column title)
           This exemple is only dimostrative if you want to use external filters instead of column headers filters
@@ -82,12 +84,12 @@ const MovieTableView = () => {
       <Flex my="2%" alignItems={"flex-start"} justifyItems={"center"}>
         <Input
           w="30%"
-          placeholder="Example of external filter for field Title"
+          placeholder={t("movies_externalfilterplaceholder")}
           onChange={(e) => setTitle(e.target.value)}
         />
       </Flex>
       <Button marginBottom={"70px"} onClick={applyExtraFilter}>
-        Apply External Filter
+        {t("movies_applyexternalfilter")}
       </Button>
       {/*External filters example end*/}
 

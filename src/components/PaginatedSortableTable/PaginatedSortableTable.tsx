@@ -36,6 +36,7 @@ import { DebouncedInputColumnHeader } from "../debouncedInputColumnHeader";
 import { ChackraDateRangeInHeader } from "../chackraDateRange/chackraDateRangeInHeader";
 import { DraggableColumnHeader } from "./draggableColumnHeader";
 import { ListResponse } from "../../lib/apiTypes";
+import { useTranslation } from "react-i18next";
 type PaginatedSortableTableProps<T> = {
   columns: ColumnDef<T>[];
   useQueryHook: (args: {
@@ -43,7 +44,7 @@ type PaginatedSortableTableProps<T> = {
     pageSize: number;
     sorting: SortingState;
     filters: ColumnFiltersState;
-  }) => { data?: ListResponse<T>, isLoading: boolean, isFetching: boolean };
+  }) => { data?: ListResponse<T>; isLoading: boolean; isFetching: boolean };
   isDraggable?: boolean;
   isSortable?: boolean;
   disableHeaderFilters?: boolean;
@@ -109,6 +110,7 @@ export function PaginatedSortableTable<T>(
     }),
     [pageIndex, pageSize]
   );
+  const { t } = useTranslation();
   const table = useReactTable<T>({
     //this is the definition of the table
     data: tableData,
@@ -158,7 +160,7 @@ export function PaginatedSortableTable<T>(
       <Box overflowX="auto">
         <Button onClick={resetOrder} hidden={!isSortable}>
           {/*This should be only demostrative and should be outside of the component*/}
-          Reset Columns Order
+          {t("movies_resetcolumnsorder")}
         </Button>
         <Table variant="simple" my="30px" minHeight={"500px"}>
           <Thead>
@@ -192,7 +194,7 @@ export function PaginatedSortableTable<T>(
                           }[header.column.getIsSorted() as string] ?? null}
                         </span>
                         {header.column.getCanFilter() &&
-                          !disableHeaderFilters ? (
+                        !disableHeaderFilters ? (
                           <span>
                             <Filter<T>
                               column={header.column}
@@ -261,7 +263,6 @@ function Filter<T>({
   table: ReactTable<T>;
   isLoading: boolean;
 }) {
-
   const firstValue = table
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id);
@@ -281,11 +282,7 @@ function Filter<T>({
       default:
         return [];
     }
-  }, [
-    column,
-    columnFacetedUniqueValues,
-    firstValue
-  ]);
+  }, [column, columnFacetedUniqueValues, firstValue]);
 
   //You can add all the filters you need and want here, even multiple per column (min max for numbers for example)
   switch (column.columnDef.meta?.type) {
@@ -317,6 +314,6 @@ function Filter<T>({
         </>
       );
     default:
-      return (<></>);
+      return <></>;
   }
 }

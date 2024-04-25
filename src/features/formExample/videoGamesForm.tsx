@@ -8,6 +8,7 @@ import {
   Container,
   FormControl,
   FormErrorMessage,
+  FormLabel,
   Input,
   Select,
   Spacer,
@@ -20,14 +21,15 @@ import { Field, Form } from "react-final-form";
 import { MdArrowDropDown } from "react-icons/md";
 import { useAppDispatch } from "../../app/hooks";
 import { zod2FieldValidator } from "../../lib/zod2FormValidator";
-import { dispatchNotification } from "../notifications/notification";
-import { NotificationDuration } from "../notifications/notificationsTypes";
+import { dispatchNotification } from "../../lib/notifications/notification";
+import { NotificationDuration } from "../../lib/notifications/notificationsTypes";
 import {
   useGetVideoGamesGenresQuery,
   useInsertNewVideoGameMutation,
 } from "./videoGamesApiSlice";
 import { VideoGame } from "./videoGamesSampleDataAndTypes";
 import z from "zod";
+import { useTranslation } from "react-i18next";
 
 const stringValidator = z.string();
 const yearValidator = z.string().refine(
@@ -45,11 +47,11 @@ const ratingValidator = z.string().refine(
   { message: "Rating must be from 0 to 10" }
 );
 const VideoGamesForm = () => {
+  const { t } = useTranslation();
+
   const dispatch = useAppDispatch();
-  const [
-    insertNewVideoGame,
-    { isSuccess: insertSuccess },
-  ] = useInsertNewVideoGameMutation();
+  const [insertNewVideoGame, { isSuccess: insertSuccess }] =
+    useInsertNewVideoGameMutation();
 
   const [flag, setFlag] = useBoolean();
   const { data: genres, isLoading: genreLoading } =
@@ -78,9 +80,14 @@ const VideoGamesForm = () => {
     }
   }, [insertSuccess, dispatch]);
   return (
-    <Accordion allowToggle index={flag ? 0 : -1} onChange={setFlag.toggle}>
+    <Accordion
+      allowToggle
+      index={flag ? 0 : -1}
+      onChange={setFlag.toggle}
+      my="30px"
+    >
       <AccordionItem>
-        <AccordionButton>Add videoGame </AccordionButton>
+        <AccordionButton>{t("games_add_video_game")}</AccordionButton>
         <AccordionPanel pb={4}>
           <Form
             onSubmit={(values: VideoGame, form: FormApi<VideoGame>) =>
@@ -98,12 +105,14 @@ const VideoGamesForm = () => {
                           return (
                             <FormControl
                               isInvalid={error && touched}
-                              isDisabled={submitting}
+                              id="title"
                             >
+                              <FormLabel>
+                                {t("games_title_placeholder")}
+                              </FormLabel>
                               <Input
                                 {...input}
-                                type="text"
-                                placeholder="Title"
+                                placeholder={t("games_title_placeholder")}
                               />
                               <FormErrorMessage>{error}</FormErrorMessage>
                             </FormControl>
@@ -238,11 +247,12 @@ const VideoGamesForm = () => {
                       />
                       <Spacer height="20px" />
                       <Button
-                        type="submit"
+                        mt={4}
                         colorScheme="teal"
                         isLoading={submitting}
+                        type="submit"
                       >
-                        Save
+                        {t("games_save_button")}
                       </Button>
                     </Box>
                   </form>

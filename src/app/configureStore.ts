@@ -1,14 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import notificationsReducer from "../features/notifications/notification";
-import errorReducer from "../features/errorHandler/errorHandler";
-import { jsonPlaceholderSlice } from "../features/jsonPlaceholderAPI/jsonPlaceholderSlice";
+import notificationsReducer from "../lib/notifications/notification";
+import errorReducer from "../lib/errorHandler/errorHandler";
+import { jsonPlaceholderSlice } from "../features/fetchApiExample/jsonPlaceholderSlice";
 import { configTableApiSlice } from "../features/configTable/configTableApi";
 import { moviesApiSlice } from "../features/paginatedTable/paginatedTableApi";
 import { videoGameApiSlice } from "../features/formExample/videoGamesApiSlice";
-import { authSlice } from "../features/authentication/authenticationSlice";
-import { AuthProvider } from "../lib/authentication/authProviderInterface";
-import { envSlice } from "../features/authentication/envSlice";
+import { authSlice } from "../lib/authentication/authenticationSlice";
+import { AuthProvider } from "../lib/authentication/providers/authProviderInterface";
+import { envSlice } from "../lib/authentication/envSlice";
 
 export function initStore(authProviderInstance: AuthProvider) {
   return configureStore({
@@ -34,7 +34,7 @@ export function initStore(authProviderInstance: AuthProvider) {
         jsonPlaceholderSlice.middleware,
         configTableApiSlice.middleware,
         moviesApiSlice.middleware,
-        videoGameApiSlice.middleware,
+        videoGameApiSlice.middleware
       ),
   });
 }

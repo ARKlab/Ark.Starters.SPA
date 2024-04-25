@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { useAuthContext } from "./useAuthContext";
-import Unauthorized from "../../features/authentication/unauthorized";
+import Unauthorized from "../unauthorized";
 
 export function AuthenticatedOnly({ children }: { children: ReactNode }) {
   const { isLogged } = useAuthContext();
