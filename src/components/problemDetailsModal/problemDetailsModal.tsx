@@ -2,8 +2,8 @@ import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import {
   DetailsType,
   selectError,
-  clearError
-} from "../../features/errorHandler/errorHandler";
+  clearError,
+} from "../../lib/errorHandler/errorHandler";
 import { ChackraUIBaseModal } from "../chackraModal/chackraBaseModal";
 import {
   Accordion,
@@ -21,15 +21,16 @@ import {
 export const ProblemDetailsModal = () => {
   const problem = useAppSelector(selectError);
   const dispatch = useAppDispatch();
-  const therIsError =
-    problem.error !== undefined ? problem.error : false;
+  const therIsError = problem.error !== undefined ? problem.error : false;
   const problemDetails = problem.details;
 
   return (
     <ChackraUIBaseModal
       size={"xl"}
       isOpen={therIsError}
-      onClose={() => { dispatch(clearError()); }}
+      onClose={() => {
+        dispatch(clearError());
+      }}
       title={problemDetails?.title || ""}
       body={<ProblemDetailsModalBody problem={problemDetails} />}
       blurredOverlay={true}

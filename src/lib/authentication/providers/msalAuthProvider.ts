@@ -1,9 +1,10 @@
 import * as msal from "@azure/msal-browser";
 import { AccountInfo } from "@azure/msal-browser";
 import { AuthProvider } from "./authProviderInterface";
-import { LoginStatus, UserAccountInfo } from "./authTypes";
+
 import * as R from "ramda";
-import { CustomSettingsType } from "../../global";
+import { LoginStatus, UserAccountInfo } from "../authTypes";
+import { CustomSettingsType } from "../../../global";
 
 export type MSALConfig = {
   msalConfig: msal.Configuration;

@@ -1,10 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../..";
-import {
-  AuthStoreType,
-  AuthenticationSteps,
-} from "../../lib/authentication/authTypes";
-import { AuthProvider } from "../../lib/authentication/authProviderInterface";
+import { AuthStoreType, AuthenticationSteps } from "./authTypes";
+import { AuthProvider } from "./providers/authProviderInterface";
 
 export const Init = createAsyncThunk("auth/init", async (_, thunkAPI) => {
   const authProviderInstance = (thunkAPI.extra as ExtraType).authProvider;

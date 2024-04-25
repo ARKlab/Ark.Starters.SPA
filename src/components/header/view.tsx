@@ -17,14 +17,12 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useAppDispatch } from "../../app/hooks";
-import {
-  Login,
-  Logout,
-} from "../../features/authentication/authenticationSlice";
-import { useAuthContext } from "../../lib/authentication/useAuthContext";
+import { Login, Logout } from "../../lib/authentication/authenticationSlice";
+import { useAuthContext } from "../../lib/authentication/components/useAuthContext";
 import { MdQuestionMark } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { RootState } from "../..";
+import { LocaleSwitcher } from "../../lib/i18n/localeSwitcher";
 
 const UserMenu = () => {
   const dispatch = useAppDispatch();
@@ -122,6 +120,9 @@ const Header = () => {
         <Spacer />
         <Spacer />
         <Spacer />
+        <Center mr={"20px"}>
+          <LocaleSwitcher />
+        </Center>
         <Center>
           <UserMenu />
         </Center>
