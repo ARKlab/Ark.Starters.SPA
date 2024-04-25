@@ -1,12 +1,13 @@
-import { Box } from '@chakra-ui/react'
-import { Outlet } from 'react-router-dom'
+import { Box, Center, Spinner } from "@chakra-ui/react";
+import { Suspense } from "react";
+import { Outlet } from "react-router-dom";
 
-import Footer from './components/footer/footer'
-import Header from './components/header/view'
-import SimpleSidebar from './components/sideBar/sideBar'
-import { ErrorBoundary } from './componentsCommon/errorBoundary'
-import { ProblemDetailsModal } from './componentsCommon/problemDetailsModal/problemDetailsModal'
-import NotificationView from './features/notifications/notificationView'
+import { ErrorBoundary } from "./components/errorBoundary";
+import Footer from "./components/footer/footer";
+import Header from "./components/header/view";
+import { ProblemDetailsModal } from "./components/problemDetailsModal/problemDetailsModal";
+import SimpleSidebar from "./components/sideBar/sideBar";
+import NotificationView from "./features/notificationsSample/notificationView";
 
 const Layout = () => {
   return (
@@ -16,7 +17,15 @@ const Layout = () => {
         <SimpleSidebar />
         <Box ml={{ base: 0, md: 60 }} p="4" my={'70px'}>
           <ErrorBoundary>
-            <Outlet />
+            <Suspense
+              fallback={
+                <Center minHeight="100vh">
+                  <Spinner />
+                </Center>
+              }
+            >
+              <Outlet />
+            </Suspense>
           </ErrorBoundary>
         </Box>
       </Box>

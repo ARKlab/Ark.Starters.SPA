@@ -2,15 +2,15 @@ import type { Action, ThunkAction} from '@reduxjs/toolkit';
 import { configureStore , combineSlices} from '@reduxjs/toolkit'
 import { setupListeners } from "@reduxjs/toolkit/query"
 
-import { authSlice } from '../features/authentication/authenticationSlice'
-import { envSlice } from '../features/authentication/envSlice'
 import { configTableApiSlice } from '../features/configTable/configTableApi'
-import errorReducer from '../features/errorHandler/errorHandler'
+import { jsonPlaceholderSlice } from '../features/fetchApiExample/jsonPlaceholderSlice';
 import { videoGameApiSlice } from '../features/formExample/videoGamesApiSlice'
-import { jsonPlaceholderSlice } from '../features/jsonPlaceholderAPI/jsonPlaceholderSlice'
-import notificationsReducer from '../features/notifications/notification'
 import { moviesApiSlice } from '../features/paginatedTable/paginatedTableApi'
-import type { AuthProvider } from '../lib/authentication/authProviderInterface'
+import { authSlice } from '../lib/authentication/authenticationSlice'
+import { envSlice } from '../lib/authentication/envSlice'
+import type { AuthProvider } from '../lib/authentication/providers/authProviderInterface';
+import errorReducer from '../lib/errorHandler/errorHandler'
+import notificationsReducer from '../lib/notifications/notification'
 
 
 // `combineSlices` automatically combines the reducers using

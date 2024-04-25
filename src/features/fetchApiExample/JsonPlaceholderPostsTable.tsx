@@ -1,8 +1,9 @@
-import { Button } from '@chakra-ui/react'
+import { Heading } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 
-import { ChackraPlainTable } from '../../components/tables/plainTable/chackraPlainTable'
+import { ChackraPlainTable } from "../../components/tables/plainTable/chackraPlainTable";
 
-import { useFetchPostsQuery } from './jsonPlaceholderSlice'
+import { useFetchPostsQuery } from "./jsonPlaceholderSlice";
 const JsonPlaceholderPostsTable = () => {
   const {
     data,
@@ -12,10 +13,12 @@ const JsonPlaceholderPostsTable = () => {
     pollingInterval: 30000,
     refetchOnReconnect: true,
     refetchOnMountOrArgChange: true,
-  })
+  });
+  const { t } = useTranslation();
+
   return (
     <>
-      <Button colorScheme="brandPalette">TestButton</Button>
+      <Heading>{t("fetch_example_Page")}</Heading>
       <ChackraPlainTable
         colorscheme="teal"
         variant="striped"

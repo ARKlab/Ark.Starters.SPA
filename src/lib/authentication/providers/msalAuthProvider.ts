@@ -2,11 +2,11 @@ import * as msal from "@azure/msal-browser";
 import type { AccountInfo } from "@azure/msal-browser";
 import * as R from "ramda";
 
-import type { CustomSettingsType } from "../../global";
+import type { CustomSettingsType } from "../../../global";
+import type { UserAccountInfo } from "../authTypes";
+import { LoginStatus } from "../authTypes";
 
 import type { AuthProvider } from "./authProviderInterface";
-import type { UserAccountInfo } from "./authTypes";
-import { LoginStatus } from "./authTypes";
 
 export type MSALConfig = {
   msalConfig: msal.Configuration;
@@ -35,6 +35,7 @@ export class MsalAuthProvider implements AuthProvider {
 
         knownAuthorities: env.knownAuthorities.split(","),
         redirectUri: env.redirectUri,
+        postLogoutRedirectUri: env.redirectUri
       },
       cache: {
         cacheLocation: "localStorage",
@@ -102,6 +103,99 @@ export class MsalAuthProvider implements AuthProvider {
       subscriber(this.loginStatus);
     }
   }
+  public async init(): Promise<void> {
+    this.myMSALObj =
+      await msal.PublicClientApplication.createPublicClientApplication(
+        this.config.msalConfig
+      );
+  }
+  public async login(): Promise<void> {
+    await this.myMSALObj!.loginRedirect(this.loginRedirectRequest);
+  }
+
+  async logout() {
+    return this.myMSALObj!.logoutRedirect();
+  }
+  public async getToken() {
+    return this.getProfileTokenRedirect();
+  }
+
+  public getLoginStatus(): LoginStatus {
+    if (this.myMSALObj) {
+      return this.loginStatus;
+    }
+    return LoginStatus.NotLogged;
+  }
+  public onLoginStatus(subscriber: (status: LoginStatus) => void) {
+    this.subscribers.add(subscriber);
+    return () => {
+      this.subscribers.delete(subscriber);
+    };
+  }
+  public async handleLoginRedirect(): Promise<void> {
+    try {
+      const resp: msal.AuthenticationResult | null =
+        await this.myMSALObj!.handleRedirectPromise();
+      if (resp) {
+        const account = this.myMSALObj!.getAllAccounts();
+        if (account.length === 0) {
+          await this.login();
+        } else {
+          this.handleResponse(resp);
+        }
+      }
+    } catch (e) {
+      throw new Error(String(e));
+    }
+  }
+
+  public async getUserDetail(): Promise<UserAccountInfo | null> {
+    const currentAccounts = this.myMSALObj!.getAllAccounts();
+    if (currentAccounts === null || currentAccounts.length === 0) {
+      return null;
+    } else {
+      this.myMSALObj!.setActiveAccount(currentAccounts[0]);
+      this.loginStatus = LoginStatus.Logged;
+      this.notifySubscribers();
+      const resp = await this.myMSALObj!.acquireTokenSilent(
+        this.silentProfileRequest
+      );
+      this.idTokenClaims = resp.idTokenClaims;
+      return { username: currentAccounts[0].username } as UserAccountInfo;
+    }
+  }
+  public hasPermission(permission: string) {
+    if (this.idTokenClaims) {
+      const permissions = R.pathOr(
+        "",
+        ["extension_Scope"],
+        this.idTokenClaims
+      ).split(" ");
+      return permissions.includes(permission);
+    }
+    return false;
+  }
+
+  //PRIVATE METHODS
+
+  private handleResponse(response: msal.AuthenticationResult | null) {
+    if (response !== null) {
+      this.account = response.account;
+    } else {
+      const accounts = this.myMSALObj!.getAllAccounts();
+      this.account = accounts ? accounts[0] : null;
+    }
+  }
+  private async getProfileTokenRedirect(): Promise<string | null> {
+    if (this.account) {
+      this.silentProfileRequest.account = this.account;
+    }
+    return this.getTokenRedirect(
+      this.silentProfileRequest,
+      this.profileRedirectRequest
+    );
+  }
+
   private async getTokenRedirect(
     silentRequest: msal.SilentRequest,
     interactiveRequest: msal.RedirectRequest
@@ -120,113 +214,5 @@ export class MsalAuthProvider implements AuthProvider {
       }
     }
     return null;
-  }
-
-  private handleResponse(response: msal.AuthenticationResult | null) {
-    if (response !== null) {
-      this.account = response.account;
-    } else {
-      const accounts = this.getAccounts();
-
-      this.account = accounts ? accounts[0] : null;
-    }
-  }
-  public async getUserDetail(): Promise<UserAccountInfo | null> {
-    const currentAccounts = this.myMSALObj!.getAllAccounts();
-    if (currentAccounts === null || currentAccounts.length === 0) {
-      return (
-        this.account && ({ username: this.account.username } as UserAccountInfo)
-      );
-    } else {
-      this.myMSALObj!.setActiveAccount(currentAccounts[0]);
-      const resp = await this.myMSALObj!.acquireTokenSilent(
-        this.silentProfileRequest
-      );
-      this.idTokenClaims = resp.idTokenClaims;
-      return { username: currentAccounts[0].username } as UserAccountInfo;
-    }
-  }
-
-  private getAccounts(): AccountInfo[] | null {
-    const currentAccounts = this.myMSALObj!.getAllAccounts();
-
-    if (currentAccounts === null) {
-      return null;
-    } else {
-      return currentAccounts;
-    }
-  }
-  public async handleLoginRedirect(): Promise<void> {
-    try {
-      const resp: msal.AuthenticationResult | null =
-        await this.myMSALObj!.handleRedirectPromise();
-      if (resp) {
-        const account = this.myMSALObj!.getAllAccounts();
-        if (account.length === 0) {
-          await this.login();
-        } else {
-          this.handleResponse(resp);
-        }
-      }
-    } catch (e) {
-      throw new Error(String(e));
-    }
-  }
-  async getProfileTokenRedirect(): Promise<string | null> {
-    if (this.account) {
-      this.silentProfileRequest.account = this.account;
-    }
-    return this.getTokenRedirect(
-      this.silentProfileRequest,
-      this.profileRedirectRequest
-    );
-  }
-  public async init(): Promise<void> {
-    this.myMSALObj =
-      await msal.PublicClientApplication.createPublicClientApplication(
-        this.config.msalConfig
-      );
-  }
-  public async login(): Promise<void> {
-    try {
-      await this.myMSALObj!.loginRedirect(this.loginRedirectRequest);
-    } catch (e) {
-      throw new Error(e as string);
-    }
-  }
-  async logout() {
-    return this.myMSALObj!.logoutRedirect();
-  }
-  async getToken(_audience?: string) {  
-    return this.getProfileTokenRedirect();
-  }
-  hasPermission(permission: string, _audience?: string) {  
-    if (this.idTokenClaims) {
-      const permissions = R.pathOr(
-        "",
-        ["extension_Scope"],
-        this.idTokenClaims
-      ).split(" ");
-      return permissions.includes(permission);
-    }
-    return false;
-  }
-  getLoginStatus(): LoginStatus {
-    if (this.myMSALObj) {
-      const isLoggedIn = this.myMSALObj.getAllAccounts().length > 0;
-      this.loginStatus = isLoggedIn
-        ? LoginStatus.Logged
-        : LoginStatus.NotLogged;
-      this.notifySubscribers();
-
-      return this.loginStatus;
-    }
-    return LoginStatus.NotLogged;
-  }
-  onLoginStatus(subscriber: (status: LoginStatus) => void) {
-    this.subscribers.add(subscriber);
-    return () => {
-      this.subscribers.delete(subscriber);
-    };
   }
 }

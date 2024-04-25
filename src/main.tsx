@@ -8,23 +8,23 @@ import {
   createRoutesFromChildren,
   isRouteErrorResponse,
   useRouteError,
-} from 'react-router-dom'
+} from "react-router-dom";
 
-import { useAppDispatch } from './app/hooks'
+import { useAppDispatch } from "./app/hooks";
+import { ErrorDisplay } from "./components/errorDisplay";
+import PageNotFound from "./components/pageNotFound";
+import SEO from "./components/seo";
 import type {
   MainSectionType,
   SubsectionMenuItemType,
-} from './components/sideBar/menuItem/types'
-import { ErrorDisplay } from './componentsCommon/errorDisplay'
-import PageNotFound from './componentsCommon/pageNotFound'
-import SEO from './componentsCommon/seo'
-import { DetectLoggedInUser } from './features/authentication/authenticationSlice'
-import Unauthorized from './features/authentication/unauthorized'
-import Layout from './layout'
-import { AuthenticationCallback } from './lib/authentication/authenticationCallback'
-import { AuthenticatedOnly } from './lib/authentication/authenticationComponents'
-import useLocalizeDocumentAttributes from './lib/i18n/useLocalizeDocumentAttributes'
-import { getEntryPointPath, mainSections } from './siteMap/mainSections'
+} from "./components/sideBar/menuItem/types";
+import Layout from "./layout";
+import { DetectLoggedInUser } from "./lib/authentication/authenticationSlice";
+import { AuthenticationCallback } from "./lib/authentication/components/authenticationCallback";
+import { AuthenticatedOnly } from "./lib/authentication/components/authenticationComponents";
+import Unauthorized from "./lib/authentication/unauthorized";
+import useLocalizeDocumentAttributes from "./lib/i18n/useLocalizeDocumentAttributes";
+import { getEntryPointPath, mainSections } from "./siteMap/mainSections";
 
 const Main = () => {
   const dispatch = useAppDispatch()

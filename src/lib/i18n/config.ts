@@ -1,14 +1,11 @@
-import i18n from 'i18next'
-import LanguageDetector from 'i18next-browser-languagedetector'
-import HttpApi from 'i18next-http-backend'
-import { initReactI18next } from 'react-i18next'
-import z from 'zod'
-import { makeZodI18nMap } from 'zod-i18n-map'
+import i18n from "i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
+import HttpApi from "i18next-http-backend";
+import { initReactI18next } from "react-i18next";
+import z from "zod";
+import { makeZodI18nMap } from "zod-i18n-map";
 
-export const supportedLngs = {
-  en: 'English',
-  it: 'Italiano',
-}
+import { supportedLngs } from "../../globalConfigs";
 
 i18n
   // Add React bindings as a plugin.
@@ -18,7 +15,7 @@ i18n
   // Initialize the i18next instance.
   .init({
     // Config options
-    load: 'languageOnly',
+    load: "languageOnly",
 
     // Specifies the default language (locale) used
     // when a user visits our site for the first time.
@@ -30,7 +27,7 @@ i18n
     // Fallback locale used when a translation is
     // missing in the active locale. Again, use your
     // preferred locale here.
-    fallbackLng: 'en',
+    fallbackLng: "en",
     supportedLngs: Object.keys(supportedLngs),
 
     // Enables useful output in the browser’s
@@ -47,16 +44,16 @@ i18n
       escapeValue: false,
     },
 
-    ns: ['translation', 'zod', 'zodCustom'],
-  })
+    ns: ["translation", "zod", "zodCustom"],
+  });
 
 z.setErrorMap(
   makeZodI18nMap({
-    ns: ['zodCustom', 'zod'],
+    ns: ["zodCustom", "zod"],
     handlePath: {
-      keyPrefix: 'paths',
+      keyPrefix: "paths",
     },
-  }),
-)
+  })
+);
 
-export default i18n
+export default i18n;

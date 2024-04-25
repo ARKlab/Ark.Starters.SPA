@@ -1,10 +1,10 @@
-import { useEffect } from 'react'
-import { Navigate } from 'react-router-dom'
+import { useEffect } from "react";
+import { Navigate } from "react-router-dom";
 
-import { useAppDispatch } from '../../app/hooks'
-import { Init } from '../../features/authentication/authenticationSlice'
+import { useAppDispatch } from "../../../app/hooks";
+import { Init } from "../authenticationSlice";
 
-import { useAuthContext } from './useAuthContext'
+import { useAuthContext } from "./useAuthContext";
 
 export const AuthenticationCallback = (props: { redirectTo: string }) => {
   const dispatch = useAppDispatch()
@@ -12,7 +12,7 @@ export const AuthenticationCallback = (props: { redirectTo: string }) => {
 
   useEffect(() => {
     if (!isLogged) {
-      dispatch(Init())
+      dispatch(Init());
     }
   }, [dispatch, isLogged])
 

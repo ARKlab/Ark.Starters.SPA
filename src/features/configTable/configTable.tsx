@@ -16,22 +16,23 @@ import {
   Thead,
   Tr,
   VStack,
-} from '@chakra-ui/react'
-import arrayMutators from 'final-form-arrays'
-import { useEffect } from 'react'
-import type { FormRenderProps } from 'react-final-form'
-import { Field, Form, useField } from 'react-final-form'
-import { FieldArray } from 'react-final-form-arrays'
-import { FaPlus, FaTrash } from 'react-icons/fa'
-import z from 'zod'
+} from "@chakra-ui/react";
+import arrayMutators from "final-form-arrays";
+import { useEffect } from "react";
+import type { FormRenderProps} from "react-final-form";
+import { Field, Form, useField } from "react-final-form";
+import { FieldArray } from "react-final-form-arrays";
+import { useTranslation } from "react-i18next";
+import { FaTrash } from "react-icons/fa";
+import z from "zod";
 
-import { useAppDispatch } from '../../app/hooks'
-import { zod2FieldValidator } from '../../lib/zod2FormValidator'
-import { dispatchNetworkError } from '../errorHandler/errorHandler'
-import { dispatchNotification } from '../notifications/notification'
-import { NotificationDuration } from '../notifications/notificationsTypes'
+import { useAppDispatch } from "../../app/hooks";
+import { dispatchNetworkError } from "../../lib/errorHandler/errorHandler";
+import { dispatchNotification } from "../../lib/notifications/notification";
+import { NotificationDuration } from "../../lib/notifications/notificationsTypes";
+import { zod2FieldValidator } from "../../lib/zod2FormValidator";
 
-import { useGetConfigQuery, usePostConfigMutation } from './configTableApi'
+import { useGetConfigQuery, usePostConfigMutation } from "./configTableApi";
 
 export type Employee = {
   name: string
@@ -98,7 +99,7 @@ export default function EditableTableExample() {
   const [
     postConfig,
     { isLoading: postConfigIsLoading, isSuccess: postConfigSuccess },
-  ] = usePostConfigMutation()
+  ] = usePostConfigMutation();
 
   const { data, isLoading: getConfigIsLoading } = useGetConfigQuery(null, {
     refetchOnReconnect: true,
@@ -130,10 +131,10 @@ export default function EditableTableExample() {
     await postConfig({ employees: values.table, throwError: values.throwError })
       .unwrap()
       .catch((e) => {
-        dispatch(dispatchNetworkError(e))
-      })
-  }
-
+        dispatch(dispatchNetworkError(e));
+      });
+  };
+  const { t } = useTranslation();
   return (
     <Form
       onSubmit={onSubmit}
@@ -154,10 +155,9 @@ export default function EditableTableExample() {
       }: FormRenderProps<{ table: Employee[]; throwError: boolean }>) => {
         return (
           <VStack as="form" onSubmit={handleSubmit} spacing={6}>
-            <Heading>Employee</Heading>
+            <Heading>{t("employee")}</Heading>
             <HStack spacing={4}>
               <Button
-                rightIcon={<FaPlus />}
                 onClick={() =>
                   push('table', {
                     name: '',
@@ -168,7 +168,7 @@ export default function EditableTableExample() {
                 colorScheme="green"
                 aria-label="Add Employee"
               >
-                New Employee
+                {t("new")}
               </Button>
               <Button
                 type="submit"
@@ -178,7 +178,7 @@ export default function EditableTableExample() {
                   form.change('throwError', false)
                 }}
               >
-                Submit
+                {t("submit")}
               </Button>
               <Button
                 type="submit"
@@ -188,22 +188,22 @@ export default function EditableTableExample() {
                   form.change('throwError', true)
                 }}
               >
-                Submit Error
+                {t("triggererror")}
               </Button>
               <Button
                 onClick={() => form.reset()}
                 isDisabled={submitting || pristine}
               >
-                Reset
+                {t("reset")}
               </Button>
             </HStack>
             <Table variant="simple">
               <Thead>
                 <Tr>
-                  <Th>First Name</Th>
-                  <Th>Last Name</Th>
-                  <Th>Employed</Th>
-                  <Th>Actions</Th>
+                  <Th>{t("firstname")}</Th>
+                  <Th>{t("lastname")}</Th>
+                  <Th>{t("employed")}</Th>
+                  <Th>{t("actions")}</Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -250,8 +250,9 @@ const TableRow = (props: {
   const { name, index, submitting, onDelete } = props
   const {
     meta: { error },
-  } = useField(name + '_rowError')
-  const rowError = error
+  } = useField(name + "_rowError");
+  const rowError = error;
+  const { t } = useTranslation();
   return (
     <Tr key={index + name}>
       <Td>
@@ -287,7 +288,7 @@ const TableRow = (props: {
           render={({ input, meta: { error, touched } }) => (
             <FormControl isInvalid={error && touched} isDisabled={submitting}>
               <Checkbox isChecked={input.checked} onChange={input.onChange}>
-                Employed
+                {t("employed")}
               </Checkbox>
               <FormErrorMessage>{error}</FormErrorMessage>
             </FormControl>

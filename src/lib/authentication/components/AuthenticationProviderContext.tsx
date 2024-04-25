@@ -1,12 +1,13 @@
-import React from 'react'
+import React from "react";
 
-import { AuthenticationContext } from './authenticationContext'
-import type { AuthProvider } from './authProviderInterface'
+import type { AuthProvider } from "../providers/authProviderInterface";
+
+import { AuthenticationContext } from "./authenticationContext";
 
 type AuthContextChildrens = {
-  children: React.ReactNode
-  authProvider: AuthProvider
-}
+  children: React.ReactNode;
+  authProvider: AuthProvider;
+};
 
 export default function AuthenticationProviderContext({
   children,
@@ -16,5 +17,5 @@ export default function AuthenticationProviderContext({
     <AuthenticationContext.Provider value={instance}>
       {children}
     </AuthenticationContext.Provider>
-  )
+  );
 }

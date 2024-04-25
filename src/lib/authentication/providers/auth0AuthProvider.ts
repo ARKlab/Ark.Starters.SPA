@@ -1,11 +1,13 @@
-import type { Auth0ClientOptions } from '@auth0/auth0-spa-js'
-import { Auth0Client } from '@auth0/auth0-spa-js'
+import type { Auth0ClientOptions } from "@auth0/auth0-spa-js";
+import { Auth0Client } from "@auth0/auth0-spa-js";
 
-import type { CustomSettingsType } from '../../global'
+import type { CustomSettingsType } from "../../../global";
+import type { UserAccountInfo } from "../authTypes";
+import { LoginStatus } from "../authTypes";
 
-import type { AuthProvider } from './authProviderInterface'
-import type { UserAccountInfo } from './authTypes'
-import { LoginStatus } from './authTypes'
+import type { AuthProvider } from "./authProviderInterface";
+
+
 
 const claimsUrl = 'http://ark-energy.eu/claims/'
 
@@ -30,43 +32,40 @@ export class Auth0AuthProvider implements AuthProvider {
         audience: env.audience,
         scope: 'openid profile email',
       },
-    }
-    this.config = { auth0Config: config }
-    this.auth0Client = new Auth0Client(this.config.auth0Config)
-  }
-  async init() {}
-
-  async login() {
-    await this.auth0Client?.loginWithRedirect()
+    };
+    this.config = { auth0Config: config };
+    this.auth0Client = new Auth0Client(this.config.auth0Config);
   }
   private notifySubscribers() {
     for (const subscriber of this.subscribers) {
       subscriber(this.loginStatus)
     }
   }
-  logout(): void {
-    this.auth0Client?.logout()
+  public async init() {}
+
+  public async login() {
+    await this.auth0Client?.loginWithRedirect();
   }
 
-  async getToken() {
-    const token = await this.auth0Client?.getTokenSilently()
+  public logout(): void {
+    this.auth0Client?.logout();
+  }
+
+  public async getToken() {
+    const token = await this.auth0Client?.getTokenSilently();
 
     return token
   }
-  async isAuthenticated(): Promise<boolean> {
-    try {
-      return await this.auth0Client?.isAuthenticated()
-    } catch (error) {
-      return false
-    }
+  public getLoginStatus(): LoginStatus {
+    return this.loginStatus;
   }
-  onLoginStatus(subscriber: (status: LoginStatus) => void) {
-    this.subscribers.add(subscriber)
+  public onLoginStatus(subscriber: (status: LoginStatus) => void) {
+    this.subscribers.add(subscriber);
     return () => {
       this.subscribers.delete(subscriber)
     }
   }
-  async handleLoginRedirect(): Promise<void> {
+  public async handleLoginRedirect(): Promise<void> {
     if (await this.isAuthenticated()) {
       this.setLoginStatus(LoginStatus.Logged)
     } else {
@@ -101,7 +100,8 @@ export class Auth0AuthProvider implements AuthProvider {
       } as UserAccountInfo
     }
   }
-  public hasPermission(permission: string, _audience?: string): boolean {
+  public hasPermission(permission: string): boolean {
+     
     // Checks whether the current user has the specified permission
     this.auth0Client.getIdTokenClaims().then((claims) => {
       const permissions = claims && claims[claimsUrl + 'permissions']
@@ -109,14 +109,17 @@ export class Auth0AuthProvider implements AuthProvider {
     })
     return false
   }
-
-  getLoginStatus(): LoginStatus {
-    return this.loginStatus
+  //PRIVATE METHODS
+  private setLoginStatus(status: LoginStatus) {
+    this.loginStatus = status;
+    this.notifySubscribers();
   }
-
-  setLoginStatus(status: LoginStatus) {
-    this.loginStatus = status
-    this.notifySubscribers()
+  private async isAuthenticated(): Promise<boolean> {
+    try {
+      return await this.auth0Client?.isAuthenticated();
+    } catch (error) {
+      return false;
+    }
   }
 }
 

@@ -1,4 +1,4 @@
-import type { LoginStatus, UserAccountInfo } from "./authTypes";
+import type { LoginStatus, UserAccountInfo } from "../authTypes";
 
 type TokenResponse = string | null;
 export interface AuthProvider {

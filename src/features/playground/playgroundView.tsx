@@ -1,10 +1,14 @@
 import { Box, Button, Heading, Wrap, WrapItem } from '@chakra-ui/react'
-import React from 'react'
+import { useTranslation } from "react-i18next";
 
-import { useAppDispatch } from '../../app/hooks'
-import { dispatchNotification } from '../notifications/notification'
-import type { NotificationPosition } from '../notifications/notificationsTypes'
-import { NotificationDuration } from '../notifications/notificationsTypes'
+import { useAppDispatch } from "../../app/hooks";
+import { dispatchNotification } from "../../lib/notifications/notification";
+import type {
+  NotificationPosition} from "../../lib/notifications/notificationsTypes";
+import {
+  NotificationDuration
+} from "../../lib/notifications/notificationsTypes";
+
 
 const PlaygroundView = () => {
   const dispatch = useAppDispatch()
@@ -17,106 +21,107 @@ const PlaygroundView = () => {
     dispatch(
       dispatchNotification({
         id: id,
-        title: 'Test Notification',
+        title: t("notification_title"),
         message: message,
         status: 'success',
         duration: duration,
         isClosable: true,
         position: position,
-      }),
-    )
-  }
-
+      })
+    );
+  };
+  const { t } = useTranslation();
+  const notificationBody = t("notification_body");
   return (
     <Box>
-      <Heading>PlayGround</Heading>
+      <Heading>{t("Playground")}</Heading>
       <Box>
-        <Heading size="md" my={'20px'}>
-          Notifications
+        <Heading size="md" my={"20px"}>
+          {t("notification_example")}
         </Heading>
         <Wrap spacing={1} my={'20px'}>
           <WrapItem>
             <Button
               onClick={() =>
                 sendNotification(
-                  '1',
-                  "Here's your notification!",
+                  "1",
+                  notificationBody,
                   NotificationDuration.VeryShort,
                   'top',
                 )
               }
             >
-              Top Very Short Norification{' '}
+              {t("top")} "Very Short Norification"
             </Button>
           </WrapItem>
           <WrapItem>
             <Button
               onClick={() =>
                 sendNotification(
-                  '2',
-                  "Here's your notification!",
+                  "2",
+                  notificationBody,
                   NotificationDuration.Short,
                   'top-left',
                 )
               }
             >
-              Top Left Short Notification
+              {t("topleft")} "Short Notification"
             </Button>
           </WrapItem>
           <WrapItem>
             <Button
               onClick={() =>
                 sendNotification(
-                  '3',
-                  "Here's your notification!",
+                  "3",
+                  notificationBody,
                   NotificationDuration.Medium,
                   'top-right',
                 )
               }
             >
-              Top Right Medium Notification
+              {t("topright")} "Medium Notification"
             </Button>
           </WrapItem>
           <WrapItem>
             <Button
               onClick={() =>
                 sendNotification(
-                  '4',
-                  "Here's your notification!",
+                  "4",
+                  notificationBody,
                   NotificationDuration.Long,
                   'bottom-left',
                 )
               }
             >
-              Bottom Left Long Notification
+              {t("bottomleft")} "Long Notification"
             </Button>
           </WrapItem>
           <WrapItem>
             <Button
               onClick={() =>
                 sendNotification(
-                  '5',
-                  "Here's your notification!",
+                  "5",
+                  notificationBody,
                   NotificationDuration.VeryLong,
                   'bottom-right',
                 )
               }
             >
-              Bottom Right Very Long Notification
+              {t("bottomright")} "Very Long Notification"
             </Button>
           </WrapItem>
           <WrapItem>
             <Button
               onClick={() =>
                 sendNotification(
-                  '6',
-                  "Here's your notification!",
+                  "6",
+                  notificationBody,
                   NotificationDuration.VeryLong,
                   'bottom',
                 )
               }
             >
-              Bottom Very Long Notification
+              {t("bottom")} "Very Long Notification"
             </Button>
           </WrapItem>
         </Wrap>

@@ -7,17 +7,21 @@ import {
   Text,
   Flex,
 } from "@chakra-ui/react";
-import type { ReactNode } from "react";
+import type { ReactNode} from "react";
 import React, { useState } from "react";
 import { Form } from "react-final-form";
+import type z from "zod";
 
 export const Wizard = ({
   onSubmit,
   children,
+  schema,
 }: {
   onSubmit: (v: number | string | boolean) => void;
   children: ReactNode;
+  schema: z.ZodTypeAny;
 }) => {
+  type SchemaType = z.infer<typeof schema>;
   const [page, setPage] = useState(0);
   const activePage = React.Children.toArray(children)[page];
   const isLastPage = page === React.Children.count(children) - 1;
@@ -36,7 +40,7 @@ export const Wizard = ({
   };
 
   return (
-    <Form
+    <Form<SchemaType>
       onSubmit={handleSubmit}
       render={({ handleSubmit, submitting, values }) => {
         return (

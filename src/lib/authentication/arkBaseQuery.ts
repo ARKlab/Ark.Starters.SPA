@@ -7,14 +7,15 @@ import type {
 import { fetchBaseQuery } from "@reduxjs/toolkit/query";
 
 import type { RootState , ExtraType } from "../../app/configureStore";
+
 import {
   tokenSelector,
   loggedOut,
   tokenReceived
-} from "../../features/authentication/authenticationSlice";
-import { baseUrlSelector } from "../../features/authentication/envSlice";
+} from "./authenticationSlice";
+import { baseUrlSelector } from "./envSlice";
+import type { AuthProvider } from "./providers/authProviderInterface";
 
-import type { AuthProvider } from "./authProviderInterface";
 
 export function ArkBaseQuery(
   args: string | FetchArgs,

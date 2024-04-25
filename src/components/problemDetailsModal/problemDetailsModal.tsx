@@ -12,11 +12,8 @@ import {
 } from '@chakra-ui/react'
 
 import { useAppSelector, useAppDispatch } from '../../app/hooks'
-import type { DetailsType } from '../../features/errorHandler/errorHandler'
-import {
-  selectError,
-  clearError,
-} from '../../features/errorHandler/errorHandler'
+import type { DetailsType} from '../../lib/errorHandler/errorHandler';
+import { clearError, selectError } from '../../lib/errorHandler/errorHandler'
 import { ChackraUIBaseModal } from '../chackraModal/chackraBaseModal'
 
 export const ProblemDetailsModal = () => {

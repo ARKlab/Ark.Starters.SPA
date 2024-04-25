@@ -11,18 +11,15 @@ import { HelmetProvider } from 'react-helmet-async'
 import { Provider } from 'react-redux'
 
 import { initStore } from './app/configureStore'
-import SEO from './componentsCommon/seo'
-import Auth0AuthProvider from './lib/authentication/auth0AuthProvider'
-import AuthenticationProviderContext from './lib/authentication/AuthenticationProviderContext'
+import SEO from './components/seo'
+import { authProvider } from './globalConfigs'
+import AuthenticationProviderContext from './lib/authentication/components/AuthenticationProviderContext'
 import Main from './main'
 import reportWebVitals from './reportWebVitals'
 import { theme } from './theme'
 
 import './lib/i18n/config'
-import { AuthProvider } from './lib/authentication/authProviderInterface'
 
-const env = window.customSettings
-const authProvider: AuthProvider = new Auth0AuthProvider(env)
 
 const store = initStore(authProvider)
 
@@ -79,7 +76,7 @@ async function initApplication() {
           </Provider>
         </AuthenticationProviderContext>
       </ReactErrorBoundary>
-    </React.StrictMode>,
+    </React.StrictMode >
   )
 
   reportWebVitals()

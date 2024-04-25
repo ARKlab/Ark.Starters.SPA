@@ -30,33 +30,37 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   useReactTable,
-} from '@tanstack/react-table'
-import React, { useMemo, useState } from 'react'
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
+} from "@tanstack/react-table";
+import React, { useEffect, useMemo, useState } from 'react';
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { useTranslation } from "react-i18next";
 
-import type { ListResponse } from '../../lib/apiTypes'
-import { ChackraDateRangeInHeader } from '../chackraDateRange/chackraDateRangeInHeader'
-import ChackraPaginationComponent from '../chackraPaginationComponent/chackraTablePagination'
-import { DebouncedInputColumnHeader } from '../debouncedInputColumnHeader'
+import type { ListResponse } from "../../lib/apiTypes";
+import { ChackraDateRangeInHeader } from "../chackraDateRange/chackraDateRangeInHeader";
+import PaginationComponent from '../chackraPaginationComponent/chackraTablePagination';
+import { DebouncedInputColumnHeader } from "../debouncedInputColumnHeader";
 
-import { ColumnSorter } from './ColumnSorter'
-import { DraggableColumnHeader } from './draggableColumnHeader'
+import { ColumnSorter } from './ColumnSorter';
+import { DraggableColumnHeader } from "./draggableColumnHeader";
+
+
+
 
 type PaginatedSortableTableProps<T> = {
   columns: ColumnDef<T>[]
   useQueryHook: (args: {
-    pageIndex: number
-    pageSize: number
-    sorting: SortingState
-    filters: ColumnFiltersState
-  }) => { data?: ListResponse<T>; isLoading: boolean; isFetching: boolean }
-  isDraggable?: boolean
-  isSortable?: boolean
-  disableHeaderFilters?: boolean
-  externalFilters?: boolean
-  externalFiltersState?: ColumnFiltersState
-}
+    pageIndex: number;
+    pageSize: number;
+    sorting: SortingState;
+    filters: ColumnFiltersState;
+  }) => { data?: ListResponse<T>; isLoading: boolean; isFetching: boolean };
+  isDraggable?: boolean;
+  isSortable?: boolean;
+  disableHeaderFilters?: boolean;
+  externalFilters?: boolean;
+  externalFiltersState?: ColumnFiltersState;
+};
 
 export function PaginatedSortableTable<T>(
   props: PaginatedSortableTableProps<T>,
@@ -79,18 +83,18 @@ export function PaginatedSortableTable<T>(
     { id: '', desc: false },
   ])
 
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
     [],
   )
 
   //When filters are provided externally, we use them instead of the internal state
-  React.useEffect(() => {
+  useEffect(() => {
     if (externalFilters) {
       setColumnFilters(externalFiltersState || [])
     }
   }, [externalFilters, externalFiltersState])
 
-  const [columnOrder, setColumnOrder] = React.useState<ColumnOrderState>(
+  const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(
     columns.map((column) => column.id as string), //must start out with populated columnOrder so we can splice
   )
 
@@ -114,8 +118,9 @@ export function PaginatedSortableTable<T>(
       pageIndex,
       pageSize,
     }),
-    [pageIndex, pageSize],
-  )
+    [pageIndex, pageSize]
+  );
+  const { t } = useTranslation();
   const table = useReactTable<T>({
     //this is the definition of the table
     data: tableData,
@@ -165,7 +170,7 @@ export function PaginatedSortableTable<T>(
       <Box overflowX="auto">
         <Button onClick={resetOrder} hidden={!isSortable}>
           {/*This should be only demostrative and should be outside of the component*/}
-          Reset Columns Order
+          {t("movies_resetcolumnsorder")}
         </Button>
         <Table variant="simple" my="30px" minHeight={'500px'}>
           <Thead>
@@ -242,7 +247,7 @@ export function PaginatedSortableTable<T>(
             )}
           </Tbody>
         </Table>
-        <ChackraPaginationComponent
+        <PaginationComponent
           page={table.getState().pagination.pageIndex}
           pageSize={table.getState().pagination.pageSize}
           count={data?.count || 0}

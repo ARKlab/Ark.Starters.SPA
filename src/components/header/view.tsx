@@ -23,8 +23,9 @@ import {
   Login,
   Logout,
   authSelector
-} from '../../features/authentication/authenticationSlice'
-import { useAuthContext } from '../../lib/authentication/useAuthContext'
+} from '../../lib/authentication/authenticationSlice'
+import { useAuthContext } from '../../lib/authentication/components/useAuthContext'
+import { LocaleSwitcher } from '../../lib/i18n/localeSwitcher'
 
 const UserMenu = () => {
   const dispatch = useAppDispatch()
@@ -123,6 +124,9 @@ const Header = () => {
         <Spacer />
         <Spacer />
         <Spacer />
+        <Center mr={"20px"}>
+          <LocaleSwitcher />
+        </Center>
         <Center>
           <UserMenu />
         </Center>
