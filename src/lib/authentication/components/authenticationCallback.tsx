@@ -1,21 +1,17 @@
-import { useEffect } from "react";
 import { useAppDispatch } from "../../../app/hooks";
-import { Init } from "../authenticationSlice";
+import { HandleRedirect } from "../authenticationSlice";
 import { useAuthContext } from "./useAuthContext";
-import { Navigate } from "react-router-dom";
+import useAsyncEffect from "../../useAsyncEffect";
 
-export const AuthenticationCallback = (props: { redirectTo: string }) => {
+export const AuthenticationCallback = () => {
   const dispatch = useAppDispatch();
   const { isLogged } = useAuthContext();
 
-  useEffect(() => {
+  useAsyncEffect(async () => {
     if (!isLogged) {
-      dispatch(Init());
+      await dispatch(HandleRedirect());
     }
   }, [dispatch, isLogged]);
 
-  if (isLogged) {
-    return <Navigate to={props.redirectTo} replace />;
-  }
   return <></>;
 };
