@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Flex, Spinner } from "@chakra-ui/react";
 import { ComponentProps, ComponentType, lazy, Suspense, useMemo } from "react";
+import CenterSpinner from "./centerSpinner";
 
 type Props<C extends ComponentType<any>> = {
     loader: () => Promise<{
@@ -15,7 +15,7 @@ function LazyLoad<C extends ComponentType<any>>({
     const LazyComponent = useMemo(() => lazy(loader), [loader]);
 
     return (
-        <Suspense fallback={<Flex direction={'column'} align={'center'} justifyContent={'center'} gap={'1ch'} ><Spinner /></Flex>}>
+        <Suspense fallback={<CenterSpinner />}>
             <LazyComponent {...props} />
         </Suspense>
     );

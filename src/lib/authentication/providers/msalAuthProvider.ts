@@ -87,10 +87,8 @@ export class MsalAuthProvider implements AuthProvider {
           },
           piiLoggingEnabled: false,
         },
-        windowHashTimeout: 60000,
-        iframeHashTimeout: 6000,
-        loadFrameTimeout: 0,
-        asyncPopups: false,
+        windowHashTimeout: 20000,
+        iframeHashTimeout: 20000
       },
     };
     this.config = { msalConfig: config, scopes: scopes };
@@ -132,23 +130,28 @@ export class MsalAuthProvider implements AuthProvider {
     });
     this.myMSALObj.setNavigationClient(new CustomNavigationClient());
   }
+  
   private notifySubscribers() {
     for (const subscriber of this.subscribers) {
       subscriber(this.loginStatus);
     }
   }
+
   public async init(): Promise<void> {
     await this.myMSALObj.initialize();
     const accounts = this.myMSALObj.getAllAccounts();
     if (accounts.length > 0) {
-        this.myMSALObj.setActiveAccount(accounts[0]);
+      this.myMSALObj.setActiveAccount(accounts[0]);
+      try {
+        await this.getUserDetail();
+      } catch (e) { 
+        return;
+      }
     }
-
-
-    await this.getUserDetail();
   }
 
   public async login(): Promise<void> {
+    // see https://github.com/AzureAD/microsoft-authentication-library-for-js/issues/5807
     const itemKey = "msal.interaction.status";
     if (sessionStorage.getItem(itemKey))
     {
@@ -158,8 +161,15 @@ export class MsalAuthProvider implements AuthProvider {
   }
 
   public async logout() {
+    // see https://github.com/AzureAD/microsoft-authentication-library-for-js/issues/5807
+    const itemKey = "msal.interaction.status";
+    if (sessionStorage.getItem(itemKey))
+    {
+        sessionStorage.removeItem(itemKey);
+    }
     return this.myMSALObj!.logoutRedirect();
   }
+
   public async getToken() {
     return await this.getProfileTokenRedirect();
   }
@@ -182,18 +192,24 @@ export class MsalAuthProvider implements AuthProvider {
 
   public async getUserDetail(): Promise<UserAccountInfo | null> {
     const account = this.myMSALObj.getActiveAccount();
-    if (account)
-    {
-      const resp = await this.myMSALObj!.acquireTokenSilent(
-        this.silentProfileRequest
-      );
-      if (resp)
-      {
-        this.idTokenClaims = resp.idTokenClaims;
-        this.loginStatus = LoginStatus.Logged;
-        this.notifySubscribers();
+    if (account) {
+      try {
+        const resp = await this.myMSALObj!.acquireTokenSilent(
+          this.silentProfileRequest
+        );
+        if (resp) {
+          this.idTokenClaims = resp.idTokenClaims;
+          this.loginStatus = LoginStatus.Logged;
+          this.notifySubscribers();
         
-        return { username: account.username } as UserAccountInfo;
+          return { username: account.username } as UserAccountInfo;
+        }
+      }
+      catch (e)
+      {
+        if (e instanceof msal.InteractionRequiredAuthError)
+          return null;
+        throw e;
       }
     }
     return null;
