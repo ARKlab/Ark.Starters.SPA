@@ -1,24 +1,22 @@
 import {
-  Center,
   ChakraProvider,
-  Spinner,
   createLocalStorageManager,
-} from '@chakra-ui/react'
-import React, { Suspense } from 'react'
-import ReactDOM from 'react-dom/client'
-import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary'
-import { HelmetProvider } from 'react-helmet-async'
-import { Provider } from 'react-redux'
+} from "@chakra-ui/react";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
+import { HelmetProvider } from "react-helmet-async";
+import { Provider } from "react-redux";
 
-import { initStore } from './app/configureStore'
-import SEO from './components/seo'
+import { initStore } from "./app/configureStore";
+import SEO from "./components/seo";
 import { authProvider } from './globalConfigs'
-import AuthenticationProviderContext from './lib/authentication/components/AuthenticationProviderContext'
-import Main from './main'
-import reportWebVitals from './reportWebVitals'
-import { theme } from './theme'
-
-import './lib/i18n/config'
+import { Init } from "./init";
+import AuthenticationProviderContext from "./lib/authentication/components/AuthenticationProviderContext";
+import reportWebVitals from "./reportWebVitals";
+import { theme } from "./theme";
+import "./lib/i18n/config";
+import { setError } from "./lib/errorHandler/errorHandler";
 
 
 const store = initStore(authProvider)
@@ -29,7 +27,7 @@ const store = initStore(authProvider)
  * for the user to take a screenshot and send to someone.
  * The only alternative would be an blank-page, which isn't nicer ...
  *
- * Important: use only basic DOM/Style, UI Toolkit nor ReduxToolkit are available!
+ * IMPORTANT: use only basic DOM/Style, UI Toolkit nor ReduxToolkit are available!
  */
 function fallbackRender({ error }: { error: Error }) {
   return (
@@ -41,50 +39,51 @@ function fallbackRender({ error }: { error: Error }) {
   )
 }
 
-async function initApplication() {
-  await authProvider.init()
-  const root = ReactDOM.createRoot(
-    document.getElementById('root') as HTMLElement,
-  )
-  const colorModeManager = createLocalStorageManager(
-    import.meta.env.VITE_APP_TITLE + '-ColorMode',
-  ) //change the name of the application
+window.addEventListener("vite:preloadError", () => {
+  window.location.reload();
+});
 
-  root.render(
-    <React.StrictMode>
-      <ReactErrorBoundary fallbackRender={fallbackRender}>
+// This is needed in case someone uses useEffect() for ASYNC promised instead of useAsyncEffect()
+window.addEventListener("unhandledrejection", (e: PromiseRejectionEvent) => {
+  store.dispatch(setError({
+    error: true,
+    details: {
+      title: "unhandled promise rejection",
+      message: e.reason?.message,
+      status: e.reason?.code,
+      isValidationError: false
+    },
+  }))
+});
+
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement
+);
+
+const colorModeManager = createLocalStorageManager(
+  import.meta.env.VITE_APP_TITLE + "-ColorMode"
+); //change the name of the application
+
+root.render(
+  <React.StrictMode>
+    <ReactErrorBoundary fallbackRender={fallbackRender}>
+      <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
         <AuthenticationProviderContext authProvider={authProvider}>
           <Provider store={store}>
-            <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
-              <HelmetProvider>
-                <SEO
-                  title={import.meta.env.VITE_APP_TITLE}
-                  description={import.meta.env.VITE_APP_DESCRIPTION}
-                  name={import.meta.env.VITE_APP_COMPANY}
-                />
-                <Suspense
-                  fallback={
-                    <Center minHeight="100vh">
-                      <Spinner />
-                    </Center>
-                  }
-                >
-                  <Main />
-                </Suspense>
-              </HelmetProvider>
-            </ChakraProvider>
+            <HelmetProvider>
+              <SEO
+                title={import.meta.env.VITE_APP_TITLE}
+                description={import.meta.env.VITE_APP_DESCRIPTION}
+                name={import.meta.env.VITE_APP_COMPANY}
+              />
+              <Init />
+            </HelmetProvider>
           </Provider>
         </AuthenticationProviderContext>
-      </ReactErrorBoundary>
-    </React.StrictMode >
-  )
+      </ChakraProvider>
+    </ReactErrorBoundary>
+  </React.StrictMode>
+);
 
-  reportWebVitals()
-}
+reportWebVitals();
 
-//
-window.addEventListener('vite:preloadError', () => {
-  window.location.reload()
-})
-
-initApplication()

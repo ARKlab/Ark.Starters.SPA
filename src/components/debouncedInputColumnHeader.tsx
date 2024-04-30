@@ -1,6 +1,8 @@
-import React from 'react'
+import React from "react";
 
-import { ChackraInputHeaderFilterWithClear } from './chackraInputFilterWithClear/chackraInputHeaderFilterWithClear'
+import useDebounce from "../lib/useDebounce";
+
+import { ChackraInputHeaderFilterWithClear } from "./chackraInputFilterWithClear/chackraInputHeaderFilterWithClear";
 
 export function DebouncedInputColumnHeader({
   value: initialValue,
@@ -8,23 +10,20 @@ export function DebouncedInputColumnHeader({
   debounce = 500,
   ...props
 }: {
-  value: string | number
-  onChange: (value: string | number) => void
-  debounce?: number
-} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'size'>) {
-  const [value, setValue] = React.useState(initialValue)
+  value: string | number;
+  onChange: (value: string | number) => void;
+  debounce?: number;
+} & Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "size">) {
+  const [value, setValue] = React.useState(initialValue);
+  const debounceValue = useDebounce(value, debounce);
 
   React.useEffect(() => {
     setValue(initialValue)
   }, [initialValue])
 
   React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      onChange(value)
-    }, debounce)
-
-    return () => clearTimeout(timeout)
-  }, [onChange, debounce, value])
+    onChange(debounceValue);
+  }, [debounceValue, onChange]);
 
   return (
     <ChackraInputHeaderFilterWithClear

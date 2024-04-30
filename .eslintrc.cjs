@@ -107,6 +107,9 @@ module.exports = {
         radix: 'error',
         'require-atomic-updates': ['error', { allowProperties: true }],
         'valid-typeof': 'warn',
+        "react-hooks/exhaustive-deps": [
+            "error"
+        ]
     },
     settings: {
         'import/resolver': {

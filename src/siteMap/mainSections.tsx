@@ -1,4 +1,3 @@
-import { Heading } from '@chakra-ui/react'
 import {
   FaBomb,
   FaCloudUploadAlt,
@@ -117,7 +116,11 @@ export const mainSections: MainSectionType[] = [
         icon: FaLock,
         isInMenu: true,
         authenticatedOnly: true,
-        component: <Heading as="h1">Auth Only</Heading>,
+        component: (
+          <LazyLoad
+            loader={async () => import("../features/authentication/authInfoPage")}
+          />
+        )
       },
       {
         path: 'bomb',
