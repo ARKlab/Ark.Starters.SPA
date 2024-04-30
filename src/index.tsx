@@ -17,10 +17,10 @@ import AuthenticationProviderContext from "./lib/authentication/components/Authe
 import SEO from "./components/seo";
 import { setError } from "./lib/errorHandler/errorHandler";
 import { Init } from "./init";
-import Auth0AuthProvider from "./lib/authentication/providers/auth0AuthProvider";
+import { MsalAuthProvider } from "./lib/authentication/providers/msalAuthProvider";
 
 const env = window.customSettings;
-export const authProvider = new Auth0AuthProvider(env);
+export const authProvider = new MsalAuthProvider(env);
 
 const store = initStore(authProvider);
 export type RootState = ReturnType<typeof store.getState>;

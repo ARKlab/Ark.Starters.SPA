@@ -157,4 +157,5 @@ export const authSlice = createSlice({
 });
 export const { tokenReceived, loggedOut } = authSlice.actions;
 
+export const authSelector = authSlice.selectSlice;
 export const tokenSelector = (state: RootState) => state.auth.data?.token;

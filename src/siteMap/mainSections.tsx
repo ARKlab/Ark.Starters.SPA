@@ -14,7 +14,6 @@ import NoEntryPoint from "../features/staticPageExample/staticPage";
 import LazyLoad from "../components/lazyLoad";
 import { Bomb } from "../components/Bomb";
 import { Navigate } from "react-router-dom";
-import { Heading } from "@chakra-ui/react";
 
 /*This is the Main Section ARRAY populate this to populate the main nav menu
 It is also used to create all the Routes for the router*/
@@ -115,7 +114,11 @@ export const mainSections: MainSectionType[] = [
         icon: FaLock,
         isInMenu: true,
         authenticatedOnly: true,
-        component: <Heading as='h1'>Auth Only</Heading>
+        component: (
+          <LazyLoad
+            loader={() => import("../features/authentication/authInfoPage")}
+          />
+        )
       },
       {
         path: "bomb",

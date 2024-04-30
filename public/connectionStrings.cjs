@@ -24,7 +24,7 @@ http
   .listen(port);
   */
 
-/* MSAL2 
+/* MSAL2 */
 
 http
   .createServer(function (req, res) {
@@ -42,9 +42,9 @@ http
     `);
   })
   .listen(port);
-*/
+// */
 
-/* AUTH0 */
+/* AUTH0 
   http
   .createServer(function (req, res) {
     res.writeHead(200, { "Content-Type": "text/javascript" });
@@ -60,4 +60,4 @@ http
   })
   .listen(port);
 
-//  */
+ */
