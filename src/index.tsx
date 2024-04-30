@@ -13,10 +13,10 @@ import SEO from "./components/seo";
 import { authProvider } from './globalConfigs'
 import { Init } from "./init";
 import AuthenticationProviderContext from "./lib/authentication/components/AuthenticationProviderContext";
+import { setError } from "./lib/errorHandler/errorHandler";
 import reportWebVitals from "./reportWebVitals";
 import { theme } from "./theme";
 import "./lib/i18n/config";
-import { setError } from "./lib/errorHandler/errorHandler";
 
 
 const store = initStore(authProvider)
