@@ -12,14 +12,15 @@ import { theme } from "./theme";
 
 import { HelmetProvider } from "react-helmet-async";
 import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
-import { MsalAuthProvider } from "./lib/authentication/providers/msalAuthProvider";
 import "./lib/i18n/config";
 import AuthenticationProviderContext from "./lib/authentication/components/AuthenticationProviderContext";
 import SEO from "./components/seo";
 import { setError } from "./lib/errorHandler/errorHandler";
 import { Init } from "./init";
+import Auth0AuthProvider from "./lib/authentication/providers/auth0AuthProvider";
+
 const env = window.customSettings;
-export const authProvider = new MsalAuthProvider(env);
+export const authProvider = new Auth0AuthProvider(env);
 
 const store = initStore(authProvider);
 export type RootState = ReturnType<typeof store.getState>;

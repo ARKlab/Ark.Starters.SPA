@@ -130,7 +130,7 @@ export class MsalAuthProvider implements AuthProvider {
     });
     this.myMSALObj.setNavigationClient(new CustomNavigationClient());
   }
-  
+
   private notifySubscribers() {
     for (const subscriber of this.subscribers) {
       subscriber(this.loginStatus);
@@ -142,11 +142,6 @@ export class MsalAuthProvider implements AuthProvider {
     const accounts = this.myMSALObj.getAllAccounts();
     if (accounts.length > 0) {
       this.myMSALObj.setActiveAccount(accounts[0]);
-      try {
-        await this.getUserDetail();
-      } catch (e) { 
-        return;
-      }
     }
   }
 
