@@ -4,7 +4,12 @@ import { AuthProvider } from "./authProviderInterface";
 import { LoginStatus, UserAccountInfo } from "../authTypes";
 import { CustomSettingsType } from "../../../global";
 
+
+// this is kind of violation but we need to use react-router-dom navigation to unsure redirects after MSAL redirect works
+import { router } from "../../router";
+
 const claimsUrl = "http://ark-energy.eu/claims/";
+
 
 export type Auth0Config = {
   auth0Config: Auth0ClientOptions;
@@ -23,7 +28,7 @@ export class Auth0AuthProvider implements AuthProvider {
       clientId: env.clientID,
       cacheLocation: "localstorage",
       authorizationParams: {
-        redirect_uri: window.location.origin,
+        redirect_uri: env.redirectUri,
         audience: env.audience,
         scope: "openid profile email",
       },
@@ -61,22 +66,26 @@ export class Auth0AuthProvider implements AuthProvider {
     };
   }
   public async handleLoginRedirect(): Promise<void> {
+    let target = "/";
+
     if (await this.isAuthenticated()) {
       this.setLoginStatus(LoginStatus.Logged);
     } else {
       const query = window.location.search;
 
       if (query.includes("code=") && query.includes("state=")) {
+        // TODO: and if the handleRedirect fails?
         await this.auth0Client.handleRedirectCallback().then((result) => {
           this.setLoginStatus(LoginStatus.Logged);
-          window.location.pathname =
-            result.appState && result.appState.targetUrl
-              ? result.appState.targetUrl
-              : "/";
+          target = result.appState?.targetUrl ?? "/";
         });
       }
     }
+    
+    const relativePath = target.replace(window.location.origin, '');
+    router.navigate(relativePath, { replace: true });
   }
+  
   public async getUserDetail(): Promise<UserAccountInfo | null> {
     const currentAccounts = await this.auth0Client.getUser();
     const claims = await this.auth0Client.getIdTokenClaims();

@@ -1,26 +1,26 @@
 import {
-  Center,
   ChakraProvider,
-  Spinner,
   createLocalStorageManager,
 } from "@chakra-ui/react";
 import { setupListeners } from "@reduxjs/toolkit/query";
-import React, { Suspense } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { initStore } from "./app/configureStore";
-import Main from "./main";
 import reportWebVitals from "./reportWebVitals";
 import { theme } from "./theme";
 
 import { HelmetProvider } from "react-helmet-async";
 import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
-import { MsalAuthProvider } from "./lib/authentication/providers/msalAuthProvider";
 import "./lib/i18n/config";
 import AuthenticationProviderContext from "./lib/authentication/components/AuthenticationProviderContext";
 import SEO from "./components/seo";
+import { setError } from "./lib/errorHandler/errorHandler";
+import { Init } from "./init";
+import { MsalAuthProvider } from "./lib/authentication/providers/msalAuthProvider";
+
 const env = window.customSettings;
-const authProvider = new MsalAuthProvider(env);
+export const authProvider = new MsalAuthProvider(env);
 
 const store = initStore(authProvider);
 export type RootState = ReturnType<typeof store.getState>;
@@ -45,50 +45,51 @@ function fallbackRender({ error }: { error: Error }) {
   );
 }
 
-async function initApplication() {
-  await authProvider.init();
-  const root = ReactDOM.createRoot(
-    document.getElementById("root") as HTMLElement
-  );
-  const colorModeManager = createLocalStorageManager(
-    import.meta.env.VITE_APP_TITLE + "-ColorMode"
-  ); //change the name of the application
-
-  root.render(
-    <React.StrictMode>
-      <ReactErrorBoundary fallbackRender={fallbackRender}>
-        <AuthenticationProviderContext authProvider={authProvider}>
-          <Provider store={store}>
-            <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
-              <HelmetProvider>
-                <SEO
-                  title={import.meta.env.VITE_APP_TITLE}
-                  description={import.meta.env.VITE_APP_DESCRIPTION}
-                  name={import.meta.env.VITE_APP_COMPANY}
-                />
-                <Suspense
-                  fallback={
-                    <Center minHeight="100vh">
-                      <Spinner />
-                    </Center>
-                  }
-                >
-                  <Main />
-                </Suspense>
-              </HelmetProvider>
-            </ChakraProvider>
-          </Provider>
-        </AuthenticationProviderContext>
-      </ReactErrorBoundary>
-    </React.StrictMode>
-  );
-
-  reportWebVitals();
-}
-
-//
 window.addEventListener("vite:preloadError", () => {
   window.location.reload();
 });
 
-initApplication();
+// This is needed in case someone uses useEffect() for ASYNC promised instead of useAsyncEffect()
+window.addEventListener("unhandledrejection", (e: PromiseRejectionEvent) => {
+  store.dispatch(setError({
+    error: true,
+    details: {
+      title: "unhandled promise rejection",
+      message: e.reason?.message,
+      status: e.reason?.code,
+      isValidationError: false
+    },
+  }))
+});
+
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement
+);
+
+const colorModeManager = createLocalStorageManager(
+  import.meta.env.VITE_APP_TITLE + "-ColorMode"
+); //change the name of the application
+
+root.render(
+  <React.StrictMode>
+    <ReactErrorBoundary fallbackRender={fallbackRender}>
+      <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
+        <AuthenticationProviderContext authProvider={authProvider}>
+          <Provider store={store}>
+            <HelmetProvider>
+              <SEO
+                title={import.meta.env.VITE_APP_TITLE}
+                description={import.meta.env.VITE_APP_DESCRIPTION}
+                name={import.meta.env.VITE_APP_COMPANY}
+              />
+              <Init />
+            </HelmetProvider>
+          </Provider>
+        </AuthenticationProviderContext>
+      </ChakraProvider>
+    </ReactErrorBoundary>
+  </React.StrictMode>
+);
+
+reportWebVitals();
+

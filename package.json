@@ -42,7 +42,7 @@
   },
   "scripts": {
     "start": "concurrently \"npm run localSettings\" \"npm run localStart\"",
-    "localSettings": "cross-env NODE_ENV=development PORT=4000 node public/connectionStrings.cjs",
+    "localSettings": "cross-env NODE_ENV=development PORT=4000 node --watch -- public/connectionStrings.cjs",
     "localStart": "vite",
     "build": "tsc && vite build",
     "preview": "concurrently \"npm run localSettings\" \"npm run vite-preview\"",

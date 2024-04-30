@@ -3,16 +3,15 @@ import { RootState } from "../..";
 import { AuthStoreType, AuthenticationSteps } from "./authTypes";
 import { AuthProvider } from "./providers/authProviderInterface";
 
-export const Init = createAsyncThunk("auth/init", async (_, thunkAPI) => {
+export const HandleRedirect = createAsyncThunk("auth/handleRedirect", async (_, thunkAPI) => {
   const authProviderInstance = (thunkAPI.extra as ExtraType).authProvider;
-  return authProviderInstance.handleLoginRedirect().then(async () => {
-    const user = await authProviderInstance.getUserDetail();
-    if (!user) return null;
+  await authProviderInstance.handleLoginRedirect();
+  const user = await authProviderInstance.getUserDetail();
+  if (!user) return null;
     return {
       userInfo: user,
       token: "",
-    } as AuthStoreType;
-  });
+  } as AuthStoreType;
 });
 
 export type ExtraType = {
@@ -85,10 +84,10 @@ export const authSlice = createSlice({
           data: action.payload,
         };
       })
-      .addCase(Init.pending, (state) => {
+      .addCase(HandleRedirect.pending, (state) => {
         return { ...state, status: AuthenticationSteps.Init, isLoading: true };
       })
-      .addCase(Init.fulfilled, (state, action) => {
+      .addCase(HandleRedirect.fulfilled, (state, action) => {
         return {
           ...state,
           status: AuthenticationSteps.InitComplete,
@@ -96,7 +95,7 @@ export const authSlice = createSlice({
           data: action.payload,
         };
       })
-      .addCase(Init.rejected, (state, action) => {
+      .addCase(HandleRedirect.rejected, (state, action) => {
         return {
           ...state,
           status: AuthenticationSteps.InitComplete,
@@ -158,4 +157,5 @@ export const authSlice = createSlice({
 });
 export const { tokenReceived, loggedOut } = authSlice.actions;
 
+export const authSelector = authSlice.selectSlice;
 export const tokenSelector = (state: RootState) => state.auth.data?.token;
