@@ -1,19 +1,22 @@
+import type { AuthenticationResult, EventMessage} from "@azure/msal-browser";
 import * as msal from "@azure/msal-browser";
-import { NavigationClient } from "@azure/msal-browser";
-import { AuthenticationResult, EventMessage, EventType } from "@azure/msal-browser";
-import { AuthProvider } from "./authProviderInterface";
-
+import { NavigationClient , EventType } from "@azure/msal-browser";
 import * as R from "ramda";
-import { LoginStatus, UserAccountInfo } from "../authTypes";
-import { CustomSettingsType } from "../../../global";
+
+import type { CustomSettingsType } from "../../../global";
+import { router } from "../../router";
+import type { UserAccountInfo } from "../authTypes";
+import { LoginStatus } from "../authTypes";
+
+import type { AuthProvider } from "./authProviderInterface";
+
+// this is kind of violation but we need to use react-router-dom navigation to unsure redirects after MSAL redirect works
 
 export type MSALConfig = {
   msalConfig: msal.Configuration;
   scopes: string[];
 };
 
-// this is kind of violation but we need to use react-router-dom navigation to unsure redirects after MSAL redirect works
-import { router } from "../../router";
 
 // see https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-react/docs/performance.md
 // see https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/navigation.md
@@ -42,7 +45,7 @@ export class MsalAuthProvider implements AuthProvider {
   private profileRequest: msal.PopupRequest;
   private profileRedirectRequest: msal.RedirectRequest;
   private idTokenClaims: msal.IdTokenClaims | null = null;
-  private subscribers = new Set<(status: string) => void>();
+  private subscribers = new Set<(status: LoginStatus) => void>();
 
   constructor(env: CustomSettingsType) {
     const scopes = env.scopes.split(",");
@@ -166,7 +169,7 @@ export class MsalAuthProvider implements AuthProvider {
   }
 
   public async getToken() {
-    return await this.getProfileTokenRedirect();
+    return this.getProfileTokenRedirect();
   }
 
   public getLoginStatus(): LoginStatus {
@@ -175,7 +178,7 @@ export class MsalAuthProvider implements AuthProvider {
     }
     return LoginStatus.NotLogged;
   }
-  public onLoginStatus(subscriber: (status: string) => void) {
+  public onLoginStatus(subscriber: (status: LoginStatus) => void) {
     this.subscribers.add(subscriber);
     return () => {
       this.subscribers.delete(subscriber);

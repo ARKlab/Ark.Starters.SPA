@@ -1,4 +1,4 @@
-import { ColumnFiltersState, SortingState } from "@tanstack/react-table";
+import type { ColumnFiltersState, SortingState } from "@tanstack/react-table";
 
 export interface ListResponse<T> extends ListQueryParams {
   data: T[];

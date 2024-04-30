@@ -1,9 +1,11 @@
+import { Suspense } from 'react'
 import {
   RouterProvider
 } from "react-router-dom";
-import { router } from "./lib/router";
-import { Suspense } from "react";
+
 import CenterSpinner from "./components/centerSpinner";
+import { router } from "./lib/router";
+
 
 const Main = () => {
 
@@ -16,4 +18,4 @@ const Main = () => {
   );
 };
 
-export default Main;
+export default Main

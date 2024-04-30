@@ -1,28 +1,29 @@
-import React from "react";
-
-import { Box, Button, Heading, Wrap, WrapItem } from "@chakra-ui/react";
-import {
-  NotificationDuration,
-  NotificationPosition,
-} from "../../lib/notifications/notificationsTypes";
-import { dispatchNotification } from "../../lib/notifications/notification";
-import { useAppDispatch } from "../../app/hooks";
+import { Box, Button, Heading, Wrap, WrapItem } from '@chakra-ui/react'
 import { useTranslation } from "react-i18next";
 
+import { useAppDispatch } from "../../app/hooks";
+import { dispatchNotification } from "../../lib/notifications/notification";
+import type {
+  NotificationPosition} from "../../lib/notifications/notificationsTypes";
+import {
+  NotificationDuration
+} from "../../lib/notifications/notificationsTypes";
+
+
 const PlaygroundView = () => {
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch()
   const sendNotification = (
     id: string,
     message: string,
     duration: NotificationDuration,
-    position: NotificationPosition
+    position: NotificationPosition,
   ) => {
     dispatch(
       dispatchNotification({
         id: id,
         title: t("notification_title"),
         message: message,
-        status: "success",
+        status: 'success',
         duration: duration,
         isClosable: true,
         position: position,
@@ -38,7 +39,7 @@ const PlaygroundView = () => {
         <Heading size="md" my={"20px"}>
           {t("notification_example")}
         </Heading>
-        <Wrap spacing={1} my={"20px"}>
+        <Wrap spacing={1} my={'20px'}>
           <WrapItem>
             <Button
               onClick={() =>
@@ -46,7 +47,7 @@ const PlaygroundView = () => {
                   "1",
                   notificationBody,
                   NotificationDuration.VeryShort,
-                  "top"
+                  'top',
                 )
               }
             >
@@ -60,7 +61,7 @@ const PlaygroundView = () => {
                   "2",
                   notificationBody,
                   NotificationDuration.Short,
-                  "top-left"
+                  'top-left',
                 )
               }
             >
@@ -74,7 +75,7 @@ const PlaygroundView = () => {
                   "3",
                   notificationBody,
                   NotificationDuration.Medium,
-                  "top-right"
+                  'top-right',
                 )
               }
             >
@@ -88,7 +89,7 @@ const PlaygroundView = () => {
                   "4",
                   notificationBody,
                   NotificationDuration.Long,
-                  "bottom-left"
+                  'bottom-left',
                 )
               }
             >
@@ -102,7 +103,7 @@ const PlaygroundView = () => {
                   "5",
                   notificationBody,
                   NotificationDuration.VeryLong,
-                  "bottom-right"
+                  'bottom-right',
                 )
               }
             >
@@ -116,7 +117,7 @@ const PlaygroundView = () => {
                   "6",
                   notificationBody,
                   NotificationDuration.VeryLong,
-                  "bottom"
+                  'bottom',
                 )
               }
             >
@@ -126,7 +127,7 @@ const PlaygroundView = () => {
         </Wrap>
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default PlaygroundView;
+export default PlaygroundView

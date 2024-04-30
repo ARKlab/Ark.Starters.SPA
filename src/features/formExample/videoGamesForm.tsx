@@ -15,37 +15,39 @@ import {
   Spinner,
   useBoolean,
 } from "@chakra-ui/react";
-import { FormApi } from "final-form";
+import type { FormApi } from "final-form";
 import { useEffect } from "react";
 import { Field, Form } from "react-final-form";
+import { useTranslation } from "react-i18next";
 import { MdArrowDropDown } from "react-icons/md";
+import z from "zod";
+
 import { useAppDispatch } from "../../app/hooks";
-import { zod2FieldValidator } from "../../lib/zod2FormValidator";
 import { dispatchNotification } from "../../lib/notifications/notification";
 import { NotificationDuration } from "../../lib/notifications/notificationsTypes";
+import { zod2FieldValidator } from "../../lib/zod2FormValidator";
+
 import {
   useGetVideoGamesGenresQuery,
   useInsertNewVideoGameMutation,
 } from "./videoGamesApiSlice";
-import { VideoGame } from "./videoGamesSampleDataAndTypes";
-import z from "zod";
-import { useTranslation } from "react-i18next";
+import type { VideoGame } from "./videoGamesSampleDataAndTypes";
 
-const stringValidator = z.string();
+const stringValidator = z.string()
 const yearValidator = z.string().refine(
   (value) => {
-    const year = Number(value);
-    return year > 1900 && year < 2022;
+    const year = Number(value)
+    return year > 1900 && year < 2022
   },
-  { message: "Year must be between 1900 and 2022" }
-);
+  { message: 'Year must be between 1900 and 2022' },
+)
 const ratingValidator = z.string().refine(
   (value) => {
-    const rating = Number(value);
-    return rating > 0 && rating < 10;
+    const rating = Number(value)
+    return rating > 0 && rating < 10
   },
-  { message: "Rating must be from 0 to 10" }
-);
+  { message: 'Rating must be from 0 to 10' },
+)
 const VideoGamesForm = () => {
   const { t } = useTranslation();
 
@@ -53,32 +55,32 @@ const VideoGamesForm = () => {
   const [insertNewVideoGame, { isSuccess: insertSuccess }] =
     useInsertNewVideoGameMutation();
 
-  const [flag, setFlag] = useBoolean();
+  const [flag, setFlag] = useBoolean()
   const { data: genres, isLoading: genreLoading } =
-    useGetVideoGamesGenresQuery();
+    useGetVideoGamesGenresQuery()
 
   const onSubmit = async (values: VideoGame, form: FormApi<VideoGame>) => {
-    await insertNewVideoGame(values);
+    await insertNewVideoGame(values)
     //reset form would not set it at pristine status so it would also
     //trigger validation errors. restart set it as new and it's what we want here
-    form.restart();
-    setFlag.toggle();
-  };
+    form.restart()
+    setFlag.toggle()
+  }
   useEffect(() => {
     if (insertSuccess) {
       dispatch(
         dispatchNotification({
-          id: "1",
-          title: "Inserted!",
-          message: "Game saved succsessfully",
-          status: "success",
+          id: '1',
+          title: 'Inserted!',
+          message: 'Game saved succsessfully',
+          status: 'success',
           duration: NotificationDuration.Medium,
           isClosable: true,
-          position: "bottom-right",
-        })
-      );
+          position: 'bottom-right',
+        }),
+      )
     }
-  }, [insertSuccess, dispatch]);
+  }, [insertSuccess, dispatch])
   return (
     <Accordion
       allowToggle
@@ -90,7 +92,7 @@ const VideoGamesForm = () => {
         <AccordionButton>{t("games_add_video_game")}</AccordionButton>
         <AccordionPanel pb={4}>
           <Form
-            onSubmit={(values: VideoGame, form: FormApi<VideoGame>) =>
+            onSubmit={async (values: VideoGame, form: FormApi<VideoGame>) =>
               onSubmit(values, form)
             }
             render={({ handleSubmit, submitting }) => {
@@ -116,7 +118,7 @@ const VideoGamesForm = () => {
                               />
                               <FormErrorMessage>{error}</FormErrorMessage>
                             </FormControl>
-                          );
+                          )
                         }}
                       />
                       <Spacer height="20px" />
@@ -142,7 +144,7 @@ const VideoGamesForm = () => {
                                 ))}
                               </Select>
                             </FormControl>
-                          );
+                          )
                         }}
                       />
                       <Spacer height="20px" />
@@ -162,7 +164,7 @@ const VideoGamesForm = () => {
                               />
                               <FormErrorMessage>{error}</FormErrorMessage>
                             </FormControl>
-                          );
+                          )
                         }}
                       />
                       <Spacer height="20px" />
@@ -182,7 +184,7 @@ const VideoGamesForm = () => {
                               />
                               <FormErrorMessage>{error}</FormErrorMessage>
                             </FormControl>
-                          );
+                          )
                         }}
                       />
                       <Spacer height="20px" />
@@ -202,7 +204,7 @@ const VideoGamesForm = () => {
                               />
                               <FormErrorMessage>{error}</FormErrorMessage>
                             </FormControl>
-                          );
+                          )
                         }}
                       />
                       <Spacer height="20px" />
@@ -222,7 +224,7 @@ const VideoGamesForm = () => {
                               />
                               <FormErrorMessage>{error}</FormErrorMessage>
                             </FormControl>
-                          );
+                          )
                         }}
                       />
                       <Spacer height="20px" />
@@ -242,7 +244,7 @@ const VideoGamesForm = () => {
                               />
                               <FormErrorMessage>{error}</FormErrorMessage>
                             </FormControl>
-                          );
+                          )
                         }}
                       />
                       <Spacer height="20px" />
@@ -257,13 +259,13 @@ const VideoGamesForm = () => {
                     </Box>
                   </form>
                 </Container>
-              );
+              )
             }}
           />
         </AccordionPanel>
       </AccordionItem>
     </Accordion>
-  );
-};
+  )
+}
 
-export default VideoGamesForm;
+export default VideoGamesForm

@@ -5,22 +5,25 @@ import type {
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query";
 import { fetchBaseQuery } from "@reduxjs/toolkit/query";
+
+import type { RootState , ExtraType } from "../../app/configureStore";
+
 import {
   tokenSelector,
   loggedOut,
-  tokenReceived,
-  ExtraType,
+  tokenReceived
 } from "./authenticationSlice";
-import { RootState } from "../..";
-import { AuthProvider } from "./providers/authProviderInterface";
 import { baseUrlSelector } from "./envSlice";
+import type { AuthProvider } from "./providers/authProviderInterface";
+
 
 export function ArkBaseQuery(
   args: string | FetchArgs,
   api: BaseQueryApi,
   extra: ExtraType
 ) {
-  const authProviderInstance = (extra as ExtraType).authProvider;
+  // Now you can use extraArgument
+  const authProviderInstance = extra.authProvider;
 
   return ArkReauthQuery(authProviderInstance)(args, api, extra);
 }

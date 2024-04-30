@@ -7,27 +7,27 @@ export enum NotificationDuration {
 }
 
 export type NotificationPosition =
-  | "top"
-  | "top-right"
-  | "top-left"
-  | "bottom"
-  | "bottom-right"
-  | "bottom-left";
+  | 'top'
+  | 'top-right'
+  | 'top-left'
+  | 'bottom'
+  | 'bottom-right'
+  | 'bottom-left'
 
 export type NotificationStatus =
-  | "loading"
-  | "error"
-  | "success"
-  | "info"
-  | "warning"
-  | undefined;
+  | 'loading'
+  | 'error'
+  | 'success'
+  | 'info'
+  | 'warning'
+  | undefined
 
 export type NotificationType = {
-  id: string;
-  duration: NotificationDuration;
-  isClosable: boolean;
-  status: NotificationStatus;
-  title: string;
-  message: string;
-  position: NotificationPosition;
-};
+  id: string
+  duration: NotificationDuration
+  isClosable: boolean
+  status: NotificationStatus
+  title: string
+  message: string
+  position: NotificationPosition
+}

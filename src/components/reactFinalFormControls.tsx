@@ -1,7 +1,8 @@
+import type {
+  FormControlProps} from "@chakra-ui/react";
 import {
   Checkbox,
   FormControl,
-  FormControlProps,
   FormErrorMessage,
   FormLabel,
   Input

@@ -1,16 +1,20 @@
 import { Box, Flex, Heading, Input, Button } from "@chakra-ui/react";
-import {
+import type {
   ColumnDef,
-  ColumnFiltersState,
+  ColumnFiltersState} from "@tanstack/react-table";
+import {
   createColumnHelper,
 } from "@tanstack/react-table";
-import { Movie } from "./fakeMoviesData";
-import { useGetMoviesQuery } from "./paginatedTableApi";
 import { useState } from "react";
-import { PaginatedSortableTable } from "../../components/PaginatedSortableTable/PaginatedSortableTable";
 import { useTranslation } from "react-i18next";
 
-const columnHelper = createColumnHelper<Movie>();
+import { PaginatedSortableTable } from "../../components/PaginatedSortableTable/PaginatedSortableTable";
+
+import type { Movie } from "./fakeMoviesData";
+import { useGetMoviesQuery } from "./paginatedTableApi";
+
+
+const columnHelper = createColumnHelper<Movie>()
 
 const MovieTableView = () => {
   const { t } = useTranslation();
@@ -66,11 +70,11 @@ const MovieTableView = () => {
   const applyExtraFilter = () => {
     setFilters([
       {
-        id: "title",
+        id: 'title',
         value: title,
       },
-    ]);
-  };
+    ])
+  }
 
   return (
     <Box>
@@ -81,7 +85,7 @@ const MovieTableView = () => {
           in the example when you apply the external filter, the column filter will be replaced completely.
           If you want to use both external and column filters, you have to merge the filters.
       */}
-      <Flex my="2%" alignItems={"flex-start"} justifyItems={"center"}>
+      <Flex my="2%" alignItems={'flex-start'} justifyItems={'center'}>
         <Input
           w="30%"
           placeholder={t("movies_externalfilterplaceholder")}
@@ -101,7 +105,7 @@ const MovieTableView = () => {
         externalFiltersState={filters}
       />
     </Box>
-  );
-};
+  )
+}
 
-export default MovieTableView;
+export default MovieTableView

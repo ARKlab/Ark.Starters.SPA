@@ -16,4 +16,3 @@ export type CustomSettingsType = {
   authority: string;
   audience: string;
 };
-export {};

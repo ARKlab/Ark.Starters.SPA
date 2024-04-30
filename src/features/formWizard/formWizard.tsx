@@ -1,4 +1,3 @@
-import { Field } from "react-final-form";
 import {
   Box,
   FormControl,
@@ -7,13 +6,17 @@ import {
   Input,
   Stack,
 } from "@chakra-ui/react";
-import { zod2FieldValidator } from "../../lib/zod2FormValidator";
-import { Wizard, WizardPage } from "../../components/wizard/wizard";
-import { CharkaCheckBoxFinalFormField } from "../../components/reactFinalFormControls";
-import z from "zod";
+import { Field } from "react-final-form";
 import { useTranslation } from "react-i18next";
+import z from "zod";
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+import { CharkaCheckBoxFinalFormField } from "../../components/reactFinalFormControls";
+import { Wizard, WizardPage } from "../../components/wizard/wizard";
+import { zod2FieldValidator } from "../../lib/zod2FormValidator";
+
+
+
+const sleep = async (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const onSubmit = async (values: string | number | boolean) => {
   await sleep(300);

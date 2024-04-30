@@ -19,78 +19,81 @@ import {
 } from "@chakra-ui/react";
 import arrayMutators from "final-form-arrays";
 import { useEffect } from "react";
-import { Field, Form, FormRenderProps, useField } from "react-final-form";
+import type { FormRenderProps} from "react-final-form";
+import { Field, Form, useField } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
+import { useTranslation } from "react-i18next";
 import { FaTrash } from "react-icons/fa";
 import z from "zod";
+
 import { useAppDispatch } from "../../app/hooks";
 import { dispatchNetworkError } from "../../lib/errorHandler/errorHandler";
 import { dispatchNotification } from "../../lib/notifications/notification";
 import { NotificationDuration } from "../../lib/notifications/notificationsTypes";
 import { zod2FieldValidator } from "../../lib/zod2FormValidator";
+
 import { useGetConfigQuery, usePostConfigMutation } from "./configTableApi";
-import { useTranslation } from "react-i18next";
 
 export type Employee = {
-  name: string;
-  surName: string;
-  employed: boolean;
-};
+  name: string
+  surName: string
+  employed: boolean
+}
 
 const nameValidator = z
   .string()
   .max(10)
-  .refine((x) => !x.endsWith("Kail"), { message: "Kail is not allowed" });
+  .refine((x) => !x.endsWith('Kail'), { message: 'Kail is not allowed' })
 
 //This is the "whole set" validator for the form. of course for us is a table but it is in fact a form
 //In our configuration pattern this would be primarily used for primary key validation so i made it generic to accept a list of props
 //to check for combinations of duplicates
 const primaryKeyValidator =
   (propsToCheck: string[]) => (values: { table?: Employee[] }) => {
-    const errors: { table?: { _rowError?: string[] }[] } = {};
+    const errors: { table?: { _rowError?: string[] }[] } = {}
 
-    const table = values.table;
+    const table = values.table
 
     if (!table) {
-      return errors;
+      return errors
     }
 
     const propValues = table.map((e) =>
-      propsToCheck.map((prop) => e[prop as keyof Employee]).join("|")
-    );
-    const duplicates: string[] = [];
+      propsToCheck.map((prop) => e[prop as keyof Employee]).join('|'),
+    )
+    const duplicates: string[] = []
 
     propValues.forEach((value) => {
       const duplicateIndexes = propValues.reduce(
         (indexes, propValue, index) => {
           if (propValue === value) {
-            indexes.push(index);
+            indexes.push(index)
           }
-          return indexes;
+          return indexes
         },
-        [] as number[]
-      );
+        [] as number[],
+      )
 
       if (duplicateIndexes.length > 1 && !duplicates.includes(value)) {
-        duplicates.push(value);
+        duplicates.push(value)
 
         duplicateIndexes.forEach((index) => {
-          errors.table = errors.table || [];
-          errors.table[index] = errors.table[index] || { _rowError: [] };
+          errors.table = errors.table || []
+          errors.table[index] = errors.table[index] || { _rowError: [] }
 
           errors.table[index]._rowError!.push(
             `Duplicate ${propsToCheck.join(
-              ", "
+              ', ',
             )} values are not allowed at indexes: ${duplicateIndexes.join(
-              ", "
-            )}`
-          );
-        });
+              ', ',
+            )}`,
+          )
+        })
       }
-    });
+    })
 
-    return errors;
-  };
+    return errors
+  }
 
 export default function EditableTableExample() {
   const [
@@ -101,29 +104,29 @@ export default function EditableTableExample() {
   const { data, isLoading: getConfigIsLoading } = useGetConfigQuery(null, {
     refetchOnReconnect: true,
     refetchOnMountOrArgChange: true,
-  });
+  })
 
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     if (postConfigSuccess) {
       dispatch(
         dispatchNotification({
-          id: "1",
-          title: "Config Submitted!",
-          message: "Configuration has been submitted successfully",
-          status: "success",
+          id: '1',
+          title: 'Config Submitted!',
+          message: 'Configuration has been submitted successfully',
+          status: 'success',
           duration: NotificationDuration.Medium,
           isClosable: true,
-          position: "bottom-right",
-        })
-      );
+          position: 'bottom-right',
+        }),
+      )
     }
-  }, [postConfigSuccess, dispatch]);
+  }, [postConfigSuccess, dispatch])
 
   const onSubmit = async (values: {
-    table: Employee[];
-    throwError: boolean;
+    table: Employee[]
+    throwError: boolean
   }) => {
     await postConfig({ employees: values.table, throwError: values.throwError })
       .unwrap()
@@ -139,7 +142,7 @@ export default function EditableTableExample() {
       mutators={{
         ...arrayMutators,
       }}
-      validate={primaryKeyValidator(["name", "surName"])}
+      validate={primaryKeyValidator(['name', 'surName'])}
       render={({
         handleSubmit,
         form: {
@@ -156,9 +159,9 @@ export default function EditableTableExample() {
             <HStack spacing={4}>
               <Button
                 onClick={() =>
-                  push("table", {
-                    name: "",
-                    surName: "",
+                  push('table', {
+                    name: '',
+                    surName: '',
                     employed: false,
                   })
                 }
@@ -172,7 +175,7 @@ export default function EditableTableExample() {
                 isDisabled={submitting || pristine || hasValidationErrors}
                 isLoading={submitting}
                 onClick={() => {
-                  form.change("throwError", false);
+                  form.change('throwError', false)
                 }}
               >
                 {t("submit")}
@@ -182,7 +185,7 @@ export default function EditableTableExample() {
                 isDisabled={submitting || pristine || hasValidationErrors}
                 isLoading={submitting || postConfigIsLoading}
                 onClick={() => {
-                  form.change("throwError", true);
+                  form.change('throwError', true)
                 }}
               >
                 {t("triggererror")}
@@ -218,13 +221,13 @@ export default function EditableTableExample() {
                       fields.map((field, index) => {
                         return (
                           <TableRow
-                            key={index + field + "row"}
+                            key={index + field + 'row'}
                             name={field}
                             index={index}
                             submitting={submitting}
                             onDelete={() => fields.remove(index)}
                           />
-                        );
+                        )
                       })
                     }
                   </FieldArray>
@@ -232,19 +235,19 @@ export default function EditableTableExample() {
               </Tbody>
             </Table>
           </VStack>
-        );
+        )
       }}
     />
-  );
+  )
 }
 
 const TableRow = (props: {
-  name: string;
-  index: number;
-  submitting: boolean;
-  onDelete: () => void;
+  name: string
+  index: number
+  submitting: boolean
+  onDelete: () => void
 }) => {
-  const { name, index, submitting, onDelete } = props;
+  const { name, index, submitting, onDelete } = props
   const {
     meta: { error },
   } = useField(name + "_rowError");
@@ -257,13 +260,13 @@ const TableRow = (props: {
           validate={zod2FieldValidator(nameValidator)}
           name={`${name}.name`}
           render={({ input, meta: { error, touched } }) => {
-            error = error || rowError;
+            error = error || rowError
             return (
               <FormControl isInvalid={error && touched} isDisabled={submitting}>
                 <Input {...input} placeholder="First Name" />
                 <FormErrorMessage>{error}</FormErrorMessage>
               </FormControl>
-            );
+            )
           }}
         />
       </Td>
@@ -302,5 +305,5 @@ const TableRow = (props: {
         />
       </Td>
     </Tr>
-  );
-};
+  )
+}

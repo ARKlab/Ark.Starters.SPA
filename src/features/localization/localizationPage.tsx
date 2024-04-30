@@ -1,21 +1,12 @@
-import {
-  Box,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Heading,
-  Input,
-  StackDivider,
-  Text,
-  VStack,
-  useToast,
-} from "@chakra-ui/react";
+import { Box, Heading, StackDivider, VStack, Text, useToast, FormControl, Input, FormErrorMessage, FormLabel } from "@chakra-ui/react";
 import { useState } from "react";
 import { Field, Form } from "react-final-form";
 import { useTranslation } from "react-i18next";
-import z from "zod";
+import z from 'zod';
+
 import { LocaleSwitcher } from "../../lib/i18n/localeSwitcher";
 import { zod2FormValidator } from "../../lib/zod2FormValidator";
+
 
 const TestSchema = z.object({
   name: z.string().min(6),

@@ -14,29 +14,33 @@ import {
   Switch,
   WrapItem,
   useColorMode,
-} from "@chakra-ui/react";
-import { useState } from "react";
-import { useAppDispatch } from "../../app/hooks";
-import { Login, Logout } from "../../lib/authentication/authenticationSlice";
-import { useAuthContext } from "../../lib/authentication/components/useAuthContext";
-import { MdQuestionMark } from "react-icons/md";
-import { useSelector } from "react-redux";
-import { RootState } from "../..";
-import { LocaleSwitcher } from "../../lib/i18n/localeSwitcher";
+} from '@chakra-ui/react'
+import { useState } from 'react'
+import { MdQuestionMark } from 'react-icons/md'
+
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import {
+  Login,
+  Logout,
+  authSelector
+} from '../../lib/authentication/authenticationSlice'
+import { useAuthContext } from '../../lib/authentication/components/useAuthContext'
+import { LocaleSwitcher } from '../../lib/i18n/localeSwitcher'
 
 const UserMenu = () => {
-  const dispatch = useAppDispatch();
-  const { isLogged } = useAuthContext();
-  const authStore = useSelector((state: RootState) => state.auth);
-  const user = authStore.data;
-  const { colorMode, toggleColorMode } = useColorMode();
-  const [isChecked, setIsChecked] = useState<boolean>(colorMode === "dark");
+  const dispatch = useAppDispatch()
+  const { isLogged } = useAuthContext()
+
+  const authStore = useAppSelector(authSelector);
+  const user = authStore.data
+  const { colorMode, toggleColorMode } = useColorMode()
+  const [isChecked, setIsChecked] = useState<boolean>(colorMode === 'dark')
   const toggleColorModeWithDelay = () => {
-    setIsChecked(!isChecked);
-    setTimeout(toggleColorMode, 200); // 200ms delay
-  };
+    setIsChecked(!isChecked)
+    setTimeout(toggleColorMode, 200) // 200ms delay
+  }
   function login() {
-    dispatch(Login());
+    dispatch(Login())
   }
   if (!isLogged) {
     return (
@@ -60,17 +64,17 @@ const UserMenu = () => {
               <MenuItem onClick={login}>Login</MenuItem>
             </WrapItem>
             <WrapItem>
-              <MenuItem onClick={() => dispatch(Logout())}>Exit</MenuItem>
+              <MenuItem onClick={async () => dispatch(Logout())}>Exit</MenuItem>
             </WrapItem>
           </MenuGroup>
         </MenuList>
       </Menu>
-    );
+    )
   }
   return (
     <Menu>
       <MenuButton mr="20px">
-        <Avatar name={user?.userInfo?.username || "User"} src="avatarSource" />
+        <Avatar name={user?.userInfo?.username || 'User'} src="avatarSource" />
       </MenuButton>
       <MenuList>
         <MenuGroup title="Options">
@@ -85,14 +89,14 @@ const UserMenu = () => {
         <MenuDivider />
         <MenuGroup title="Account">
           <WrapItem>
-            <MenuItem>{user?.userInfo?.username || "User"}</MenuItem>
+            <MenuItem>{user?.userInfo?.username || 'User'}</MenuItem>
           </WrapItem>
-          <MenuItem onClick={() => dispatch(Logout())}>Exit</MenuItem>
+          <MenuItem onClick={async () => dispatch(Logout())}>Exit</MenuItem>
         </MenuGroup>
       </MenuList>
     </Menu>
-  );
-};
+  )
+}
 
 const Header = () => {
   return (
@@ -102,16 +106,16 @@ const Header = () => {
       top="0"
       left="0"
       right="0"
-      zIndex={"banner"} // You can adjust the z-index as needed
-      shadow={"md"}
-      width={"100%"}
-      height={"60px"}
+      zIndex={'banner'} // You can adjust the z-index as needed
+      shadow={'md'}
+      width={'100%'}
+      height={'60px'}
       bg="gray.800"
     >
       <Flex>
-        <Center ml={"20px"} paddingTop={"5px"}>
+        <Center ml={'20px'} paddingTop={'5px'}>
           <Image
-            height={"50px"}
+            height={'50px'}
             src="https://ark-energy.eu/wp-content/uploads/2022/07/logo-white.png"
             alt=""
           />
@@ -128,7 +132,7 @@ const Header = () => {
         </Center>
       </Flex>
     </Box>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

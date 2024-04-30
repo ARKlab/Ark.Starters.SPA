@@ -1,3 +1,3 @@
 export const Bomb = (): JSX.Element => {
-    throw new Error('💥 CABOOM 💥');
-};
+  throw new Error('💥 CABOOM 💥')
+}

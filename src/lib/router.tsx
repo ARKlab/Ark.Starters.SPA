@@ -1,12 +1,14 @@
 import { Else, If, Then } from "react-if";
-import { MainSectionType, SubsectionMenuItemType } from "../components/sideBar/menuItem/types"
-import { AuthenticatedOnly } from "./authentication/components/authenticatedOnly";
-import SEO from "../components/seo";
 import { Outlet, Route, createBrowserRouter, createRoutesFromChildren } from "react-router-dom";
-import { mainSections } from "../siteMap/mainSections";
-import Layout from "../layout";
-import { AuthenticationCallback } from "./authentication/components/authenticationCallback";
+
 import PageNotFound from "../components/pageNotFound";
+import SEO from "../components/seo";
+import type { MainSectionType, SubsectionMenuItemType } from "../components/sideBar/menuItem/types"
+import Layout from "../layout";
+import { mainSections } from "../siteMap/mainSections";
+
+import { AuthenticatedOnly } from "./authentication/components/authenticatedOnly";
+import { AuthenticationCallback } from "./authentication/components/authenticationCallback";
 import Unauthorized from "./authentication/unauthorized";
 import { ErrorFallback } from "./errorFallback";
 

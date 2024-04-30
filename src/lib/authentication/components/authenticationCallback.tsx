@@ -1,7 +1,7 @@
 import { useAppDispatch } from "../../../app/hooks";
-import { HandleRedirect } from "../authenticationSlice";
-import useAsyncEffect from "../../useAsyncEffect";
 import CenterSpinner from "../../../components/centerSpinner";
+import useAsyncEffect from "../../useAsyncEffect";
+import { HandleRedirect } from "../authenticationSlice";
 
 export const AuthenticationCallback = () => {
   const dispatch = useAppDispatch();

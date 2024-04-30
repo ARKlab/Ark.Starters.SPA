@@ -9,17 +9,19 @@ import {
   FaTable,
 } from "react-icons/fa";
 import { RiMovie2Line } from "react-icons/ri";
-import { MainSectionType } from "../components/sideBar/menuItem/types";
-import NoEntryPoint from "../features/staticPageExample/staticPage";
-import LazyLoad from "../components/lazyLoad";
-import { Bomb } from "../components/Bomb";
 import { Navigate } from "react-router-dom";
+
+import { Bomb } from "../components/Bomb";
+import LazyLoad from "../components/lazyLoad";
+import type { MainSectionType } from "../components/sideBar/menuItem/types";
+import NoEntryPoint from "../features/staticPageExample/staticPage";
+
 
 /*This is the Main Section ARRAY populate this to populate the main nav menu
 It is also used to create all the Routes for the router*/
 export const mainSections: MainSectionType[] = [
   {
-    label: "Main Test Section",
+    label: 'Main Test Section',
     path: '',
     subsections: [
       {
@@ -30,99 +32,99 @@ export const mainSections: MainSectionType[] = [
         isEntryPoint: true,
       },
       {
-        path: "jsonplaceholder",
-        label: "Posts",
+        path: 'jsonplaceholder',
+        label: 'Posts',
         icon: FaCloudUploadAlt,
         isInMenu: true,
         component: (
           <LazyLoad
-            loader={() => import("../features/fetchApiExample/JsonPlaceHolder")}
+            loader={async () => import("../features/fetchApiExample/JsonPlaceHolder")}
           />
         ),
         isEntryPoint: true,
       },
       {
-        path: "playground",
-        label: "PlayGround",
+        path: 'playground',
+        label: 'PlayGround',
         icon: FaPlay,
         isInMenu: true,
         component: (
           <LazyLoad
-            loader={() => import("../features/playground/playgroundView")}
+            loader={async () => import("../features/playground/playgroundView")}
           />
         ),
       },
       {
-        path: "configTable",
-        label: "Config Table",
+        path: 'configTable',
+        label: 'Config Table',
         icon: FaTable,
         isInMenu: true,
         component: (
           <LazyLoad
-            loader={() => import("../features/configTable/configTableExample")}
+            loader={async () => import("../features/configTable/configTableExample")}
           />
         ),
       },
       {
-        path: "moviesTable",
-        label: "Movie Paginated Table",
+        path: 'moviesTable',
+        label: 'Movie Paginated Table',
         icon: RiMovie2Line,
         isInMenu: true,
         component: (
           <LazyLoad
-            loader={() => import("../features/paginatedTable/moviePage")}
+            loader={async () => import("../features/paginatedTable/moviePage")}
           />
         ),
       },
       {
-        path: "videoGamesTable",
-        label: "VideoGames Table",
+        path: 'videoGamesTable',
+        label: 'VideoGames Table',
         icon: FaGamepad,
         isInMenu: true,
         component: (
           <LazyLoad
-            loader={() => import("../features/formExample/videoGamesPage")}
+            loader={async () => import("../features/formExample/videoGamesPage")}
           />
         ),
       },
 
       {
-        path: "wizardForm",
-        label: "Wizard Form",
+        path: 'wizardForm',
+        label: 'Wizard Form',
         icon: FaTable,
         isInMenu: true,
         component: (
           <LazyLoad
-            loader={() => import("../features/formWizard/formWizard")}
+            loader={async () => import("../features/formWizard/formWizard")}
           />
         ),
       },
       {
-        path: "translation",
-        label: "Translation Sample",
+        path: 'translation',
+        label: 'Translation Sample',
         icon: FaFlag,
         isInMenu: true,
         component: (
           <LazyLoad
-            loader={() => import("../features/localization/localizationPage")}
+            loader={async () => import("../features/localization/localizationPage")}
           />
         ),
       },
       {
-        path: "authonly",
-        label: "Auth Only",
+        path: 'authonly',
+        label: 'Auth Only',
         icon: FaLock,
         isInMenu: true,
         authenticatedOnly: true,
         component: (
           <LazyLoad
-            loader={() => import("../features/authentication/authInfoPage")}
+            loader={async () => import("../features/authentication/authInfoPage")}
           />
         )
       },
       {
-        path: "bomb",
-        label: "Throw Error",
+        path: 'bomb',
+        label: 'Throw Error',
         icon: FaBomb,
         isInMenu: true,
         component: <Bomb />,
@@ -130,19 +132,19 @@ export const mainSections: MainSectionType[] = [
     ],
   },
   {
-    label: "External Section",
-    path: "ext",
+    label: 'External Section',
+    path: 'ext',
     subsections: [
       {
-        externalUrl: "https://www.google.com",
-        label: "Google",
+        externalUrl: 'https://www.google.com',
+        label: 'Google',
         icon: FaExternalLinkAlt,
         isInMenu: true,
         authenticatedOnly: false,
       },
       {
-        externalUrl: "https://react.dev/",
-        label: "React",
+        externalUrl: 'https://react.dev/',
+        label: 'React',
         icon: FaExternalLinkAlt,
         isInMenu: true,
         authenticatedOnly: false,
@@ -150,33 +152,33 @@ export const mainSections: MainSectionType[] = [
     ],
   },
   {
-    label: "Another Section",
-    path: "anotherSection",
+    label: 'Another Section',
+    path: 'anotherSection',
     subsections: [
       {
-        label: "Sub Subsections",
-        path: "nested",
+        label: 'Sub Subsections',
+        path: 'nested',
         isInMenu: true,
         authenticatedOnly: false,
         subsections: [
           {
-            path: "authonly",
-            label: "Auth Only",
+            path: 'authonly',
+            label: 'Auth Only',
             component: <NoEntryPoint />,
             icon: FaTable,
             isInMenu: true,
             authenticatedOnly: true,
           },
           {
-            externalUrl: "https://www.google.com",
-            label: "Google",
+            externalUrl: 'https://www.google.com',
+            label: 'Google',
             icon: FaExternalLinkAlt,
             isInMenu: true,
             authenticatedOnly: false,
           },
           {
-            externalUrl: "https://react.dev/",
-            label: "React",
+            externalUrl: 'https://react.dev/',
+            label: 'React',
             icon: FaExternalLinkAlt,
             isInMenu: true,
             authenticatedOnly: false,
@@ -185,18 +187,18 @@ export const mainSections: MainSectionType[] = [
       },
     ],
   },
-];
+]
 
 export function getEntryPointPath(sections: MainSectionType[]): string {
   for (const section of sections) {
     for (const subsection of section.subsections ?? []) {
-      if (subsection.path === "/") {
-        return "/";
+      if (subsection.path === '/') {
+        return '/'
       }
       if (subsection.isEntryPoint) {
-        return (section.path ?? "" + subsection.path) || "/";
+        return (section.path ?? '' + subsection.path) || '/'
       }
     }
   }
-  return "/";
+  return '/'
 }

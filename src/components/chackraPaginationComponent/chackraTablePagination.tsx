@@ -1,25 +1,21 @@
-import {
-  Button,
-  Select,
-  Stack,
-} from "@chakra-ui/react";
-import * as R from "ramda";
-import { MouseEventHandler } from "react";
+import { Button, Select, Stack } from '@chakra-ui/react'
+import * as R from 'ramda'
+import type { MouseEventHandler } from 'react'
 import {
   MdChevronLeft,
   MdChevronRight,
   MdFirstPage,
   MdLastPage,
-} from "react-icons/md";
+} from 'react-icons/md'
 
 type PaginationComponentTypes = {
-  count: number;
-  page: number;
-  pageSize: number;
-  onPageChange: (page: number) => unknown;
-  onPageSizeChange: (pageSize: number) => unknown;
-  isLoading: boolean;
-};
+  count: number
+  page: number
+  pageSize: number
+  onPageChange: (page: number) => unknown
+  onPageSizeChange: (pageSize: number) => unknown
+  isLoading: boolean
+}
 
 const PaginationComponent = ({
   count,
@@ -29,22 +25,22 @@ const PaginationComponent = ({
   onPageSizeChange,
   isLoading,
 }: PaginationComponentTypes) => {
-  const totalPages = Math.ceil(R.divide(count, pageSize));
-  const pageMinRange = 3;
+  const totalPages = Math.ceil(R.divide(count, pageSize))
+  const pageMinRange = 3
   const pageMinRangeVal = R.gt(page, pageMinRange)
     ? R.min(
-      R.subtract(page, pageMinRange),
-      R.subtract(totalPages, pageMinRange)
-    )
-    : 0;
+        R.subtract(page, pageMinRange),
+        R.subtract(totalPages, pageMinRange),
+      )
+    : 0
 
-  const pageMaxRange = 2;
-  const pageMaxSub = R.subtract(totalPages, pageMaxRange);
+  const pageMaxRange = 2
+  const pageMaxSub = R.subtract(totalPages, pageMaxRange)
   const pageMaxRangeVal =
-    page < pageMaxSub ? R.add(page, pageMaxRange) : totalPages;
+    page < pageMaxSub ? R.add(page, pageMaxRange) : totalPages
 
-  const pageRange = R.range(pageMinRangeVal, page < 3 ? 5 : pageMaxRangeVal);
-  if (isLoading) return <></>;
+  const pageRange = R.range(pageMinRangeVal, page < 3 ? 5 : pageMaxRangeVal)
+  if (isLoading) return <></>
   return (
     <div>
       {count > pageSize ? (
@@ -81,7 +77,7 @@ const PaginationComponent = ({
               value={<MdChevronLeft />}
             />
             {pageRange.map((p: number, i: number) => {
-              const pVal = R.add(1, p);
+              const pVal = R.add(1, p)
               return (
                 <PageItem
                   display={(pVal - 1) * pageSize < count}
@@ -91,7 +87,7 @@ const PaginationComponent = ({
                   value={pVal}
                   currentPage={page === pVal}
                 />
-              );
+              )
             })}
             <PageItem
               display={page < totalPages}
@@ -128,19 +124,19 @@ const PaginationComponent = ({
         </Stack>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default PaginationComponent;
+export default PaginationComponent
 
 type PageItemsTypes = {
-  display: boolean;
-  onChange: MouseEventHandler<HTMLButtonElement>;
-  title?: string;
-  disable?: boolean;
-  currentPage?: boolean;
-  value: string | number | JSX.Element;
-};
+  display: boolean
+  onChange: MouseEventHandler<HTMLButtonElement>
+  title?: string
+  disable?: boolean
+  currentPage?: boolean
+  value: string | number | JSX.Element
+}
 
 const PageItem = ({
   display,
@@ -157,10 +153,10 @@ const PageItem = ({
         isDisabled={disable}
         onClick={onChange}
         title={title}
-        variant={currentPage ? "outline" : ""}
+        variant={currentPage ? 'outline' : ''}
       >
         {value}
       </Button>
     ),
-    () => <></>
-  )(display);
+    () => <></>,
+  )(display)

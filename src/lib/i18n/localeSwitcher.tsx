@@ -1,8 +1,9 @@
+
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import { useCallback } from "react";
 import { supportedLngs } from "../../globalConfigs";
 
 export const LocaleSwitcher = () => {
@@ -31,7 +32,7 @@ export const LocaleSwitcher = () => {
           </MenuButton>
           <MenuList>
             {Object.entries(supportedLngs).map(([k, v]) => (
-              <MenuItem key={k} onClick={() => swith(k)}>
+              <MenuItem key={k} onClick={async () => swith(k)}>
                 {v}
               </MenuItem>
             ))}

@@ -1,4 +1,4 @@
-import { AccountInfo, PublicClientApplication } from "@azure/msal-browser";
+import type { AccountInfo, PublicClientApplication } from "@azure/msal-browser";
 
 export function createAuthHelpers(auth: PublicClientApplication) {
   const getUserAccounts = () => auth.getAllAccounts();
@@ -6,7 +6,7 @@ export function createAuthHelpers(auth: PublicClientApplication) {
 
   const loginWithRedirect = async (scopes: string[]) => {
     storePathname();
-    await storeManagementToken();
+    storeManagementToken();
     const options = buildScope({ scopes });
     await auth.loginRedirect(options);
   };
