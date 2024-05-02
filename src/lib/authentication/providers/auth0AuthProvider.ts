@@ -36,6 +36,12 @@ export class Auth0AuthProvider implements AuthProvider {
       subscriber(this.loginStatus);
     }
   }
+  public hasPermission(permission: string): boolean {
+    // eslint-disable-line @typescript-eslint/no-unused-vars
+    // Checks whether the current user has the specified permission
+    const permissions = this.getUserPermissions();
+    return permissions.includes(permission);
+  }
   public async init() {}
 
   public async login() {
@@ -94,15 +100,14 @@ export class Auth0AuthProvider implements AuthProvider {
       } as UserAccountInfo;
     }
   }
-  public hasPermission(permission: string): boolean {
-    // eslint-disable-line @typescript-eslint/no-unused-vars
-    // Checks whether the current user has the specified permission
+  private getUserPermissions(): string[] {
     this.auth0Client.getIdTokenClaims().then((claims) => {
       const permissions = claims && claims[claimsUrl + "permissions"];
-      return permissions.includes(permission);
+      return permissions;
     });
-    return false;
+    return [] as string[];
   }
+
   //PRIVATE METHODS
   private setLoginStatus(status: LoginStatus) {
     this.loginStatus = status;

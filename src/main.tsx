@@ -24,6 +24,7 @@ import {
 import { ErrorDisplay } from "./components/errorDisplay";
 import SEO from "./components/seo";
 import useLocalizeDocumentAttributes from "./lib/i18n/useLocalizeDocumentAttributes";
+import ProtectedRoute from "./lib/authentication/components/protectedRoute";
 
 const Main = () => {
   const dispatch = useAppDispatch();
@@ -53,11 +54,20 @@ const Main = () => {
   const renderSections = (s?: SubsectionMenuItemType[]) => {
     return s
       ?.filter((x) => !!x.path)
-      .map((x, i) => (
-        <Route key={i} path={x.path} element={wrapComponent(x)}>
-          {renderSections(x.subsections)}
-        </Route>
-      ));
+      .map((x, i) =>
+        x.permissions && x.permissions.length > 0 ? (
+          <ProtectedRoute
+            key={i}
+            path={x.path!}
+            permissions={x.permissions}
+            element={wrapComponent(x)}
+          />
+        ) : (
+          <Route key={i} path={x.path} element={wrapComponent(x)}>
+            {renderSections(x.subsections)}
+          </Route>
+        )
+      );
   };
 
   const routes = mainSections

@@ -28,6 +28,7 @@ export const DetectLoggedInUser = createAsyncThunk(
     if (!user || user.username === "") return null;
     return {
       userInfo: user,
+      permissions: user.permissions,
       token: "",
     } as AuthStoreType;
   }
@@ -159,3 +160,4 @@ export const authSlice = createSlice({
 export const { tokenReceived, loggedOut } = authSlice.actions;
 
 export const tokenSelector = (state: RootState) => state.auth.data?.token;
+export const userSelector = (state: RootState) => state.auth.data?.userInfo;

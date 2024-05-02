@@ -1,15 +1,13 @@
-import React from "react";
-
 import { Box, Button, Heading, Wrap, WrapItem } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
+import { useAppDispatch } from "../../app/hooks";
+import { dispatchNotification } from "../../lib/notifications/notification";
 import {
   NotificationDuration,
   NotificationPosition,
 } from "../../lib/notifications/notificationsTypes";
-import { dispatchNotification } from "../../lib/notifications/notification";
-import { useAppDispatch } from "../../app/hooks";
-import { useTranslation } from "react-i18next";
 
-const PlaygroundView = () => {
+const NotificationPlaygroundView = () => {
   const dispatch = useAppDispatch();
   const sendNotification = (
     id: string,
@@ -29,6 +27,7 @@ const PlaygroundView = () => {
       })
     );
   };
+
   const { t } = useTranslation();
   const notificationBody = t("notification_body");
   return (
@@ -129,4 +128,4 @@ const PlaygroundView = () => {
   );
 };
 
-export default PlaygroundView;
+export default NotificationPlaygroundView;

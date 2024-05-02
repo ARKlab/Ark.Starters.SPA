@@ -7,11 +7,12 @@ export type MainSectionType = {
   path?: string;
   authenticatedOnly?: boolean;
   component?: ReactNode;
-}
+};
 
 export type SubsectionMenuItemType = {
   isInMenu: boolean;
   icon?: IconType;
   externalUrl?: string;
   isEntryPoint?: boolean;
+  permissions?: string[];
 } & MainSectionType;

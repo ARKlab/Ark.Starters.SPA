@@ -100,6 +100,17 @@ export class MsalAuthProvider implements AuthProvider {
       subscriber(this.loginStatus);
     }
   }
+  private getUserPermissions(): string[] {
+    if (this.idTokenClaims) {
+      const permissions = R.pathOr(
+        "",
+        ["extension_Scope"],
+        this.idTokenClaims
+      ).split(" ");
+      return permissions;
+    }
+    return [] as string[];
+  }
   public async init(): Promise<void> {
     this.myMSALObj =
       await msal.PublicClientApplication.createPublicClientApplication(
@@ -158,19 +169,17 @@ export class MsalAuthProvider implements AuthProvider {
         this.silentProfileRequest
       );
       this.idTokenClaims = resp.idTokenClaims;
-      return { username: currentAccounts[0].username } as UserAccountInfo;
+      const permissions = this.getUserPermissions();
+      return {
+        username: currentAccounts[0].username,
+        permissions: permissions,
+      } as UserAccountInfo;
     }
   }
+
   public hasPermission(permission: string) {
-    if (this.idTokenClaims) {
-      const permissions = R.pathOr(
-        "",
-        ["extension_Scope"],
-        this.idTokenClaims
-      ).split(" ");
-      return permissions.includes(permission);
-    }
-    return false;
+    const permissions = this.getUserPermissions();
+    return permissions.includes(permission);
   }
 
   //PRIVATE METHODS

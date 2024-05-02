@@ -4,14 +4,16 @@ import {
   FaExternalLinkAlt,
   FaFlag,
   FaGamepad,
-  FaPlay,
   FaTable,
 } from "react-icons/fa";
+import { GrSecure } from "react-icons/gr";
+import { IoIosNotifications } from "react-icons/io";
 import { RiMovie2Line } from "react-icons/ri";
+import { Bomb } from "../components/Bomb";
+import LazyLoad from "../components/lazyLoad";
 import { MainSectionType } from "../components/sideBar/menuItem/types";
 import NoEntryPoint from "../features/staticPageExample/staticPage";
-import LazyLoad from "../components/lazyLoad";
-import { Bomb } from "../components/Bomb";
+import { testProtectedRoutePermissions } from "../globalConfigs";
 
 /*This is the Main Section ARRAY populate this to populate the main nav menu
 It is also used to create all the Routes for the router*/
@@ -33,13 +35,47 @@ export const mainSections: MainSectionType[] = [
         isEntryPoint: true,
       },
       {
-        path: "playground",
-        label: "PlayGround",
-        icon: FaPlay,
+        path: "notificationplayground",
+        label: "Notifications",
+        icon: IoIosNotifications,
         isInMenu: true,
         component: (
           <LazyLoad
-            loader={() => import("../features/playground/playgroundView")}
+            loader={() =>
+              import(
+                "../features/notificationPlayground/notificationPlaygroundView"
+              )
+            }
+          />
+        ),
+      },
+      {
+        path: "permissionsplayground",
+        label: "Permissions",
+        icon: GrSecure,
+        isInMenu: true,
+        authenticatedOnly: true,
+        component: (
+          <LazyLoad
+            loader={() =>
+              import(
+                "../features/permissionsPlayground/permissionsPlaygroundView"
+              )
+            }
+          />
+        ),
+      },
+      {
+        path: "protectedRoute",
+        label: "Protected Route",
+        isInMenu: false,
+        authenticatedOnly: true,
+        permissions: testProtectedRoutePermissions,
+        component: (
+          <LazyLoad
+            loader={() =>
+              import("../features/permissionsPlayground/protectedRouteView")
+            }
           />
         ),
       },
