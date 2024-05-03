@@ -1,7 +1,9 @@
 import { Heading } from "@chakra-ui/react";
-import { ChackraPlainTable } from "../../components/tables/plainTable/chackraPlainTable";
-import { useFetchPostsQuery } from "./jsonPlaceholderSlice";
 import { useTranslation } from "react-i18next";
+
+import { ChackraPlainTable } from "../../components/tables/plainTable/chackraPlainTable";
+
+import { useFetchPostsQuery } from "./jsonPlaceholderSlice";
 const JsonPlaceholderPostsTable = () => {
   const {
     data,
@@ -25,7 +27,7 @@ const JsonPlaceholderPostsTable = () => {
         isError={isError}
       />
     </>
-  );
-};
+  )
+}
 
-export default JsonPlaceholderPostsTable;
+export default JsonPlaceholderPostsTable

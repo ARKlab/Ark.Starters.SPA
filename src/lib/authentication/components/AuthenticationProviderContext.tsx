@@ -1,5 +1,7 @@
 import React from "react";
-import { AuthProvider } from "../providers/authProviderInterface";
+
+import type { AuthProvider } from "../providers/authProviderInterface";
+
 import { AuthenticationContext } from "./authenticationContext";
 
 type AuthContextChildrens = {

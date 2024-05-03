@@ -1,21 +1,14 @@
-import { useEffect } from "react";
 import { useAppDispatch } from "../../../app/hooks";
-import { Init } from "../authenticationSlice";
-import { useAuthContext } from "./useAuthContext";
-import { Navigate } from "react-router-dom";
+import CenterSpinner from "../../../components/centerSpinner";
+import useAsyncEffect from "../../useAsyncEffect";
+import { HandleRedirect } from "../authenticationSlice";
 
-export const AuthenticationCallback = (props: { redirectTo: string }) => {
+export const AuthenticationCallback = () => {
   const dispatch = useAppDispatch();
-  const { isLogged } = useAuthContext();
 
-  useEffect(() => {
-    if (!isLogged) {
-      dispatch(Init());
-    }
-  }, [dispatch, isLogged]);
+  useAsyncEffect(async () => {
+    await dispatch(HandleRedirect());
+  }, [dispatch]);
 
-  if (isLogged) {
-    return <Navigate to={props.redirectTo} replace />;
-  }
-  return <></>;
+  return <CenterSpinner />;
 };

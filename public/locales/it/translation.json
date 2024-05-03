@@ -76,5 +76,7 @@
     "permissionsPlayground_havePermission": "Questo è il componente quando si dispone della permission",
     "permissionsPlayground_noPermission": "Questo è un componente di fallback perché non si dispone della permission. Potrebbe anche essere null e non mostrare nulla."  ,
     "permissionsPlayground_componentTitle": "Componente protetto da permissions:",
-    "permissionsPlayground_protected_route": "This is a Protected Route"
+    "permissionsPlayground_protected_route": "This is a Protected Route",
+    "permissionsPlayground_noPermissions": "Questo account non ha permessi pertanto questa Demo non funzionerà correttamente. Per favore, accedi con un account che ha un qualsiasi permesso.",
+    "permissionsPlayground_goToProtectedRoute":"Sezione protetta da permessi:"
 }

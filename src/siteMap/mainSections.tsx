@@ -1,116 +1,92 @@
+import { CiLock } from "react-icons/ci";
 import {
   FaBomb,
   FaCloudUploadAlt,
   FaExternalLinkAlt,
   FaFlag,
   FaGamepad,
+  FaLock,
+  FaPlay,
   FaTable,
 } from "react-icons/fa";
-import { GrSecure } from "react-icons/gr";
-import { IoIosNotifications } from "react-icons/io";
 import { RiMovie2Line } from "react-icons/ri";
+import { Navigate } from "react-router-dom";
+
 import { Bomb } from "../components/Bomb";
 import LazyLoad from "../components/lazyLoad";
-import { MainSectionType } from "../components/sideBar/menuItem/types";
+import type { MainSectionType } from "../components/sideBar/menuItem/types";
 import NoEntryPoint from "../features/staticPageExample/staticPage";
-import { testProtectedRoutePermissions } from "../globalConfigs";
 
 /*This is the Main Section ARRAY populate this to populate the main nav menu
 It is also used to create all the Routes for the router*/
 export const mainSections: MainSectionType[] = [
   {
     label: "Main Test Section",
-    path: "main",
+    path: "",
     subsections: [
+      {
+        path: "",
+        label: "index",
+        isInMenu: false,
+        component: <Navigate to="jsonplaceholder" />,
+        isEntryPoint: true,
+      },
       {
         path: "jsonplaceholder",
         label: "Posts",
         icon: FaCloudUploadAlt,
         isInMenu: true,
-        component: (
-          <LazyLoad
-            loader={() => import("../features/fetchApiExample/JsonPlaceHolder")}
-          />
-        ),
+        component: <LazyLoad loader={async () => import("../features/fetchApiExample/JsonPlaceHolder")} />,
         isEntryPoint: true,
       },
       {
-        path: "notificationplayground",
-        label: "Notifications",
-        icon: IoIosNotifications,
+        path: "playground",
+        label: "PlayGround",
+        icon: FaPlay,
         isInMenu: true,
         component: (
-          <LazyLoad
-            loader={() =>
-              import(
-                "../features/notificationPlayground/notificationPlaygroundView"
-              )
-            }
-          />
+          <LazyLoad loader={async () => import("../features/notificationPlayground/notificationPlaygroundView")} />
         ),
       },
       {
-        path: "permissionsplayground",
+        path: "permissionsPlayground",
         label: "Permissions",
-        icon: GrSecure,
-        isInMenu: true,
         authenticatedOnly: true,
+        icon: CiLock,
+        isInMenu: true,
         component: (
-          <LazyLoad
-            loader={() =>
-              import(
-                "../features/permissionsPlayground/permissionsPlaygroundView"
-              )
-            }
-          />
+          <LazyLoad loader={async () => import("../features/permissionsPlayground/permissionsPlaygroundView")} />
         ),
       },
       {
         path: "protectedRoute",
         label: "Protected Route",
-        isInMenu: false,
         authenticatedOnly: true,
-        permissions: testProtectedRoutePermissions,
-        component: (
-          <LazyLoad
-            loader={() =>
-              import("../features/permissionsPlayground/protectedRouteView")
-            }
-          />
-        ),
+        permissions: ["grant:admin"],
+        icon: CiLock,
+        isInMenu: false,
+        component: <LazyLoad loader={async () => import("../features/permissionsPlayground/protectedRouteView")} />,
       },
       {
         path: "configTable",
         label: "Config Table",
         icon: FaTable,
         isInMenu: true,
-        component: (
-          <LazyLoad
-            loader={() => import("../features/configTable/configTableExample")}
-          />
-        ),
+        component: <LazyLoad loader={async () => import("../features/configTable/configTableExample")} />,
       },
       {
         path: "moviesTable",
         label: "Movie Paginated Table",
         icon: RiMovie2Line,
         isInMenu: true,
-        component: (
-          <LazyLoad
-            loader={() => import("../features/paginatedTable/moviePage")}
-          />
-        ),
+        component: <LazyLoad loader={async () => import("../features/paginatedTable/moviePage")} />,
       },
       {
         path: "videoGamesTable",
         label: "VideoGames Table",
         icon: FaGamepad,
         isInMenu: true,
-        component: (
-          <LazyLoad
-            loader={() => import("../features/formExample/videoGamesPage")}
-          />
-        ),
+        component: <LazyLoad loader={async () => import("../features/formExample/videoGamesPage")} />,
       },
 
       {
@@ -118,22 +94,22 @@ export const mainSections: MainSectionType[] = [
         label: "Wizard Form",
         icon: FaTable,
         isInMenu: true,
-        component: (
-          <LazyLoad
-            loader={() => import("../features/formWizard/formWizard")}
-          />
-        ),
+        component: <LazyLoad loader={async () => import("../features/formWizard/formWizard")} />,
       },
       {
         path: "translation",
         label: "Translation Sample",
         icon: FaFlag,
         isInMenu: true,
-        component: (
-          <LazyLoad
-            loader={() => import("../features/localization/localizationPage")}
-          />
-        ),
+        component: <LazyLoad loader={async () => import("../features/localization/localizationPage")} />,
+      },
+      {
+        path: "authonly",
+        label: "Auth Only",
+        icon: FaLock,
+        isInMenu: true,
+        authenticatedOnly: true,
+        component: <LazyLoad loader={async () => import("../features/authentication/authInfoPage")} />,
       },
       {
         path: "bomb",

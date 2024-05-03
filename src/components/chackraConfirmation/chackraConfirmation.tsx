@@ -1,4 +1,3 @@
-import React, { useRef } from "react";
 import {
   AlertDialog,
   AlertDialogBody,
@@ -8,7 +7,9 @@ import {
   AlertDialogOverlay,
   Button,
 } from "@chakra-ui/react";
-import { Action } from "redux";
+import React, { useRef } from "react";
+import type { Action } from "redux";
+
 import { useAppDispatch } from "../../app/hooks";
 
 export const ChackraConfirmation = (props: {

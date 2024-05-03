@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { IconType } from "react-icons";
+import type { ReactNode } from "react";
+import type { IconType } from "react-icons";
 
 export type MainSectionType = {
   subsections?: SubsectionMenuItemType[];
@@ -7,6 +7,7 @@ export type MainSectionType = {
   path?: string;
   authenticatedOnly?: boolean;
   component?: ReactNode;
+  permissions?: string[];
 };
 
 export type SubsectionMenuItemType = {
@@ -14,5 +15,4 @@ export type SubsectionMenuItemType = {
   icon?: IconType;
   externalUrl?: string;
   isEntryPoint?: boolean;
-  permissions?: string[];
 } & MainSectionType;

@@ -8,25 +8,25 @@ import {
   TableContainer,
   Center,
   Spinner,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react'
 
 export type PlainTablePropsType<T> = {
-  data: T[];
-  colorscheme?: string;
-  variant?: string;
-  isLoading: boolean;
-  isError: boolean;
-};
+  data: T[]
+  colorscheme?: string
+  variant?: string
+  isLoading: boolean
+  isError: boolean
+}
 
 export const ChackraPlainTable = <T,>({
   data,
-  colorscheme = "grey",
-  variant = "striped",
+  colorscheme = 'grey',
+  variant = 'striped',
   isLoading,
   isError,
 }: PlainTablePropsType<T>) => {
-  type TK = keyof T;
-  const headers = Object.keys(data[0] || {}) as TK[];
+  type TK = keyof T
+  const headers = Object.keys(data[0] || {}) as TK[]
 
   return (
     <TableContainer my="30px">
@@ -59,5 +59,5 @@ export const ChackraPlainTable = <T,>({
         </Tbody>
       </Table>
     </TableContainer>
-  );
-};
+  )
+}

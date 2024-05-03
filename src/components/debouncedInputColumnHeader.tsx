@@ -1,4 +1,7 @@
 import React from "react";
+
+import useDebounce from "../lib/useDebounce";
+
 import { ChackraInputHeaderFilterWithClear } from "./chackraInputFilterWithClear/chackraInputHeaderFilterWithClear";
 
 export function DebouncedInputColumnHeader({
@@ -12,18 +15,15 @@ export function DebouncedInputColumnHeader({
   debounce?: number;
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "size">) {
   const [value, setValue] = React.useState(initialValue);
+  const debounceValue = useDebounce(value, debounce);
 
   React.useEffect(() => {
-    setValue(initialValue);
-  }, [initialValue]);
+    setValue(initialValue)
+  }, [initialValue])
 
   React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      onChange(value);
-    }, debounce);
-
-    return () => clearTimeout(timeout);
-  }, [onChange, debounce, value]);
+    onChange(debounceValue);
+  }, [debounceValue, onChange]);
 
   return (
     <ChackraInputHeaderFilterWithClear
@@ -31,5 +31,5 @@ export function DebouncedInputColumnHeader({
       onChange={(e) => setValue(e.target.value)}
       {...props}
     />
-  );
+  )
 }

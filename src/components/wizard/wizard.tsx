@@ -1,5 +1,3 @@
-import React, { useState, ReactNode } from "react";
-import { Form } from "react-final-form";
 import {
   Button,
   Box,
@@ -9,7 +7,10 @@ import {
   Text,
   Flex,
 } from "@chakra-ui/react";
-import z from "zod";
+import type { ReactNode} from "react";
+import React, { useState } from "react";
+import { Form } from "react-final-form";
+import type z from "zod";
 
 export const Wizard = ({
   onSubmit,

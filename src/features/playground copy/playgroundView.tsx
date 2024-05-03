@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 
 import {
   Box,
@@ -14,16 +13,19 @@ import {
   InputRightElement,
   Text,
 } from "@chakra-ui/react";
-import {
-  NotificationDuration,
-  NotificationPosition,
-} from "../../lib/notifications/notificationsTypes";
-import { dispatchNotification } from "../../lib/notifications/notification";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { userSelector } from "../../lib/authentication/authenticationSlice";
 import { MdCheckCircle } from "react-icons/md";
+
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { userSelector } from "../../lib/authentication/authenticationSlice";
 import ProtectedComponent from "../../lib/authentication/components/protectedComponent";
+import { dispatchNotification } from "../../lib/notifications/notification";
+import {
+  NotificationDuration
+} from "../../lib/notifications/notificationsTypes";
+import type {
+  NotificationPosition} from "../../lib/notifications/notificationsTypes";
 
 const PlaygroundView = () => {
   const dispatch = useAppDispatch();

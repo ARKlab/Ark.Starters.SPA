@@ -1,27 +1,31 @@
-import { z } from "zod";
-import _ from "lodash";
+import _ from 'lodash'
+import type { z } from 'zod'
 
 /*
 final form with form array error format:
 { "table": [ { "name": ["error 1"] } ] }
 */
 
-export const zod2FormValidator = <T extends z.ZodTypeAny>(schema: T) => (values: Record<string, unknown>) => {
-  const res = schema.safeParse(values);
-  if (!res.success) {
-    const errors = {};
-    for (const err of res.error.errors) {
-      _.set(errors, err.path, [err.message]);
+export const zod2FormValidator =
+  <T extends z.ZodTypeAny>(schema: T) =>
+  (values: Record<string, unknown>) => {
+    const res = schema.safeParse(values)
+    if (!res.success) {
+      const errors = {}
+      for (const err of res.error.errors) {
+        _.set(errors, err.path, [err.message])
+      }
+      return errors
     }
-    return errors;
+    return undefined
   }
-  return undefined;
-};
 
-export const zod2FieldValidator = <T extends z.ZodTypeAny>(schema: T) => (value: unknown) => {
-  const res = schema.safeParse(value);
-  if (!res.success) {
-    return res.error.formErrors.formErrors;
+export const zod2FieldValidator =
+  <T extends z.ZodTypeAny>(schema: T) =>
+  (value: unknown) => {
+    const res = schema.safeParse(value)
+    if (!res.success) {
+      return res.error.formErrors.formErrors
+    }
+    return undefined
   }
-  return undefined;
-};

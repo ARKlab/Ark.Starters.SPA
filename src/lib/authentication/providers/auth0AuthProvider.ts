@@ -1,8 +1,13 @@
-import { Auth0Client, Auth0ClientOptions } from "@auth0/auth0-spa-js";
+import type { Auth0ClientOptions } from "@auth0/auth0-spa-js";
+import { Auth0Client } from "@auth0/auth0-spa-js";
 
-import { AuthProvider } from "./authProviderInterface";
-import { LoginStatus, UserAccountInfo } from "../authTypes";
-import { CustomSettingsType } from "../../../global";
+import type { CustomSettingsType } from "../../../global";
+import { router } from "../../router";
+import type { UserAccountInfo } from "../authTypes";
+import { LoginStatus } from "../authTypes";
+
+// this is kind of violation but we need to use react-router-dom navigation to unsure redirects after MSAL redirect works
+import type { AuthProvider } from "./authProviderInterface";
 
 const claimsUrl = "http://ark-energy.eu/claims/";
 
@@ -12,10 +17,11 @@ export type Auth0Config = {
 
 export class Auth0AuthProvider implements AuthProvider {
   private loginStatus: LoginStatus = LoginStatus.NotLogged;
-  private subscribers = new Set<(status: string) => void>();
+  private subscribers = new Set<(status: LoginStatus) => void>();
 
   private auth0Client: Auth0Client;
   private config: Auth0Config;
+  private userPermissions: string[] = [];
 
   constructor(env: CustomSettingsType) {
     const config: Auth0ClientOptions = {
@@ -23,7 +29,7 @@ export class Auth0AuthProvider implements AuthProvider {
       clientId: env.clientID,
       cacheLocation: "localstorage",
       authorizationParams: {
-        redirect_uri: window.location.origin,
+        redirect_uri: env.redirectUri,
         audience: env.audience,
         scope: "openid profile email",
       },
@@ -39,7 +45,7 @@ export class Auth0AuthProvider implements AuthProvider {
   public hasPermission(permission: string): boolean {
     // eslint-disable-line @typescript-eslint/no-unused-vars
     // Checks whether the current user has the specified permission
-    const permissions = this.getUserPermissions();
+    const permissions = this.userPermissions;
     return permissions.includes(permission);
   }
   public async init() {}
@@ -60,35 +66,39 @@ export class Auth0AuthProvider implements AuthProvider {
   public getLoginStatus(): LoginStatus {
     return this.loginStatus;
   }
-  public onLoginStatus(subscriber: (status: string) => void) {
+  public onLoginStatus(subscriber: (status: LoginStatus) => void) {
     this.subscribers.add(subscriber);
     return () => {
       this.subscribers.delete(subscriber);
     };
   }
   public async handleLoginRedirect(): Promise<void> {
+    let target = "/";
+
     if (await this.isAuthenticated()) {
       this.setLoginStatus(LoginStatus.Logged);
     } else {
       const query = window.location.search;
 
       if (query.includes("code=") && query.includes("state=")) {
-        await this.auth0Client.handleRedirectCallback().then((result) => {
+        // TODO: and if the handleRedirect fails?
+        await this.auth0Client.handleRedirectCallback().then(result => {
           this.setLoginStatus(LoginStatus.Logged);
-          window.location.pathname =
-            result.appState && result.appState.targetUrl
-              ? result.appState.targetUrl
-              : "/";
+          target = result.appState?.targetUrl ?? "/";
         });
       }
     }
+
+    const relativePath = target.replace(window.location.origin, "");
+    router.navigate(relativePath, { replace: true });
   }
+
   public async getUserDetail(): Promise<UserAccountInfo | null> {
     const currentAccounts = await this.auth0Client.getUser();
     const claims = await this.auth0Client.getIdTokenClaims();
     const groups = claims && claims[claimsUrl + "groups"];
     const permissions = claims && claims[claimsUrl + "permissions"];
-
+    this.userPermissions = permissions || [];
     if (!currentAccounts) {
       return null;
     } else {
@@ -100,12 +110,11 @@ export class Auth0AuthProvider implements AuthProvider {
       } as UserAccountInfo;
     }
   }
-  private getUserPermissions(): string[] {
-    this.auth0Client.getIdTokenClaims().then((claims) => {
-      const permissions = claims && claims[claimsUrl + "permissions"];
-      return permissions;
-    });
-    return [] as string[];
+
+  private async getUserPermissions(): Promise<string[]> {
+    const claims = await this.auth0Client.getIdTokenClaims();
+    const permissions = claims && claims[claimsUrl + "permissions"];
+    return permissions || [];
   }
 
   //PRIVATE METHODS

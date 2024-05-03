@@ -18,11 +18,12 @@ export default defineConfig({
             ],
             hook: 'buildStart'
         }),
-        eslint({ cache: true, fix: true })],
+        eslint({ fix: true, lintOnStart:true, exclude: ['node_modules/**', 'build/**', 'public/**'] })],
     test: {
         globals: true,
         environment: "jsdom",
         setupFiles: "./vitest.setup.ts",
+        mockReset: true,
         // you might want to disable it, if you don't have tests that rely on CSS
         // since parsing CSS is slow
         css: true,

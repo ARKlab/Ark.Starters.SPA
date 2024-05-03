@@ -1,36 +1,18 @@
-import { useNavigate, Route } from "react-router-dom";
-import { useAuthContext } from "./useAuthContext";
+import React from "react";
+import { Navigate } from "react-router-dom";
+
+import { useAuthContext } from "./useAuthContext"; // replace with your auth context
 
 type ProtectedRouteProps = {
-  path: string;
-  element: React.ReactElement;
-  permissions: string[];
-  fallbackPath?: string;
+  permissions?: string[];
+  children: React.ReactNode;
 };
 
-const ProtectedRoute = ({
-  path,
-  element,
-  permissions,
-  fallbackPath = "/",
-}: ProtectedRouteProps) => {
-  const navigate = useNavigate();
+const ProtectedRoute = ({ permissions, children }: ProtectedRouteProps) => {
   const { context } = useAuthContext();
+  const hasAllPermissions = permissions ? permissions.every(permission => context.hasPermission(permission)) : true;
 
-  // Check if the user has all the required permissions
-  const hasAllPermissions = permissions.every((permission) =>
-    context.hasPermission(permission)
-  );
-
-  if (!hasAllPermissions) {
-    navigate(fallbackPath);
-    return null;
-  }
-  return (
-    <>
-      <Route path={path} element={element} />
-    </>
-  );
+  return hasAllPermissions ? <>{children}</> : <Navigate to="/Unauthorized" />;
 };
 
 export default ProtectedRoute;

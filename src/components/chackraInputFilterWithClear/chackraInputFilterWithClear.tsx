@@ -1,3 +1,5 @@
+import type {
+  InputProps} from "@chakra-ui/react";
 import {
   Button,
   FormControl,
@@ -5,8 +7,7 @@ import {
   Input,
   InputGroup,
   Text,
-  InputRightElement,
-  InputProps,
+  InputRightElement
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { TiTimes } from "react-icons/ti";

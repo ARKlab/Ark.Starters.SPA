@@ -1,10 +1,11 @@
 import { useToast } from "@chakra-ui/react";
+import { useEffect } from "react";
+
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   resetNotification,
   selectNotification,
 } from "../../lib/notifications/notification";
-import { useEffect } from "react";
 
 const NotificationView = () => {
   const toast = useToast();

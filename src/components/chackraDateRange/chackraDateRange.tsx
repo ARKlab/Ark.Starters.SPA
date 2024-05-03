@@ -9,6 +9,7 @@ import {
 import { RangeDatepicker } from "chakra-dayzed-datepicker";
 import { useState } from "react";
 import { TiTimes } from "react-icons/ti";
+
 import { formatDateToString } from "../../lib/helper";
 
 export const ChackraDateRange = (props: {
@@ -54,7 +55,7 @@ export const ChackraDateRange = (props: {
             dateFormat: props.dateFormat ? props.dateFormat : "dd-MM-yyyy",
           }}
           selectedDates={fromToRange}
-          onDateChange={(e) =>
+          onDateChange={async (e) =>
             handleFromToDataRangeChange(e, props.propForm, props.propTo)
           }
         />
@@ -64,7 +65,7 @@ export const ChackraDateRange = (props: {
               rounded={"full"}
               h="1rem"
               size="xs"
-              onClick={(_) =>
+              onClick={async (_) =>
                 handleFromToDataRangeChange([], props.propForm, props.propTo)
               }
             >

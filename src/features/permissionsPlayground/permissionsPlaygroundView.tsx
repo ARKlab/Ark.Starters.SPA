@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import {
   Box,
   Button,
@@ -13,19 +11,20 @@ import {
   ListItem,
   Text,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MdCheckCircle } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+
 import { useAppSelector } from "../../app/hooks";
 import { userSelector } from "../../lib/authentication/authenticationSlice";
 import ProtectedComponent from "../../lib/authentication/components/protectedComponent";
-import { useNavigate } from "react-router-dom";
 
 const PlaygroundView = () => {
   const user = useAppSelector(userSelector);
-  const [requiredPermission, setRequiredPermission] =
-    useState<string>("mega:admin");
+  const [requiredPermission, setRequiredPermission] = useState<string>("mega:admin");
   const [inputValue, setInputValue] = useState<string>(requiredPermission);
-
+  const permissions: string[] = user?.permissions || [];
   const { t } = useTranslation();
   const navigate = useNavigate();
   return (
@@ -39,8 +38,8 @@ const PlaygroundView = () => {
           })}
         </Heading>
         <Box>
-          <List bg={"orange.100"} w="20%">
-            {user?.permissions?.map((permission) => {
+          <List bg={"orange.100"} w="20%" color={"black"}>
+            {permissions.map(permission => {
               return (
                 <ListItem key={permission}>
                   <ListIcon as={MdCheckCircle} color="green.500" />
@@ -49,6 +48,7 @@ const PlaygroundView = () => {
               );
             })}
           </List>
+          {permissions.length === 0 && <Text>{t("permissionsPlayground_noPermissions")}</Text>}
           <Divider my={"20px"} />
           <Heading size="md" my={"20px"}>
             {t("permissionsPlayground_componentTitle")}
@@ -58,14 +58,10 @@ const PlaygroundView = () => {
             <Input
               placeholder={t("permissionsPlayground_permissionPlaceholder")}
               value={inputValue}
-              onChange={(event) => setInputValue(event.target.value)}
+              onChange={event => setInputValue(event.target.value)}
             />
             <InputRightElement width="4.5rem">
-              <Button
-                h="1.75rem"
-                size="sm"
-                onClick={() => setRequiredPermission(inputValue)}
-              >
+              <Button h="1.75rem" size="sm" onClick={() => setRequiredPermission(inputValue)}>
                 {t("permissionsPlayground_setButton")}
               </Button>
             </InputRightElement>
@@ -76,23 +72,23 @@ const PlaygroundView = () => {
           <ProtectedComponent
             permissions={requiredPermission.split(",")}
             component={
-              <Box bg="green.100">
+              <Box bg="green.100" color={"black"}>
                 {t("permissionsPlayground_havePermission")}
               </Box>
             }
             fallBackComponent={
-              <Box bg="red.100">{t("permissionsPlayground_noPermission")}</Box>
+              <Box bg="red.100" color={"black"}>
+                {t("permissionsPlayground_noPermission")}
+              </Box>
             }
           />
         </Box>
         <Divider my={"20px"} />
         <Box>
           <Heading size="md" my={"20px"}>
-            {t("permissionsPlayground_goToProtectedRoute")}{" "}
+            {t("permissionsPlayground_goToProtectedRoute")}
           </Heading>
-          <Button onClick={() => navigate("/main/protectedRoute")}>
-            {t("permissionsPlayground_goToProtectedRouteButton")}
-          </Button>
+          <Button onClick={() => navigate("/protectedRoute")}>Go!</Button>
         </Box>
       </Box>
     </Box>
