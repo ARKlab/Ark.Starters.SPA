@@ -2,8 +2,13 @@
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true,
     "editor.formatOnType": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "explicit",
+        "source.fixAll.eslint": "explicit"
+    },
     "workbench.colorCustomizations": {
-        
-        "editorError.border": "#ff0000"
-    }
+        "editorError.background": "#ff581171"
+    },
+    "prettier.configPath": ".prettierrc",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
 }

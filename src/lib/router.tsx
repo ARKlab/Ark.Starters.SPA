@@ -15,6 +15,7 @@ import { ErrorFallback } from "./errorFallback";
 
 const wrapComponent = (x: MainSectionType) => {
   const checkPermissions = x.permissions && x.permissions.length > 0;
+
   return (
     <>
       <SEO title={x.label} />

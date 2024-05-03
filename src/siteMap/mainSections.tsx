@@ -67,6 +67,7 @@ export const mainSections: MainSectionType[] = [
         isInMenu: false,
         component: <LazyLoad loader={async () => import("../features/permissionsPlayground/protectedRouteView")} />,
       },
+
       {
         path: "configTable",
         label: "Config Table",
@@ -103,6 +104,7 @@ export const mainSections: MainSectionType[] = [
         isInMenu: true,
         component: <LazyLoad loader={async () => import("../features/localization/localizationPage")} />,
       },
+
       {
         path: "authonly",
         label: "Auth Only",

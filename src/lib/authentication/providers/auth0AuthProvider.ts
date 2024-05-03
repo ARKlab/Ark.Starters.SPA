@@ -82,6 +82,7 @@ export class Auth0AuthProvider implements AuthProvider {
 
       if (query.includes("code=") && query.includes("state=")) {
         // TODO: and if the handleRedirect fails?
+
         await this.auth0Client.handleRedirectCallback().then(result => {
           this.setLoginStatus(LoginStatus.Logged);
           target = result.appState?.targetUrl ?? "/";
@@ -99,6 +100,7 @@ export class Auth0AuthProvider implements AuthProvider {
     const groups = claims && claims[claimsUrl + "groups"];
     const permissions = claims && claims[claimsUrl + "permissions"];
     this.userPermissions = permissions || [];
+
     if (!currentAccounts) {
       return null;
     } else {

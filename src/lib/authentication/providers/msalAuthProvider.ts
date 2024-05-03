@@ -163,6 +163,7 @@ export class MsalAuthProvider implements AuthProvider {
   public async logout() {
     // see https://github.com/AzureAD/microsoft-authentication-library-for-js/issues/5807
     const itemKey = "msal.interaction.status";
+
     if (sessionStorage.getItem(itemKey)) {
       sessionStorage.removeItem(itemKey);
     }
@@ -194,6 +195,7 @@ export class MsalAuthProvider implements AuthProvider {
     if (account) {
       try {
         const resp = await this.myMSALObj!.acquireTokenSilent(this.silentProfileRequest);
+
         if (resp) {
           this.idTokenClaims = resp.idTokenClaims;
           this.loginStatus = LoginStatus.Logged;
@@ -203,6 +205,7 @@ export class MsalAuthProvider implements AuthProvider {
         }
       } catch (e) {
         if (e instanceof msal.InteractionRequiredAuthError) return null;
+
         throw e;
       }
     }

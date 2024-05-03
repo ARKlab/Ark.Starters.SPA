@@ -46,6 +46,7 @@ export const getLoginStatus = createAsyncThunk("auth/getLoginStatus", async (_, 
 
 export const authSlice = createAppSlice({
   name: "auth",
+
   initialState: {
     status: AuthenticationSteps.NotStarted,
     isLoading: false,
@@ -126,6 +127,7 @@ export const authSlice = createAppSlice({
           error: action.error,
         };
       })
+
       .addCase(getLoginStatus.pending, state => {
         return { ...state, status: AuthenticationSteps.Login, isLoading: true };
       })
@@ -152,4 +154,5 @@ export const authSlice = createAppSlice({
 export const { tokenReceived, loggedOut } = authSlice.actions;
 
 export const { tokenSelector, userSelector } = authSlice.selectors;
+
 export const authSelector = authSlice.selectSlice;
