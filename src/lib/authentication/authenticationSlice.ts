@@ -24,7 +24,6 @@ export const DetectLoggedInUser = createAsyncThunk("auth/setLoggedUser", async (
   if (!user || user.username === "") return null;
   return {
     userInfo: user,
-    permissions: user.permissions,
     token: "",
   } as AuthStoreType;
 });
