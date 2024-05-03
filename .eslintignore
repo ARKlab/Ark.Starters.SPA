@@ -1,0 +1,9 @@
+.vscode
+node_modules
+public
+build
+dist
+.github
+
+vite.config.ts
+vitest.setup.ts
