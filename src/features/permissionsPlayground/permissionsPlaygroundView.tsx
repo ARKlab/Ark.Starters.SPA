@@ -71,17 +71,16 @@ const PlaygroundView = () => {
           </Heading>
           <ProtectedComponent
             permissions={requiredPermission.split(",")}
-            component={
-              <Box bg="green.100" color={"black"}>
-                {t("permissionsPlayground_havePermission")}
-              </Box>
-            }
             fallBackComponent={
               <Box bg="red.100" color={"black"}>
                 {t("permissionsPlayground_noPermission")}
               </Box>
             }
-          />
+          >
+            <Box bg="green.100" color={"black"}>
+              {t("permissionsPlayground_havePermission")}
+            </Box>
+          </ProtectedComponent>
         </Box>
         <Divider my={"20px"} />
         <Box>

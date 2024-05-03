@@ -1,27 +1,22 @@
-import { useAuthContext } from "./useAuthContext";
+import { useAppSelector } from "../../../app/hooks";
+import { userSelector } from "../authenticationSlice";
 
-type protectedComponentProps = {
+type ProtectedComponentProps = {
   permissions: string[];
-  component: JSX.Element;
-  fallBackComponent?: JSX.Element | null;
+  children: React.ReactNode;
+  fallBackComponent?: React.ReactNode;
 };
 
-const ProtectedComponent = ({
-  permissions,
-  component,
-  fallBackComponent,
-}: protectedComponentProps) => {
-  const { context } = useAuthContext();
-
-  const hasAllPermissions = permissions.every((permission) =>
-    context.hasPermission(permission)
-  );
+const ProtectedComponent = ({ permissions, children, fallBackComponent }: ProtectedComponentProps) => {
+  const user = useAppSelector(userSelector);
+  const userPermissions = user?.permissions || ([] as string[]);
+  const hasAllPermissions = permissions.every(permission => userPermissions.includes(permission));
 
   if (!hasAllPermissions) {
-    return fallBackComponent;
+    return <>{fallBackComponent}</>;
   }
 
-  return component;
+  return <>{children}</>;
 };
 
 export default ProtectedComponent;

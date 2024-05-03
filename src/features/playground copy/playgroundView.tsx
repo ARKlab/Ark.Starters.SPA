@@ -1,4 +1,3 @@
-
 import {
   Box,
   Button,
@@ -19,13 +18,9 @@ import { MdCheckCircle } from "react-icons/md";
 
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { userSelector } from "../../lib/authentication/authenticationSlice";
-import ProtectedComponent from "../../lib/authentication/components/protectedComponent";
 import { dispatchNotification } from "../../lib/notifications/notification";
-import {
-  NotificationDuration
-} from "../../lib/notifications/notificationsTypes";
-import type {
-  NotificationPosition} from "../../lib/notifications/notificationsTypes";
+import { NotificationDuration } from "../../lib/notifications/notificationsTypes";
+import type { NotificationPosition } from "../../lib/notifications/notificationsTypes";
 
 const PlaygroundView = () => {
   const dispatch = useAppDispatch();
@@ -33,7 +28,7 @@ const PlaygroundView = () => {
     id: string,
     message: string,
     duration: NotificationDuration,
-    position: NotificationPosition
+    position: NotificationPosition,
   ) => {
     dispatch(
       dispatchNotification({
@@ -44,12 +39,11 @@ const PlaygroundView = () => {
         duration: duration,
         isClosable: true,
         position: position,
-      })
+      }),
     );
   };
   const user = useAppSelector(userSelector);
-  const [requiredPermission, setRequiredPermission] =
-    useState<string>("mega:admin");
+  const [requiredPermission, setRequiredPermission] = useState<string>("mega:admin");
   const [inputValue, setInputValue] = useState<string>(requiredPermission);
 
   const { t } = useTranslation();
@@ -63,86 +57,34 @@ const PlaygroundView = () => {
         </Heading>
         <Wrap spacing={1} my={"20px"}>
           <WrapItem>
-            <Button
-              onClick={() =>
-                sendNotification(
-                  "1",
-                  notificationBody,
-                  NotificationDuration.VeryShort,
-                  "top"
-                )
-              }
-            >
+            <Button onClick={() => sendNotification("1", notificationBody, NotificationDuration.VeryShort, "top")}>
               {t("top")} "Very Short Norification"
             </Button>
           </WrapItem>
           <WrapItem>
-            <Button
-              onClick={() =>
-                sendNotification(
-                  "2",
-                  notificationBody,
-                  NotificationDuration.Short,
-                  "top-left"
-                )
-              }
-            >
+            <Button onClick={() => sendNotification("2", notificationBody, NotificationDuration.Short, "top-left")}>
               {t("topleft")} "Short Notification"
             </Button>
           </WrapItem>
           <WrapItem>
-            <Button
-              onClick={() =>
-                sendNotification(
-                  "3",
-                  notificationBody,
-                  NotificationDuration.Medium,
-                  "top-right"
-                )
-              }
-            >
+            <Button onClick={() => sendNotification("3", notificationBody, NotificationDuration.Medium, "top-right")}>
               {t("topright")} "Medium Notification"
             </Button>
           </WrapItem>
           <WrapItem>
-            <Button
-              onClick={() =>
-                sendNotification(
-                  "4",
-                  notificationBody,
-                  NotificationDuration.Long,
-                  "bottom-left"
-                )
-              }
-            >
+            <Button onClick={() => sendNotification("4", notificationBody, NotificationDuration.Long, "bottom-left")}>
               {t("bottomleft")} "Long Notification"
             </Button>
           </WrapItem>
           <WrapItem>
             <Button
-              onClick={() =>
-                sendNotification(
-                  "5",
-                  notificationBody,
-                  NotificationDuration.VeryLong,
-                  "bottom-right"
-                )
-              }
+              onClick={() => sendNotification("5", notificationBody, NotificationDuration.VeryLong, "bottom-right")}
             >
               {t("bottomright")} "Very Long Notification"
             </Button>
           </WrapItem>
           <WrapItem>
-            <Button
-              onClick={() =>
-                sendNotification(
-                  "6",
-                  notificationBody,
-                  NotificationDuration.VeryLong,
-                  "bottom"
-                )
-              }
-            >
+            <Button onClick={() => sendNotification("6", notificationBody, NotificationDuration.VeryLong, "bottom")}>
               {t("bottom")} "Very Long Notification"
             </Button>
           </WrapItem>
@@ -157,7 +99,7 @@ const PlaygroundView = () => {
         </Heading>
         <Box>
           <List>
-            {user?.permissions?.map((permission) => {
+            {user?.permissions?.map(permission => {
               return (
                 <ListItem key={permission}>
                   <ListIcon as={MdCheckCircle} color="green.500" />
@@ -171,32 +113,14 @@ const PlaygroundView = () => {
             <Input
               placeholder={t("permissionsPlayground_permissionPlaceholder")}
               value={inputValue}
-              onChange={(event) => setInputValue(event.target.value)}
+              onChange={event => setInputValue(event.target.value)}
             />
             <InputRightElement width="4.5rem">
-              <Button
-                h="1.75rem"
-                size="sm"
-                onClick={() => setRequiredPermission(inputValue)}
-              >
+              <Button h="1.75rem" size="sm" onClick={() => setRequiredPermission(inputValue)}>
                 {t("permissionsPlayground_setButton")}
               </Button>
             </InputRightElement>
           </InputGroup>
-          <Heading size="sm" my={"20px"}>
-            {t("permissionsPlayground_protectedComponent")}
-          </Heading>
-          <ProtectedComponent
-            permission={requiredPermission}
-            component={
-              <Box bg="green.100">
-                {t("permissionsPlayground_havePermission")}
-              </Box>
-            }
-            fallBackComponent={
-              <Box bg="red.100">{t("permissionsPlayground_noPermission")}</Box>
-            }
-          />
         </Box>
       </Box>
     </Box>

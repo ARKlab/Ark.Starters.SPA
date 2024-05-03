@@ -1,7 +1,8 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
 
-import { useAuthContext } from "./useAuthContext"; // replace with your auth context
+import { useAppSelector } from "../../../app/hooks";
+import { userSelector } from "../authenticationSlice";
+import Unauthorized from "../unauthorized";
 
 type ProtectedRouteProps = {
   permissions?: string[];
@@ -9,10 +10,11 @@ type ProtectedRouteProps = {
 };
 
 const ProtectedRoute = ({ permissions, children }: ProtectedRouteProps) => {
-  const { context } = useAuthContext();
-  const hasAllPermissions = permissions ? permissions.every(permission => context.hasPermission(permission)) : true;
+  const user = useAppSelector(userSelector);
+  const userPermissions = user?.permissions || ([] as string[]);
+  const hasAllPermissions = permissions ? permissions.every(permission => userPermissions.includes(permission)) : true;
 
-  return hasAllPermissions ? <>{children}</> : <Navigate to="/Unauthorized" />;
+  return hasAllPermissions ? <>{children}</> : <Unauthorized />;
 };
 
 export default ProtectedRoute;
