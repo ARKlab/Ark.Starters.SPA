@@ -64,8 +64,19 @@
     "wizard_sms_notifications_label": "Ricevi notifiche SMS",
     "localization_example_1": "Nel cesto ci sono {{number}} mele.",
     "localization_control_label":"Imposta il numero di mele",
-       "localization_dynamic_text_explanation": "Questo esempio mostra come i valori dinamici possano cambiare posizione se richiesto dalla lingua selezionata.",
-       "localization_dynamic_text": "Traduzione testo dinamico",
-       "localization_simple_text": "Traduzione testo semplice"
-    
+    "localization_dynamic_text_explanation": "Questo esempio mostra come i valori dinamici possano cambiare posizione se richiesto dalla lingua selezionata.",
+    "localization_dynamic_text": "Traduzione testo dinamico",
+    "localization_simple_text": "Traduzione testo semplice",
+    "permissionsPlayground_title": "Permissions Playground",
+    "permissionsPlayground_yourPermissions": "Elenco dei permessi di {{username}}:",
+    "permissionsPlayground_setPermission": "Imposta il permesso necessario per vedere il componente sottostante. Separa con la virgola per più permessi",
+    "permissionsPlayground_permissionPlaceholder": "Permesso",
+    "permissionsPlayground_setButton": "Salva",
+    "permissionsPlayground_protectedComponent": "Il seguente componente è protetto dal permesso sopra indicato: (permessi multipli sono calcolati con AND)",
+    "permissionsPlayground_havePermission": "Questo è il componente quando si dispone della permission",
+    "permissionsPlayground_noPermission": "Questo è un componente di fallback perché non si dispone della permission. Potrebbe anche essere null e non mostrare nulla."  ,
+    "permissionsPlayground_componentTitle": "Componente protetto da permissions:",
+    "permissionsPlayground_protected_route": "This is a Protected Route",
+    "permissionsPlayground_noPermissions": "Questo account non ha permessi pertanto questa Demo non funzionerà correttamente. Per favore, accedi con un account che ha un qualsiasi permesso.",
+    "permissionsPlayground_goToProtectedRoute":"Sezione protetta da permessi:"
 }

@@ -66,5 +66,17 @@
     "localization_control_label": "Set apple number",
     "localization_dynamic_text_explanation": "This is to show the use of parameters in translations where the phrase construction requires to change the position of the dynamic value",
     "localization_dynamic_text": "Dynamic Text Translation",
-    "localization_simple_text": "Simple Text Translation"
+    "localization_simple_text": "Simple Text Translation",
+    "permissionsPlayground_title": "Permissions Playground",
+    "permissionsPlayground_yourPermissions": "{{username}}'s permissions:",
+    "permissionsPlayground_setPermission": "Set the permission needed to see the below component. Use comma to separate multiple permissions.",
+    "permissionsPlayground_permissionPlaceholder": "Permission",
+    "permissionsPlayground_setButton": "Set",
+    "permissionsPlayground_protectedComponent": "The following component is protected by the above permission (multiple permissions are in logic AND):",
+    "permissionsPlayground_havePermission": "This is the component when you have the permission",
+    "permissionsPlayground_noPermission": "This is a fallback component because you don't have the permission. this could be also null and show nothing.",
+    "permissionsPlayground_componentTitle": "Component protected with permission:",
+    "permissionsPlayground_protected_route": "This is a Protected Route",
+    "permissionsPlayground_noPermissions": "This account has no permissions so this DEMO is not going to work for you. Please login with an account that has permissions of any kind.",
+     "permissionsPlayground_goToProtectedRoute":"Permissions protected section:"
 }

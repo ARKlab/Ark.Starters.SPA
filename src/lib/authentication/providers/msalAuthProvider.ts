@@ -1,6 +1,6 @@
-import type { AuthenticationResult, EventMessage} from "@azure/msal-browser";
+import type { AuthenticationResult, EventMessage } from "@azure/msal-browser";
 import * as msal from "@azure/msal-browser";
-import { NavigationClient , EventType } from "@azure/msal-browser";
+import { NavigationClient, EventType } from "@azure/msal-browser";
 import * as R from "ramda";
 
 import type { CustomSettingsType } from "../../../global";
@@ -17,22 +17,21 @@ export type MSALConfig = {
   scopes: string[];
 };
 
-
 // see https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-react/docs/performance.md
 // see https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/navigation.md
 class CustomNavigationClient extends NavigationClient {
-    constructor() {
-        super();
-    }
-    
-    // This function will be called anytime msal needs to navigate from one page in your application to another
-    async navigateInternal(url:string, options: msal.NavigationOptions) {
-        // url will be absolute, you will need to parse out the relative path to provide to the history API
-      const relativePath = url.replace(window.location.origin, '');
-      router.navigate(relativePath, { replace: options.noHistory });
+  constructor() {
+    super();
+  }
 
-      return false; // this is MANDATORY to ensure that async handling post-login is handled before navigation
-    }
+  // This function will be called anytime msal needs to navigate from one page in your application to another
+  async navigateInternal(url: string, options: msal.NavigationOptions) {
+    // url will be absolute, you will need to parse out the relative path to provide to the history API
+    const relativePath = url.replace(window.location.origin, "");
+    router.navigate(relativePath, { replace: options.noHistory });
+
+    return false; // this is MANDATORY to ensure that async handling post-login is handled before navigation
+  }
 }
 
 export class MsalAuthProvider implements AuthProvider {
@@ -57,7 +56,7 @@ export class MsalAuthProvider implements AuthProvider {
         knownAuthorities: env.knownAuthorities.split(","),
         redirectUri: env.redirectUri,
         postLogoutRedirectUri: window.origin,
-        navigateToLoginRequestUrl: true
+        navigateToLoginRequestUrl: true,
       },
       cache: {
         cacheLocation: "localStorage",
@@ -65,11 +64,7 @@ export class MsalAuthProvider implements AuthProvider {
       },
       system: {
         loggerOptions: {
-          loggerCallback: (
-            level: msal.LogLevel,
-            message: string,
-            containsPii: boolean
-          ): void => {
+          loggerCallback: (level: msal.LogLevel, message: string, containsPii: boolean): void => {
             if (containsPii) {
               return;
             }
@@ -91,7 +86,7 @@ export class MsalAuthProvider implements AuthProvider {
           piiLoggingEnabled: false,
         },
         windowHashTimeout: 20000,
-        iframeHashTimeout: 20000
+        iframeHashTimeout: 20000,
       },
     };
     this.config = { msalConfig: config, scopes: scopes };
@@ -116,20 +111,20 @@ export class MsalAuthProvider implements AuthProvider {
 
     this.myMSALObj = new msal.PublicClientApplication(this.config.msalConfig);
     this.myMSALObj.addEventCallback((event: EventMessage) => {
-        if (event.eventType === EventType.LOGIN_SUCCESS && event.payload) {
-          const payload = event.payload as AuthenticationResult;
-          const account = payload.account;
-          this.myMSALObj.setActiveAccount(account);
-          this.idTokenClaims = payload.idTokenClaims;
-          this.loginStatus = LoginStatus.Logged;
-          this.notifySubscribers();
+      if (event.eventType === EventType.LOGIN_SUCCESS && event.payload) {
+        const payload = event.payload as AuthenticationResult;
+        const account = payload.account;
+        this.myMSALObj.setActiveAccount(account);
+        this.idTokenClaims = payload.idTokenClaims;
+        this.loginStatus = LoginStatus.Logged;
+        this.notifySubscribers();
       }
-      
+
       if (event.eventType === EventType.LOGIN_FAILURE && event.payload) {
-          this.idTokenClaims = null;
-          this.loginStatus = LoginStatus.Error;
-          this.notifySubscribers();
-        }
+        this.idTokenClaims = null;
+        this.loginStatus = LoginStatus.Error;
+        this.notifySubscribers();
+      }
     });
     this.myMSALObj.setNavigationClient(new CustomNavigationClient());
   }
@@ -138,6 +133,14 @@ export class MsalAuthProvider implements AuthProvider {
     for (const subscriber of this.subscribers) {
       subscriber(this.loginStatus);
     }
+  }
+
+  private getUserPermissions(): string[] {
+    if (this.idTokenClaims) {
+      const permissions = R.pathOr("", ["extension_Scope"], this.idTokenClaims).split(" ");
+      return permissions;
+    }
+    return [] as string[];
   }
 
   public async init(): Promise<void> {
@@ -151,9 +154,8 @@ export class MsalAuthProvider implements AuthProvider {
   public async login(): Promise<void> {
     // see https://github.com/AzureAD/microsoft-authentication-library-for-js/issues/5807
     const itemKey = "msal.interaction.status";
-    if (sessionStorage.getItem(itemKey))
-    {
-        sessionStorage.removeItem(itemKey);
+    if (sessionStorage.getItem(itemKey)) {
+      sessionStorage.removeItem(itemKey);
     }
     await this.myMSALObj!.loginRedirect(this.loginRedirectRequest);
   }
@@ -161,9 +163,9 @@ export class MsalAuthProvider implements AuthProvider {
   public async logout() {
     // see https://github.com/AzureAD/microsoft-authentication-library-for-js/issues/5807
     const itemKey = "msal.interaction.status";
-    if (sessionStorage.getItem(itemKey))
-    {
-        sessionStorage.removeItem(itemKey);
+
+    if (sessionStorage.getItem(itemKey)) {
+      sessionStorage.removeItem(itemKey);
     }
     return this.myMSALObj!.logoutRedirect();
   }
@@ -185,28 +187,25 @@ export class MsalAuthProvider implements AuthProvider {
     };
   }
   public async handleLoginRedirect(): Promise<void> {
-    await this.myMSALObj!.handleRedirectPromise();    
+    await this.myMSALObj!.handleRedirectPromise();
   }
 
   public async getUserDetail(): Promise<UserAccountInfo | null> {
     const account = this.myMSALObj.getActiveAccount();
     if (account) {
       try {
-        const resp = await this.myMSALObj!.acquireTokenSilent(
-          this.silentProfileRequest
-        );
+        const resp = await this.myMSALObj!.acquireTokenSilent(this.silentProfileRequest);
+
         if (resp) {
           this.idTokenClaims = resp.idTokenClaims;
           this.loginStatus = LoginStatus.Logged;
           this.notifySubscribers();
-        
-          return { username: account.username } as UserAccountInfo;
+
+          return { username: account.username, permissions: this.getUserPermissions() } as UserAccountInfo;
         }
-      }
-      catch (e)
-      {
-        if (e instanceof msal.InteractionRequiredAuthError)
-          return null;
+      } catch (e) {
+        if (e instanceof msal.InteractionRequiredAuthError) return null;
+
         throw e;
       }
     }
@@ -214,15 +213,8 @@ export class MsalAuthProvider implements AuthProvider {
   }
 
   public hasPermission(permission: string) {
-    if (this.idTokenClaims) {
-      const permissions = R.pathOr(
-        "",
-        ["extension_Scope"],
-        this.idTokenClaims
-      ).split(" ");
-      return permissions.includes(permission);
-    }
-    return false;
+    const permissions = this.getUserPermissions();
+    return permissions.includes(permission);
   }
 
   private async getProfileTokenRedirect(): Promise<string | null> {
@@ -231,15 +223,12 @@ export class MsalAuthProvider implements AuthProvider {
     if (account) {
       this.silentProfileRequest.account = account;
     }
-    return this.getTokenRedirect(
-      this.silentProfileRequest,
-      this.profileRedirectRequest
-    );
+    return this.getTokenRedirect(this.silentProfileRequest, this.profileRedirectRequest);
   }
 
   private async getTokenRedirect(
     silentRequest: msal.SilentRequest,
-    interactiveRequest: msal.RedirectRequest
+    interactiveRequest: msal.RedirectRequest,
   ): Promise<string | null> {
     try {
       const response = await this.myMSALObj!.acquireTokenSilent(silentRequest);
@@ -247,7 +236,7 @@ export class MsalAuthProvider implements AuthProvider {
       return response.accessToken;
     } catch (e) {
       if (e instanceof msal.InteractionRequiredAuthError) {
-        this.myMSALObj!.acquireTokenRedirect(interactiveRequest).catch((e) => {
+        this.myMSALObj!.acquireTokenRedirect(interactiveRequest).catch(e => {
           throw new Error(e);
         });
       } else {
