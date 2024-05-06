@@ -10,11 +10,14 @@ import {
   FaTable,
 } from "react-icons/fa";
 import { RiMovie2Line } from "react-icons/ri";
+import { TbListDetails } from "react-icons/tb";
 import { Navigate } from "react-router-dom";
 
 import { Bomb } from "../components/Bomb";
 import LazyLoad from "../components/lazyLoad";
 import type { MainSectionType } from "../components/sideBar/menuItem/types";
+import DetailsPage from "../features/detailsPage/detailsPage";
+import DetailsPageExampleMainView from "../features/detailsPage/detailsPageExampleMainView";
 import NoEntryPoint from "../features/staticPageExample/staticPage";
 
 /*This is the Main Section ARRAY populate this to populate the main nav menu
@@ -119,6 +122,27 @@ export const mainSections: MainSectionType[] = [
         icon: FaBomb,
         isInMenu: true,
         component: <Bomb />,
+      },
+      //This is the way we must define the routes for pages that have details pages
+      {
+        path: "details",
+        label: "Details Page",
+        icon: TbListDetails,
+        isInMenu: true,
+        subsections: [
+          {
+            path: "",
+            label: "",
+            isInMenu: false,
+            component: <DetailsPageExampleMainView />,
+          },
+          {
+            path: ":id",
+            label: "Details",
+            isInMenu: false,
+            component: <DetailsPage />,
+          },
+        ],
       },
     ],
   },
