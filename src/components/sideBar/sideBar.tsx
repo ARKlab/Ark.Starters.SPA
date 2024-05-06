@@ -1,5 +1,5 @@
 //#region Imports
-import type { BoxProps, FlexProps } from '@chakra-ui/react'
+import type { BoxProps, FlexProps } from "@chakra-ui/react";
 import {
   Accordion,
   AccordionButton,
@@ -15,18 +15,18 @@ import {
   Text,
   useColorModeValue,
   useDisclosure,
-} from '@chakra-ui/react'
-import { FiMenu } from 'react-icons/fi'
+} from "@chakra-ui/react";
+import { FiMenu } from "react-icons/fi";
 
-import { mainSections } from '../../siteMap/mainSections'
+import { mainSections } from "../../siteMap/mainSections";
 
-import MenuItem from './menuItem/menuItem'
-import type { SubsectionMenuItemType } from './menuItem/types'
+import MenuItem from "./menuItem/menuItem";
+import type { SubsectionMenuItemType } from "./menuItem/types";
 
 //#endregion
 
 export default function SimpleSidebar() {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   //With the useAuthContext hook you can get the user's authentication status and hide\show the menu items accordingly
   //in this Template we will not hide the menu items that require authentication but this is just an example.
@@ -40,10 +40,7 @@ export default function SimpleSidebar() {
 
   return (
     <>
-      <SidebarContent
-        onClose={() => onClose}
-        display={{ base: 'none', md: 'block' }}
-      />
+      <SidebarContent onClose={() => onClose} display={{ base: "none", md: "block" }} />
       <Drawer
         isOpen={isOpen}
         placement="left"
@@ -53,56 +50,43 @@ export default function SimpleSidebar() {
         size="full"
       >
         <DrawerContent>
-          <SidebarContent onClose={onClose} key={'SideBarContent'} />
+          <SidebarContent onClose={onClose} key={"SideBarContent"} />
         </DrawerContent>
       </Drawer>
 
-      <MobileNav
-        display={{ base: 'flex', md: 'none' }}
-        onOpen={onOpen}
-        marginTop={'50px'}
-        marginBottom={'-60px'}
-      />
+      <MobileNav display={{ base: "flex", md: "none" }} onOpen={onOpen} marginTop={"50px"} marginBottom={"-60px"} />
     </>
-  )
+  );
 }
 
 interface SidebarProps extends BoxProps {
-  onClose: () => void
+  onClose: () => void;
 }
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   return (
     <Box
-      bg={useColorModeValue('white', 'gray.900')}
+      bg={useColorModeValue("white", "gray.900")}
       borderRight="1px"
       my="-20px"
-      borderRightColor={useColorModeValue('gray.200', 'gray.700')}
-      w={{ base: 'full', md: 60 }}
+      borderRightColor={useColorModeValue("gray.200", "gray.700")}
+      w={{ base: "full", md: 60 }}
       pos="fixed"
       h="full"
       {...rest}
     >
       <Flex h="10" alignItems="center" mx="8" justifyContent="space-between">
-        <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
+        <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
-      <Accordion
-        defaultIndex={[0]}
-        allowMultiple
-        borderStyle={'none'}
-        borderWidth={0}
-      >
+      <Accordion defaultIndex={[0]} allowMultiple borderStyle={"none"} borderWidth={0}>
         {mainSections.map((section, index) => (
-          <AccordionItem
-            border="none"
-            key={section.label + 'accordionItem' + index}
-          >
+          <AccordionItem border="none" key={section.label + "accordionItem" + index}>
             <h2>
               <AccordionButton
-                key={section.label + 'accordionButton' + index}
+                key={section.label + "accordionButton" + index}
                 _hover={{
-                  background: 'brand.primary',
-                  color: 'brandPalette.900',
+                  background: "brand.primary",
+                  color: "brandPalette.900",
                 }}
               >
                 <Box as="span" flex="1" textAlign="left">
@@ -111,22 +95,19 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
                 <AccordionIcon />
               </AccordionButton>
             </h2>
-            <AccordionPanel
-              pb={4}
-              key={section.label + 'accordionPanel' + index}
-            >
+            <AccordionPanel pb={4} key={section.label + "accordionPanel" + index}>
               {section.subsections?.map((x, indexSub) =>
                 x.isInMenu ? (
-                  x.subsections && x.subsections?.length > 0 ? (
+                  doINeedAnInnerAccordion(x) ? (
                     <InnerAccordionSections
-                      key={x.path + 'innerAccordionSections' + indexSub}
+                      key={x.path + "innerAccordionSections" + indexSub}
                       section={x}
-                      parentPath={[section.path, x.path].join('/')}
+                      parentPath={[section.path, x.path].join("/")}
                     />
                   ) : (
                     <MenuItem
-                      key={x.path + 'menuItem' + indexSub}
-                      path={[section.path, x.path].join('/')}
+                      key={x.path + "menuItem" + indexSub}
+                      path={[section.path, x.path].join("/")}
                       externalUrl={x.externalUrl}
                       label={x.label}
                       icon={x.icon}
@@ -139,33 +120,36 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         ))}
       </Accordion>
     </Box>
-  )
+  );
+};
+
+function doINeedAnInnerAccordion(section: SubsectionMenuItemType) {
+  return (
+    section.subsections && section.subsections.length > 0 && section.subsections.filter(x => x.isInMenu).length > 0
+  );
 }
 
-const InnerAccordionSections = (props: {
-  section: SubsectionMenuItemType
-  parentPath: string
-}) => {
-  const section = props.section
+const InnerAccordionSections = (props: { section: SubsectionMenuItemType; parentPath: string }) => {
+  const section = props.section;
   if (section.subsections)
     return (
       <Accordion
         defaultIndex={[0]}
         allowMultiple
         my="0px"
-        borderStyle={'hidden'}
-        key={section.path + 'accordion'}
-        width={'100%'}
-        mx={'1'}
+        borderStyle={"hidden"}
+        key={section.path + "accordion"}
+        width={"100%"}
+        mx={"1"}
         borderWidth={0}
       >
-        <AccordionItem key={section.path + 'AccordionItemInner'} border="none">
+        <AccordionItem key={section.path + "AccordionItemInner"} border="none">
           <h2>
             <AccordionButton
-              key={section.path + 'AccordionButtonInner'}
+              key={section.path + "AccordionButtonInner"}
               _hover={{
-                background: 'brand.primary',
-                color: 'brandPalette.900',
+                background: "brand.primary",
+                color: "brandPalette.900",
               }}
             >
               <Box as="span" flex="1" textAlign="left">
@@ -174,12 +158,12 @@ const InnerAccordionSections = (props: {
               <AccordionIcon mx={-3} />
             </AccordionButton>
           </h2>
-          <AccordionPanel pb={4} key={section.path + 'AccordionPanelInner'}>
+          <AccordionPanel pb={4} key={section.path + "AccordionPanelInner"}>
             {section.subsections.map((x, index) =>
               x.isInMenu ? (
                 <MenuItem
-                  key={x.path + 'AccordionMenuItemInner' + index}
-                  path={[props.parentPath, x.path].join('/')}
+                  key={x.path + "AccordionMenuItemInner" + index}
+                  path={[props.parentPath, x.path].join("/")}
                   externalUrl={x.externalUrl}
                   label={x.label}
                   icon={x.icon}
@@ -189,12 +173,12 @@ const InnerAccordionSections = (props: {
           </AccordionPanel>
         </AccordionItem>
       </Accordion>
-    )
-  else return <></>
-}
+    );
+  else return <></>;
+};
 
 interface MobileProps extends FlexProps {
-  onOpen: () => void
+  onOpen: () => void;
 }
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
   return (
@@ -203,22 +187,17 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
       px={{ base: 4, md: 24 }}
       height="20"
       alignItems="center"
-      bg={useColorModeValue('white', 'gray.900')}
+      bg={useColorModeValue("white", "gray.900")}
       borderBottomWidth="1px"
-      borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
+      borderBottomColor={useColorModeValue("gray.200", "gray.700")}
       justifyContent="flex-start"
       {...rest}
     >
-      <IconButton
-        variant="outline"
-        onClick={onOpen}
-        aria-label="open menu"
-        icon={<FiMenu />}
-      />
+      <IconButton variant="outline" onClick={onOpen} aria-label="open menu" icon={<FiMenu />} />
 
       <Text fontSize="2xl" ml="8" fontFamily="monospace" fontWeight="bold">
         Menu
       </Text>
     </Flex>
-  )
-}
+  );
+};
