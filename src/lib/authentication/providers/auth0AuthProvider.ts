@@ -1,5 +1,6 @@
 import type { Auth0ClientOptions } from "@auth0/auth0-spa-js";
 import { Auth0Client } from "@auth0/auth0-spa-js";
+import { z } from "zod";
 
 import type { CustomSettingsType } from "../../../global";
 import { router } from "../../router";
@@ -55,7 +56,7 @@ export class Auth0AuthProvider implements AuthProvider {
   }
 
   public logout(): void {
-    this.auth0Client?.logout();
+    void this.auth0Client?.logout();
   }
 
   public async getToken() {
@@ -85,13 +86,13 @@ export class Auth0AuthProvider implements AuthProvider {
 
         await this.auth0Client.handleRedirectCallback().then(result => {
           this.setLoginStatus(LoginStatus.Logged);
-          target = result.appState?.targetUrl ?? "/";
+          target = (result.appState as { targetUrl: string })?.targetUrl ?? "/";
         });
       }
     }
 
     const relativePath = target.replace(window.location.origin, "");
-    router.navigate(relativePath, { replace: true });
+    await router.navigate(relativePath, { replace: true });
   }
 
   public async getUserDetail(): Promise<UserAccountInfo | null> {
@@ -115,8 +116,10 @@ export class Auth0AuthProvider implements AuthProvider {
 
   private async getUserPermissions(): Promise<string[]> {
     const claims = await this.auth0Client.getIdTokenClaims();
-    const permissions = claims && claims[claimsUrl + "permissions"];
-    return permissions || [];
+    const k = claimsUrl + "permissions";
+    const mappedClaims = z.record(z.enum([k]), z.array(z.string()).optional()).parse(claims);
+
+    return mappedClaims[k] || [];
   }
 
   //PRIVATE METHODS

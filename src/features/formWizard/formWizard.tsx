@@ -18,10 +18,6 @@ import { zod2FieldValidator } from "../../lib/zod2FormValidator";
 
 const sleep = async (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const onSubmit = async (values: string | number | boolean) => {
-  await sleep(300);
-  window.alert(JSON.stringify(values, null, 2));
-};
 const emailSchema = z.string().email();
 const required = z.string().min(1);
 const passwordComplexity = z.string().refine((v) => v.length > 6, {
@@ -48,12 +44,17 @@ const WizardFormView = () => {
     specialOffers: z.boolean(),
     smsNotifications: z.boolean(),
   });
+  type Schema = z.infer<typeof WizardSchema>;
+  const onSubmit = async (values: Schema) => {
+    await sleep(300);
+    window.alert(JSON.stringify(values, null, 2));
+  };
   const { t } = useTranslation();
   return (
     <Box>
       <Heading>{t("wizard_form_title")}</Heading>
       <Box marginTop={"20px"}>
-        <Wizard onSubmit={onSubmit} schema={WizardSchema}>
+        <Wizard<Schema> onSubmit={onSubmit}>
           <WizardPage>
             <Stack spacing={4}>
               <Field name="firstName" validate={zod2FieldValidator(required)}>

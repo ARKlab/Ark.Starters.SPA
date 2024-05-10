@@ -10,7 +10,7 @@ const Unauthorized = () => {
 
   const dispatch = useAppDispatch()
   function login() {
-    dispatch(Login())
+    void dispatch(Login())
   }
   return (
     <Box>

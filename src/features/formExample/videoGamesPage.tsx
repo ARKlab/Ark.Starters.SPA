@@ -1,5 +1,5 @@
 import { Box, Heading } from "@chakra-ui/react";
-import type { ColumnDef} from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 import { createColumnHelper } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
@@ -65,7 +65,8 @@ const VideoGamesTableView = () => {
       cell: (info) => {
         const genreId = info.getValue();
         const matchingGenre = genres?.find((x) => x.id === genreId);
-        return matchingGenre ? matchingGenre.name : t("games_unknown_genre");
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return matchingGenre?.name ?? t("games_unknown_genre");
       },
       header: () => <span>{t("games_genre")}</span>,
       meta: { type: "number" },

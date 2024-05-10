@@ -7,54 +7,56 @@ import { makeZodI18nMap } from "zod-i18n-map";
 
 import { supportedLngs } from "../../globalConfigs";
 
-// eslint-disable-next-line import/no-named-as-default-member
-i18n
-  // Add React bindings as a plugin.
-  .use(HttpApi)
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  // Initialize the i18next instance.
-  .init({
-    // Config options
-    load: "languageOnly",
+export const i18nSetup = async () => {
+  z.setErrorMap(
+    makeZodI18nMap({
+      ns: ["zodCustom", "zod"],
+      handlePath: {
+        keyPrefix: "paths",
+      },
+    }),
+  );
 
-    // Specifies the default language (locale) used
-    // when a user visits our site for the first time.
-    // We use English here, but feel free to use
-    // whichever locale you want.
-    // disabled: conflict with LanguageDetector
-    //lng: "en",
+  // eslint-disable-next-line import/no-named-as-default-member
+  await i18n
+    // Add React bindings as a plugin.
+    .use(HttpApi)
+    .use(LanguageDetector)
+    .use(initReactI18next)
+    // Initialize the i18next instance.
+    .init({
+      // Config options
+      load: "languageOnly",
 
-    // Fallback locale used when a translation is
-    // missing in the active locale. Again, use your
-    // preferred locale here.
-    fallbackLng: "en",
-    supportedLngs: Object.keys(supportedLngs),
+      // Specifies the default language (locale) used
+      // when a user visits our site for the first time.
+      // We use English here, but feel free to use
+      // whichever locale you want.
+      // disabled: conflict with LanguageDetector
+      //lng: "en",
 
-    // Enables useful output in the browser’s
-    // dev console.
-    debug: import.meta.env.DEV,
+      // Fallback locale used when a translation is
+      // missing in the active locale. Again, use your
+      // preferred locale here.
+      fallbackLng: "en",
+      supportedLngs: Object.keys(supportedLngs),
 
-    // Normally, we want `escapeValue: true` as it
-    // ensures that i18next escapes any code in
-    // translation messages, safeguarding against
-    // XSS (cross-site scripting) attacks. However,
-    // React does this escaping itself, so we turn
-    // it off in i18next.
-    interpolation: {
-      escapeValue: false,
-    },
+      // Enables useful output in the browser’s
+      // dev console.
+      debug: import.meta.env.DEV,
 
-    ns: ["translation", "zod", "zodCustom"],
-  });
+      // Normally, we want `escapeValue: true` as it
+      // ensures that i18next escapes any code in
+      // translation messages, safeguarding against
+      // XSS (cross-site scripting) attacks. However,
+      // React does this escaping itself, so we turn
+      // it off in i18next.
+      interpolation: {
+        escapeValue: false,
+      },
 
-z.setErrorMap(
-  makeZodI18nMap({
-    ns: ["zodCustom", "zod"],
-    handlePath: {
-      keyPrefix: "paths",
-    },
-  }),
-);
+      ns: ["translation", "zod", "zodCustom"],
+    });
+};
 
 export default i18n;

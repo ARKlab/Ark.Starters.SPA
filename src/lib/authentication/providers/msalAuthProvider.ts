@@ -28,7 +28,7 @@ class CustomNavigationClient extends NavigationClient {
   async navigateInternal(url: string, options: msal.NavigationOptions) {
     // url will be absolute, you will need to parse out the relative path to provide to the history API
     const relativePath = url.replace(window.location.origin, "");
-    router.navigate(relativePath, { replace: options.noHistory });
+    await router.navigate(relativePath, { replace: options.noHistory });
 
     return false; // this is MANDATORY to ensure that async handling post-login is handled before navigation
   }
@@ -157,7 +157,7 @@ export class MsalAuthProvider implements AuthProvider {
     if (sessionStorage.getItem(itemKey)) {
       sessionStorage.removeItem(itemKey);
     }
-    await this.myMSALObj!.loginRedirect(this.loginRedirectRequest);
+    await this.myMSALObj.loginRedirect(this.loginRedirectRequest);
   }
 
   public async logout() {
@@ -167,7 +167,7 @@ export class MsalAuthProvider implements AuthProvider {
     if (sessionStorage.getItem(itemKey)) {
       sessionStorage.removeItem(itemKey);
     }
-    return this.myMSALObj!.logoutRedirect();
+    return this.myMSALObj.logoutRedirect();
   }
 
   public async getToken() {
@@ -187,14 +187,14 @@ export class MsalAuthProvider implements AuthProvider {
     };
   }
   public async handleLoginRedirect(): Promise<void> {
-    await this.myMSALObj!.handleRedirectPromise();
+    await this.myMSALObj.handleRedirectPromise();
   }
 
   public async getUserDetail(): Promise<UserAccountInfo | null> {
     const account = this.myMSALObj.getActiveAccount();
     if (account) {
       try {
-        const resp = await this.myMSALObj!.acquireTokenSilent(this.silentProfileRequest);
+        const resp = await this.myMSALObj.acquireTokenSilent(this.silentProfileRequest);
 
         if (resp) {
           this.idTokenClaims = resp.idTokenClaims;
@@ -231,14 +231,12 @@ export class MsalAuthProvider implements AuthProvider {
     interactiveRequest: msal.RedirectRequest,
   ): Promise<string | null> {
     try {
-      const response = await this.myMSALObj!.acquireTokenSilent(silentRequest);
+      const response = await this.myMSALObj.acquireTokenSilent(silentRequest);
 
       return response.accessToken;
     } catch (e) {
       if (e instanceof msal.InteractionRequiredAuthError) {
-        this.myMSALObj!.acquireTokenRedirect(interactiveRequest).catch(e => {
-          throw new Error(e);
-        });
+        await this.myMSALObj.acquireTokenRedirect(interactiveRequest);
       } else {
         throw new Error("Error getting token from redirect");
       }

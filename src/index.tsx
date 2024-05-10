@@ -9,15 +9,12 @@ import { HelmetProvider } from "react-helmet-async";
 import { Provider } from "react-redux";
 
 import { initStore } from "./app/configureStore";
-import SEO from "./components/seo";
 import { authProvider } from './globalConfigs'
 import { Init } from "./init";
 import AuthenticationProviderContext from "./lib/authentication/components/AuthenticationProviderContext";
 import { setError } from "./lib/errorHandler/errorHandler";
 import reportWebVitals from "./reportWebVitals";
 import { theme } from "./theme";
-import "./lib/i18n/config";
-
 
 const store = initStore(authProvider)
 
@@ -49,7 +46,9 @@ window.addEventListener("unhandledrejection", (e: PromiseRejectionEvent) => {
     error: true,
     details: {
       title: "unhandled promise rejection",
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       message: e.reason?.message,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       status: e.reason?.code,
       isValidationError: false
     },
@@ -71,11 +70,6 @@ root.render(
         <AuthenticationProviderContext authProvider={authProvider}>
           <Provider store={store}>
             <HelmetProvider>
-              <SEO
-                title={import.meta.env.VITE_APP_TITLE}
-                description={import.meta.env.VITE_APP_DESCRIPTION}
-                name={import.meta.env.VITE_APP_COMPANY}
-              />
               <Init />
             </HelmetProvider>
           </Provider>

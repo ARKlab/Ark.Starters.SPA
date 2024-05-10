@@ -1,5 +1,6 @@
 import type {
-  FormControlProps} from "@chakra-ui/react";
+  FormControlProps
+} from "@chakra-ui/react";
 import {
   Checkbox,
   FormControl,
@@ -22,7 +23,7 @@ export const FieldControl = ({
   return (
     <FormControl
       {...rest}
-      isInvalid={error && touched}
+      isInvalid={!!error && touched}
       isDisabled={submitting}
     />
   );

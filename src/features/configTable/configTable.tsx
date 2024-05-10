@@ -19,7 +19,6 @@ import {
 } from "@chakra-ui/react";
 import arrayMutators from "final-form-arrays";
 import { useEffect } from "react";
-import type { FormRenderProps} from "react-final-form";
 import { Field, Form, useField } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
 import { useTranslation } from "react-i18next";
@@ -124,10 +123,12 @@ export default function EditableTableExample() {
     }
   }, [postConfigSuccess, dispatch])
 
-  const onSubmit = async (values: {
-    table: Employee[]
-    throwError: boolean
-  }) => {
+  type FormValue = {
+    table: Employee[];
+    throwError: boolean;
+  };
+
+  const onSubmit = async (values: FormValue) => {
     await postConfig({ employees: values.table, throwError: values.throwError })
       .unwrap()
       .catch((e) => {
@@ -136,7 +137,7 @@ export default function EditableTableExample() {
   };
   const { t } = useTranslation();
   return (
-    <Form
+    <Form<FormValue>
       onSubmit={onSubmit}
       initialValues={{ table: data }}
       mutators={{
@@ -152,14 +153,14 @@ export default function EditableTableExample() {
         submitting,
         pristine,
         hasValidationErrors,
-      }: FormRenderProps<{ table: Employee[]; throwError: boolean }>) => {
+      }) => {
         return (
           <VStack as="form" onSubmit={handleSubmit} spacing={6}>
             <Heading>{t("employee")}</Heading>
             <HStack spacing={4}>
               <Button
                 onClick={() =>
-                  push('table', {
+                  void push('table', {
                     name: '',
                     surName: '',
                     employed: false,

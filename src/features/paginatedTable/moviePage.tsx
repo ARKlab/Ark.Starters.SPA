@@ -54,7 +54,7 @@ const MovieTableView = () => {
     }),
     columnHelper.accessor((row) => row.rating, {
       id: "rating",
-      cell: (info) => "🍿".repeat(info.getValue() as number),
+      cell: (info) => "🍿".repeat(info.getValue()),
       header: () => <span>{t("movies_rating")}</span>,
       meta: { type: "number" },
     }),

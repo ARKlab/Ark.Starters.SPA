@@ -1,13 +1,11 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-
-import type { ExtraType } from "../../app/configureStore";
+import { createAppAsyncThunk } from "../../app/createAppAsyncThunk";
 import { createAppSlice } from "../../app/createAppSlice";
 
 import type { AuthStoreType } from "./authTypes";
 import { AuthenticationSteps } from "./authTypes";
 
-export const HandleRedirect = createAsyncThunk("auth/handleRedirect", async (_, thunkAPI) => {
-  const authProviderInstance = (thunkAPI.extra as ExtraType).authProvider;
+export const HandleRedirect = createAppAsyncThunk("auth/handleRedirect", async (_, thunkAPI) => {
+  const authProviderInstance = thunkAPI.extra.authProvider;
   await authProviderInstance.handleLoginRedirect();
   const user = await authProviderInstance.getUserDetail();
   if (!user) return null;
@@ -17,8 +15,8 @@ export const HandleRedirect = createAsyncThunk("auth/handleRedirect", async (_, 
   } as AuthStoreType;
 });
 
-export const DetectLoggedInUser = createAsyncThunk("auth/setLoggedUser", async (_, thunkAPI) => {
-  const authProviderInstance = (thunkAPI.extra as ExtraType).authProvider;
+export const DetectLoggedInUser = createAppAsyncThunk("auth/setLoggedUser", async (_, thunkAPI) => {
+  const authProviderInstance = thunkAPI.extra.authProvider;
   const user = await authProviderInstance.getUserDetail();
 
   if (!user || user.username === "") return null;
@@ -28,18 +26,18 @@ export const DetectLoggedInUser = createAsyncThunk("auth/setLoggedUser", async (
   } as AuthStoreType;
 });
 
-export const Logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
-  const authProviderInstance = (thunkAPI.extra as ExtraType).authProvider;
+export const Logout = createAppAsyncThunk("auth/logout", (_, thunkAPI) => {
+  const authProviderInstance = thunkAPI.extra.authProvider;
   authProviderInstance.logout();
 });
 
-export const Login = createAsyncThunk("auth/redirectHandle", async (_, thunkAPI) => {
-  const authProviderInstance = (thunkAPI.extra as ExtraType).authProvider;
+export const Login = createAppAsyncThunk("auth/redirectHandle", (_, thunkAPI) => {
+  const authProviderInstance = thunkAPI.extra.authProvider;
   authProviderInstance.login();
 });
 
-export const getLoginStatus = createAsyncThunk("auth/getLoginStatus", async (_, thunkAPI) => {
-  const authProviderInstance = (thunkAPI.extra as ExtraType).authProvider;
+export const getLoginStatus = createAppAsyncThunk("auth/getLoginStatus", (_, thunkAPI) => {
+  const authProviderInstance = thunkAPI.extra.authProvider;
   const status = authProviderInstance.getLoginStatus();
   return status;
 });
@@ -155,4 +153,5 @@ export const { tokenReceived, loggedOut } = authSlice.actions;
 
 export const { tokenSelector, userSelector } = authSlice.selectors;
 
+// eslint-disable-next-line @typescript-eslint/unbound-method
 export const authSelector = authSlice.selectSlice;

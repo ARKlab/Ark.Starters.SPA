@@ -108,7 +108,7 @@ export function PaginatedSortableTable<T>(
     filters: columnFilters,
   })
 
-  const tableData: T[] = data && data.data ? (data.data as T[]) : []
+  const tableData: T[] = data && data.data ? (data.data) : []
 
   // useMemo is used here to optimize performance by memoizing the sorting and pagination states.
   // This avoids unnecessary re-renders and computations if these states do not change between renders.
@@ -262,33 +262,23 @@ export function PaginatedSortableTable<T>(
 
 function Filter<T>({
   column,
-  table,
   isLoading,
 }: {
   column: Column<T, unknown>
   table: ReactTable<T>
   isLoading: boolean
 }) {
-  const firstValue = table
-    .getPreFilteredRowModel()
-    .flatRows[0]?.getValue(column.id)
-
   const columnFilterValue = column.getFilterValue()
   const columnFacetedUniqueValues = column.getFacetedUniqueValues()
 
   const sortedUniqueValues = React.useMemo(() => {
     switch (column.columnDef.meta?.type) {
-      case 'date':
-        return []
-      case 'number':
       case 'string':
-        return typeof firstValue === 'number'
-          ? []
-          : Array.from(columnFacetedUniqueValues.keys()).sort()
+        return Array.from(columnFacetedUniqueValues.keys()).sort().map(x => String(x));
       default:
-        return []
+        return [];
     }
-  }, [column, columnFacetedUniqueValues, firstValue])
+  }, [column, columnFacetedUniqueValues])
 
   //You can add all the filters you need and want here, even multiple per column (min max for numbers for example)
   switch (column.columnDef.meta?.type) {

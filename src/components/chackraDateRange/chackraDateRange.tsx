@@ -22,7 +22,7 @@ export const ChackraDateRange = (props: {
 
   const [fromToRange, setFromToRange] = useState<Date[]>([]);
 
-  const handleFromToDataRangeChange = async (
+  const handleFromToDataRangeChange = (
     value: Date[],
     d1: string,
     d2: string
@@ -55,7 +55,7 @@ export const ChackraDateRange = (props: {
             dateFormat: props.dateFormat ? props.dateFormat : "dd-MM-yyyy",
           }}
           selectedDates={fromToRange}
-          onDateChange={async (e) =>
+          onDateChange={(e) =>
             handleFromToDataRangeChange(e, props.propForm, props.propTo)
           }
         />
@@ -65,7 +65,7 @@ export const ChackraDateRange = (props: {
               rounded={"full"}
               h="1rem"
               size="xs"
-              onClick={async (_) =>
+              onClick={(_) =>
                 handleFromToDataRangeChange([], props.propForm, props.propTo)
               }
             >

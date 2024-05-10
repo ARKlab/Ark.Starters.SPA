@@ -72,7 +72,7 @@ const LocalizationPage = () => {
                     render={({ input, meta: { error, touched } }) => {
                       return (
                         <FormControl
-                          isInvalid={error && touched}
+                          isInvalid={!!error && touched}
                           isDisabled={submitting}
                         >
                           <FormLabel htmlFor="name">Name</FormLabel>
@@ -89,7 +89,7 @@ const LocalizationPage = () => {
                     render={({ input, meta: { error, touched } }) => {
                       return (
                         <FormControl
-                          isInvalid={error && touched}
+                          isInvalid={!!error && touched}
                           isDisabled={submitting}
                         >
                           <FormLabel htmlFor="fieldName">FieldName</FormLabel>
@@ -107,7 +107,7 @@ const LocalizationPage = () => {
                     render={({ input, meta: { error, touched } }) => {
                       return (
                         <FormControl
-                          isInvalid={error && touched}
+                          isInvalid={!!error && touched}
                           isDisabled={submitting}
                         >
                           <FormLabel htmlFor="customErrorInline">

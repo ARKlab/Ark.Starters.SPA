@@ -40,7 +40,7 @@ const UserMenu = () => {
     setTimeout(toggleColorMode, 200) // 200ms delay
   }
   function login() {
-    dispatch(Login())
+    void dispatch(Login())
   }
   if (!isLogged) {
     return (

@@ -1,35 +1,35 @@
-import type { PayloadAction } from '@reduxjs/toolkit'
-import { createSlice } from '@reduxjs/toolkit'
+import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
-import type { NotificationType } from './notificationsTypes'
+import type { NotificationType } from "./notificationsTypes";
 
-type State = { notification: NotificationType | null }
+type State = { notification: NotificationType | null };
 
-const initialState: State = { notification: null }
+const initialState: State = { notification: null };
 
 const notificationsSlice = createSlice({
-  name: 'notifications',
+  name: "notifications",
   initialState,
   reducers: {
     showNotification: (state, action: PayloadAction<NotificationType>) => {
-      state.notification = action.payload
+      state.notification = action.payload;
     },
-    resetNotification: (state) => {
-      state.notification = null
+    resetNotification: state => {
+      state.notification = null;
     },
   },
   selectors: {
-    selectNotification: (s) => s.notification,
+    selectNotification: s => s.notification,
   },
-})
+});
 
-export const { showNotification, resetNotification } =
-  notificationsSlice.actions
+export const { showNotification, resetNotification } = notificationsSlice.actions;
 
-export default notificationsSlice.reducer
+export default notificationsSlice.reducer;
 
-export const selectNotificationsState = notificationsSlice.selectSlice
-export const { selectNotification } = notificationsSlice.selectors
+// eslint-disable-next-line @typescript-eslint/unbound-method
+export const selectNotificationsState = notificationsSlice.selectSlice;
+export const { selectNotification } = notificationsSlice.selectors;
 
 // Azione dispatch
 export const dispatchNotification = (notification: NotificationType) =>
@@ -41,4 +41,4 @@ export const dispatchNotification = (notification: NotificationType) =>
     isClosable: notification.isClosable,
     message: notification.message,
     position: notification.position,
-  })
+  });

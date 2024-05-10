@@ -7,7 +7,7 @@ module.exports = {
         'plugin:react-hooks/recommended',
         'plugin:import/recommended',
         'plugin:jsx-a11y/recommended',
-        'plugin:@typescript-eslint/recommended',
+        'plugin:@typescript-eslint/recommended-type-checked',
         // This disables the formatting rules in ESLint that Prettier is going to be responsible for handling.
         // Make sure it's always the last config, so it gets the chance to override other configs.
         'eslint-config-prettier',
@@ -19,8 +19,9 @@ module.exports = {
     },
     plugins: ['react-refresh', 'react-hooks', 'jsx-a11y', 'import', 'prettier'],
     rules: {
+        "no-restricted-imports": "off",
         "@typescript-eslint/no-restricted-imports": [
-            2,
+            'error',
             {
                 "paths": [
                     {
@@ -28,15 +29,21 @@ module.exports = {
                         "importNames": ["useSelector", "useStore", "useDispatch"],
                         "message": "Please use pre-typed versions from `src/app/hooks.ts` instead."
                     },
-
                     {
-                        "name": "'@reduxjs/toolkit'",
+                        "name": "@reduxjs/toolkit",
                         "importNames": ["createSlice"],
                         "message": "Please use thunk-able versions from `src/app/createAppSlice.ts` instead."
+                    },
+                    {
+                        "name": "@reduxjs/toolkit",
+                        "importNames": ["createAsyncThunk"],
+                        "message": "Please use thunk-able versions from `src/app/createAppAsyncThunk.ts` instead."
                     }
                 ]
             }
         ],
+        '@typescript-eslint/no-unsafe-assignment': 'off',
+        '@typescript-eslint/no-unsafe-member-access': 'off',
         'react-refresh/only-export-components': [
             'error',
             { allowConstantExport: true },

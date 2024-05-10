@@ -32,7 +32,7 @@ export function initStore(authProviderInstance: AuthProvider) {
           extraArgument: {
             authProvider: authProviderInstance,
           },
-          serializableCheck: false,
+          serializableCheck: true,
         },
       }).concat(
         jsonPlaceholderSlice.middleware,
@@ -58,4 +58,4 @@ export type AppThunk<ThunkReturnType = void> = ThunkAction<
   RootState,
   ExtraType,
   Action
->
+  >

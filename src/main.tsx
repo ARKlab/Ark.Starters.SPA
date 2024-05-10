@@ -4,15 +4,23 @@ import {
 } from "react-router-dom";
 
 import CenterSpinner from "./components/centerSpinner";
+import SEO from './components/seo';
+import useLocalizeDocumentAttributes from './lib/i18n/useLocalizeDocumentAttributes';
 import { router } from "./lib/router";
 
 
 const Main = () => {
+  useLocalizeDocumentAttributes();
 
   return (
     <Suspense
       fallback={<CenterSpinner />}
     >
+      <SEO
+        title={import.meta.env.VITE_APP_TITLE}
+        description={import.meta.env.VITE_APP_DESCRIPTION}
+        name={import.meta.env.VITE_APP_COMPANY}
+      />
       <RouterProvider router={router} />
     </Suspense>
   );
