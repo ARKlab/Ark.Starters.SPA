@@ -7,12 +7,14 @@ import eslint from "vite-plugin-eslint";
 import copy from "rollup-plugin-copy";
 import preload from "vite-plugin-preload";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
+import { reactClickToComponent } from "vite-plugin-react-click-to-component";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     ViteImageOptimizer(),
     react(),
+    reactClickToComponent(),
     preload(),
     copy({
       targets: [{ src: "node_modules/zod-i18n-map/locales", dest: "public" }],
