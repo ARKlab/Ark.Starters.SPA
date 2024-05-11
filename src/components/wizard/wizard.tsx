@@ -23,13 +23,13 @@ export function Wizard<SchemaType extends object>({
   const isLastPage = page === React.Children.count(children) - 1;
 
   const next = () =>
-    setPage(Math.min(page + 1, React.Children.count(children) - 1));
+    { setPage(Math.min(page + 1, React.Children.count(children) - 1)); };
 
-  const previous = () => setPage(Math.max(page - 1, 0));
+  const previous = () => { setPage(Math.max(page - 1, 0)); };
 
   const handleSubmit = (values: SchemaType) => {
     if (isLastPage) {
-      return onSubmit(values);
+      onSubmit(values); return;
     } else {
       next();
     }

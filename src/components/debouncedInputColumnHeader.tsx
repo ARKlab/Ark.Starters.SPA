@@ -28,7 +28,7 @@ export function DebouncedInputColumnHeader({
   return (
     <ChackraInputHeaderFilterWithClear
       value={value}
-      onChange={(e) => setValue(e.target.value)}
+      onChange={(e) => { setValue(e.target.value); }}
       {...props}
     />
   )

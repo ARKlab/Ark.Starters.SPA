@@ -52,15 +52,15 @@ export class Auth0AuthProvider implements AuthProvider {
   public async init() {}
 
   public async login() {
-    await this.auth0Client?.loginWithRedirect();
+    await this.auth0Client.loginWithRedirect();
   }
 
-  public logout(): void {
-    void this.auth0Client?.logout();
+  public async logout() {
+    await this.auth0Client.logout();
   }
 
   public async getToken() {
-    const token = await this.auth0Client?.getTokenSilently();
+    const token = await this.auth0Client.getTokenSilently();
 
     return token;
   }
@@ -86,7 +86,7 @@ export class Auth0AuthProvider implements AuthProvider {
 
         await this.auth0Client.handleRedirectCallback().then(result => {
           this.setLoginStatus(LoginStatus.Logged);
-          target = (result.appState as { targetUrl: string })?.targetUrl ?? "/";
+          target = (result.appState as { targetUrl?: string }).targetUrl ?? "/";
         });
       }
     }
@@ -107,7 +107,7 @@ export class Auth0AuthProvider implements AuthProvider {
     } else {
       this.setLoginStatus(LoginStatus.Logged);
       return {
-        username: currentAccounts?.name || "",
+        username: currentAccounts.name || "",
         permissions: permissions,
         groups: groups,
       } as UserAccountInfo;
@@ -129,7 +129,7 @@ export class Auth0AuthProvider implements AuthProvider {
   }
   private async isAuthenticated(): Promise<boolean> {
     try {
-      return await this.auth0Client?.isAuthenticated();
+      return await this.auth0Client.isAuthenticated();
     } catch (error) {
       return false;
     }

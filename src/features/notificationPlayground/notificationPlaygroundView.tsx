@@ -39,34 +39,34 @@ const NotificationPlaygroundView = () => {
         </Heading>
         <Wrap spacing={1} my={"20px"}>
           <WrapItem>
-            <Button onClick={() => sendNotification("1", notificationBody, NotificationDuration.VeryShort, "top")}>
+            <Button onClick={() => { sendNotification("1", notificationBody, NotificationDuration.VeryShort, "top"); }}>
               {t("top")} "Very Short Norification"
             </Button>
           </WrapItem>
           <WrapItem>
-            <Button onClick={() => sendNotification("2", notificationBody, NotificationDuration.Short, "top-left")}>
+            <Button onClick={() => { sendNotification("2", notificationBody, NotificationDuration.Short, "top-left"); }}>
               {t("topleft")} "Short Notification"
             </Button>
           </WrapItem>
           <WrapItem>
-            <Button onClick={() => sendNotification("3", notificationBody, NotificationDuration.Medium, "top-right")}>
+            <Button onClick={() => { sendNotification("3", notificationBody, NotificationDuration.Medium, "top-right"); }}>
               {t("topright")} "Medium Notification"
             </Button>
           </WrapItem>
           <WrapItem>
-            <Button onClick={() => sendNotification("4", notificationBody, NotificationDuration.Long, "bottom-left")}>
+            <Button onClick={() => { sendNotification("4", notificationBody, NotificationDuration.Long, "bottom-left"); }}>
               {t("bottomleft")} "Long Notification"
             </Button>
           </WrapItem>
           <WrapItem>
             <Button
-              onClick={() => sendNotification("5", notificationBody, NotificationDuration.VeryLong, "bottom-right")}
+              onClick={() => { sendNotification("5", notificationBody, NotificationDuration.VeryLong, "bottom-right"); }}
             >
               {t("bottomright")} "Very Long Notification"
             </Button>
           </WrapItem>
           <WrapItem>
-            <Button onClick={() => sendNotification("6", notificationBody, NotificationDuration.VeryLong, "bottom")}>
+            <Button onClick={() => { sendNotification("6", notificationBody, NotificationDuration.VeryLong, "bottom"); }}>
               {t("bottom")} "Very Long Notification"
             </Button>
           </WrapItem>

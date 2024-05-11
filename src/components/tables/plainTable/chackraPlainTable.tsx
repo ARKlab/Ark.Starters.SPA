@@ -18,7 +18,7 @@ export type PlainTablePropsType<T> = {
   isError: boolean
 }
 
-export const ChackraPlainTable = <T,>({
+export const ChackraPlainTable = <T extends object,>({
   data,
   colorscheme = 'grey',
   variant = 'striped',
@@ -26,7 +26,17 @@ export const ChackraPlainTable = <T,>({
   isError,
 }: PlainTablePropsType<T>) => {
   type TK = keyof T
-  const headers = Object.keys(data[0] || {}) as TK[]
+  const first = data.length < 1 ? {} : data[0];
+
+  /* TODO: this doesn't work well as
+   * Typescript doesn't support compile-time to derive the properties of T
+   * At runtime, the Array may be empty and thus cannot be derived either
+   * Solutions:
+   *   1. move responsability to developer
+   *   2. use Zod schema, pairing T with Schema: z.object({...}).shape contains the list of keys
+   *      requires time to understand the right Generics to use 
+   */
+  const headers = Object.keys(first) as TK[]
 
   return (
     <TableContainer my="30px">
@@ -39,7 +49,7 @@ export const ChackraPlainTable = <T,>({
           </Tr>
         </Thead>
         <Tbody>
-          {isLoading || isError || !data ? (
+          {isLoading || isError ? (
             <Tr>
               <Td colSpan={headers.length}>
                 <Center>

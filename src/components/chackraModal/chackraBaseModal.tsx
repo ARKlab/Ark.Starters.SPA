@@ -29,7 +29,7 @@ export const ChackraUIBaseModal = (props: {
   let footerCloseButton = <></>
   if (props.submitButton)
     submitSegment = (
-      <Button colorScheme="brandPalette" mr={3} onClick={() => executeSubmit()}>
+      <Button colorScheme="brandPalette" mr={3} onClick={() => { executeSubmit(); }}>
         {props.submitButtonText}
       </Button>
     )

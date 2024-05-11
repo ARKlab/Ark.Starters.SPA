@@ -72,7 +72,7 @@ const moviesData: Movie[] = Array.from({ length: 100 }, (_, i) => ({
   genre: `Genere ${(i % 5) + 1}`,
   director: `${baseDirectors[i % baseDirectors.length]}${i + 1}`,
   actors: `${baseActors[i % baseActors.length]}${i + 1}`,
-  plot: `${basePlots[i % basePlots.length]}`,
+  plot: basePlots[i % basePlots.length],
   rating: Math.floor(Math.random() * 5) + 1,
 }))
 

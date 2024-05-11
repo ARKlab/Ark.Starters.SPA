@@ -24,7 +24,7 @@ export const ChackraDateRangeInHeader = (props: {
           dateFormat: dateFormat ? dateFormat : 'dd-MM-yyyy',
         }}
         selectedDates={value}
-        onDateChange={(e) => handleOnChange(e)}
+        onDateChange={(e) => { handleOnChange(e); }}
         disabled={isLoading}
       />
       {value.length > 0 && (
@@ -32,7 +32,7 @@ export const ChackraDateRangeInHeader = (props: {
           <Button
             rounded={'full'}
             size="xs"
-            onClick={() => handleOnChange([] as Date[])}
+            onClick={() => { handleOnChange([] as Date[]); }}
           >
             <TiTimes />
           </Button>

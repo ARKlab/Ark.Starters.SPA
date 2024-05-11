@@ -63,14 +63,14 @@ const primaryKeyValidator =
     const duplicates: string[] = []
 
     propValues.forEach((value) => {
-      const duplicateIndexes = propValues.reduce(
+      const duplicateIndexes = propValues.reduce<number[]>(
         (indexes, propValue, index) => {
           if (propValue === value) {
             indexes.push(index)
           }
           return indexes
         },
-        [] as number[],
+        [],
       )
 
       if (duplicateIndexes.length > 1 && !duplicates.includes(value)) {
@@ -79,14 +79,16 @@ const primaryKeyValidator =
         duplicateIndexes.forEach((index) => {
           errors.table = errors.table || []
           errors.table[index] = errors.table[index] || { _rowError: [] }
+          const e = errors.table[index]._rowError || []
 
-          errors.table[index]._rowError!.push(
+          e.push(
             `Duplicate ${propsToCheck.join(
               ', ',
             )} values are not allowed at indexes: ${duplicateIndexes.join(
               ', ',
             )}`,
           )
+          errors.table[index]._rowError = e;
         })
       }
     })
@@ -192,7 +194,7 @@ export default function EditableTableExample() {
                 {t("triggererror")}
               </Button>
               <Button
-                onClick={() => form.reset()}
+                onClick={() => { form.reset(); }}
                 isDisabled={submitting || pristine}
               >
                 {t("reset")}

@@ -139,7 +139,7 @@ const LocalizationPage = () => {
               id="apples"
               type="number"
               value={apples}
-              onChange={(e) => setApples(Number(e.target.value))}
+              onChange={(e) => { setApples(Number(e.target.value)); }}
             />
           </FormControl>
           <Text fontSize="2xl">

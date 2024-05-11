@@ -98,8 +98,7 @@ export function PaginatedSortableTable<T>(
     columns.map((column) => column.id as string), //must start out with populated columnOrder so we can splice
   )
 
-  const resetOrder = () =>
-    setColumnOrder(columns.map((column) => column.id as string))
+  const resetOrder = () => { setColumnOrder(columns.map((column) => column.id as string)); }
 
   const { data, isLoading, isFetching } = useQueryHook({
     pageIndex,
@@ -108,7 +107,7 @@ export function PaginatedSortableTable<T>(
     filters: columnFilters,
   })
 
-  const tableData: T[] = data && data.data ? (data.data) : []
+  const tableData: T[] = data?.data ?? []
 
   // useMemo is used here to optimize performance by memoizing the sorting and pagination states.
   // This avoids unnecessary re-renders and computations if these states do not change between renders.
@@ -126,7 +125,7 @@ export function PaginatedSortableTable<T>(
     data: tableData,
     columns,
     getPaginationRowModel: getPaginationRowModel(),
-    pageCount: tableData ? Math.ceil(tableData.length / pageSize) : 0,
+    pageCount: Math.ceil(tableData.length / pageSize),
     //this is the state of the table (table.getState()) we take care of it manually to have all features server side and ARK compatibile
     state: {
       pagination,
@@ -219,7 +218,7 @@ export function PaginatedSortableTable<T>(
           <Tbody>
             {isLoading || isFetching ? (
               <Tr>
-                <Td colSpan={columns ? columns.length : 1}>
+                <Td colSpan={columns.length}>
                   <Center>
                     <Spinner />
                   </Center>
@@ -264,7 +263,7 @@ function Filter<T>({
   column,
   isLoading,
 }: {
-  column: Column<T, unknown>
+  column: Column<T>
   table: ReactTable<T>
   isLoading: boolean
 }) {
@@ -301,7 +300,7 @@ function Filter<T>({
           <DebouncedInputColumnHeader
             type="text"
             value={(columnFilterValue ?? '') as string}
-            onChange={(value) => column.setFilterValue(value)}
+            onChange={(value) => { column.setFilterValue(value); }}
             placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
             className="w-36 border shadow rounded"
             list={column.id + 'list'}

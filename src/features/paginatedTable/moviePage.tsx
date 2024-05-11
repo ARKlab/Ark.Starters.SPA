@@ -89,7 +89,7 @@ const MovieTableView = () => {
         <Input
           w="30%"
           placeholder={t("movies_externalfilterplaceholder")}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => { setTitle(e.target.value); }}
         />
       </Flex>
       <Button marginBottom={"70px"} onClick={applyExtraFilter}>

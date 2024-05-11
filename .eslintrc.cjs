@@ -7,7 +7,7 @@ module.exports = {
         'plugin:react-hooks/recommended',
         'plugin:import/recommended',
         'plugin:jsx-a11y/recommended',
-        'plugin:@typescript-eslint/recommended-type-checked',
+        'plugin:@typescript-eslint/strict-type-checked',
         // This disables the formatting rules in ESLint that Prettier is going to be responsible for handling.
         // Make sure it's always the last config, so it gets the chance to override other configs.
         'eslint-config-prettier',
@@ -44,6 +44,14 @@ module.exports = {
         ],
         '@typescript-eslint/no-unsafe-assignment': 'off',
         '@typescript-eslint/no-unsafe-member-access': 'off',
+        '@typescript-eslint/restrict-template-expressions': ['error', {
+            allowNullish: true
+        }],
+        '@typescript-eslint/restrict-plus-operands': ['error', {
+            allowNullish: true
+        }],
+        '@typescript-eslint/no-invalid-void-type': ['off'],
+        '@typescript-eslint/use-unknown-in-catch-callback-variable': 'off',
         'react-refresh/only-export-components': [
             'error',
             { allowConstantExport: true },

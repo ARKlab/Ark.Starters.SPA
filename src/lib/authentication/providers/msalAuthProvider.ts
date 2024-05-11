@@ -20,10 +20,6 @@ export type MSALConfig = {
 // see https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-react/docs/performance.md
 // see https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/navigation.md
 class CustomNavigationClient extends NavigationClient {
-  constructor() {
-    super();
-  }
-
   // This function will be called anytime msal needs to navigate from one page in your application to another
   async navigateInternal(url: string, options: msal.NavigationOptions) {
     // url will be absolute, you will need to parse out the relative path to provide to the history API
@@ -175,10 +171,7 @@ export class MsalAuthProvider implements AuthProvider {
   }
 
   public getLoginStatus(): LoginStatus {
-    if (this.myMSALObj) {
-      return this.loginStatus;
-    }
-    return LoginStatus.NotLogged;
+    return this.loginStatus;
   }
   public onLoginStatus(subscriber: (status: LoginStatus) => void) {
     this.subscribers.add(subscriber);
@@ -196,13 +189,11 @@ export class MsalAuthProvider implements AuthProvider {
       try {
         const resp = await this.myMSALObj.acquireTokenSilent(this.silentProfileRequest);
 
-        if (resp) {
-          this.idTokenClaims = resp.idTokenClaims;
-          this.loginStatus = LoginStatus.Logged;
-          this.notifySubscribers();
+        this.idTokenClaims = resp.idTokenClaims;
+        this.loginStatus = LoginStatus.Logged;
+        this.notifySubscribers();
 
-          return { username: account.username, permissions: this.getUserPermissions() } as UserAccountInfo;
-        }
+        return { username: account.username, permissions: this.getUserPermissions() } as UserAccountInfo;
       } catch (e) {
         if (e instanceof msal.InteractionRequiredAuthError) return null;
 

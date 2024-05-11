@@ -66,7 +66,7 @@ const ProblemDetailsModalBody = (props: { problem: DetailsType | null }) => {
             </h2>
             <AccordionPanel pb={4}>
               {problem?.exceptionDetails
-                ? problem?.exceptionDetails[0].raw
+                ? problem.exceptionDetails[0].raw
                 : 'No StackTrace found'}
             </AccordionPanel>
           </AccordionItem>

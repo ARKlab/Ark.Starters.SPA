@@ -56,7 +56,7 @@ export const ChackraDateRange = (props: {
           }}
           selectedDates={fromToRange}
           onDateChange={(e) =>
-            handleFromToDataRangeChange(e, props.propForm, props.propTo)
+            { handleFromToDataRangeChange(e, props.propForm, props.propTo); }
           }
         />
         {fromToRange.length > 0 && (
@@ -66,7 +66,7 @@ export const ChackraDateRange = (props: {
               h="1rem"
               size="xs"
               onClick={(_) =>
-                handleFromToDataRangeChange([], props.propForm, props.propTo)
+                { handleFromToDataRangeChange([], props.propForm, props.propTo); }
               }
             >
               <TiTimes />

@@ -58,10 +58,10 @@ const PlaygroundView = () => {
             <Input
               placeholder={t("permissionsPlayground_permissionPlaceholder")}
               value={inputValue}
-              onChange={event => setInputValue(event.target.value)}
+              onChange={event => { setInputValue(event.target.value); }}
             />
             <InputRightElement width="4.5rem">
-              <Button h="1.75rem" size="sm" onClick={() => setRequiredPermission(inputValue)}>
+              <Button h="1.75rem" size="sm" onClick={() => { setRequiredPermission(inputValue); }}>
                 {t("permissionsPlayground_setButton")}
               </Button>
             </InputRightElement>
@@ -87,7 +87,7 @@ const PlaygroundView = () => {
           <Heading size="md" my={"20px"}>
             {t("permissionsPlayground_goToProtectedRoute")}
           </Heading>
-          <Button onClick={() => navigate("/protectedRoute")}>Go!</Button>
+          <Button onClick={() => { navigate("/protectedRoute"); }}>Go!</Button>
         </Box>
       </Box>
     </Box>

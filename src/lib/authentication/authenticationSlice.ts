@@ -26,14 +26,14 @@ export const DetectLoggedInUser = createAppAsyncThunk("auth/setLoggedUser", asyn
   } as AuthStoreType;
 });
 
-export const Logout = createAppAsyncThunk("auth/logout", (_, thunkAPI) => {
+export const Logout = createAppAsyncThunk("auth/logout", async (_, thunkAPI) => {
   const authProviderInstance = thunkAPI.extra.authProvider;
-  authProviderInstance.logout();
+  await authProviderInstance.logout();
 });
 
-export const Login = createAppAsyncThunk("auth/redirectHandle", (_, thunkAPI) => {
+export const Login = createAppAsyncThunk("auth/redirectHandle", async (_, thunkAPI) => {
   const authProviderInstance = thunkAPI.extra.authProvider;
-  authProviderInstance.login();
+  await authProviderInstance.login();
 });
 
 export const getLoginStatus = createAppAsyncThunk("auth/getLoginStatus", (_, thunkAPI) => {
@@ -115,6 +115,12 @@ export const authSlice = createAppSlice({
           isError: true,
           error: action.error,
         };
+      })
+      .addCase(Logout.fulfilled, state => {
+        state.isLoading = false;
+        state.status = AuthenticationSteps.LogoutComplete;
+        state.data = null;
+        return state;
       })
       .addCase(Logout.rejected, (state, action) => {
         return {

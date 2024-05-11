@@ -10,11 +10,11 @@ export interface AuthProvider {
   /**
    * Initiates the login process.
    */
-  login: () => void;
+  login: () => Promise<void>;
   /**
    * Initiates the logout process.
    */
-  logout: () => void;
+  logout: () => Promise<void>;
   /**
    * Retrieves the authentication token information
    *  if token is not valid token will be refreshed silently

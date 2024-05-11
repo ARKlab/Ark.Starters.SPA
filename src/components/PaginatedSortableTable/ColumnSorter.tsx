@@ -6,7 +6,7 @@ import React from 'react'
 export const ColumnSorter = <T,>({
   column,
 }: {
-  column: Column<T, unknown>
+  column: Column<T>
 }) => {
   if (!column.getCanSort()) {
     return null
