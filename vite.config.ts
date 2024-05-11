@@ -6,10 +6,12 @@ import react from "@vitejs/plugin-react";
 import eslint from "vite-plugin-eslint";
 import copy from "rollup-plugin-copy";
 import preload from "vite-plugin-preload";
+import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    ViteImageOptimizer(),
     react(),
     preload(),
     copy({
