@@ -1,5 +1,6 @@
 /// <reference types="vitest" />
 /// <reference types="vite/client" />
+/// <reference types="vite-plugin-svgr/client" />
 
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
@@ -8,10 +9,19 @@ import copy from "rollup-plugin-copy";
 import preload from "vite-plugin-preload";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import { reactClickToComponent } from "vite-plugin-react-click-to-component";
+import svgr from "vite-plugin-svgr";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    svgr({
+      svgrOptions: {
+        plugins: ["@svgr/plugin-svgo", "@svgr/plugin-jsx"],
+        svgoConfig: {
+          floatPrecision: 2,
+        },
+      },
+    }),
     ViteImageOptimizer(),
     react({ jsxImportSource: "@emotion/react", plugins: [["@swc/plugin-emotion", {}]] }),
     reactClickToComponent(),

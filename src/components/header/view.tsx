@@ -3,7 +3,6 @@ import {
   Box,
   Center,
   Flex,
-  Image,
   Menu,
   MenuButton,
   MenuDivider,
@@ -26,6 +25,7 @@ import {
 } from '../../lib/authentication/authenticationSlice'
 import { useAuthContext } from '../../lib/authentication/components/useAuthContext'
 import { LocaleSwitcher } from '../../lib/i18n/localeSwitcher'
+import { Logo } from '../../logo'
 
 const UserMenu = () => {
   const dispatch = useAppDispatch()
@@ -109,16 +109,13 @@ const Header = () => {
       zIndex={'banner'} // You can adjust the z-index as needed
       shadow={'md'}
       width={'100%'}
-      height={'60px'}
+      paddingTop={'5px'}
+      paddingBottom={'5px'}
       bg="gray.800"
     >
       <Flex>
-        <Center ml={'20px'} paddingTop={'5px'}>
-          <Image
-            height={'50px'}
-            src="https://ark-energy.eu/wp-content/uploads/2022/07/logo-white.png"
-            alt=""
-          />
+        <Center ml={'20px'} >
+          <Logo />
         </Center>
         <Spacer />
         <Spacer />
