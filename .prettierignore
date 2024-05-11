@@ -1,5 +1,6 @@
 .git
 .vscode
+.swc
 node_modules
 .eslintignore
 .gitignore

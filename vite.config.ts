@@ -2,7 +2,7 @@
 /// <reference types="vite/client" />
 
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import react from "@vitejs/plugin-react-swc";
 import eslint from "vite-plugin-eslint";
 import copy from "rollup-plugin-copy";
 import preload from "vite-plugin-preload";
@@ -13,7 +13,7 @@ import { reactClickToComponent } from "vite-plugin-react-click-to-component";
 export default defineConfig({
   plugins: [
     ViteImageOptimizer(),
-    react(),
+    react({ jsxImportSource: "@emotion/react", plugins: [["@swc/plugin-emotion", {}]] }),
     reactClickToComponent(),
     preload(),
     copy({
