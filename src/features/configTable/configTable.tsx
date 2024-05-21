@@ -23,7 +23,7 @@ import { Field, Form, useField } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
 import { useTranslation } from "react-i18next";
 import { FaTrash } from "react-icons/fa";
-import z from "zod";
+import * as z from "zod";
 
 import { useAppDispatch } from "../../app/hooks";
 import { dispatchNetworkError } from "../../lib/errorHandler/errorHandler";

@@ -2,7 +2,7 @@ import type { Auth0ClientOptions } from "@auth0/auth0-spa-js";
 import { Auth0Client } from "@auth0/auth0-spa-js";
 import { z } from "zod";
 
-import type { CustomSettingsType } from "../../../global";
+import type { CustomSettingsType } from "../../../config/global";
 import { router } from "../../router";
 import type { UserAccountInfo } from "../authTypes";
 import { LoginStatus } from "../authTypes";
@@ -44,7 +44,6 @@ export class Auth0AuthProvider implements AuthProvider {
     }
   }
   public hasPermission(permission: string): boolean {
-    // eslint-disable-line @typescript-eslint/no-unused-vars
     // Checks whether the current user has the specified permission
     const permissions = this.userPermissions;
     return permissions.includes(permission);

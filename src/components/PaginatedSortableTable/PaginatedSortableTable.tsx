@@ -31,7 +31,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useTranslation } from "react-i18next";
@@ -270,7 +270,7 @@ function Filter<T>({
   const columnFilterValue = column.getFilterValue()
   const columnFacetedUniqueValues = column.getFacetedUniqueValues()
 
-  const sortedUniqueValues = React.useMemo(() => {
+  const sortedUniqueValues = useMemo(() => {
     switch (column.columnDef.meta?.type) {
       case 'string':
         return Array.from(columnFacetedUniqueValues.keys()).sort().map(x => String(x));

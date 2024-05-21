@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { Field } from "react-final-form";
 import { useTranslation } from "react-i18next";
-import z from "zod";
+import * as z from "zod";
 
 import { CharkaCheckBoxFinalFormField } from "../../components/reactFinalFormControls";
 import { Wizard, WizardPage } from "../../components/wizard/wizard";

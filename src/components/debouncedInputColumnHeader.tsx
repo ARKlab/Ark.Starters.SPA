@@ -1,4 +1,5 @@
-import React from "react";
+
+import { useEffect, useState } from "react";
 
 import useDebounce from "../lib/useDebounce";
 
@@ -14,14 +15,14 @@ export function DebouncedInputColumnHeader({
   onChange: (value: string | number) => void;
   debounce?: number;
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "size">) {
-  const [value, setValue] = React.useState(initialValue);
+  const [value, setValue] = useState(initialValue);
   const debounceValue = useDebounce(value, debounce);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setValue(initialValue)
   }, [initialValue])
 
-  React.useEffect(() => {
+  useEffect(() => {
     onChange(debounceValue);
   }, [debounceValue, onChange]);
 

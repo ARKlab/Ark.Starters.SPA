@@ -8,3 +8,4 @@ dist
 
 vite.config.ts
 vitest.setup.ts
+pwa-assets.config.ts

@@ -2,7 +2,7 @@ import { Box, Heading, StackDivider, VStack, Text, useToast, FormControl, Input,
 import { useState } from "react";
 import { Field, Form } from "react-final-form";
 import { useTranslation } from "react-i18next";
-import z from 'zod';
+import * as z from 'zod';
 
 import { LocaleSwitcher } from "../../lib/i18n/localeSwitcher";
 import { zod2FormValidator } from "../../lib/zod2FormValidator";

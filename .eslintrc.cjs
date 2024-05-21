@@ -1,6 +1,6 @@
 module.exports = {
     root: true,
-    env: { browser: true, es2020: true },
+    env: { browser: true, es2020: true, node: true },
     extends: [
         // By extending from a plugin config, we can get recommended rules without having to add them manually.
         'eslint:recommended',
@@ -12,10 +12,10 @@ module.exports = {
         // Make sure it's always the last config, so it gets the chance to override other configs.
         'eslint-config-prettier',
     ],
-    ignorePatterns: ['node_modules', 'public', 'build', '.eslintrc.cjs'],
-    parser: '@typescript-eslint/parser',
+    ignorePatterns: ['node_modules', 'public', 'build', 'dist', 'dev-dist', '.eslintrc.cjs'],
     parserOptions: {
-        project: ['tsconfig.json']
+        project: ['tsconfig.json'],
+
     },
     plugins: ['react-refresh', 'react-hooks', 'jsx-a11y', 'import', 'prettier'],
     rules: {
@@ -132,11 +132,16 @@ module.exports = {
         ]
     },
     settings: {
+        "import/parsers": {
+            "@typescript-eslint/parser": [".ts", ".tsx"],
+        },
         'import/resolver': {
-            node: {
-                paths: ['src'],
-                extensions: ['.mjs', '.js', 'cjs', '.jsx', '.ts', '.tsx'],
-            },
+            "typescript": {
+                "alwaysTryTypes": true,
+                project: ['tsconfig.json']
+            }
         }
-    }
+    },
+    reportUnusedDisableDirectives: true
+
 }

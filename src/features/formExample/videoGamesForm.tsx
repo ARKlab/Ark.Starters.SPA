@@ -20,7 +20,7 @@ import { useEffect } from "react";
 import { Field, Form } from "react-final-form";
 import { useTranslation } from "react-i18next";
 import { MdArrowDropDown } from "react-icons/md";
-import z from "zod";
+import * as z from "zod";
 
 import { useAppDispatch } from "../../app/hooks";
 import { dispatchNotification } from "../../lib/notifications/notification";

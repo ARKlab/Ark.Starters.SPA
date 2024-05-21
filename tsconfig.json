@@ -4,11 +4,14 @@
     "lib": [
       "DOM",
       "DOM.Iterable",
-      "ESNext"
+      "ESNext",
+      "WebWorker"
     ],
     "types": [
       "vite/client",
-      "vitest/globals"
+      "vitest/globals",
+      "vite-plugin-pwa/pwa-assets",
+      "vite-plugin-pwa/client"
     ],
     "allowJs": false,
     "skipLibCheck": true,
@@ -29,6 +32,8 @@
     "./src"
   ],
   "files": [
-    "./vitest.setup.ts"
+    "./vitest.setup.ts",
+    "src/config/authProvider.ts",
+    "./src/config/env.ts"
   ]
 }
