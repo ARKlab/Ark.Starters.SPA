@@ -1,9 +1,9 @@
-import { AlertDialog, AlertDialogBody, AlertDialogCloseButton, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button } from '@chakra-ui/react';
-import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { If, Then } from 'react-if';
 // eslint-disable-next-line import/no-unresolved
 import { useRegisterSW } from 'virtual:pwa-register/react'
+
+import { ConfirmationDialog } from './confirmationDialog/confirmationDialog';
 
 
 export const PWABadge = () => {
@@ -34,44 +34,25 @@ export const PWABadge = () => {
         setNeedRefresh(false)
     }
 
-    const cancelRef = useRef<HTMLButtonElement | null>(null);
     const { t } = useTranslation();
 
-    return (<AlertDialog
-        isOpen={offlineReady || needRefresh}
-        leastDestructiveRef={cancelRef}
-        closeOnOverlayClick={false}
-        onClose={onClose}
-    >
-        <AlertDialogOverlay>
-            <AlertDialogContent>
-                <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-                    <If condition={offlineReady}><Then>{t('pwaBadge.offlineReady.title')}</Then></If>
-                    <If condition={needRefresh}><Then>{t('pwaBadge.newVersion.title')}</Then></If>
-                </AlertDialogHeader>
-                <AlertDialogCloseButton />
+    return (
+        <ConfirmationDialog
+            isOpen={offlineReady || needRefresh}
+            onClose={onClose}
+            onConfirm={async () => updateServiceWorker(true)}
+            title={<>
+                <If condition={offlineReady}><Then>{t('pwaBadge.offlineReady.title')}</Then></If>
+                <If condition={needRefresh}><Then>{t('pwaBadge.newVersion.title')}</Then></If>
+            </>}
+            body={<>
+                <If condition={offlineReady}><Then>{t('pwaBadge.offlineReady.body')}</Then></If>
+                <If condition={needRefresh}><Then>{t('pwaBadge.newVersion.body')}</Then></If></>
+            }
 
-                <AlertDialogBody>
-                    <If condition={offlineReady}><Then>{t('pwaBadge.offlineReady.body')}</Then></If>
-                    <If condition={needRefresh}><Then>{t('pwaBadge.newVersion.body')}</Then></If>
-                </AlertDialogBody>
-
-                <AlertDialogFooter>
-                    <Button ref={cancelRef} onClick={onClose}>
-                        {t('pwaBadge.button.close')}
-                    </Button>
-                    <If condition={needRefresh}>
-                        <Then>
-                            <Button colorScheme='green' onClick={async () => updateServiceWorker(true)} ml={3}>
-                                {t('pwaBadge.button.refresh')}
-                            </Button>
-                        </Then>
-                    </If>
-                </AlertDialogFooter>
-            </AlertDialogContent>
-        </AlertDialogOverlay>
-    </AlertDialog>
+        />
     );
+
 }
 
 
