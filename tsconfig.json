@@ -32,8 +32,6 @@
     "./src"
   ],
   "files": [
-    "./vitest.setup.ts",
-    "src/config/authProvider.ts",
-    "./src/config/env.ts"
+    "./vitest.setup.ts"
   ]
 }

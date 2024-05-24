@@ -27,6 +27,8 @@ import { useAuthContext } from '../../lib/authentication/components/useAuthConte
 import { LocaleSwitcher } from '../../lib/i18n/localeSwitcher'
 import { Logo } from '../../logo'
 
+import { GlobalLoadingBar } from './GlobalLoadingBar'
+
 const UserMenu = () => {
   const dispatch = useAppDispatch()
   const { isLogged } = useAuthContext()
@@ -128,8 +130,10 @@ const Header = () => {
           <UserMenu />
         </Center>
       </Flex>
+      <GlobalLoadingBar />
     </Box>
   )
 }
+
 
 export default Header
