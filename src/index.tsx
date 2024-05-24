@@ -2,21 +2,13 @@ import {
   ChakraProvider,
   createLocalStorageManager,
 } from "@chakra-ui/react";
-import React from "react";
-import ReactDOM from "react-dom/client";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
 import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
-import { HelmetProvider } from "react-helmet-async";
-import { Provider } from "react-redux";
 
-import { initStore } from "./app/configureStore";
-import { authProvider } from './globalConfigs'
-import { Init } from "./init";
-import AuthenticationProviderContext from "./lib/authentication/components/AuthenticationProviderContext";
-import { setError } from "./lib/errorHandler/errorHandler";
+import LazyLoad from "./components/lazyLoad";
 import reportWebVitals from "./reportWebVitals";
 import { theme } from "./theme";
-
-const store = initStore(authProvider)
 
 /**
  * ReactErrorBoundary at this level renders a Chakra-less/Redux-less context as they failed.
@@ -40,22 +32,8 @@ window.addEventListener("vite:preloadError", () => {
   window.location.reload();
 });
 
-// This is needed in case someone uses useEffect() for ASYNC promised instead of useAsyncEffect()
-window.addEventListener("unhandledrejection", (e: PromiseRejectionEvent) => {
-  store.dispatch(setError({
-    error: true,
-    details: {
-      title: "unhandled promise rejection",
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      message: e.reason?.message,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      status: e.reason?.code,
-      isValidationError: false
-    },
-  }))
-});
 
-const root = ReactDOM.createRoot(
+const root = createRoot(
   document.getElementById("root") as HTMLElement
 );
 
@@ -63,21 +41,17 @@ const colorModeManager = createLocalStorageManager(
   import.meta.env.VITE_APP_TITLE + "-ColorMode"
 ); //change the name of the application
 
+// Initialize as little as possible so that we can Render the ErrorBoundary if initStatic throws any error
+// Thus defer 'importing' initStatic via Lazy to avoid any throw in the 'global' scope
 root.render(
-  <React.StrictMode>
+  <StrictMode>
     <ReactErrorBoundary fallbackRender={fallbackRender}>
       <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
-        <AuthenticationProviderContext authProvider={authProvider}>
-          <Provider store={store}>
-            <HelmetProvider>
-              <Init />
-            </HelmetProvider>
-          </Provider>
-        </AuthenticationProviderContext>
+        <LazyLoad loader={async () => import("./initGlobals")} />
       </ChakraProvider>
     </ReactErrorBoundary>
-  </React.StrictMode>
+  </StrictMode>
 );
 
-reportWebVitals(console.log);
+reportWebVitals();
 

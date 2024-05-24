@@ -2,10 +2,10 @@ import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import HttpApi from "i18next-http-backend";
 import { initReactI18next } from "react-i18next";
-import z from "zod";
+import * as z from "zod";
 import { makeZodI18nMap } from "zod-i18n-map";
 
-import { supportedLngs } from "../../globalConfigs";
+import { supportedLngs } from "../../config/lang";
 
 export const i18nSetup = async () => {
   z.setErrorMap(
@@ -17,7 +17,6 @@ export const i18nSetup = async () => {
     }),
   );
 
-  // eslint-disable-next-line import/no-named-as-default-member
   await i18n
     // Add React bindings as a plugin.
     .use(HttpApi)
@@ -54,6 +53,9 @@ export const i18nSetup = async () => {
       interpolation: {
         escapeValue: false,
       },
+
+      // if a key is empty, returns the key
+      returnEmptyString: false,
 
       ns: ["translation", "zod", "zodCustom"],
     });

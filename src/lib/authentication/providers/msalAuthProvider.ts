@@ -3,7 +3,7 @@ import * as msal from "@azure/msal-browser";
 import { NavigationClient, EventType } from "@azure/msal-browser";
 import * as R from "ramda";
 
-import type { CustomSettingsType } from "../../../global";
+import type { CustomSettingsType } from "../../../config/global";
 import { router } from "../../router";
 import type { UserAccountInfo } from "../authTypes";
 import { LoginStatus } from "../authTypes";

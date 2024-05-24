@@ -1,5 +1,5 @@
 import { createAppSlice } from "../../app/createAppSlice";
-import type { CustomSettingsType } from "../../global";
+import type { CustomSettingsType } from "../../config/global";
 
 const initialState: CustomSettingsType = window.customSettings;
 

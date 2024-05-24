@@ -1,6 +1,6 @@
 import { Image } from '@chakra-ui/react'
 
-import imgUrl from './logo-ark.png'
+import imgUrl from './logo.png'
 
 export const Logo = () => {
     return <Image

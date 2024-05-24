@@ -8,7 +8,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import type { ReactNode } from "react";
-import React, { useState } from "react";
+import { useState, Children } from "react";
 import { Form } from "react-final-form";
 
 export function Wizard<SchemaType extends object>({
@@ -19,11 +19,10 @@ export function Wizard<SchemaType extends object>({
   children: ReactNode;
 }) {
   const [page, setPage] = useState(0);
-  const activePage = React.Children.toArray(children)[page];
-  const isLastPage = page === React.Children.count(children) - 1;
+  const activePage = Children.toArray(children)[page];
+  const isLastPage = page === Children.count(children) - 1;
 
-  const next = () =>
-    { setPage(Math.min(page + 1, React.Children.count(children) - 1)); };
+  const next = () => { setPage(Math.min(page + 1, Children.count(children) - 1)); };
 
   const previous = () => { setPage(Math.max(page - 1, 0)); };
 

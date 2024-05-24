@@ -4,7 +4,7 @@ import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
-import { supportedLngs } from "../../globalConfigs";
+import { supportedLngs } from "../../config/lang";
 
 export const LocaleSwitcher = () => {
   const { i18n } = useTranslation();
