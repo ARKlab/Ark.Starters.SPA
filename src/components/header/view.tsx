@@ -15,7 +15,9 @@ import {
   useColorMode,
 } from '@chakra-ui/react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { MdQuestionMark } from 'react-icons/md'
+import { Then, If, Else } from 'react-if'
 
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import {
@@ -41,59 +43,44 @@ const UserMenu = () => {
     setIsChecked(!isChecked)
     setTimeout(toggleColorMode, 200) // 200ms delay
   }
-  function login() {
-    void dispatch(Login())
-  }
-  if (!isLogged) {
-    return (
-      <Menu>
-        <MenuButton mr="20px">
-          <Avatar icon={<MdQuestionMark />} />
-        </MenuButton>
-        <MenuList>
-          <MenuGroup title="Options">
-            <MenuItem
-              as={Switch}
-              onChange={toggleColorModeWithDelay}
-              isChecked={isChecked}
-            >
-              Dark Mode
-            </MenuItem>
-          </MenuGroup>
-          <MenuDivider />
-          <MenuGroup title="Account">
-            <WrapItem>
-              <MenuItem onClick={login}>Login</MenuItem>
-            </WrapItem>
-            <WrapItem>
-              <MenuItem onClick={async () => dispatch(Logout())}>Exit</MenuItem>
-            </WrapItem>
-          </MenuGroup>
-        </MenuList>
-      </Menu>
-    )
-  }
+  const { t } = useTranslation();
   return (
     <Menu>
       <MenuButton mr="20px">
-        <Avatar name={user?.userInfo?.username || 'User'} src="avatarSource" />
+        <If condition={isLogged}>
+          <Then>
+            <Avatar name={user?.userInfo?.username || t('menu.user')} src="avatarSource" />
+          </Then>
+          <Else>
+            <Avatar icon={<MdQuestionMark />} />
+          </Else>
+        </If>
       </MenuButton>
       <MenuList>
-        <MenuGroup title="Options">
+        <MenuGroup title={t('menu.options')}>
           <MenuItem
             as={Switch}
             onChange={toggleColorModeWithDelay}
             isChecked={isChecked}
           >
-            Dark Mode
+            {t('menu.dark')}
           </MenuItem>
         </MenuGroup>
         <MenuDivider />
-        <MenuGroup title="Account">
-          <WrapItem>
-            <MenuItem>{user?.userInfo?.username || 'User'}</MenuItem>
-          </WrapItem>
-          <MenuItem onClick={async () => dispatch(Logout())}>Exit</MenuItem>
+        <MenuGroup title={t('menu.account')}>
+          <If condition={isLogged}>
+            <Then>
+              <WrapItem>
+                <MenuItem>{user?.userInfo?.username || t('menu.user')}</MenuItem>
+              </WrapItem>
+              <MenuItem onClick={async () => dispatch(Logout())}>{t('exit')}</MenuItem>
+            </Then>
+            <Else>
+              <WrapItem>
+                <MenuItem onClick={async () => dispatch(Login())}>{t('login')}</MenuItem>
+              </WrapItem>
+            </Else>
+          </If>
         </MenuGroup>
       </MenuList>
     </Menu>

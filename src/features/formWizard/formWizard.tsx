@@ -21,7 +21,9 @@ const sleep = async (ms: number) => new Promise((resolve) => setTimeout(resolve,
 const emailSchema = z.string().email();
 const required = z.string().min(1);
 const passwordComplexity = z.string().refine((v) => v.length > 6, {
-  message: "Password needs to be at least 6 characters",
+  params: {
+    i18n: { key: "password_complexity" },
+  },
 });
 const phoneSchema = z
   .string()

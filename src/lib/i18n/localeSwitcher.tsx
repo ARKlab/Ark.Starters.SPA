@@ -28,7 +28,7 @@ export const LocaleSwitcher = () => {
             rightIcon={<ChevronDownIcon />}
             isActive={isOpen}
           >
-            {i18n.resolvedLanguage}
+            {i18n.language}
           </MenuButton>
           <MenuList>
             {Object.entries(supportedLngs).map(([k, v]) => (

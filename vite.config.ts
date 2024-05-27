@@ -6,6 +6,7 @@ import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import eslint from "vite-plugin-eslint";
 import copy from "rollup-plugin-copy";
+import { i18nAlly } from "vite-plugin-i18n-ally";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import { reactClickToComponent } from "vite-plugin-react-click-to-component";
 import svgr from "vite-plugin-svgr";
@@ -35,7 +36,7 @@ export default defineConfig(({ mode }) => {
         pwaAssets: { disabled: false, config: true, htmlPreset: "2023", overrideManifestIcons: true },
         workbox: {
           maximumFileSizeToCacheInBytes: chunkSizeLimit * 1024,
-          globPatterns: ["**/*.{js,css,html,ico,png,svg}", "**/locales/" + defaultLang + "/*.json"],
+          globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
         },
         manifest: {
           name: env.VITE_APP_TITLE,
@@ -70,10 +71,13 @@ export default defineConfig(({ mode }) => {
         targets: Object.keys(supportedLngs).map(l => {
           return {
             src: "node_modules/zod-i18n-map/locales/" + l,
-            dest: "public/locales",
+            dest: "src/locales",
           };
         }),
         hook: "buildStart",
+      }),
+      i18nAlly({
+        localesPaths: ["./src/locales"],
       }),
       eslint({ fix: true, lintOnStart: true, exclude: ["node_modules/**", "build/**", "public/**"] }),
     ],

@@ -6,7 +6,7 @@ const DetailsPageExampleMainView = () => {
   const { t } = useTranslation();
   return (
     <Box>
-      <Heading>{t("Playground")}</Heading>
+      <Heading>{t("playground")}</Heading>
       <Box>
         <Heading size="md" my={"20px"}>
           {t("notification_example")}
