@@ -76,9 +76,7 @@ export default defineConfig(({ mode }) => {
         }),
         hook: "buildStart",
       }),
-      i18nAlly({
-        localesPaths: ["./src/locales"],
-      }),
+      i18nAlly(),
       eslint({
         fix: true,
         lintOnStart: true,
