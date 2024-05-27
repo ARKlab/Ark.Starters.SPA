@@ -37,6 +37,12 @@
   "games_video_games": "Videogiochi",
   "hello_world": "Ciao, Mondo!",
   "lastname": "Cognome",
+  "localization-samples": {
+    "locale-switcher": "Cambia lingua",
+    "submit": "Inviato",
+    "submit-message": "Figo!",
+    "title": "Esempi di localizzazione"
+  },
   "localization_control_label": "Imposta il numero di mele",
   "localization_dynamic_text": "Traduzione testo dinamico",
   "localization_dynamic_text_explanation": "Questo esempio mostra come i valori dinamici possano cambiare posizione se richiesto dalla lingua selezionata.",
@@ -60,6 +66,7 @@
   "movies_release": "Data di uscita",
   "movies_resetcolumnsorder": "Ripristina Ordine Colonne",
   "movies_title": "Titolo",
+  "name": "Nome",
   "new": "Nuovo",
   "notification_body": "Ecco una notifica di prova!",
   "notification_example": "Notifiche di esempio",
@@ -93,6 +100,9 @@
   "top": "In alto",
   "topleft": "In alto a sinistra",
   "topright": "In alto a destra",
+  "translation-samples": {
+    "custom-error": "Errore personalizzato"
+  },
   "triggerError": "Scatena un errore",
   "wizard_billing_address_placeholder": "Indirizzo di fatturazione",
   "wizard_email_placeholder": "Email",

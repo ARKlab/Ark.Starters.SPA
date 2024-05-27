@@ -37,6 +37,12 @@
   "games_video_games": "Video Games",
   "hello_world": "Hello, World!",
   "lastname": "Last Name",
+  "localization-samples": {
+    "locale-switcher": "Locale Switcher",
+    "submit": "Submitted",
+    "submit-message": "nice!",
+    "title": "Localization samples"
+  },
   "localization_control_label": "Set apple number",
   "localization_dynamic_text": "Dynamic Text Translation",
   "localization_dynamic_text_explanation": "This is to show the use of parameters in translations where the phrase construction requires to change the position of the dynamic value",
@@ -60,6 +66,7 @@
   "movies_release": "Release",
   "movies_resetcolumnsorder": "Reset Columns Order",
   "movies_title": "Title",
+  "name": "Name",
   "new": "New",
   "notification_body": "Here's your notification!",
   "notification_example": "notifications example",
@@ -93,6 +100,9 @@
   "top": "Top",
   "topleft": "Top Left",
   "topright": "Top Right",
+  "translation-samples": {
+    "custom-error": "Custom Error"
+  },
   "triggerError": "Trigger an Error",
   "wizard_billing_address_placeholder": "Billing Address",
   "wizard_email_placeholder": "Email",
