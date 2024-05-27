@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { set } from 'lodash-es'
 import type { z } from 'zod'
 
 /*
@@ -13,7 +13,7 @@ export const zod2FormValidator =
     if (!res.success) {
       const errors = {}
       for (const err of res.error.errors) {
-        _.set(errors, err.path, [err.message])
+        set(errors, err.path, [err.message])
       }
       return errors
     }
