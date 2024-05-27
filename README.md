@@ -306,7 +306,7 @@ export interface AuthProvider {
 
 ## Localization with i18n
 
-[React-i18next](https://react.i18next.com/) is used for Localization support. Refer to official documentation for usage or check the [LocalizationPage](https://github.com/ARKlab/Ark.Starters.SPA/blob/master/src/features/localization/localizationPage.tsx) examples.
+[React-i18next](https://react.i18next.com/) is used for Localization support. Refer to official documentation for usage or check the [LocalizationPage](src/features/localization/localizationPage.tsx) examples.
 
 ### Configure
 
@@ -316,7 +316,7 @@ To disable Localization but still supporting Zod errors, fill the list with the 
 
 ### Integration with Zod validation error
 
-Based on [zod-i18n-map](https://github.com/aiji42/zod-i18n), has been configured so that you can use zodCustom i18n namespace for custom key messages as shown in [LocalizationPage](https://github.com/ARKlab/Ark.Starters.SPA/blob/master/src/features/localization/localizationPage.tsx).
+Based on [zod-i18n-map](https://github.com/aiji42/zod-i18n), has been configured so that you can use zodCustom i18n namespace for custom key messages as shown in [LocalizationPage](src/features/localization/localizationPage.tsx).
 
 ```ts
 const TestSchema = z.object({
@@ -338,4 +338,23 @@ const TestSchema = z.object({
 
 ### Integration with Final Form
 
-Check [LocalizationPage](https://github.com/ARKlab/Ark.Starters.SPA/blob/master/src/features/localization/localizationPage.tsx) to see how to use Zod for validating the Forms using `zod2FormValidator` and `zod2FieldValidator` helpers.
+Check [LocalizationPage](src/features/localization/localizationPage.tsx) to see how to use Zod for validating the Forms using `zod2FormValidator` and `zod2FieldValidator` helpers.
+
+## PWA Support
+
+This starter project include PWA via [vite-plugin-pwa](https://github.com/vite-pwa/vite-plugin-pwa).
+
+### Test PWA Update badge
+
+To test the PWA popup, run the preview build.
+
+1. npm run build
+2. npm run preview
+3. Ctrl+C to stop the Preview server - leave the page open in the Browser
+4. edit any file
+5. npm run build
+6. npm run preview
+7. A wild Popup happears!
+8. **Remember to uninstall the Service Worker** by clearing site data from DevTools before moving back to development via `npm run start`
+
+![image](docs/pwa-uninstall.png)
