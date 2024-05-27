@@ -12,7 +12,7 @@ module.exports = {
         // Make sure it's always the last config, so it gets the chance to override other configs.
         'eslint-config-prettier',
     ],
-    ignorePatterns: ['node_modules', 'public', 'build', 'dist', 'dev-dist', '.eslintrc.cjs'],
+    ignorePatterns: ["**/node_modules/", ".git/", 'public/', 'build/', 'dist/', 'dev-dist/', '.eslintrc.cjs'],
     parserOptions: {
         project: ['tsconfig.json'],
 

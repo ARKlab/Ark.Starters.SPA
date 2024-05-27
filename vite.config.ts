@@ -79,7 +79,12 @@ export default defineConfig(({ mode }) => {
       i18nAlly({
         localesPaths: ["./src/locales"],
       }),
-      eslint({ fix: true, lintOnStart: true, exclude: ["node_modules/**", "build/**", "public/**"] }),
+      eslint({
+        fix: true,
+        lintOnStart: true,
+        cache: true,
+        exclude: ["**/node_modules/**", "**/build/**", "**/public/**", "**/dev-dist/**", "virtual:**"],
+      }),
     ],
     test: {
       globals: true,
