@@ -52,6 +52,15 @@ export const mainSections: MainSectionType[] = [
         ),
       },
       {
+        path: "globalLoadingBar",
+        label: "GlobalLoadingBar",
+        icon: FaPlay,
+        isInMenu: true,
+        component: (
+          <LazyLoad loader={async () => import("../features/globalLoadingBar/globalLoadingPage")} />
+        ),
+      },
+      {
         path: "permissionsPlayground",
         label: "Permissions",
         authenticatedOnly: true,

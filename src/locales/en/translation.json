@@ -114,5 +114,11 @@
   "wizard_phone_placeholder": "Phone",
   "wizard_shipping_address_placeholder": "Shipping Address",
   "wizard_sms_notifications_label": "Receive SMS Notifications",
-  "wizard_special_offers_label": "Receive Special Offers via Email"
+  "wizard_special_offers_label": "Receive Special Offers via Email",
+  "globalloadingbar": {
+    "title": "Global Loading Bar",
+    "description": "While loading this page, you can see the Global Progress as getting data takes a lot.",
+    "slowButtonText": "Trigger Slow fetch",
+    "fastButtonText": "Trigger Fast fetch"
+  }
 }

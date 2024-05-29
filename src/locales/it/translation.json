@@ -114,5 +114,11 @@
   "wizard_phone_placeholder": "Telefono",
   "wizard_shipping_address_placeholder": "Indirizzo di spedizione",
   "wizard_sms_notifications_label": "Ricevi notifiche SMS",
-  "wizard_special_offers_label": "Ricevi offerte speciali via email"
+  "wizard_special_offers_label": "Ricevi offerte speciali via email",
+  "globalloadingbar": {
+    "title": "Barra di caricamento globale",
+    "description": "Durante il caricamento di questa pagina, puoi vedere il progresso globale poiché ottenere dati richiede molto.",
+    "slowButtonText": "Attiva il recupero lento",
+    "fastButtonText": "Attiva il recupero veloce"
+  }
 }
