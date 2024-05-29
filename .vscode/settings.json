@@ -11,4 +11,10 @@
     },
     "prettier.configPath": ".prettierrc",
     "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "i18n-ally.localesPaths": [
+        "public/locales",
+        "src/locales",
+        "src/lib/i18n"
+    ],
+    "i18n-ally.keystyle": "nested",
 }
