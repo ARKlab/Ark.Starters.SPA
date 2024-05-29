@@ -32,7 +32,7 @@ const NotificationPlaygroundView = () => {
   const notificationBody = t("notification_body");
   return (
     <Box>
-      <Heading>{t("Playground")}</Heading>
+      <Heading>{t("playground")}</Heading>
       <Box>
         <Heading size="md" my={"20px"}>
           {t("notification_example")}

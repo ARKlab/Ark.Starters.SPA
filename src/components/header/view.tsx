@@ -3,6 +3,7 @@ import {
   Box,
   Center,
   Flex,
+  HStack,
   Menu,
   MenuButton,
   MenuDivider,
@@ -111,24 +112,24 @@ const Header = () => {
       zIndex={'banner'} // You can adjust the z-index as needed
       shadow={'md'}
       width={'100%'}
-      paddingTop={'5px'}
-      paddingBottom={'5px'}
       bg="gray.800"
     >
-      <Flex>
+      <Flex
+        paddingTop={'5px'}
+        paddingBottom={'5px'}
+      >
         <Center ml={'20px'} >
           <Logo />
         </Center>
         <Spacer />
-        <Spacer />
-        <Spacer />
-        <Spacer />
-        <Center mr={"20px"}>
-          <LocaleSwitcher />
-        </Center>
-        <Center>
-          <UserMenu />
-        </Center>
+        <HStack>
+          <Center mr={"20px"}>
+            <LocaleSwitcher />
+          </Center>
+          <Center>
+            <UserMenu />
+          </Center>
+        </HStack>
       </Flex>
       <GlobalLoadingBar />
     </Box>
