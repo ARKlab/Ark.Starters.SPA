@@ -191,7 +191,7 @@ export default function EditableTableExample() {
                   form.change('throwError', true)
                 }}
               >
-                {t("triggererror")}
+                {t("triggerError")}
               </Button>
               <Button
                 onClick={() => { form.reset(); }}

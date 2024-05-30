@@ -28,8 +28,8 @@ const LocalizationPage = () => {
 
   const submit = () => {
     toast({
-      title: "Submitted",
-      description: "nice!",
+      title: t('localization-samples.submit'),
+      description: t('localization-samples.submit-message'),
     });
   };
 
@@ -40,7 +40,7 @@ const LocalizationPage = () => {
   return (
     <Box>
       <Heading noOfLines={1} size="xl">
-        Localization samples
+        {t('localization-samples.title')}
       </Heading>
       <VStack
         divider={<StackDivider borderColor="gray.200" />}
@@ -49,7 +49,7 @@ const LocalizationPage = () => {
       >
         <Box my="20px">
           <Heading noOfLines={1} size="md">
-            "Locale Switcher"
+            {t('localization-samples.locale-switcher')}
           </Heading>
           <LocaleSwitcher />
         </Box>
@@ -75,7 +75,7 @@ const LocalizationPage = () => {
                           isInvalid={!!error && touched}
                           isDisabled={submitting}
                         >
-                          <FormLabel htmlFor="name">Name</FormLabel>
+                          <FormLabel htmlFor="name">{t('name')}</FormLabel>
                           <Input {...input} />
                           <FormErrorMessage>{error}</FormErrorMessage>
                         </FormControl>
@@ -111,7 +111,7 @@ const LocalizationPage = () => {
                           isDisabled={submitting}
                         >
                           <FormLabel htmlFor="customErrorInline">
-                            Custom Error
+                            {t('translation-samples.custom-error')}
                           </FormLabel>
                           <Input {...input} />
 

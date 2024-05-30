@@ -1,13 +1,18 @@
 import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
-import HttpApi from "i18next-http-backend";
 import { initReactI18next } from "react-i18next";
+import { setupI18n } from "vite-plugin-i18n-ally/client";
 import * as z from "zod";
 import { makeZodI18nMap } from "zod-i18n-map";
 
 import { supportedLngs } from "../../config/lang";
 
+const fallbackLng = Object.keys(supportedLngs)[0];
+const lookupTarget = "lang";
+
 export const i18nSetup = async () => {
+  if (i18n.isInitialized) return;
+
   z.setErrorMap(
     makeZodI18nMap({
       ns: ["zodCustom", "zod"],
@@ -18,8 +23,6 @@ export const i18nSetup = async () => {
   );
 
   await i18n
-    // Add React bindings as a plugin.
-    .use(HttpApi)
     .use(LanguageDetector)
     .use(initReactI18next)
     // Initialize the i18next instance.
@@ -37,7 +40,7 @@ export const i18nSetup = async () => {
       // Fallback locale used when a translation is
       // missing in the active locale. Again, use your
       // preferred locale here.
-      fallbackLng: "en",
+      fallbackLng: fallbackLng,
       supportedLngs: Object.keys(supportedLngs),
 
       // Enables useful output in the browser’s
@@ -57,8 +60,42 @@ export const i18nSetup = async () => {
       // if a key is empty, returns the key
       returnEmptyString: false,
 
-      ns: ["translation", "zod", "zodCustom"],
-    });
-};
+      nsSeparator: ".",
+      detection: {
+        caches: ["localStorage", "sessionStorage", "cookie"],
+        lookupQuerystring: lookupTarget,
+        // ... For more configurations, please refer to `i18next-browser-languagedetector`
+      },
 
-export default i18n;
+      // empty resources to avoid startup warning
+      resources: {},
+
+      nonExplicitSupportedLngs: true,
+      cleanCode: true,
+      lowerCaseLng: true,
+    });
+
+  await new Promise<void>(resolve => {
+    const { loadResourceByLang } = setupI18n({
+      language: i18n.language,
+      onInited() {
+        resolve();
+      },
+      onResourceLoaded: (langs, currentLang) => {
+        // Once the resource is loaded, add it to i18next
+        Object.keys(langs).forEach(ns => {
+          i18n.addResourceBundle(currentLang, ns, langs[ns]);
+        });
+      },
+      fallbackLng,
+    });
+
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    const _changeLanguage = i18n.changeLanguage;
+    i18n.changeLanguage = async (lang: string, ...args) => {
+      // Load resources before language change
+      await loadResourceByLang(lang);
+      return _changeLanguage(lang, ...args);
+    };
+  });
+};

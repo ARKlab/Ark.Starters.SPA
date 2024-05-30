@@ -40,7 +40,7 @@ export const PWABadge = () => {
         <ConfirmationDialog
             isOpen={offlineReady || needRefresh}
             onClose={onClose}
-            onConfirm={async () => updateServiceWorker(true)}
+            onConfirm={needRefresh ? async () => updateServiceWorker(true) : undefined}
             title={<>
                 <If condition={offlineReady}><Then>{t('pwaBadge.offlineReady.title')}</Then></If>
                 <If condition={needRefresh}><Then>{t('pwaBadge.newVersion.title')}</Then></If>

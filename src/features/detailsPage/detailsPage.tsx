@@ -11,11 +11,11 @@ const DetailsPage = () => {
   return (
     <Box>
       <Heading>
-        <BackButton mx="20px" /> {t("Playground")}
+        <BackButton mx="20px" /> {t("playground")}
       </Heading>
       <Box>
         <Heading size="md" my={"20px"}>
-          {t("Details for ID:")} {id}
+          {t("playground_details_id")} {id}
         </Heading>
       </Box>
     </Box>

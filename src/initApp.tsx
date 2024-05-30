@@ -16,11 +16,12 @@ export function InitApp() {
     const { context } = useAuthContext();
 
     useAsyncEffect(async () => {
+        if (!v) return;
         await i18nSetup();
         await context.init();
         await dispatch(DetectLoggedInUser());
         setValue(false);
-    }, [setValue]);
+    }, [v, setValue]);
 
     if (v) return (<CenterSpinner />);
 
