@@ -1,7 +1,7 @@
 import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
-import { setupI18n } from "vite-plugin-i18n-ally/client";
+import { i18nAlly } from "vite-plugin-i18n-ally/client";
 import * as z from "zod";
 import { makeZodI18nMap } from "zod-i18n-map";
 
@@ -76,7 +76,7 @@ export const i18nSetup = async () => {
     });
 
   await new Promise<void>(resolve => {
-    const { loadResourceByLang } = setupI18n({
+    const { beforeLanguageChange } = i18nAlly({
       language: i18n.language,
       onInited() {
         resolve();
@@ -94,7 +94,7 @@ export const i18nSetup = async () => {
     const _changeLanguage = i18n.changeLanguage;
     i18n.changeLanguage = async (lang: string, ...args) => {
       // Load resources before language change
-      await loadResourceByLang(lang);
+      await beforeLanguageChange(lang);
       return _changeLanguage(lang, ...args);
     };
   });
