@@ -13,7 +13,7 @@ import svgr from "vite-plugin-svgr";
 import { VitePWA } from "vite-plugin-pwa";
 import { supportedLngs } from "./src/config/lang";
 
-const chunkSizeLimit = 2048;
+const chunkSizeLimit = 10048;
 const defaultLang = Object.keys(supportedLngs)[0];
 
 // https://vitejs.dev/config/
@@ -100,16 +100,12 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks: {
-            react: ["react", "react-router-dom", "react-dom", "react-error-boundary", "react-helmet-async"],
-            rtk: ["@reduxjs/toolkit", "react-redux"],
+            react: ["react", "react-router-dom", "react-dom", "react-error-boundary", "react-helmet-async", "react-if"],
+            rtk: ["@reduxjs/toolkit", "@reduxjs/toolkit/query", "@reduxjs/toolkit/react", "react-redux"],
             chakra: ["@chakra-ui/react", "@emotion/react", "@emotion/styled", "framer-motion"],
-            i18n: [
-              "i18next",
-              "react-i18next",
-              "zod-i18n-map",
-              "i18next-http-backend",
-              "i18next-browser-languagedetector",
-            ],
+            i18n: ["i18next", "react-i18next", "zod-i18n-map", "i18next-browser-languagedetector"],
+            finalForm: ["react-final-form", "react-final-form-arrays"],
+            common: ["@tanstack/react-table", "ramda", "date-fns", "react-dnd", "react-dnd-html5-backend"],
           },
         },
       },
