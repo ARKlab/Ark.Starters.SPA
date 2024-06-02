@@ -14,6 +14,7 @@ import {
   Spacer,
   Spinner,
   useBoolean,
+  useToast,
 } from "@chakra-ui/react";
 import type { FormApi } from "final-form";
 import { useEffect } from "react";
@@ -22,9 +23,6 @@ import { useTranslation } from "react-i18next";
 import { MdArrowDropDown } from "react-icons/md";
 import * as z from "zod";
 
-import { useAppDispatch } from "../../app/hooks";
-import { dispatchNotification } from "../../lib/notifications/notification";
-import { NotificationDuration } from "../../lib/notifications/notificationsTypes";
 import { zod2FieldValidator } from "../../lib/zod2FormValidator";
 
 import {
@@ -50,8 +48,8 @@ const ratingValidator = z.string().refine(
 )
 const VideoGamesForm = () => {
   const { t } = useTranslation();
+  const toast = useToast();
 
-  const dispatch = useAppDispatch();
   const [insertNewVideoGame, { isSuccess: insertSuccess }] =
     useInsertNewVideoGameMutation();
 
@@ -68,19 +66,16 @@ const VideoGamesForm = () => {
   }
   useEffect(() => {
     if (insertSuccess) {
-      dispatch(
-        dispatchNotification({
-          id: '1',
-          title: 'Inserted!',
-          message: 'Game saved succsessfully',
-          status: 'success',
-          duration: NotificationDuration.Medium,
-          isClosable: true,
-          position: 'bottom-right',
-        }),
-      )
+      toast({
+        title: 'Inserted!',
+        description: 'Game saved succsessfully',
+        status: 'success',
+        duration: 4000,
+        isClosable: true,
+        position: 'bottom-right',
+      });
     }
-  }, [insertSuccess, dispatch])
+  }, [insertSuccess, toast])
   return (
     <Accordion
       allowToggle

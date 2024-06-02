@@ -7,7 +7,6 @@ import Footer from "./components/footer/footer";
 import Header from "./components/header/view";
 import { ProblemDetailsModal } from "./components/problemDetailsModal/problemDetailsModal";
 import SimpleSidebar from "./components/sideBar/sideBar";
-import NotificationView from "./features/notificationsSample/notificationView";
 
 const Layout = () => {
   return (
@@ -31,7 +30,6 @@ const Layout = () => {
       </Box>
       <Footer />
       <ProblemDetailsModal />
-      <NotificationView />
     </>
   )
 }

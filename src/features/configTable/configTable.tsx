@@ -16,6 +16,7 @@ import {
   Thead,
   Tr,
   VStack,
+  useToast,
 } from "@chakra-ui/react";
 import arrayMutators from "final-form-arrays";
 import { useEffect } from "react";
@@ -27,8 +28,6 @@ import * as z from "zod";
 
 import { useAppDispatch } from "../../app/hooks";
 import { dispatchNetworkError } from "../../lib/errorHandler/errorHandler";
-import { dispatchNotification } from "../../lib/notifications/notification";
-import { NotificationDuration } from "../../lib/notifications/notificationsTypes";
 import { zod2FieldValidator } from "../../lib/zod2FormValidator";
 
 import { useGetConfigQuery, usePostConfigMutation } from "./configTableApi";
@@ -107,23 +106,22 @@ export default function EditableTableExample() {
     refetchOnMountOrArgChange: true,
   })
 
+  const toast = useToast();
+
   const dispatch = useAppDispatch()
 
   useEffect(() => {
     if (postConfigSuccess) {
-      dispatch(
-        dispatchNotification({
-          id: '1',
-          title: 'Config Submitted!',
-          message: 'Configuration has been submitted successfully',
-          status: 'success',
-          duration: NotificationDuration.Medium,
-          isClosable: true,
-          position: 'bottom-right',
-        }),
-      )
+      toast({
+        title: 'Config Submitted!',
+        description: 'Configuration has been submitted successfully',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+        position: 'bottom-right',
+      });
     }
-  }, [postConfigSuccess, dispatch])
+  }, [postConfigSuccess, toast])
 
   type FormValue = {
     table: Employee[];

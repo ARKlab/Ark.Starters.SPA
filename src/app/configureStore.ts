@@ -11,7 +11,6 @@ import { authSlice } from "../lib/authentication/authenticationSlice";
 import { envSlice } from "../lib/authentication/envSlice";
 import type { AuthProvider } from "../lib/authentication/providers/authProviderInterface";
 import errorReducer from "../lib/errorHandler/errorHandler";
-import notificationsReducer from "../lib/notifications/notification";
 
 // `combineSlices` automatically combines the reducers using
 // their `reducerPath`s, therefore we no longer need to call `combineReducers`.
@@ -24,7 +23,6 @@ const sliceReducers = combineSlices(
   moviesApiSlice,
   globalLoadingSlice,
   {
-    notifications: notificationsReducer,
     errorHandler: errorReducer,
   },
 );
