@@ -14,8 +14,7 @@ import {
   Spacer,
   Switch,
   WrapItem,
-  useColorMode,
-  useColorModeValue,
+  useColorMode
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -98,7 +97,7 @@ const Header = () => {
     <Box
       as="header"
       shadow={'lg'}
-      bg={useColorModeValue("gray.500", "gray.800")}
+      bg={'header.bg'}
     >
       <Flex
         paddingTop={'5px'}

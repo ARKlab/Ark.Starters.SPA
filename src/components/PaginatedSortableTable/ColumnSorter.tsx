@@ -21,7 +21,7 @@ export const ColumnSorter = <T,>({
       onClick={column.getToggleSortingHandler()}
       icon={<ColumnSorterIcon sorted={sorted} />}
       variant={sorted ? 'light' : 'transparent'}
-      color={sorted ? 'primary' : 'gray'}
+      color={'primary'}
     />
   )
 }

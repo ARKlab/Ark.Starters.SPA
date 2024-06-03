@@ -40,10 +40,10 @@ export default function SimpleSidebar() {
 
   return (
     <>
-      <SidebarContent display={{ base: "none", lg: "block" }} w={60}
-        bg={useColorModeValue("white", "gray.900")}
+      <SidebarContent display={{ base: "none", lg: "block" }} w={60} h={'full'}
         borderRight="1px"
         borderRightColor={useColorModeValue("gray.200", "gray.700")}
+        bg={'sider.bg'}
       />
       <Drawer
         isOpen={isMobileSiderOpen}
@@ -54,7 +54,7 @@ export default function SimpleSidebar() {
       >
         <DrawerOverlay />
         <DrawerContent
-          bg={useColorModeValue("white", "gray.900")}
+          bg={'sider.bg'}
         >
           <DrawerCloseButton></DrawerCloseButton>
           <DrawerHeader></DrawerHeader>
