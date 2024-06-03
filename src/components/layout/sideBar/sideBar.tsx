@@ -1,5 +1,5 @@
 //#region Imports
-import type { BoxProps, FlexProps } from "@chakra-ui/react";
+import type { BoxProps } from "@chakra-ui/react";
 import {
   Accordion,
   AccordionButton,
@@ -7,77 +7,76 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
-  CloseButton,
   Drawer,
+  DrawerBody,
+  DrawerCloseButton,
   DrawerContent,
-  Flex,
-  IconButton,
-  Text,
+  DrawerHeader,
+  DrawerOverlay,
+  useBreakpointValue,
   useColorModeValue,
-  useDisclosure,
 } from "@chakra-ui/react";
-import { FiMenu } from "react-icons/fi";
+import { useCallback, useEffect } from "react";
 
-import { mainSections } from "../../siteMap/mainSections";
+import useRouteChanged from "../../../lib/useRouteChanged";
+import { mainSections } from "../../../siteMap/mainSections";
+import { useLayoutContext } from "../useLayoutContext";
 
 import MenuItem from "./menuItem/menuItem";
 import type { SubsectionMenuItemType } from "./menuItem/types";
 
-//#endregion
 
 export default function SimpleSidebar() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isMobileSiderOpen, setMobileSiderOpen } = useLayoutContext();
 
-  //With the useAuthContext hook you can get the user's authentication status and hide\show the menu items accordingly
-  //in this Template we will not hide the menu items that require authentication but this is just an example.
-  //if you show the menu items the Router will redirect the user to the unauthorized page
-  //the choice in our example is either to show the menu items or not while preventing the user from accessing the page
-  //this are the lines to have the logged status of the user:
-  /*
-  const { context, isLogged } = useAuthContext();
+  const onClose = useCallback(() => { setMobileSiderOpen(false); }, [setMobileSiderOpen]);
 
-*/
+  // close drawer after clicking / navigating
+  useRouteChanged(onClose);
+
+  // close drawer if screen gets bigger while drawer is open
+  const isDesktop = useBreakpointValue({ base: false, lg: true });
+  useEffect(() => { if (isDesktop) onClose(); }, [onClose, isDesktop]);
 
   return (
     <>
-      <SidebarContent onClose={() => onClose} display={{ base: "none", md: "block" }} />
+      <SidebarContent display={{ base: "none", lg: "block" }} w={60} h={'full'}
+        borderRight="1px"
+        borderRightColor={useColorModeValue("gray.200", "gray.700")}
+        bg={'sider.bg'}
+      />
       <Drawer
-        isOpen={isOpen}
-        placement="left"
+        isOpen={isMobileSiderOpen}
+        placement="right"
         onClose={onClose}
         returnFocusOnClose={false}
         onOverlayClick={onClose}
-        size="full"
       >
-        <DrawerContent>
-          <SidebarContent onClose={onClose} key={"SideBarContent"} />
+        <DrawerOverlay />
+        <DrawerContent
+          bg={'sider.bg'}
+        >
+          <DrawerCloseButton></DrawerCloseButton>
+          <DrawerHeader></DrawerHeader>
+          <DrawerBody>
+            <SidebarContent key={"SideBarContent"} />
+          </DrawerBody>
         </DrawerContent>
       </Drawer>
 
-      <MobileNav display={{ base: "flex", md: "none" }} onOpen={onOpen} marginTop={"50px"} marginBottom={"-60px"} />
     </>
   );
 }
 
 interface SidebarProps extends BoxProps {
-  onClose: () => void;
 }
 
-const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+const SidebarContent = ({ ...rest }: SidebarProps) => {
   return (
     <Box
-      bg={useColorModeValue("white", "gray.900")}
-      borderRight="1px"
-      my="-20px"
-      borderRightColor={useColorModeValue("gray.200", "gray.700")}
-      w={{ base: "full", md: 60 }}
-      pos="fixed"
-      h="full"
+      as={'nav'}
       {...rest}
     >
-      <Flex h="10" alignItems="center" mx="8" justifyContent="space-between">
-        <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
-      </Flex>
       <Accordion defaultIndex={[0]} allowMultiple borderStyle={"none"} borderWidth={0}>
         {mainSections.map((section, index) => (
           <AccordionItem border="none" key={section.label + "accordionItem" + index}>
@@ -177,27 +176,3 @@ const InnerAccordionSections = (props: { section: SubsectionMenuItemType; parent
   else return <></>;
 };
 
-interface MobileProps extends FlexProps {
-  onOpen: () => void;
-}
-const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
-  return (
-    <Flex
-      ml={{ base: 0, md: 60 }}
-      px={{ base: 4, md: 24 }}
-      height="20"
-      alignItems="center"
-      bg={useColorModeValue("white", "gray.900")}
-      borderBottomWidth="1px"
-      borderBottomColor={useColorModeValue("gray.200", "gray.700")}
-      justifyContent="flex-start"
-      {...rest}
-    >
-      <IconButton variant="outline" onClick={onOpen} aria-label="open menu" icon={<FiMenu />} />
-
-      <Text fontSize="2xl" ml="8" fontFamily="monospace" fontWeight="bold">
-        Menu
-      </Text>
-    </Flex>
-  );
-};

@@ -4,6 +4,7 @@ import {
   Center,
   Flex,
   HStack,
+  IconButton,
   Menu,
   MenuButton,
   MenuDivider,
@@ -13,22 +14,24 @@ import {
   Spacer,
   Switch,
   WrapItem,
-  useColorMode,
+  useColorMode
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { MdQuestionMark } from 'react-icons/md'
+import { FiMenu } from 'react-icons/fi'
+import { MdQuestionMark } from "react-icons/md";
 import { Then, If, Else } from 'react-if'
 
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { useAppDispatch, useAppSelector } from '../../../app/hooks'
 import {
   Login,
   Logout,
   authSelector
-} from '../../lib/authentication/authenticationSlice'
-import { useAuthContext } from '../../lib/authentication/components/useAuthContext'
-import { LocaleSwitcher } from '../../lib/i18n/localeSwitcher'
-import { Logo } from '../../logo'
+} from '../../../lib/authentication/authenticationSlice'
+import { useAuthContext } from '../../../lib/authentication/components/useAuthContext'
+import { LocaleSwitcher } from '../../../lib/i18n/localeSwitcher'
+import { Logo } from '../../../logo'
+import { useLayoutContext } from '../useLayoutContext'
 
 import { GlobalLoadingBar } from './GlobalLoadingBar'
 
@@ -47,7 +50,7 @@ const UserMenu = () => {
   const { t } = useTranslation();
   return (
     <Menu>
-      <MenuButton mr="20px">
+      <MenuButton>
         <If condition={isLogged}>
           <Then>
             <Avatar name={user?.userInfo?.username || t('menu.user')} src="avatarSource" />
@@ -89,32 +92,36 @@ const UserMenu = () => {
 }
 
 const Header = () => {
+  const { isMobileSiderOpen, setMobileSiderOpen } = useLayoutContext();
   return (
     <Box
       as="header"
-      position="fixed"
-      top="0"
-      left="0"
-      right="0"
-      zIndex={'banner'} // You can adjust the z-index as needed
-      shadow={'md'}
-      width={'100%'}
-      bg="gray.800"
+      shadow={'lg'}
+      bg={'header.bg'}
     >
       <Flex
         paddingTop={'5px'}
         paddingBottom={'5px'}
       >
-        <Center ml={'20px'} >
-          <Logo />
-        </Center>
+        <HStack spacing={2} pl={2}>
+          <Center>
+            <Logo />
+          </Center>
+        </HStack>
         <Spacer />
-        <HStack>
-          <Center mr={"20px"}>
+        <HStack spacing={2} pr={2}>
+          <Center>
             <LocaleSwitcher />
           </Center>
           <Center>
             <UserMenu />
+          </Center>
+          <Center display={{ base: "block", lg: "none" }}>
+            <If condition={!isMobileSiderOpen}>
+              <Then>
+                <IconButton variant="outline" aria-label="open menu" onClick={() => { setMobileSiderOpen(true); }} icon={<FiMenu />} />
+              </Then>
+            </If>
           </Center>
         </HStack>
       </Flex>

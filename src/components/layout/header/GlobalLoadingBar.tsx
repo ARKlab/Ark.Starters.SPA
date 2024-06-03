@@ -1,8 +1,8 @@
 import { Progress } from '@chakra-ui/react';
 import { QueryStatus } from '@reduxjs/toolkit/query';
 
-import { useAppSelector } from '../../app/hooks';
-import useDebounce from '../../lib/useDebounce';
+import { useAppSelector } from '../../../app/hooks';
+import useDebounce from '../../../lib/useDebounce';
 
 type X = {
     queries?: Record<string, { status: QueryStatus } | undefined>;

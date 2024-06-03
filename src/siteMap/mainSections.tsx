@@ -14,8 +14,8 @@ import { TbListDetails } from "react-icons/tb";
 import { Navigate } from "react-router-dom";
 
 import { Bomb } from "../components/Bomb";
+import type { MainSectionType } from "../components/layout/sideBar/menuItem/types";
 import LazyLoad from "../components/lazyLoad";
-import type { MainSectionType } from "../components/sideBar/menuItem/types";
 import DetailsPage from "../features/detailsPage/detailsPage";
 import DetailsPageExampleMainView from "../features/detailsPage/detailsPageExampleMainView";
 import NoEntryPoint from "../features/staticPageExample/staticPage";

@@ -1,10 +1,23 @@
-import { extendTheme } from '@chakra-ui/react'
+import type { StyleFunctionProps } from '@chakra-ui/react';
+import { extendTheme, baseTheme, withDefaultColorScheme } from '@chakra-ui/react';
+import { mode } from "@chakra-ui/theme-tools";
+
 const config = {
-  initialColorMode: 'dark',
-  useSystemColorMode: false, // Set to true if you want to use the system color mode
+  useSystemColorMode: true,
 }
 export const theme = extendTheme({
   config,
+  styles: {
+    global: (props: StyleFunctionProps) => {
+      const bgLight = props.theme.colors.gray[50];
+      const bgDark = props.theme.colors.gray[900];
+      return {
+        "html, body": {
+          background: mode(bgLight, bgDark)(props),
+        },
+      };
+    },
+  },
   colors: {
     brandPalette: {
       100: '#e4f1ff',
@@ -21,10 +34,29 @@ export const theme = extendTheme({
       selected: '#104378',
       dark: '#194069',
       darken: '#282c37',
-    },
+    }
+  },
+  semanticTokens: {
+    colors: {
+      header: {
+        bg: {
+          default: baseTheme.colors.gray[500],
+          _dark: baseTheme.colors.gray[800],
+        },
+      },
+      sider: {
+        bg: {
+          default: baseTheme.colors.white,
+          _dark: baseTheme.colors.gray[800],
+        },
+      }
+    }
   },
   fonts: {
     heading: `'PTSansRegular', sans-serif`,
     body: `'PTSansRegular', sans-serif`,
   },
-})
+
+},
+  withDefaultColorScheme({ colorScheme: 'brandPalette' }),
+)

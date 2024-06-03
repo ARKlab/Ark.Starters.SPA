@@ -1,10 +1,10 @@
 import { Else, If, Then } from "react-if";
 import { Outlet, Route, createBrowserRouter, createRoutesFromChildren } from "react-router-dom";
 
+import Layout from "../components/layout/layout";
+import type { MainSectionType, SubsectionMenuItemType } from "../components/layout/sideBar/menuItem/types";
 import PageNotFound from "../components/pageNotFound";
 import SEO from "../components/seo";
-import type { MainSectionType, SubsectionMenuItemType } from "../components/sideBar/menuItem/types";
-import Layout from "../layout";
 import { mainSections } from "../siteMap/mainSections";
 
 import { AuthenticatedOnly } from "./authentication/components/authenticatedOnly";
