@@ -12,6 +12,7 @@ import { reactClickToComponent } from "vite-plugin-react-click-to-component";
 import svgr from "vite-plugin-svgr";
 import { VitePWA } from "vite-plugin-pwa";
 import { supportedLngs } from "./src/config/lang";
+import legacy from "vite-plugin-legacy-swc";
 
 const chunkSizeLimit = 10048;
 const defaultLang = Object.keys(supportedLngs)[0];
@@ -21,6 +22,14 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   return {
     plugins: [
+      legacy({
+        targets: ["defaults"],
+        modernTargets: [
+          "fully supports es6-module and fully supports css-grid and fully supports es6-module-dynamic-import and >0.5%, not dead",
+        ],
+        modernPolyfills: true,
+        renderLegacyChunks: false,
+      }),
       svgr({
         svgrOptions: {
           plugins: ["@svgr/plugin-svgo", "@svgr/plugin-jsx"],
@@ -97,6 +106,7 @@ export default defineConfig(({ mode }) => {
       emptyOutDir: true,
       outDir: "build",
       chunkSizeWarningLimit: chunkSizeLimit,
+      target: "esnext",
       rollupOptions: {
         output: {
           manualChunks: {
