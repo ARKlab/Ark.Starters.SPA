@@ -11,9 +11,19 @@ import { LoginStatus } from "../authTypes";
 import type { AuthProvider } from "./authProviderInterface";
 
 const claimsUrl = "http://ark-energy.eu/claims/";
+const CODE_RE = /[?&]code=[^&]+/;
+const STATE_RE = /[?&]state=[^&]+/;
+const ERROR_RE = /[?&]error=[^&]+/;
+
+export const hasAuthParams = (searchParams = window.location.search): boolean =>
+  (CODE_RE.test(searchParams) || ERROR_RE.test(searchParams)) && STATE_RE.test(searchParams);
 
 export type Auth0Config = {
   auth0Config: Auth0ClientOptions;
+};
+
+type AppState = {
+  targetUrl?: string;
 };
 
 export class Auth0AuthProvider implements AuthProvider {
@@ -29,6 +39,8 @@ export class Auth0AuthProvider implements AuthProvider {
       domain: env.domain,
       clientId: env.clientID,
       cacheLocation: "localstorage",
+      useCookiesForTransactions: true,
+      useRefreshTokens: true,
       authorizationParams: {
         redirect_uri: env.redirectUri,
         audience: env.audience,
@@ -48,10 +60,19 @@ export class Auth0AuthProvider implements AuthProvider {
     const permissions = this.userPermissions;
     return permissions.includes(permission);
   }
-  public async init() {}
+  public async init() {
+    await this.isAuthenticated();
+    if (hasAuthParams()) {
+      await this.handleLoginRedirect();
+    }
+  }
 
   public async login() {
-    await this.auth0Client.loginWithRedirect();
+    await this.auth0Client.loginWithRedirect<AppState>({
+      appState: {
+        targetUrl: window.location.href,
+      },
+    });
   }
 
   public async logout() {
@@ -75,23 +96,16 @@ export class Auth0AuthProvider implements AuthProvider {
   public async handleLoginRedirect(): Promise<void> {
     let target = "/";
 
-    if (await this.isAuthenticated()) {
+    try {
+      const result = await this.auth0Client.handleRedirectCallback<AppState>();
       this.setLoginStatus(LoginStatus.Logged);
-    } else {
-      const query = window.location.search;
-
-      if (query.includes("code=") && query.includes("state=")) {
-        // TODO: and if the handleRedirect fails?
-
-        await this.auth0Client.handleRedirectCallback().then(result => {
-          this.setLoginStatus(LoginStatus.Logged);
-          target = (result.appState as { targetUrl?: string }).targetUrl ?? "/";
-        });
-      }
+      target = result.appState?.targetUrl ?? "/";
+      const relativePath = target.replace(window.location.origin, "");
+      await router.navigate(relativePath, { replace: true });
+    } catch (e) {
+      this.setLoginStatus(LoginStatus.Error);
+      throw e;
     }
-
-    const relativePath = target.replace(window.location.origin, "");
-    await router.navigate(relativePath, { replace: true });
   }
 
   public async getUserDetail(): Promise<UserAccountInfo | null> {

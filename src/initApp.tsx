@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { useAppDispatch } from "./app/hooks";
 import CenterSpinner from "./components/centerSpinner";
@@ -11,19 +11,22 @@ import Main from "./main";
 
 
 export function InitApp() {
-    const [v, setValue] = useState(true);
+    const ref = useRef<boolean>(false);
+    const [loading, setLoading] = useState(true);
+
     const dispatch = useAppDispatch();
     const { context } = useAuthContext();
 
     useAsyncEffect(async () => {
-        if (!v) return;
+        if (ref.current) return;
+        ref.current = true;
         await i18nSetup();
         await context.init();
         await dispatch(DetectLoggedInUser());
-        setValue(false);
-    }, [v, setValue]);
+        setLoading(false);
+    }, [dispatch, setLoading]);
 
-    if (v) return (<CenterSpinner />);
+    if (loading) return (<CenterSpinner />);
 
     return (<>
         <Main />

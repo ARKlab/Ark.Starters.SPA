@@ -1,3 +1,5 @@
+import type { SerializedError } from "@reduxjs/toolkit";
+
 import { createAppAsyncThunk } from "../../app/createAppAsyncThunk";
 import { createAppSlice } from "../../app/createAppSlice";
 
@@ -49,7 +51,7 @@ export const authSlice = createAppSlice({
     status: AuthenticationSteps.NotStarted,
     isLoading: false,
     isError: false,
-    error: {} as unknown,
+    error: null as SerializedError | null,
     data: null as AuthStoreType | null,
   },
   reducers: c => ({
@@ -63,7 +65,7 @@ export const authSlice = createAppSlice({
   extraReducers: builder => {
     builder
       .addCase(DetectLoggedInUser.pending, state => {
-        return { ...state, status: AuthenticationSteps.Init, isLoading: true };
+        return { ...state, status: AuthenticationSteps.Init, isLoading: true, isError: false, error: null };
       })
       .addCase(DetectLoggedInUser.fulfilled, (state, action) => {
         return {
@@ -73,13 +75,22 @@ export const authSlice = createAppSlice({
           data: action.payload,
         };
       })
+      .addCase(DetectLoggedInUser.rejected, (state, action) => {
+        return {
+          ...state,
+          status: AuthenticationSteps.LoginError,
+          isLoading: false,
+          isError: true,
+          error: action.error,
+        };
+      })
       .addCase(HandleRedirect.pending, state => {
-        return { ...state, status: AuthenticationSteps.Init, isLoading: true };
+        return { ...state, status: AuthenticationSteps.HandlingRedirect, isLoading: true, isError: false, error: null };
       })
       .addCase(HandleRedirect.fulfilled, (state, action) => {
         return {
           ...state,
-          status: AuthenticationSteps.InitComplete,
+          status: AuthenticationSteps.LoginComplete,
           isLoading: false,
           data: action.payload,
         };
@@ -87,7 +98,7 @@ export const authSlice = createAppSlice({
       .addCase(HandleRedirect.rejected, (state, action) => {
         return {
           ...state,
-          status: AuthenticationSteps.InitComplete,
+          status: AuthenticationSteps.LoginError,
           isLoading: false,
           isError: true,
           error: action.error,
@@ -96,8 +107,10 @@ export const authSlice = createAppSlice({
       .addCase(Login.pending, state => {
         return {
           ...state,
-          status: AuthenticationSteps.HandlingRedirect,
+          status: AuthenticationSteps.Login,
           isLoading: true,
+          isError: false,
+          error: null,
         };
       })
       .addCase(Login.fulfilled, state => {
@@ -116,6 +129,13 @@ export const authSlice = createAppSlice({
           error: action.error,
         };
       })
+      .addCase(Logout.pending, state => {
+        state.isLoading = true;
+        state.status = AuthenticationSteps.Logout;
+        state.isError = false;
+        state.error = null;
+        return state;
+      })
       .addCase(Logout.fulfilled, state => {
         state.isLoading = false;
         state.status = AuthenticationSteps.LogoutComplete;
@@ -133,7 +153,7 @@ export const authSlice = createAppSlice({
       })
 
       .addCase(getLoginStatus.pending, state => {
-        return { ...state, status: AuthenticationSteps.Login, isLoading: true };
+        return { ...state, status: AuthenticationSteps.Login, isLoading: true, isError: false, error: null };
       })
       .addCase(getLoginStatus.fulfilled, state => {
         return {
