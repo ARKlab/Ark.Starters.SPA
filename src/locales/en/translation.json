@@ -35,6 +35,12 @@
   "games_title_placeholder": "Title",
   "games_unknown_genre": "Unknown",
   "games_video_games": "Video Games",
+  "globalloadingbar": {
+    "description": "While loading this page, you can see the Global Progress as getting data takes a lot.",
+    "fastButtonText": "Trigger Fast fetch",
+    "slowButtonText": "Trigger Slow fetch",
+    "title": "Global Loading Bar"
+  },
   "hello_world": "Hello, World!",
   "lastname": "Last Name",
   "localization-samples": {
@@ -88,6 +94,7 @@
   "pwaBadge": {
     "newVersion": {
       "body": "New Version is available. Refresh to update.",
+      "reload": "Reload",
       "title": "New Version Available"
     },
     "offlineReady": {
@@ -114,11 +121,5 @@
   "wizard_phone_placeholder": "Phone",
   "wizard_shipping_address_placeholder": "Shipping Address",
   "wizard_sms_notifications_label": "Receive SMS Notifications",
-  "wizard_special_offers_label": "Receive Special Offers via Email",
-  "globalloadingbar": {
-    "title": "Global Loading Bar",
-    "description": "While loading this page, you can see the Global Progress as getting data takes a lot.",
-    "slowButtonText": "Trigger Slow fetch",
-    "fastButtonText": "Trigger Fast fetch"
-  }
+  "wizard_special_offers_label": "Receive Special Offers via Email"
 }

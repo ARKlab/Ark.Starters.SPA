@@ -1,9 +1,9 @@
+import { useToast, Text, Button } from '@chakra-ui/react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { If, Then } from 'react-if';
 // eslint-disable-next-line import/no-unresolved
 import { useRegisterSW } from 'virtual:pwa-register/react'
 
-import { ConfirmationDialog } from './confirmationDialog/confirmationDialog';
 
 
 export const PWABadge = () => {
@@ -29,30 +29,38 @@ export const PWABadge = () => {
         },
     })
 
-    function onClose() {
-        setOfflineReady(false)
-        setNeedRefresh(false)
-    }
-
     const { t } = useTranslation();
+    const toast = useToast();
 
-    return (
-        <ConfirmationDialog
-            isOpen={offlineReady || needRefresh}
-            onClose={onClose}
-            onConfirm={needRefresh ? async () => updateServiceWorker(true) : undefined}
-            title={<>
-                <If condition={offlineReady}><Then>{t('pwaBadge.offlineReady.title')}</Then></If>
-                <If condition={needRefresh}><Then>{t('pwaBadge.newVersion.title')}</Then></If>
-            </>}
-            body={<>
-                <If condition={offlineReady}><Then>{t('pwaBadge.offlineReady.body')}</Then></If>
-                <If condition={needRefresh}><Then>{t('pwaBadge.newVersion.body')}</Then></If></>
-            }
+    useEffect(() => {
+        if (offlineReady) {
+            toast({
+                isClosable: true,
+                status: 'info',
+                title: t('pwaBadge.offlineReady.title'),
+                description: t('pwaBadge.offlineReady.body')
+            })
+            setOfflineReady(false);
+        }
+    }, [offlineReady, setOfflineReady, t, toast]);
 
-        />
-    );
+    useEffect(() => {
+        const id = 'pwa.needRefresh';
+        if (needRefresh && !toast.isActive(id)) {
+            toast({
+                id: id,
+                isClosable: true,
+                onCloseComplete: () => { setNeedRefresh(false); },
+                status: 'warning',
+                title: t('pwaBadge.newVersion.title'),
+                description: (<><Text>{t('pwaBadge.newVersion.body')}</Text><Button colorScheme='red' size={'sm'} onClick={async () => updateServiceWorker(true)}>{t('pwaBadge.newVersion.reload')}</Button></>),
+                duration: 9999999,
+                position: 'top',
+            });
+        }
+    }, [needRefresh, setNeedRefresh, t, toast, updateServiceWorker]);
 
+    return (<></>);
 }
 
 

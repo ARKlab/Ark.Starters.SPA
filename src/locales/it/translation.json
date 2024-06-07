@@ -35,6 +35,12 @@
   "games_title_placeholder": "Titolo",
   "games_unknown_genre": "Sconosciuto",
   "games_video_games": "Videogiochi",
+  "globalloadingbar": {
+    "description": "Durante il caricamento di questa pagina, puoi vedere il progresso globale poiché ottenere dati richiede molto.",
+    "fastButtonText": "Attiva il recupero veloce",
+    "slowButtonText": "Attiva il recupero lento",
+    "title": "Barra di caricamento globale"
+  },
   "hello_world": "Ciao, Mondo!",
   "lastname": "Cognome",
   "localization-samples": {
@@ -88,6 +94,7 @@
   "pwaBadge": {
     "newVersion": {
       "body": "Una nuova versione è disponibile. \nRicarica per aggiornare.",
+      "reload": "Ricarica",
       "title": "Nuova versione disponibile"
     },
     "offlineReady": {
@@ -114,11 +121,5 @@
   "wizard_phone_placeholder": "Telefono",
   "wizard_shipping_address_placeholder": "Indirizzo di spedizione",
   "wizard_sms_notifications_label": "Ricevi notifiche SMS",
-  "wizard_special_offers_label": "Ricevi offerte speciali via email",
-  "globalloadingbar": {
-    "title": "Barra di caricamento globale",
-    "description": "Durante il caricamento di questa pagina, puoi vedere il progresso globale poiché ottenere dati richiede molto.",
-    "slowButtonText": "Attiva il recupero lento",
-    "fastButtonText": "Attiva il recupero veloce"
-  }
+  "wizard_special_offers_label": "Ricevi offerte speciali via email"
 }
