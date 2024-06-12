@@ -3,16 +3,9 @@
   "bottom": "In basso",
   "bottomleft": "In basso a sinistra",
   "bottomright": "In basso a destra",
-  "confirmationDialog": {
-    "button": {
-      "close": "Annulla",
-      "confirm": "Conferma"
-    }
-  },
   "detailspage_clickIdToViewDetails": "Fare clic sull'ID per visualizzare i dettagli",
   "employed": "Impiegato",
   "employee": "Dipendente",
-  "exit": "Esci",
   "fetch_example_Page": "Pagina di Esempio Fetch",
   "firstname": "Nome",
   "games_add_video_game": "Aggiungi videogioco",
@@ -54,13 +47,6 @@
   "localization_dynamic_text_explanation": "Questo esempio mostra come i valori dinamici possano cambiare posizione se richiesto dalla lingua selezionata.",
   "localization_example_1": "Nel cesto ci sono {{number}} mele.",
   "localization_simple_text": "Traduzione testo semplice",
-  "login": "Login",
-  "menu": {
-    "account": "Account",
-    "dark": "Scuro",
-    "options": "Opzioni",
-    "user": "Utente"
-  },
   "movies_actors": "Attori",
   "movies_applyexternalfilter": "Applica Filtro Esterno",
   "movies_director": "Regista",
@@ -91,17 +77,6 @@
   "permissionsPlayground_yourPermissions": "Elenco dei permessi di {{username}}:",
   "playground": "Parco Giochi",
   "playground_details_id": "Dettagli per l'Id:",
-  "pwaBadge": {
-    "newVersion": {
-      "body": "Una nuova versione è disponibile. \nRicarica per aggiornare.",
-      "reload": "Ricarica",
-      "title": "Nuova versione disponibile"
-    },
-    "offlineReady": {
-      "body": "L'applicazione è stata installata. \nPuoi iniziare a lavorare offline.",
-      "title": "Pronto l'uso Offline"
-    }
-  },
   "reset": "Ripristina",
   "submit": "Invia",
   "top": "In alto",

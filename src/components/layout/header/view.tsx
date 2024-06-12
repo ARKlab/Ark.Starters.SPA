@@ -47,7 +47,7 @@ const UserMenu = () => {
     setIsChecked(!isChecked)
     setTimeout(toggleColorMode, 200) // 200ms delay
   }
-  const { t } = useTranslation();
+  const { t } = useTranslation('template');
   return (
     <Menu>
       <MenuButton>
@@ -77,11 +77,11 @@ const UserMenu = () => {
               <WrapItem>
                 <MenuItem>{user?.userInfo?.username || t('menu.user')}</MenuItem>
               </WrapItem>
-              <MenuItem onClick={async () => dispatch(Logout())}>{t('exit')}</MenuItem>
+              <MenuItem onClick={async () => dispatch(Logout())}>{t('menu.exit')}</MenuItem>
             </Then>
             <Else>
               <WrapItem>
-                <MenuItem onClick={async () => dispatch(Login())}>{t('login')}</MenuItem>
+                <MenuItem onClick={async () => dispatch(Login())}>{t('menu.login')}</MenuItem>
               </WrapItem>
             </Else>
           </If>

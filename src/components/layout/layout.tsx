@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 
 import { ErrorBoundary } from "../errorBoundary";
+import { GdprConsentDialog } from "../gdprConsentDialog";
 import { ProblemDetailsModal } from "../problemDetailsModal/problemDetailsModal";
 
 import Header from "./header/view";
@@ -48,6 +49,7 @@ const Layout = () => {
       </Grid>
 
       <ProblemDetailsModal />
+      <GdprConsentDialog />
     </LayoutContextProvider>
   )
 }

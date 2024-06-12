@@ -29,7 +29,7 @@ export const PWABadge = () => {
         },
     })
 
-    const { t } = useTranslation();
+    const { t } = useTranslation('template');
     const toast = useToast();
 
     useEffect(() => {

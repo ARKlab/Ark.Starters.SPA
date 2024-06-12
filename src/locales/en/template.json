@@ -1,0 +1,30 @@
+{
+    "errors": {
+        "notFoundPage": "This page could not be found"
+    },
+    "pwaBadge": {
+        "newVersion": {
+            "body": "New Version is available. Refresh to update.",
+            "reload": "Reload",
+            "title": "New Version Available"
+        },
+        "offlineReady": {
+            "body": "App has been installed. You can start working offline.",
+            "title": "Offline Ready"
+        }
+    },
+    "confirmationDialog": {
+        "button": {
+            "close": "Close",
+            "confirm": "Confirm"
+        }
+    },
+    "menu": {
+        "account": "Account",
+        "dark": "Dark",
+        "options": "Options",
+        "user": "User",
+        "login": "Login",
+        "exit": "Exit"
+    }
+}

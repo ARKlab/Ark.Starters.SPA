@@ -3,16 +3,9 @@
   "bottom": "Bottom",
   "bottomleft": "Bottom Left",
   "bottomright": "Bottom Right",
-  "confirmationDialog": {
-    "button": {
-      "close": "Close",
-      "confirm": "Confirm"
-    }
-  },
   "detailspage_clickIdToViewDetails": "Click on the ID to view details",
   "employed": "Employed",
   "employee": "Employee",
-  "exit": "Exit",
   "fetch_example_Page": "Fetch Example Page",
   "firstname": "First Name",
   "games_add_video_game": "Add video game",
@@ -54,13 +47,6 @@
   "localization_dynamic_text_explanation": "This is to show the use of parameters in translations where the phrase construction requires to change the position of the dynamic value",
   "localization_example_1": "I have {{number}} apples in the basket.",
   "localization_simple_text": "Simple Text Translation",
-  "login": "Login",
-  "menu": {
-    "account": "Account",
-    "dark": "Dark",
-    "options": "Options",
-    "user": "User"
-  },
   "movies_actors": "Actors",
   "movies_applyexternalfilter": "Apply External Filter",
   "movies_director": "Director",
@@ -91,17 +77,6 @@
   "permissionsPlayground_yourPermissions": "{{username}}'s permissions:",
   "playground": "Playground",
   "playground_details_id": "Details for Id:",
-  "pwaBadge": {
-    "newVersion": {
-      "body": "New Version is available. Refresh to update.",
-      "reload": "Reload",
-      "title": "New Version Available"
-    },
-    "offlineReady": {
-      "body": "App has been installed. You can start working offline.",
-      "title": "Offline Ready"
-    }
-  },
   "reset": "Reset",
   "submit": "Submit",
   "top": "Top",
