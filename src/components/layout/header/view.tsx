@@ -5,6 +5,7 @@ import {
   Flex,
   HStack,
   IconButton,
+  LinkOverlay,
   Menu,
   MenuButton,
   MenuDivider,
@@ -21,6 +22,7 @@ import { useTranslation } from 'react-i18next'
 import { FiMenu } from 'react-icons/fi'
 import { MdQuestionMark } from "react-icons/md";
 import { Then, If, Else } from 'react-if'
+import { Link } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '../../../app/hooks'
 import {
@@ -105,7 +107,9 @@ const Header = () => {
       >
         <HStack spacing={2} pl={2}>
           <Center>
-            <Logo />
+            <LinkOverlay as={Link} to={"/"}>
+              <Logo />
+            </LinkOverlay>
           </Center>
         </HStack>
         <Spacer />
