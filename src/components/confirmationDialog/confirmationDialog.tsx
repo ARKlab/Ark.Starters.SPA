@@ -20,7 +20,7 @@ export const ConfirmationDialog = (props: {
   onClose: () => void;
 }) => {
   const closeRef = useRef<HTMLButtonElement>(null);
-  const { t } = useTranslation();
+  const { t } = useTranslation('template');
 
   return (
     <>

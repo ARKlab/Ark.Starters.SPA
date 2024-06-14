@@ -4,6 +4,7 @@ import { mode } from "@chakra-ui/theme-tools";
 
 const config = {
   useSystemColorMode: true,
+  initialColorMode: 'system'
 }
 export const theme = extendTheme({
   config,

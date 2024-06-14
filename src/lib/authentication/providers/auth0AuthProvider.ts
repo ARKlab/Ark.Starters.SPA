@@ -148,5 +148,3 @@ export class Auth0AuthProvider implements AuthProvider {
     }
   }
 }
-
-export default Auth0AuthProvider;

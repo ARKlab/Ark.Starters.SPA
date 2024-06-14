@@ -1,0 +1,30 @@
+{
+    "errors": {
+        "notFoundPage": "Impossibile trovare questa pagina"
+    },
+    "pwaBadge": {
+        "newVersion": {
+            "body": "Una nuova versione è disponibile. \nRicarica per aggiornare.",
+            "reload": "Ricarica",
+            "title": "Nuova versione disponibile"
+        },
+        "offlineReady": {
+            "body": "L'applicazione è stata installata. \nPuoi iniziare a lavorare offline.",
+            "title": "Pronto l'uso Offline"
+        }
+    },
+    "confirmationDialog": {
+        "button": {
+            "close": "Annulla",
+            "confirm": "Conferma"
+        }
+    },
+    "menu": {
+        "account": "Account",
+        "dark": "Scuro",
+        "options": "Opzioni",
+        "user": "Utente",
+        "login": "Login",
+        "exit": "Esci"
+    }
+}

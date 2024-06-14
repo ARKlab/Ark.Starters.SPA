@@ -135,5 +135,8 @@ export default defineConfig(({ mode }) => {
         "/connectionStrings.cjs": "http://localhost:4000",
       },
     },
+    esbuild: {
+      drop: mode == "production" ? ["console", "debugger"] : [],
+    },
   };
 });
