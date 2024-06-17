@@ -358,3 +358,21 @@ To test the PWA popup, run the preview build.
 8. **Remember to uninstall the Service Worker** by clearing site data from DevTools before moving back to development via `npm run start`
 
 ![image](docs/pwa-uninstall.png)
+
+## Cookie Consent
+
+By default this Template adds a Cookie Consent banner. By choice, the Banner is blocking and the entire site is blocked until user picks a choice.
+
+The Template uses technical 'Cookies' by default to provide the following 'necessary' capabilities (Cookies include any storage, including LocalStorage, SessionStorage, WorkersCache, etc.):
+
+- _lang_: used to provide Lang switch so that User can also Read the ToS.
+- _dark theme_: used to use the _system_ configured theme. This is arguably a 'functional' cookie more than 'necessary' but is embeeded in Chakra UI. Check [this](https://github.com/themesberg/flowbite-react/issues/546) discussion.
+- _auth_: authentication libraries like MSAL and Auth0 use cookies for login purposes. Check the respective website for the list of cookies used.
+
+### Configure
+
+Edit [`config/gdpr.ts`](./src/config/gdpr.ts) file.
+
+### Limitations
+
+Only 'external' policy urls are supported as the ConsentBanner is blocking and thus would not redirect. Use the Translation files to embeed the Policy within the description of the Customize.

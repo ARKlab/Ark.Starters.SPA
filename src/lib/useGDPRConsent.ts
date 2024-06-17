@@ -1,6 +1,5 @@
 import { useCallback } from "react";
-
-import useCookie from "./useCookie";
+import { useLocalStorage } from "usehooks-ts";
 
 export interface PurposeCookieTypes {
   necessary?: boolean;
@@ -24,10 +23,6 @@ const allCookiesSetToValue = (value: boolean): ConsentState => ({
   marketing: value,
 });
 
-const cookieOptions: Cookies.CookieAttributes = {
-  expires: 365,
-};
-
 export const useCookieConsent = (): [
   ConsentState | undefined,
   {
@@ -36,20 +31,22 @@ export const useCookieConsent = (): [
     acceptSome: (c: ConsentState) => void;
   },
 ] => {
-  const [consent, { updateCookie }] = useCookie<ConsentState>(COOKIE_CONSENT_KEY, undefined);
+  const [consent, update] = useLocalStorage<ConsentState | undefined>(COOKIE_CONSENT_KEY, undefined, {
+    initializeWithValue: false,
+  });
 
   const acceptAll = useCallback(() => {
-    updateCookie(allCookiesSetToValue(true), cookieOptions);
-  }, [updateCookie]);
+    update(allCookiesSetToValue(true));
+  }, [update]);
   const rejectNotNecessary = useCallback(() => {
-    updateCookie(allCookiesSetToValue(false), cookieOptions);
-  }, [updateCookie]);
+    update(allCookiesSetToValue(false));
+  }, [update]);
 
   const acceptSome = useCallback(
     (c: ConsentState) => {
-      updateCookie({ ...c, necessary: true }, cookieOptions);
+      update({ ...c, necessary: true });
     },
-    [updateCookie],
+    [update],
   );
 
   return [
