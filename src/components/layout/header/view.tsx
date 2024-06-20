@@ -5,6 +5,7 @@ import {
   Flex,
   HStack,
   IconButton,
+  LinkBox,
   LinkOverlay,
   Menu,
   MenuButton,
@@ -106,11 +107,13 @@ const Header = () => {
         paddingBottom={'5px'}
       >
         <HStack spacing={2} pl={2}>
-          <Center>
-            <LinkOverlay as={Link} to={"/"}>
-              <Logo />
-            </LinkOverlay>
-          </Center>
+          <LinkBox>
+            <Center>
+              <LinkOverlay as={Link} to={"/"}>
+                <Logo />
+              </LinkOverlay>
+            </Center>
+          </LinkBox>
         </HStack>
         <Spacer />
         <HStack spacing={2} pr={2}>
