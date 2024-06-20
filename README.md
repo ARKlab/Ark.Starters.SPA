@@ -1,10 +1,10 @@
 # ARK Starters Single Page Application
 
-# Introduction
+## Introduction
 
 In this project, we've curated a collection of UI elements, layouts, and interactions to demonstrate best practices in user interface design. Each section focuses on a specific aspect of UI.
 
-## Packages
+### Packages
 
 In order to mantain this project with the most updated version of LTS's packages:
 
@@ -14,7 +14,7 @@ To update a specific package, you can use `npm update package_name` This will up
 
 In order to Update all packages you can also use the command `npx npm-check-updates` that upgrades your package.json dependencies to the latest versions, ignoring specified versions.
 
-# Features
+## Features
 
 - **Flexible Authentication Provider:** This project include the authentication provider library that supports multiple authentication providers. You can easily support the providers you need.
 - **Diverse Examples:** From simple buttons to complex navigation menus, the project covers a wide range of UI elements commonly found in web and mobile applications.
@@ -22,15 +22,15 @@ In order to Update all packages you can also use the command `npx npm-check-upda
 - **Code Snippets:** Each example comes with corresponding code snippets, making it easy for developers to integrate these UI patterns into their projects.
 - **Localization:** based on i18next and [vscode i18n-ally](https://github.com/lokalise/i18n-ally) extension, supports dynamic loading of translation files and auto-detect based on Browser
 
-# Getting Started
+## Getting Started
 
 TODO: this section would provide examples on how to run the template and how to use it
 
-## Design Guidelines
+### Design Guidelines
 
 When styling components, we follow these guidelines:
 
-### Support for Light and Dark mode
+#### Support for Light and Dark mode
 
 The application supports natively both light and dark mode.
 The way this works is that chackra save a variable in the localStorage with either 'Light' or 'Dark'.
@@ -47,7 +47,7 @@ and then pass it in the **Provider**:
 <ChakraProvider  theme={theme}  colorModeManager={colorModeManager}>
 ```
 
-### Z-Index usage
+#### Z-Index usage
 
 For any need of z-Index, we refer to the zIndices guideline of Chackra UI
 
@@ -71,7 +71,7 @@ const zIndices = {
 };
 ```
 
-### Distancing
+#### Distancing
 
 1. **Use `em` units for font sizes and other measurements related to text**: This makes the design more flexible and accessible, as `em` units adjust automatically to the user's default font size. For example, instead of `fontSize="16px"`, use `fontSize="1em"`.
 
@@ -79,7 +79,7 @@ const zIndices = {
 
 Remember to test your design at different browser font sizes to make sure it looks good and is easy to read for all users.
 
-### Tables
+#### Tables
 
 Tables are implemented with Tanstack (react tables v8)
 
@@ -139,7 +139,7 @@ data: {
 
 **externalFiltersState:** _ColumnFiltersState_ object with the state of external filters (this is mandatory if **externalFilters** is true
 
-## Environment (env)
+### Environment (env)
 
 The application initializes itself by reading environmental variables and injecting them into the Redux store (env). Additionally, the Authentication provider constructor receives _env_ as a parameter, containing all the necessary configurations.
 _env_ is an object of type **CustomSettingsType** defined as it follows:
@@ -160,7 +160,7 @@ type CustomSettingsType = {
 
 This will be used as globals configuration and can be implemented to support more features (ex: subsidiaries).
 
-## Authentication
+### Authentication
 
 This project is implemented with a flexible authentication provider that can support multiple providers.
 Now it support **MSAL** and **AUTH0** providers and you can switch between one another easily.
@@ -178,9 +178,9 @@ _env_ is the enviroment and it must contains all the data needed to authenticate
 For this reason make sure that the **connectionStrings.js** file is aligned with the deploy environments you are using.
 In order to make this works locally you must create a **.env.local** file in the root of your project with all the env variables needed by connectionStrings.js and your AuthProvider implementation.
 
-### Auth0
+#### Auth0
 
-#### .env.local
+##### .env.local
 
 ```javascript
 AUTH0_ClientId = "yourclientId";
@@ -190,7 +190,7 @@ AUTH0_RedirectUri = "yourRedirectUri";
 SERVICE_URL = "yourApi.com";
 ```
 
-#### connectionStrings.js
+##### connectionStrings.js
 
 ```javascript
 var http = require("http");
@@ -214,9 +214,9 @@ http
   .listen(port);
 ```
 
-### MSAL
+#### MSAL
 
-#### .env.local
+##### .env.local
 
 ```javascript
 PORT = 4000;
@@ -229,7 +229,7 @@ MSAL_RedirectUri = "yourRedirectUri";
 SERVICE_URL = "yourApi.com";
 ```
 
-#### connectionStrings.cjs
+##### connectionStrings.cjs
 
 ```javascript
 var http = require("http");
@@ -255,7 +255,7 @@ http
   .listen(port);
 ```
 
-### Adding providers
+#### Adding providers
 
 In order to add support for more providers you will implement your own version of the AuthProvider interface.
 Here is the interface:
@@ -304,17 +304,17 @@ export interface AuthProvider {
 }
 ```
 
-## Localization with i18n
+### Localization with i18n
 
 [React-i18next](https://react.i18next.com/) is used for Localization support. Refer to official documentation for usage or check the [LocalizationPage](src/features/localization/localizationPage.tsx) examples.
 
-### Configure
+#### Configure
 
 Edit [config/lang.ts](https://github.com/ARKlab/Ark.Starters.SPA/blob/master/src/config/lang.ts) configuring the list of supported Locales and the respective title, which will be shown in the LocaleSwitcher in the Header.
 
 To disable Localization but still supporting Zod errors, fill the list with the only supported lang.
 
-### Integration with Zod validation error
+#### Integration with Zod validation error
 
 Based on [zod-i18n-map](https://github.com/aiji42/zod-i18n), has been configured so that you can use zodCustom i18n namespace for custom key messages as shown in [LocalizationPage](src/features/localization/localizationPage.tsx).
 
@@ -336,15 +336,15 @@ const TestSchema = z.object({
 }
 ```
 
-### Integration with Final Form
+#### Integration with Final Form
 
 Check [LocalizationPage](src/features/localization/localizationPage.tsx) to see how to use Zod for validating the Forms using `zod2FormValidator` and `zod2FieldValidator` helpers.
 
-## PWA Support
+### PWA Support
 
 This starter project include PWA via [vite-plugin-pwa](https://github.com/vite-pwa/vite-plugin-pwa).
 
-### Test PWA Update badge
+#### Test PWA Update badge
 
 To test the PWA popup, run the preview build.
 
@@ -359,7 +359,7 @@ To test the PWA popup, run the preview build.
 
 ![image](docs/pwa-uninstall.png)
 
-## Cookie Consent
+### Cookie Consent
 
 By default this Template adds a Cookie Consent banner. By choice, the Banner is blocking and the entire site is blocked until user picks a choice.
 
@@ -369,10 +369,10 @@ The Template uses technical 'Cookies' by default to provide the following 'neces
 - _dark theme_: used to use the _system_ configured theme. This is arguably a 'functional' cookie more than 'necessary' but is embeeded in Chakra UI. Check [this](https://github.com/themesberg/flowbite-react/issues/546) discussion.
 - _auth_: authentication libraries like MSAL and Auth0 use cookies for login purposes. Check the respective website for the list of cookies used.
 
-### Configure
+#### Configure
 
 Edit [`config/gdpr.ts`](./src/config/gdpr.ts) file.
 
-### Limitations
+#### Limitations
 
 Only 'external' policy urls are supported as the ConsentBanner is blocking and thus would not redirect. Use the Translation files to embeed the Policy within the description of the Customize.
