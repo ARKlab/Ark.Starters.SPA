@@ -96,7 +96,7 @@
     "vite-plugin-react-click-to-component": "^3.0.0",
     "vite-plugin-static-copy": "^1.0.5",
     "vite-plugin-svgr": "^4.2.0",
-    "vitest": "^1.6.0",
+    "vitest": "^2.0.3",
     "web-vitals": "^4.1.1"
   },
   "overrides": {
