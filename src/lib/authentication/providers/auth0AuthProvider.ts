@@ -143,7 +143,7 @@ export class Auth0AuthProvider implements AuthProvider {
   private async isAuthenticated(): Promise<boolean> {
     try {
       return await this.auth0Client.isAuthenticated();
-    } catch (error) {
+    } catch {
       return false;
     }
   }

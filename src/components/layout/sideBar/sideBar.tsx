@@ -25,25 +25,31 @@ import { useLayoutContext } from "../useLayoutContext";
 import MenuItem from "./menuItem/menuItem";
 import type { SubsectionMenuItemType } from "./menuItem/types";
 
-
 export default function SimpleSidebar() {
   const { isMobileSiderOpen, setMobileSiderOpen } = useLayoutContext();
 
-  const onClose = useCallback(() => { setMobileSiderOpen(false); }, [setMobileSiderOpen]);
+  const onClose = useCallback(() => {
+    setMobileSiderOpen(false);
+  }, [setMobileSiderOpen]);
 
   // close drawer after clicking / navigating
   useRouteChanged(onClose);
 
   // close drawer if screen gets bigger while drawer is open
   const isDesktop = useBreakpointValue({ base: false, lg: true });
-  useEffect(() => { if (isDesktop) onClose(); }, [onClose, isDesktop]);
+  useEffect(() => {
+    if (isDesktop) onClose();
+  }, [onClose, isDesktop]);
 
   return (
     <>
-      <SidebarContent display={{ base: "none", lg: "block" }} w={60} h={'full'}
+      <SidebarContent
+        display={{ base: "none", lg: "block" }}
+        w={60}
+        h={"full"}
         borderRight="1px"
         borderRightColor={useColorModeValue("gray.200", "gray.700")}
-        bg={'sider.bg'}
+        bg={"sider.bg"}
       />
       <Drawer
         isOpen={isMobileSiderOpen}
@@ -53,9 +59,7 @@ export default function SimpleSidebar() {
         onOverlayClick={onClose}
       >
         <DrawerOverlay />
-        <DrawerContent
-          bg={'sider.bg'}
-        >
+        <DrawerContent bg={"sider.bg"}>
           <DrawerCloseButton></DrawerCloseButton>
           <DrawerHeader></DrawerHeader>
           <DrawerBody>
@@ -63,20 +67,13 @@ export default function SimpleSidebar() {
           </DrawerBody>
         </DrawerContent>
       </Drawer>
-
     </>
   );
 }
 
-interface SidebarProps extends BoxProps {
-}
-
-const SidebarContent = ({ ...rest }: SidebarProps) => {
+const SidebarContent = ({ ...rest }: BoxProps) => {
   return (
-    <Box
-      as={'nav'}
-      {...rest}
-    >
+    <Box as={"nav"} {...rest}>
       <Accordion defaultIndex={[0]} allowMultiple borderStyle={"none"} borderWidth={0}>
         {mainSections.map((section, index) => (
           <AccordionItem border="none" key={section.label + "accordionItem" + index}>
@@ -175,4 +172,3 @@ const InnerAccordionSections = (props: { section: SubsectionMenuItemType; parent
     );
   else return <></>;
 };
-
