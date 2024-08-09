@@ -1,5 +1,5 @@
 import type { Action, ThunkAction } from "@reduxjs/toolkit";
-import { configureStore, combineSlices } from "@reduxjs/toolkit";
+import { configureStore, combineSlices, addListener } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
 import { configTableApiSlice } from "../features/configTable/configTableApi";
@@ -26,8 +26,6 @@ const sliceReducers = combineSlices(
     errorHandler: errorReducer,
   },
 );
-// Infer the `RootState` type from the root reducer
-export type RootState = ReturnType<typeof sliceReducers>;
 
 export function initStore(authProviderInstance: AuthProvider) {
   const store = configureStore({
@@ -56,8 +54,10 @@ export function initStore(authProviderInstance: AuthProvider) {
 export type ExtraType = {
   authProvider: AuthProvider;
 };
-
 export type AppStore = ReturnType<typeof initStore>;
 // Infer the `AppDispatch` type from the store itself
 export type AppDispatch = AppStore["dispatch"];
+export type RootState = ReturnType<AppStore["getState"]>;
 export type AppThunk<ThunkReturnType = void> = ThunkAction<ThunkReturnType, RootState, ExtraType, Action>;
+
+export const addAppListener = addListener.withTypes<RootState, AppDispatch>();

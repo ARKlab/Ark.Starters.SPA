@@ -1,12 +1,13 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+import { createAppApi } from "../../app/createAppApi";
 import type { ArkPagedQueryParameters, ListResponse } from "../../lib/apiTypes";
 import { delay } from "../../lib/helper";
 
 import type { VideoGameGenre, VideoGame } from "./videoGamesSampleDataAndTypes";
 import { videoGamesSampleData, gameGenres } from "./videoGamesSampleDataAndTypes";
 
-export const videoGameApiSlice = createApi({
+export const videoGameApiSlice = createAppApi({
   reducerPath: "videoGameApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "https://bestVg.com/",

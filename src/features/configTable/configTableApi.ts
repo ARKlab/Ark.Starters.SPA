@@ -1,5 +1,6 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+import { createAppApi } from "../../app/createAppApi";
 import { delay } from "../../lib/helper";
 
 import type { Employee } from "./configTable";
@@ -27,7 +28,7 @@ const data = [
   { name: "Gianluca", surName: "Ferrari", employed: false },
 ] as Employee[];
 
-export const configTableApiSlice = createApi({
+export const configTableApiSlice = createAppApi({
   reducerPath: "configTableApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "https://myconfigUrlApi.com/",

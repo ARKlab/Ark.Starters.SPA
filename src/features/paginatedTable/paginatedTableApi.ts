@@ -1,13 +1,14 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { every, orderBy, filter } from "lodash-es";
 
+import { createAppApi } from "../../app/createAppApi";
 import type { ArkPagedQueryParameters, ListResponse } from "../../lib/apiTypes";
 import { delay } from "../../lib/helper";
 
 import type { Movie } from "./fakeMoviesData";
 import moviesData from "./fakeMoviesData";
 
-export const moviesApiSlice = createApi({
+export const moviesApiSlice = createAppApi({
   reducerPath: "moviesApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "https://bestMoviesApi.com/",
