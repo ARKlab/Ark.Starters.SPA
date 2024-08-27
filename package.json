@@ -90,7 +90,7 @@
     "vite-plugin-eslint": "1.8.1",
     "vite-plugin-i18n-ally": "4.1.1",
     "vite-plugin-image-optimizer": "1.1.8",
-    "vite-plugin-legacy-swc": "1.2.0",
+    "vite-plugin-legacy-swc": "1.2.1",
     "vite-plugin-preload": "0.4.2",
     "vite-plugin-pwa": "0.20.1",
     "vite-plugin-react-click-to-component": "3.0.0",
