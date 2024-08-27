@@ -1,6 +1,6 @@
 import { Button, Select, Stack } from '@chakra-ui/react'
 import * as R from 'ramda'
-import type { MouseEventHandler } from 'react'
+import type { JSX, MouseEventHandler } from "react"
 import {
   MdChevronLeft,
   MdChevronRight,
@@ -29,9 +29,9 @@ const PaginationComponent = ({
   const pageMinRange = 3
   const pageMinRangeVal = R.gt(page, pageMinRange)
     ? R.min(
-        R.subtract(page, pageMinRange),
-        R.subtract(totalPages, pageMinRange),
-      )
+      R.subtract(page, pageMinRange),
+      R.subtract(totalPages, pageMinRange),
+    )
     : 0
 
   const pageMaxRange = 2

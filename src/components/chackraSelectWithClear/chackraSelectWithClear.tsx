@@ -8,6 +8,7 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react";
+import type { JSX } from "react"
 import { useState } from "react";
 import { MdArrowDropDown } from "react-icons/md";
 import { TiTimes } from "react-icons/ti";

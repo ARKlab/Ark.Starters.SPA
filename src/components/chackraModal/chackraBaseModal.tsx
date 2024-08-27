@@ -8,6 +8,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react'
+import type { JSX } from "react"
 
 export const ChackraUIBaseModal = (props: {
   isOpen: boolean
@@ -40,7 +41,7 @@ export const ChackraUIBaseModal = (props: {
       </Button>
     )
   }
-  if (!props.onClose) props.onClose = () => {}
+  if (!props.onClose) props.onClose = () => { }
   let overlay = <ModalOverlay />
   if (props.blurredOverlay)
     overlay = <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(5px)" />
