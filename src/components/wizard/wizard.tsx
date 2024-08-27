@@ -11,6 +11,7 @@ import type { ReactNode } from "react";
 import { useState, Children } from "react";
 import { Form } from "react-final-form";
 
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export function Wizard<SchemaType extends object>({
   onSubmit,
   children
