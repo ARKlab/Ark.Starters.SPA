@@ -92,7 +92,7 @@
     "vite-plugin-image-optimizer": "1.1.8",
     "vite-plugin-legacy-swc": "1.2.1",
     "vite-plugin-preload": "0.4.2",
-    "vite-plugin-pwa": "0.20.4",
+    "vite-plugin-pwa": "0.20.5",
     "vite-plugin-react-click-to-component": "3.0.0",
     "vite-plugin-static-copy": "1.0.6",
     "vite-plugin-svgr": "4.2.0",
