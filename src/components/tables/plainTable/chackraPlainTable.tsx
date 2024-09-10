@@ -9,7 +9,7 @@ import { setError } from "../../../lib/errorHandler/errorHandler";
 import { isErrorWithMessage, isFetchBaseQueryError } from "../../../lib/errorHandler/errorHandlingLib";
 
 export type PlainTablePropsType<T extends ZodRawShape> = {
-  data: z.infer<ZodObject<T>>[] | null;
+  data: z.infer<ZodObject<T>>[] | undefined;
   colorscheme?: string;
   variant?: string;
   isLoading: boolean;
@@ -29,10 +29,10 @@ export const ChackraPlainTable = <T extends ZodRawShape>({
 }: PlainTablePropsType<T>) => {
   const toast = useToast();
   const dispatch = useAppDispatch();
-  const notFetchingError = isError && error && data === null;
+  const notFetchingError = isError && error && data === undefined;
   if (isError && error) {
     const details = _getDetails(error);
-    if (data === null) {
+    if (data === undefined) {
       dispatch(setError({ error: true, details }));
     } else {
       //THIS CASE IS FOR POLLING ONLY. IF YOU FETCH DATA CORRECTLY BUT ONE OF THE SUBSEQUENT POLLS FAILS YOU WILL HAVE BOTH DATA AND ERROR

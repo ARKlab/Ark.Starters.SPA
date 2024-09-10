@@ -31,7 +31,7 @@ const JsonPlaceholderPostsTable = () => {
       <ChackraPlainTable
         colorscheme="teal"
         variant="striped"
-        data={data || []}
+        data={data}
         isLoading={isLoading || isFetching}
         isError={isError}
         error={error}
