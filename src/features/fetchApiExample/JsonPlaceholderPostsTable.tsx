@@ -15,11 +15,14 @@ export const PostDataSchema = z.object({
 
 export type PostDataType = z.infer<typeof PostDataSchema>;
 const JsonPlaceholderPostsTable = () => {
-  const { data, isLoading, isError, error } /*This also contains error and isSuccess*/ = useFetchPostsQuery(null, {
-    pollingInterval: 30000,
-    refetchOnReconnect: true,
-    refetchOnMountOrArgChange: true,
-  });
+  const { data, isLoading, isFetching, isError, error } /*This also contains error and isSuccess*/ = useFetchPostsQuery(
+    null,
+    {
+      pollingInterval: 30000,
+      refetchOnReconnect: true,
+      refetchOnMountOrArgChange: true,
+    },
+  );
   const { t } = useTranslation();
 
   return (
@@ -29,7 +32,7 @@ const JsonPlaceholderPostsTable = () => {
         colorscheme="teal"
         variant="striped"
         data={data || []}
-        isLoading={isLoading}
+        isLoading={isLoading || isFetching}
         isError={isError}
         error={error}
         schema={PostDataSchema}
