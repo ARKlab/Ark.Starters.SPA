@@ -4,7 +4,7 @@ import type { PostDataType } from "./jsonPlaceholderTypes";
 export const jsonPlaceholderSlice = createApi({
   reducerPath: "jsonPlaceholder",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://jsonplaceholdes.typicode.com/",
+    baseUrl: "https://jsonplaceholder.typicode.com/",
   }),
   endpoints: builder => ({
     fetchPosts: builder.query<PostDataType[], null>({
