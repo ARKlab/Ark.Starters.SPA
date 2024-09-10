@@ -11,6 +11,7 @@ import {
   AccordionPanel,
   Button,
 } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import type { DetailsType } from "../../lib/errorHandler/errorHandler";
@@ -39,7 +40,7 @@ export const ProblemDetailsModal = () => {
 
 const ProblemDetailsModalBody = (props: { problem: DetailsType | null }) => {
   const problem = props.problem;
-
+  const navigate = useNavigate();
   return (
     <>
       <Flex>
@@ -51,7 +52,7 @@ const ProblemDetailsModalBody = (props: { problem: DetailsType | null }) => {
         </Card>
       </Flex>
       <Flex my="20px">
-        <Accordion w="-webkit-fill-available">
+        <Accordion w="full">
           <AccordionItem>
             <h2>
               <AccordionButton>
@@ -70,7 +71,7 @@ const ProblemDetailsModalBody = (props: { problem: DetailsType | null }) => {
       <Flex justifyContent={"center"}>
         <Button
           onClick={() => {
-            window.location.reload();
+            navigate(0);
           }}
         >
           Reload Page
