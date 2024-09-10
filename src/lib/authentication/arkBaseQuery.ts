@@ -1,72 +1,50 @@
-import type {
-  BaseQueryApi,
-  BaseQueryFn,
-  FetchArgs,
-  FetchBaseQueryError,
-} from "@reduxjs/toolkit/query";
+import type { BaseQueryApi, BaseQueryFn, FetchArgs, FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { fetchBaseQuery } from "@reduxjs/toolkit/query";
 
-import type { RootState , ExtraType } from "../../app/configureStore";
+import type { RootState, ExtraType } from "../../app/configureStore";
 
-import {
-  tokenSelector,
-  loggedOut,
-  tokenReceived
-} from "./authenticationSlice";
+import { tokenSelector, loggedOut, tokenReceived } from "./authenticationSlice";
 import { baseUrlSelector } from "./envSlice";
-import type { AuthProvider } from "./providers/authProviderInterface";
 
-
-export function ArkBaseQuery(
-  args: string | FetchArgs,
-  api: BaseQueryApi,
-  extra: ExtraType
-) {
-  // Now you can use extraArgument
-  const authProviderInstance = extra.authProvider;
-
-  return ArkReauthQuery(authProviderInstance)(args, api, extra);
+export function ArkBaseQuery(args: string | FetchArgs, api: BaseQueryApi, extraOptions: ExtraType) {
+  return ArkQuery()(args, api, extraOptions);
 }
 
-function BaseQuery(api: BaseQueryApi) {
+function createBaseQuery(api: BaseQueryApi) {
   const baseUrl = baseUrlSelector(api.getState() as RootState);
   return fetchBaseQuery({
     baseUrl,
-    prepareHeaders: (headers, { getState }) => {
-      const token = tokenSelector(getState() as RootState);
+    prepareHeaders: async (headers, { extra, getState }) => {
+      let token = tokenSelector(getState() as RootState);
 
-      // If we have a token set in state, let's assume that we should be passing it.
+      if (!token || token === "") {
+        token = await (extra as ExtraType).authProvider.getToken(baseUrl);
+        if (token) api.dispatch(tokenReceived(token));
+        else api.dispatch(loggedOut());
+      }
+
       if (token) {
         headers.set("authorization", `Bearer ${token}`);
       }
-
+      headers.set("Content-Type", "application/json");
+      headers.set("Accept", "application/json");
       return headers;
     },
   });
 }
 
-export function ArkReauthQuery(authProvider: AuthProvider) {
-  const baseQueryWithReauth: BaseQueryFn<
-    string | FetchArgs,
-    unknown,
-    FetchBaseQueryError
-  > = async (args, api, extraOptions) => {
-    const baseQuery = BaseQuery(api);
+export function ArkQuery() {
+  const baseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError, ExtraType> = async (
+    args,
+    api,
+    extraOptions,
+  ) => {
+    const baseQuery = createBaseQuery(api);
     let result = await baseQuery(args, api, extraOptions);
     if (result.error && result.error.status === 401) {
-      // try to get a new token
-      const baseUrl = baseUrlSelector(api.getState() as RootState);
-      const refreshResult = await authProvider.getToken(baseUrl);
-      if (refreshResult) {
-        // store the new token
-        api.dispatch(tokenReceived(refreshResult));
-        // retry the initial query
-        result = await baseQuery(args, api, extraOptions);
-      } else {
-        api.dispatch(loggedOut());
-      }
+      result = await baseQuery(args, api, extraOptions);
     }
     return result;
   };
-  return baseQueryWithReauth;
+  return baseQuery;
 }

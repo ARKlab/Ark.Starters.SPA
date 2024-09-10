@@ -9,36 +9,38 @@ import {
   Flex,
   AccordionButton,
   AccordionPanel,
-} from '@chakra-ui/react'
+  Button,
+} from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
-import { useAppSelector, useAppDispatch } from '../../app/hooks'
-import type { DetailsType} from '../../lib/errorHandler/errorHandler';
-import { clearError, selectError } from '../../lib/errorHandler/errorHandler'
-import { ChackraUIBaseModal } from '../chackraModal/chackraBaseModal'
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import type { DetailsType } from "../../lib/errorHandler/errorHandler";
+import { clearError, selectError } from "../../lib/errorHandler/errorHandler";
+import { ChackraUIBaseModal } from "../chackraModal/chackraBaseModal";
 
 export const ProblemDetailsModal = () => {
-  const problem = useAppSelector(selectError)
-  const dispatch = useAppDispatch()
-  const therIsError = problem.error !== undefined ? problem.error : false
-  const problemDetails = problem.details
+  const problem = useAppSelector(selectError);
+  const dispatch = useAppDispatch();
+  const therIsError = problem.error !== undefined ? problem.error : false;
+  const problemDetails = problem.details;
 
   return (
     <ChackraUIBaseModal
-      size={'xl'}
+      size={"xl"}
       isOpen={therIsError}
       onClose={() => {
-        dispatch(clearError())
+        dispatch(clearError());
       }}
-      title={problemDetails?.title || ''}
+      title={problemDetails?.title || ""}
       body={<ProblemDetailsModalBody problem={problemDetails} />}
       blurredOverlay={true}
     />
-  )
-}
+  );
+};
 
 const ProblemDetailsModalBody = (props: { problem: DetailsType | null }) => {
-  const problem = props.problem
-
+  const problem = props.problem;
+  const navigate = useNavigate();
   return (
     <>
       <Flex>
@@ -46,15 +48,11 @@ const ProblemDetailsModalBody = (props: { problem: DetailsType | null }) => {
       </Flex>
       <Flex my="20px">
         <Card>
-          <Code colorScheme="grey">
-            {problem?.originalDetail
-              ? problem.originalDetail
-              : problem?.message}
-          </Code>
+          <Code colorScheme="grey">{problem?.originalDetail ? problem.originalDetail : problem?.message}</Code>
         </Card>
       </Flex>
       <Flex my="20px">
-        <Accordion>
+        <Accordion w="full">
           <AccordionItem>
             <h2>
               <AccordionButton>
@@ -65,13 +63,20 @@ const ProblemDetailsModalBody = (props: { problem: DetailsType | null }) => {
               </AccordionButton>
             </h2>
             <AccordionPanel pb={4}>
-              {problem?.exceptionDetails
-                ? problem.exceptionDetails[0].raw
-                : 'No StackTrace found'}
+              {problem?.exceptionDetails ? problem.exceptionDetails[0].raw : "No StackTrace found"}
             </AccordionPanel>
           </AccordionItem>
         </Accordion>
       </Flex>
+      <Flex justifyContent={"center"}>
+        <Button
+          onClick={() => {
+            navigate(0);
+          }}
+        >
+          Reload Page
+        </Button>
+      </Flex>
     </>
-  )
-}
+  );
+};
