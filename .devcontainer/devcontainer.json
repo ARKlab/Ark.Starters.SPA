@@ -1,0 +1,12 @@
+{
+    "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "esbenp.prettier-vscode",
+                "dbaeumer.vscode-eslint",
+                "lokalise.i18n-ally"
+            ]
+        }
+    }
+}
