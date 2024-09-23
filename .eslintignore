@@ -8,4 +8,5 @@ dist
 
 vite.config.ts
 vitest.setup.ts
+cypress.config.ts
 pwa-assets.config.ts
