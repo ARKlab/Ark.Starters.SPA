@@ -1,6 +1,5 @@
-import { useEffect } from "react";
 import { Else, If, Then } from "react-if";
-import { Outlet, Route, createBrowserRouter, createRoutesFromChildren, useNavigate } from "react-router-dom";
+import { Outlet, Route, createBrowserRouter, createRoutesFromChildren } from "react-router-dom";
 
 import Layout from "../components/layout/layout";
 import type { MainSectionType, SubsectionMenuItemType } from "../components/layout/sideBar/menuItem/types";
