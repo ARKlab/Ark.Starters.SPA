@@ -22,4 +22,5 @@ jobs:
       - name: Cypress E2E
         uses: cypress-io/github-action@v6
         with:
+          install: false
           command: npm run e2e:ci
