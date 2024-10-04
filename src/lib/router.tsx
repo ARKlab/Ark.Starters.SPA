@@ -1,5 +1,6 @@
+import { useEffect } from "react";
 import { Else, If, Then } from "react-if";
-import { Outlet, Route, createBrowserRouter, createRoutesFromChildren } from "react-router-dom";
+import { Outlet, Route, createBrowserRouter, createRoutesFromChildren, useNavigate } from "react-router-dom";
 
 import Layout from "../components/layout/layout";
 import type { MainSectionType, SubsectionMenuItemType } from "../components/layout/sideBar/menuItem/types";
@@ -64,6 +65,17 @@ const routes = mainSections
     ),
   );
 
+// eslint-disable-next-line react-refresh/only-export-components
+const GoBack = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate(0);
+  }, [navigate]);
+
+  return (<></>)
+}
+
 export const router = createBrowserRouter(
   createRoutesFromChildren(
     <Route path="/" element={<Layout />}>
@@ -71,8 +83,13 @@ export const router = createBrowserRouter(
         <Route path="auth-callback" element={<AuthenticationCallback />} />
         <Route path="Unauthorized" element={<Unauthorized />} />
         {routes}
+        <Route path="/reload" element={<GoBack />} />
+        <Route path="/null" element={<></>} />
         <Route path="*" element={<PageNotFound />} />
       </Route>
     </Route>,
   ),
 );
+
+if (window.Cypress)
+  window.router = router;

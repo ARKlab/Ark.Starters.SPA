@@ -88,9 +88,10 @@ export default defineConfig(({ mode }) => {
       i18nAlly(),
       eslint({
         fix: true,
-        lintOnStart: true,
+        lintOnStart: mode != "e2e",
         cache: true,
         exclude: ["**/node_modules/**", "**/build/**", "**/public/**", "**/dev-dist/**", "virtual:**"],
+        include: ["./src/**/*.{ts,tsx}"],
       }),
     ],
     test: {
@@ -101,7 +102,6 @@ export default defineConfig(({ mode }) => {
       // you might want to disable it, if you don't have tests that rely on CSS
       // since parsing CSS is slow
       css: true,
-      
 
       exclude: ["**/node_modules/**", "**/build/**", "**/public/**", "**/dev-dist/**", "virtual:**", "**/cypress/**"],
     },
@@ -125,14 +125,14 @@ export default defineConfig(({ mode }) => {
       sourcemap: true,
     },
     server: {
-      port: 3000,
+      port: parseInt(process.env.PORT || "") || 3000,
       open: true,
       proxy: {
         "/connectionStrings.cjs": "http://localhost:4000",
       },
     },
     preview: {
-      port: 3000,
+      port: parseInt(process.env.PORT || "") || 3000,
       open: true,
       proxy: {
         "/connectionStrings.cjs": "http://localhost:4000",

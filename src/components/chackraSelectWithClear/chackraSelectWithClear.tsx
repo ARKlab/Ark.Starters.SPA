@@ -52,7 +52,7 @@ const ChackraSelectWithClear: React.FC<SelectWithClearProps> = ({
           isRequired={true}
           value={selectValue}
           onChange={handleChange}
-          icon={isLoading ? <Spinner /> : <MdArrowDropDown />}
+          icon={isLoading ? <Spinner data-role='spinner' /> : <MdArrowDropDown />}
         >
           {options}
         </Select>

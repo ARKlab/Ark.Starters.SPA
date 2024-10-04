@@ -1,7 +1,8 @@
-import { Center, Grid, GridItem, Spinner } from "@chakra-ui/react";
+import { Grid, GridItem } from "@chakra-ui/react";
 import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 
+import CenterSpinner from "../centerSpinner";
 import { ErrorBoundary } from "../errorBoundary";
 import { GdprConsentDialog } from "../gdprConsentDialog";
 import { ProblemDetailsModal } from "../problemDetailsModal/problemDetailsModal";
@@ -35,9 +36,7 @@ const Layout = () => {
           <ErrorBoundary>
             <Suspense
               fallback={
-                <Center>
-                  <Spinner />
-                </Center>
+                <CenterSpinner />
               }
             >
               <Outlet />
