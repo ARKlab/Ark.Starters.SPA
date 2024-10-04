@@ -65,17 +65,6 @@ const routes = mainSections
     ),
   );
 
-// eslint-disable-next-line react-refresh/only-export-components
-const GoBack = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    navigate(0);
-  }, [navigate]);
-
-  return (<></>)
-}
-
 export const router = createBrowserRouter(
   createRoutesFromChildren(
     <Route path="/" element={<Layout />}>
@@ -83,7 +72,6 @@ export const router = createBrowserRouter(
         <Route path="auth-callback" element={<AuthenticationCallback />} />
         <Route path="Unauthorized" element={<Unauthorized />} />
         {routes}
-        <Route path="/reload" element={<GoBack />} />
         <Route path="/null" element={<></>} />
         <Route path="*" element={<PageNotFound />} />
       </Route>
