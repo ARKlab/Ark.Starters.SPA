@@ -32,7 +32,8 @@ const JsonPlaceholderPostsTable = () => {
         colorscheme="teal"
         variant="striped"
         data={data}
-        isLoading={isLoading || isFetching}
+        //isFetching here would show the spinner each poll. If you want to show spinner only on initial load, use isLoading
+        isLoading={isLoading}
         isError={isError}
         error={error}
         schema={PostDataSchema}
