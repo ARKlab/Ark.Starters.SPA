@@ -15,14 +15,12 @@ export const PostDataSchema = z.object({
 
 export type PostDataType = z.infer<typeof PostDataSchema>;
 const JsonPlaceholderPostsTable = () => {
-  const { data, isLoading, isFetching, isError, error } /*This also contains error and isSuccess*/ = useFetchPostsQuery(
-    null,
-    {
+  const { data, isLoading, isError, error } /*This also contains error and isSuccess isFetching etc..*/ =
+    useFetchPostsQuery(null, {
       pollingInterval: 30000,
       refetchOnReconnect: true,
       refetchOnMountOrArgChange: true,
-    },
-  );
+    });
   const { t } = useTranslation();
 
   return (
@@ -32,7 +30,8 @@ const JsonPlaceholderPostsTable = () => {
         colorscheme="teal"
         variant="striped"
         data={data}
-        isLoading={isLoading || isFetching}
+        //isFetching here would show the spinner each poll. If you want to show spinner only on initial load, use isLoading
+        isLoading={isLoading}
         isError={isError}
         error={error}
         schema={PostDataSchema}
