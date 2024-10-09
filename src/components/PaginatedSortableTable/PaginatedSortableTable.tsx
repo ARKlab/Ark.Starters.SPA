@@ -220,7 +220,7 @@ export function PaginatedSortableTable<T>(
               <Tr>
                 <Td colSpan={columns.length}>
                   <Center>
-                    <Spinner />
+                    <Spinner data-role='spinner' />
                   </Center>
                 </Td>
               </Tr>
