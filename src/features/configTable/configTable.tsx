@@ -212,7 +212,7 @@ export default function EditableTableExample() {
                   <Tr>
                     <Td colSpan={3}>
                       <Center>
-                        <Spinner />
+                        <Spinner data-role='spinner' />
                       </Center>
                     </Td>
                   </Tr>

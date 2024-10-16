@@ -71,8 +71,12 @@ export const router = createBrowserRouter(
         <Route path="auth-callback" element={<AuthenticationCallback />} />
         <Route path="Unauthorized" element={<Unauthorized />} />
         {routes}
+        <Route path="/null" element={<></>} />
         <Route path="*" element={<PageNotFound />} />
       </Route>
     </Route>,
   ),
 );
+
+if (window.Cypress)
+  window.router = router;

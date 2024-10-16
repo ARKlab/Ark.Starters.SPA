@@ -32,7 +32,7 @@ export const useCookieConsent = (): [
   },
 ] => {
   const [consent, update] = useLocalStorage<ConsentState | undefined>(COOKIE_CONSENT_KEY, undefined, {
-    initializeWithValue: false,
+    initializeWithValue: true,
   });
 
   const acceptAll = useCallback(() => {

@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { ChackraPlainTable } from "../../components/tables/plainTable/chackraPlainTable";
 
-import { useFetchPostsQuery } from "./jsonPlaceholderSlice";
+import { useFetchPostsQuery } from "./jsonPlaceholderApi";
 
 export const PostDataSchema = z.object({
   id: z.number().nullable(),

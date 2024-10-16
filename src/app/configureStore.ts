@@ -3,7 +3,7 @@ import { configureStore, combineSlices } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
 import { configTableApiSlice } from "../features/configTable/configTableApi";
-import { jsonPlaceholderSlice } from "../features/fetchApiExample/jsonPlaceholderSlice";
+import { jsonPlaceholderApi } from "../features/fetchApiExample/jsonPlaceholderApi";
 import { videoGameApiSlice } from "../features/formExample/videoGamesApiSlice";
 import { globalLoadingSlice } from "../features/globalLoadingBar/globalLoadingApi";
 import { moviesApiSlice } from "../features/paginatedTable/paginatedTableApi";
@@ -17,15 +17,18 @@ import errorReducer from "../lib/errorHandler/errorHandler";
 const sliceReducers = combineSlices(
   authSlice,
   envSlice,
+
   configTableApiSlice,
   videoGameApiSlice,
-  jsonPlaceholderSlice,
+  jsonPlaceholderApi,
   moviesApiSlice,
+
   globalLoadingSlice,
   {
     errorHandler: errorReducer,
   },
 );
+
 // Infer the `RootState` type from the root reducer
 export type RootState = ReturnType<typeof sliceReducers>;
 
@@ -41,7 +44,7 @@ export function initStore(authProviderInstance: AuthProvider) {
           serializableCheck: true,
         },
       }).concat(
-        jsonPlaceholderSlice.middleware,
+        jsonPlaceholderApi.middleware,
         configTableApiSlice.middleware,
         moviesApiSlice.middleware,
         videoGameApiSlice.middleware,
@@ -52,6 +55,14 @@ export function initStore(authProviderInstance: AuthProvider) {
   setupListeners(store.dispatch);
   return store;
 }
+
+export const resetApiActions = [
+  jsonPlaceholderApi.util.resetApiState(),
+  configTableApiSlice.util.resetApiState(),
+  moviesApiSlice.util.resetApiState(),
+  videoGameApiSlice.util.resetApiState(),
+  globalLoadingSlice.util.resetApiState(),
+];
 
 export type ExtraType = {
   authProvider: AuthProvider;
