@@ -27,19 +27,18 @@ describe("Config Table", () => {
     });
 
     it("API mocks via MSW", () => {
-      // the global 'beforeEach' and the local 'actAsAnon' ensure we're on /null start'
-      cy.window().then(win => {
-        const data = [{ name: "Mario", surName: "Rossi", employed: true }] as Employee[];
-        if (win.msw === undefined) throw new Error("wtf?!");
-        const { worker, http } = win.msw;
+      cy.window()
+        .its("msw")
+        .then(msw => {
+          const data = [{ name: "Mario", surName: "Rossi", employed: true }] as Employee[];
+          const { worker, http } = msw;
 
-        worker.use(
-          http.get(url + "/", () => {
-            return HttpResponse.json(data);
-          }),
-        );
-      });
-
+          worker.use(
+            http.get(url + "/", () => {
+              return HttpResponse.json(data);
+            }),
+          );
+        });
       cy.navigateViaMenu(/config table/i);
 
       cy.get("table tbody tr").should("have.length", 1);
