@@ -13,6 +13,7 @@ import svgr from "vite-plugin-svgr";
 import { VitePWA } from "vite-plugin-pwa";
 import { supportedLngs } from "./src/config/lang";
 import legacy from "vite-plugin-legacy-swc";
+import msw from "@iodigital/vite-plugin-msw";
 
 const chunkSizeLimit = 10048;
 const defaultLang = Object.keys(supportedLngs)[0];
@@ -22,6 +23,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   return {
     plugins: [
+      msw({ mode: "browser", handlers: [] }),
       legacy({
         targets: ["defaults"],
         modernTargets: [
