@@ -22,10 +22,10 @@ export const i18nSetup = async () => {
     }),
   );
 
-  await new Promise<void>((resolve, reject) => {
+  await new Promise<void>(resolve => {
     const { asyncLoadResource } = i18nAlly({
-      onInit({ language }) {
-        i18next
+      async onInit({ language }) {
+        await i18next
           .use(initReactI18next)
           // Initialize the i18next instance.
           .init({
@@ -76,8 +76,7 @@ export const i18nSetup = async () => {
             nonExplicitSupportedLngs: true,
             cleanCode: true,
             lowerCaseLng: true,
-          })
-          .catch(reject);
+          });
       },
       onInited() {
         resolve();
@@ -112,6 +111,7 @@ export const i18nSetup = async () => {
     const _changeLanguage = i18next.changeLanguage;
     i18next.changeLanguage = async (lang: string, ...args) => {
       // Load resources before language change
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       await asyncLoadResource(lang);
       return _changeLanguage(lang, ...args);
     };
