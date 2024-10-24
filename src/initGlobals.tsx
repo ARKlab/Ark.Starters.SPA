@@ -1,13 +1,22 @@
 import { HelmetProvider } from "react-helmet-async";
 import { Provider } from "react-redux";
 
-import { initStore } from "./app/configureStore";
+import { initStore, resetApiActions } from "./app/configureStore";
 import { authProvider } from "./config/authProvider"; // this could fail if 'env' is malconfigured as is env-dependent
 import { InitApp } from "./initApp";
 import AuthenticationProviderContext from "./lib/authentication/components/AuthenticationProviderContext";
 import { setError } from "./lib/errorHandler/errorHandler";
 
 const store = initStore(authProvider)
+
+if (window.Cypress) {
+  window.rtkq = {
+    resetCache: () => {
+      for (const x of resetApiActions)
+        store.dispatch(x);
+    }
+  }
+}
 
 // This is needed in case someone uses useEffect() for ASYNC promised instead of useAsyncEffect()
 window.addEventListener("unhandledrejection", (e: PromiseRejectionEvent) => {
