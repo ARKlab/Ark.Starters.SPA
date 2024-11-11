@@ -14,9 +14,21 @@ module.exports = {
     ],
     ignorePatterns: ["**/node_modules/", ".git/", 'public/', 'build/', 'dist/', 'dev-dist/', '.eslintrc.cjs'],
     parserOptions: {
-        project: ['tsconfig.json'],
+        project: ['tsconfig.json', 'cypress/tsconfig.json'],
 
     },
+    "overrides": [
+        {
+            "extends": [
+                "plugin:cypress/recommended",
+                "plugin:mocha/recommended",
+                "plugin:chai-friendly/recommended"
+            ],
+            "files": [
+                "cypress/**/*.ts"
+            ]
+        }
+    ],
     plugins: ['react-refresh', 'react-hooks', 'jsx-a11y', 'import', 'prettier'],
     rules: {
         "no-restricted-imports": "off",

@@ -6,7 +6,8 @@ import { makeZodI18nMap } from "zod-i18n-map";
 
 import { supportedLngs } from "../../config/lang";
 
-const fallbackLng = Object.keys(supportedLngs)[0];
+const langs = import.meta.env.MODE == "e2e" ? { cimode: "cimode" } : supportedLngs;
+const fallbackLng = Object.keys(langs)[0];
 const lookupTarget = "lang";
 
 export const i18nSetup = async () => {
@@ -47,6 +48,11 @@ export const i18nSetup = async () => {
             // Enables useful output in the browser’s
             // dev console.
             debug: import.meta.env.DEV,
+            appendNamespaceToCIMode: true,
+            appendNamespaceToMissingKey: true,
+            returnNull: false,
+            // if a key is empty, returns the key
+            returnEmptyString: false,
 
             // Normally, we want `escapeValue: true` as it
             // ensures that i18next escapes any code in
@@ -57,9 +63,6 @@ export const i18nSetup = async () => {
             interpolation: {
               escapeValue: false,
             },
-
-            // if a key is empty, returns the key
-            returnEmptyString: false,
 
             nsSeparator: ".",
 

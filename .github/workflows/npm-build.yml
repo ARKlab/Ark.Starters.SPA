@@ -19,3 +19,12 @@ jobs:
           node-version: "22.x"
       - run: npm ci
       - run: npm run build
+      - name: Cypress E2E
+        uses: cypress-io/github-action@v6
+        env:
+          VITE_MODE: e2e
+        with:
+          install: false
+          start: npm start
+          wait-on: "http://localhost:3000, http://localhost:4000"
+          wait-on-timeout: 130

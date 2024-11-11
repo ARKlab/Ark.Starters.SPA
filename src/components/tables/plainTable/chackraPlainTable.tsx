@@ -70,7 +70,7 @@ export const ChackraPlainTable = <T extends ZodRawShape>({
               <Tr>
                 <Td colSpan={headers.length}>
                   <Center>
-                    <Spinner />
+                    <Spinner data-role='spinner' />
                   </Center>
                 </Td>
               </Tr>

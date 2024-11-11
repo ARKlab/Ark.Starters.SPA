@@ -69,10 +69,10 @@ export const GdprConsentDialog = () => {
                             <Spacer />
                             <ButtonGroup gap={1}>
 
-                                <Button ref={closeRef} onClick={() => { actions.rejectNotNecessary(); onClose(); }}>
+                                <Button ref={closeRef} onClick={() => { actions.rejectNotNecessary(); onClose(); }} data-role='gdpr-reject'>
                                     {t('reject')}
                                 </Button>
-                                <Button colorScheme="red" onClick={() => { actions.acceptAll(); onClose(); }} ml={3}>
+                                <Button colorScheme="red" onClick={() => { actions.acceptAll(); onClose(); }} ml={3} data-role='gdpr-acceptAll'>
                                     {t('acceptAll')}
                                 </Button>
 

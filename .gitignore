@@ -24,3 +24,9 @@ yarn-debug.log*
 yarn-error.log*
 
 src/locales/**/zod.json
+
+cypress/screenshots
+cypress/videos
+cypress/downloads
+
+.nyc_output/
