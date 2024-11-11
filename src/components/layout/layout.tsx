@@ -7,7 +7,7 @@ import { GdprConsentDialog } from "../gdprConsentDialog";
 import { ProblemDetailsModal } from "../problemDetailsModal/problemDetailsModal";
 
 import Header from "./header/view";
-import { LayoutContextProvider } from "./layoutContext";
+import { LayoutContextProvider } from "./LayoutContextProvider";
 import SimpleSidebar from "./sideBar/sideBar";
 
 const Layout = () => {
