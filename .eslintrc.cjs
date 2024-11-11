@@ -20,7 +20,9 @@ module.exports = {
     "overrides": [
         {
             "extends": [
-                "plugin:cypress/recommended"
+                "plugin:cypress/recommended",
+                "plugin:mocha/recommended",
+                "plugin:chai-friendly/recommended"
             ],
             "files": [
                 "cypress/**/*.ts"

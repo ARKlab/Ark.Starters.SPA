@@ -81,10 +81,8 @@ export const i18nSetup = async () => {
       onInited() {
         resolve();
       },
-      onResourceLoaded: (resources, { language }) => {
-        Object.keys(resources).forEach(ns => {
-          i18next.addResourceBundle(language, ns, resources[ns]);
-        });
+      onResourceLoaded: (resources, { language, namespace }) => {
+        i18next.addResourceBundle(language, namespace, resources);
       },
       fallbackLng,
       detection: [
