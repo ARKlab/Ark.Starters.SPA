@@ -1,5 +1,4 @@
-import type { ReactNode } from "react";
-import { createContext, useState } from "react";
+import { createContext } from "react";
 
 export interface ILayoutContext {
     isMobileSiderOpen: boolean;
@@ -11,20 +10,3 @@ export const LayoutContext = createContext<ILayoutContext>({
     setMobileSiderOpen: () => undefined,
 });
 
-export const LayoutContextProvider = ({ children }: {
-    children: ReactNode;
-}) => {
-
-    const [isMobileSiderOpen, setMobileSiderOpen] = useState(false);
-
-    return (
-        <LayoutContext.Provider
-            value={{
-                isMobileSiderOpen,
-                setMobileSiderOpen,
-            }}
-        >
-            {children}
-        </LayoutContext.Provider>
-    );
-};
