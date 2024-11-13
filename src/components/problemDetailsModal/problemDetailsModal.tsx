@@ -21,7 +21,7 @@ import { ChackraUIBaseModal } from "../chackraModal/chackraBaseModal";
 export const ProblemDetailsModal = () => {
   const problem = useAppSelector(selectError);
   const dispatch = useAppDispatch();
-  const therIsError = problem.error !== undefined ? problem.error : false;
+  const therIsError = problem.error ?? false;
   const problemDetails = problem.details;
 
   return (
@@ -31,7 +31,7 @@ export const ProblemDetailsModal = () => {
       onClose={() => {
         dispatch(clearError());
       }}
-      title={problemDetails?.title || ""}
+      title={problemDetails?.title ?? ""}
       body={<ProblemDetailsModalBody problem={problemDetails} />}
       blurredOverlay={true}
     />

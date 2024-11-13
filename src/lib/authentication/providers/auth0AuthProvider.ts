@@ -111,8 +111,8 @@ export class Auth0AuthProvider implements AuthProvider {
   public async getUserDetail(): Promise<UserAccountInfo | null> {
     const currentAccounts = await this.auth0Client.getUser();
     const claims = await this.auth0Client.getIdTokenClaims();
-    const groups = claims && claims[claimsUrl + "groups"];
-    const permissions = claims && claims[claimsUrl + "permissions"];
+    const groups = claims?.[claimsUrl + "groups"];
+    const permissions = claims?.[claimsUrl + "permissions"];
     this.userPermissions = permissions || [];
 
     if (!currentAccounts) {
@@ -120,7 +120,7 @@ export class Auth0AuthProvider implements AuthProvider {
     } else {
       this.setLoginStatus(LoginStatus.Logged);
       return {
-        username: currentAccounts.name || "",
+        username: currentAccounts.name ?? "",
         permissions: permissions,
         groups: groups,
       } as UserAccountInfo;
@@ -132,7 +132,7 @@ export class Auth0AuthProvider implements AuthProvider {
     const k = claimsUrl + "permissions";
     const mappedClaims = z.record(z.enum([k]), z.array(z.string()).optional()).parse(claims);
 
-    return mappedClaims[k] || [];
+    return mappedClaims[k] ?? [];
   }
 
   //PRIVATE METHODS

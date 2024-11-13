@@ -1,5 +1,6 @@
 import type {
-  InputProps} from "@chakra-ui/react";
+  InputProps
+} from "@chakra-ui/react";
 import {
   Button,
   FormControl,

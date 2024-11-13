@@ -32,10 +32,9 @@ window.addEventListener("vite:preloadError", () => {
   window.location.reload();
 });
 
-
-const root = createRoot(
-  document.getElementById("root") as HTMLElement
-);
+const rootElement = document.getElementById("root");
+if (rootElement === null) throw new Error("#root not found");
+const root = createRoot(rootElement);
 
 const colorModeManager = createLocalStorageManager(
   import.meta.env.VITE_APP_TITLE + "-ColorMode"

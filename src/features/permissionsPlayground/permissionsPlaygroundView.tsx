@@ -24,7 +24,7 @@ const PlaygroundView = () => {
   const user = useAppSelector(userSelector);
   const [requiredPermission, setRequiredPermission] = useState<string>("mega:admin");
   const [inputValue, setInputValue] = useState<string>(requiredPermission);
-  const permissions: string[] = user?.permissions || [];
+  const permissions: string[] = user?.permissions ?? [];
   const { t } = useTranslation();
   const navigate = useNavigate();
   return (
