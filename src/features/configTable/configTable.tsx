@@ -76,9 +76,9 @@ const primaryKeyValidator =
         duplicates.push(value)
 
         duplicateIndexes.forEach((index) => {
-          errors.table = errors.table || []
+          errors.table = errors.table ?? []
           errors.table[index] = errors.table[index] || { _rowError: [] }
-          const e = errors.table[index]._rowError || []
+          const e = errors.table[index]._rowError ?? []
 
           e.push(
             `Duplicate ${propsToCheck.join(

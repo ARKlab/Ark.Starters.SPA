@@ -85,7 +85,7 @@ const arrDataBuilder = ({
   join,
 }: {
   key: string | number | symbol;
-  data: Array<any>;
+  data: any[];
   equator: string;
   join: string;
 }) => {

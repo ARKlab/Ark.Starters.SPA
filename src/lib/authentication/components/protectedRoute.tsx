@@ -11,7 +11,7 @@ type ProtectedRouteProps = {
 
 const ProtectedRoute = ({ permissions, children }: ProtectedRouteProps) => {
   const user = useAppSelector(userSelector);
-  const userPermissions = user?.permissions || ([] as string[]);
+  const userPermissions = user?.permissions ?? ([] as string[]);
   const hasAllPermissions = permissions ? permissions.every(permission => userPermissions.includes(permission)) : true;
 
   return hasAllPermissions ? <>{children}</> : <Unauthorized />;

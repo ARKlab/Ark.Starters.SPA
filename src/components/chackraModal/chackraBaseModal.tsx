@@ -41,7 +41,7 @@ export const ChackraUIBaseModal = (props: {
       </Button>
     )
   }
-  if (!props.onClose) props.onClose = () => { }
+  if (!props.onClose) props.onClose = () => { /* do nothing */ }
   let overlay = <ModalOverlay />
   if (props.blurredOverlay)
     overlay = <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(5px)" />

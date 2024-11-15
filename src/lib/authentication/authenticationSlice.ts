@@ -60,7 +60,9 @@ export const authSlice = createAppSlice({
         state.data.token = action.payload;
       }
     }),
-    loggedOut: () => {},
+    loggedOut: () => {
+      /* do nothing */
+    },
   }),
   extraReducers: builder => {
     builder

@@ -14,7 +14,7 @@ const BackButton = ({ mx }: BackButtonProps) => {
       icon={<ArrowBackIcon />}
       onClick={() => { navigate(-1); }}
       isRound
-      mx={mx || "0px"}
+      mx={mx ?? "0px"}
     />
   );
 };

@@ -2,7 +2,8 @@
     "extends": "../tsconfig.json",
     "include": [
         "./**/*.ts",
-        "../src/global.d.ts"
+        "../src/global.d.ts",
+        "../cypress.config.ts"
     ],
     "exclude": [],
     "compilerOptions": {
