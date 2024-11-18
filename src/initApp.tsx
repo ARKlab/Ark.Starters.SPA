@@ -21,7 +21,7 @@ export function InitApp() {
 
         if (import.meta.env.DEV) {
             const { worker } = await import('./lib/mocks/browserWorker');
-            await worker.start({ onUnhandledRequest: "bypass" });
+            await worker.start({ onUnhandledRequest: "error" });
         }
 
         await i18nSetup();
