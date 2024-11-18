@@ -1,13 +1,9 @@
 import {
   Button,
   Center,
-  Checkbox,
-  FormControl,
-  FormErrorMessage,
   HStack,
   Heading,
   IconButton,
-  Input,
   Spinner,
   Table,
   Tbody,
@@ -20,14 +16,16 @@ import {
 } from "@chakra-ui/react";
 import arrayMutators from "final-form-arrays";
 import { useEffect } from "react";
-import { Field, Form, useField } from "react-final-form";
+import { Form, useFormState } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
 import { useTranslation } from "react-i18next";
 import { FaTrash } from "react-icons/fa";
 import * as z from "zod";
 
 import { useAppDispatch } from "../../app/hooks";
+import { CheckboxControl, InputControl } from "../../components/reactFinalFormControls";
 import { dispatchNetworkError } from "../../lib/errorHandler/errorHandler";
+import { useRenderCount } from "../../lib/useRenderCount";
 import { zod2FieldValidator } from "../../lib/zod2FormValidator";
 
 import { useGetConfigQuery, usePostConfigMutation } from "./configTableApi";
@@ -95,6 +93,7 @@ const primaryKeyValidator =
     return errors
   }
 
+
 export default function EditableTableExample() {
   const [
     postConfig,
@@ -136,6 +135,9 @@ export default function EditableTableExample() {
       });
   };
   const { t } = useTranslation();
+
+
+
   return (
     <Form<FormValue>
       onSubmit={onSubmit}
@@ -210,27 +212,24 @@ export default function EditableTableExample() {
               <Tbody>
                 {getConfigIsLoading ? (
                   <Tr>
-                    <Td colSpan={3}>
+                    <Td colSpan={4}>
                       <Center>
                         <Spinner data-role='spinner' />
                       </Center>
                     </Td>
                   </Tr>
                 ) : (
-                  <FieldArray<Employee> name="table">
-                    {({ fields }) =>
-                      fields.map((field, index) => {
-                        return (
-                          <TableRow
-                            key={index + field + 'row'}
-                            name={field}
-                            index={index}
-                            submitting={submitting}
-                            onDelete={() => fields.remove(index)}
-                          />
-                        )
-                      })
-                    }
+                  <FieldArray<Employee> name="table" render={({ fields }) =>
+                    fields.map((name, index) => {
+                      return (
+                        <TableRow
+                          key={name}
+                          name={name}
+                          index={index}
+                          onDelete={() => fields.remove(index)}
+                        />
+                      )
+                    })}>
                   </FieldArray>
                 )}
               </Tbody>
@@ -245,56 +244,30 @@ export default function EditableTableExample() {
 const TableRow = (props: {
   name: string
   index: number
-  submitting: boolean
   onDelete: () => void
 }) => {
-  const { name, index, submitting, onDelete } = props
-  const {
-    meta: { error },
-  } = useField(name + "_rowError");
-  const rowError = error;
+  const { name, onDelete } = props
   const { t } = useTranslation();
+
+  const renderCount = useRenderCount();
+
+  const { submitting } = useFormState({ subscription: { submitting: true } });
+
   return (
-    <Tr key={index + name}>
+    <Tr>
       <Td>
-        <Field
+        <InputControl
           validate={zod2FieldValidator(nameValidator)}
           name={`${name}.name`}
-          render={({ input, meta: { error, touched } }) => {
-            error = error || rowError
-            return (
-              <FormControl isInvalid={error && touched} isDisabled={submitting}>
-                <Input {...input} placeholder="First Name" />
-                <FormErrorMessage>{error}</FormErrorMessage>
-              </FormControl>
-            )
-          }}
         />
       </Td>
       <Td>
-        <Field
+        <InputControl
           name={`${name}.surName`}
-          render={({ input, meta: { error, touched } }) => (
-            <FormControl isInvalid={error && touched} isDisabled={submitting}>
-              <Input {...input} />
-              <FormErrorMessage>{error}</FormErrorMessage>
-            </FormControl>
-          )}
         />
       </Td>
       <Td>
-        <Field
-          type="checkbox"
-          name={`${name}.employed`}
-          render={({ input, meta: { error, touched } }) => (
-            <FormControl isInvalid={error && touched} isDisabled={submitting}>
-              <Checkbox isChecked={input.checked} onChange={input.onChange}>
-                {t("employed")}
-              </Checkbox>
-              <FormErrorMessage>{error}</FormErrorMessage>
-            </FormControl>
-          )}
-        />
+        <CheckboxControl name={`${name}.employed`} label={t("employed")} />
       </Td>
       <Td>
         <IconButton
@@ -304,6 +277,7 @@ const TableRow = (props: {
           colorScheme="red"
           aria-label="Remove Employee"
         />
+        {renderCount}
       </Td>
     </Tr>
   )

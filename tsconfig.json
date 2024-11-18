@@ -35,6 +35,7 @@
   "files": [
     "./vitest.setup.ts",
     "./vite.config.ts",
-    "./pwa-assets.config.ts"
+    "./pwa-assets.config.ts",
+    "./src/lib/useRenderCount.ts"
   ]
 }

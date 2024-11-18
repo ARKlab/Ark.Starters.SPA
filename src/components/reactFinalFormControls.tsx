@@ -9,6 +9,7 @@ import {
   Input
 } from "@chakra-ui/react";
 import React from "react";
+import type { UseFieldConfig } from "react-final-form";
 import { useField } from "react-final-form";
 
 export const FieldControl = ({
@@ -40,27 +41,27 @@ export const InputControl = ({
   name,
   label,
   placeholder,
+  ...rest
 }: {
   name: string;
-  label: React.ReactNode;
+  label?: React.ReactNode;
   placeholder?: string;
-}) => {
-  const { input, meta } = useField(name);
+} & UseFieldConfig<string>) => {
+  const { input } = useField(name, rest);
   return (
-    <FieldControl name={name} my={4}>
-      <FormLabel htmlFor={name}>{label}</FormLabel>
+    <FieldControl name={name}>
+      {(label ? <FormLabel htmlFor={name}>{label}</FormLabel> : null)}
       <Input
         {...input}
-        isInvalid={meta.error && meta.touched}
         id={name}
         placeholder={placeholder}
       />
       <FieldError name={name} />
-    </FieldControl>
+    </FieldControl >
   );
 };
 
-export const CharkaCheckBoxFinalFormField = ({
+export const CheckboxControl = ({
   label,
   name,
 }: {
@@ -72,7 +73,7 @@ export const CharkaCheckBoxFinalFormField = ({
     <FormControl isInvalid={meta.error && meta.touched}>
       <Checkbox
         {...input}
-        size="lg"
+        size="md"
         isChecked={input.checked}
         onChange={input.onChange}
       >
