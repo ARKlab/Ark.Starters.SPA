@@ -71,7 +71,7 @@ const ProblemDetailsModalBody = (props: { problem: DetailsType | null }) => {
       <Flex justifyContent={"center"}>
         <Button
           onClick={() => {
-            navigate(0);
+            void navigate(0);
           }}
         >
           Reload Page
