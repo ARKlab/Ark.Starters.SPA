@@ -14,7 +14,15 @@ function createBaseQuery(api: BaseQueryApi) {
   const baseUrl = baseUrlSelector(api.getState() as RootState);
   return fetchBaseQuery({
     baseUrl,
-    prepareHeaders: async (headers, { extra, getState }) => {
+    prepareHeaders: async (headers, { extra, getState, arg }) => {
+      if (arg && typeof arg === "object" && "body" in arg && arg.body instanceof FormData) {
+        // Remove Content-Type for FormData to let the browser set it
+        headers.delete("Content-Type");
+      } else {
+        // Set Content-Type to application/json for all other requests
+        headers.set("Content-Type", "application/json");
+        headers.set("Accept", "application/json");
+      }
       let token = tokenSelector(getState() as RootState);
 
       if (!token || token === "") {
@@ -26,8 +34,7 @@ function createBaseQuery(api: BaseQueryApi) {
       if (token) {
         headers.set("authorization", `Bearer ${token}`);
       }
-      headers.set("Content-Type", "application/json");
-      headers.set("Accept", "application/json");
+
       return headers;
     },
   });
