@@ -39,6 +39,7 @@ const schema = z.object({
   ),
 });
 
+
 export default function EditableTableExample() {
   const { t } = useTranslation();
 

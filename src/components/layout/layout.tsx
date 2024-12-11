@@ -1,13 +1,14 @@
-import { Center, Grid, GridItem, Spinner } from "@chakra-ui/react";
+import { Grid, GridItem } from "@chakra-ui/react";
 import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 
+import CenterSpinner from "../centerSpinner";
 import { ErrorBoundary } from "../errorBoundary";
 import { GdprConsentDialog } from "../gdprConsentDialog";
 import { ProblemDetailsModal } from "../problemDetailsModal/problemDetailsModal";
 
 import Header from "./header/view";
-import { LayoutContextProvider } from "./layoutContext";
+import { LayoutContextProvider } from "./LayoutContextProvider";
 import SimpleSidebar from "./sideBar/sideBar";
 
 const Layout = () => {
@@ -35,9 +36,7 @@ const Layout = () => {
           <ErrorBoundary>
             <Suspense
               fallback={
-                <Center>
-                  <Spinner />
-                </Center>
+                <CenterSpinner />
               }
             >
               <Outlet />

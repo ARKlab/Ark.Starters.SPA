@@ -90,15 +90,17 @@ export function PaginatedSortableTable<T>(
   //When filters are provided externally, we use them instead of the internal state
   useEffect(() => {
     if (externalFilters) {
-      setColumnFilters(externalFiltersState || [])
+      setColumnFilters(externalFiltersState ?? [])
     }
   }, [externalFilters, externalFiltersState])
 
   const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(
-    columns.map((column) => column.id as string), //must start out with populated columnOrder so we can splice
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    columns.filter(x => x.id != undefined).map((column) => column.id!), //must start out with populated columnOrder so we can splice
   )
 
-  const resetOrder = () => { setColumnOrder(columns.map((column) => column.id as string)); }
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const resetOrder = () => { setColumnOrder(columns.filter(x => x.id != undefined).map((column) => column.id!)); }
 
   const { data, isLoading, isFetching } = useQueryHook({
     pageIndex,
@@ -220,7 +222,7 @@ export function PaginatedSortableTable<T>(
               <Tr>
                 <Td colSpan={columns.length}>
                   <Center>
-                    <Spinner />
+                    <Spinner data-role='spinner' />
                   </Center>
                 </Td>
               </Tr>
@@ -249,7 +251,7 @@ export function PaginatedSortableTable<T>(
         <PaginationComponent
           page={table.getState().pagination.pageIndex}
           pageSize={table.getState().pagination.pageSize}
-          count={data?.count || 0}
+          count={data?.count ?? 0}
           onPageChange={onPageIndexChange}
           onPageSizeChange={onPageSizeChange}
           isLoading={isFetching}

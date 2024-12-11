@@ -56,7 +56,7 @@ const UserMenu = () => {
       <MenuButton>
         <If condition={isLogged}>
           <Then>
-            <Avatar name={user?.userInfo?.username || t('menu.user')} src="avatarSource" />
+            <Avatar name={user?.userInfo?.username ?? t('menu.user')} src="avatarSource" />
           </Then>
           <Else>
             <Avatar icon={<MdQuestionMark />} />
@@ -78,7 +78,7 @@ const UserMenu = () => {
           <If condition={isLogged}>
             <Then>
               <WrapItem>
-                <MenuItem>{user?.userInfo?.username || t('menu.user')}</MenuItem>
+                <MenuItem>{user?.userInfo?.username ?? t('menu.user')}</MenuItem>
               </WrapItem>
               <MenuItem onClick={async () => dispatch(Logout())}>{t('menu.exit')}</MenuItem>
             </Then>

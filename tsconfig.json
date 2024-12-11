@@ -11,7 +11,8 @@
       "vite/client",
       "vitest/globals",
       "vite-plugin-pwa/pwa-assets",
-      "vite-plugin-pwa/client"
+      "vite-plugin-pwa/client",
+      "vite-plugin-i18n-ally/client"
     ],
     "allowJs": false,
     "skipLibCheck": true,
@@ -32,6 +33,9 @@
     "./src"
   ],
   "files": [
-    "./vitest.setup.ts"
+    "./vitest.setup.ts",
+    "./vite.config.ts",
+    "./pwa-assets.config.ts",
+    "./src/lib/useRenderCount.ts"
   ]
 }

@@ -12,9 +12,11 @@ const BackButton = ({ mx }: BackButtonProps) => {
     <IconButton
       aria-label="Go back"
       icon={<ArrowBackIcon />}
-      onClick={() => { navigate(-1); }}
+      onClick={() => {
+        void navigate(-1);
+      }}
       isRound
-      mx={mx || "0px"}
+      mx={mx ?? "0px"}
     />
   );
 };

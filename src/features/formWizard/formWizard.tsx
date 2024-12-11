@@ -3,7 +3,7 @@ import { Field } from "react-final-form";
 import { useTranslation } from "react-i18next";
 import * as z from "zod";
 
-import { CharkaCheckBoxFinalFormField } from "../../components/reactFinalFormControls";
+import { CheckboxControl } from "../../components/reactFinalFormControls";
 import { Wizard, WizardPage } from "../../components/wizard/wizard";
 import { zod2FieldValidator } from "../../lib/zod2FormValidator";
 
@@ -113,9 +113,9 @@ const WizardFormView = () => {
           </WizardPage>
           <WizardPage>
             <Stack spacing={4}>
-              <CharkaCheckBoxFinalFormField name="newsletter" label={t("wizard_newsletter_label")} />
-              <CharkaCheckBoxFinalFormField name="specialOffers" label={t("wizard_special_offers_label")} />
-              <CharkaCheckBoxFinalFormField name="smsNotifications" label={t("wizard_sms_notifications_label")} />
+              <CheckboxControl name="newsletter" label={t("wizard_newsletter_label")} />
+              <CheckboxControl name="specialOffers" label={t("wizard_special_offers_label")} />
+              <CheckboxControl name="smsNotifications" label={t("wizard_sms_notifications_label")} />
             </Stack>
           </WizardPage>
         </Wizard>

@@ -25,7 +25,9 @@ function useAsyncEffect(effect: () => Promise<void> | AsyncGenerator<void, void,
           await task;
         }
         // eslint-disable-next-line  @typescript-eslint/no-unused-vars
-      })().then(r => {}, showBoundary);
+      })().then(r => {
+        /* do nothing */
+      }, showBoundary);
 
       return () => {
         isCancelled.d = true;

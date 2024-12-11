@@ -2,14 +2,13 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ "master" ]
-    
+    branches: ["master"]
+
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -17,6 +16,15 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: "22.x"
       - run: npm ci
       - run: npm run build
+      - name: Cypress E2E
+        uses: cypress-io/github-action@v6
+        env:
+          VITE_MODE: e2e
+        with:
+          install: false
+          start: npm start
+          wait-on: "http://localhost:3000, http://localhost:4000"
+          wait-on-timeout: 130

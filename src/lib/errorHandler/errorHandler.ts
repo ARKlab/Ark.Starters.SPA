@@ -1,8 +1,9 @@
 import type { Dispatch, PayloadAction } from "@reduxjs/toolkit";
-import { createSlice } from "@reduxjs/toolkit";
 import type { ReactNode } from "react";
 
-export type DetailsType = {
+import { createAppSlice } from "../../app/createAppSlice";
+
+export interface DetailsType {
   title?: string;
   message?: string;
   btnTitle?: ReactNode;
@@ -13,9 +14,9 @@ export type DetailsType = {
   originalDetail?: string;
   exceptionDetails?: ExceptionDetails[] | null;
   traceId?: string;
-};
+}
 
-type ExceptionDetails = {
+interface ExceptionDetails {
   message: string;
   type: string;
   raw: string;
@@ -29,19 +30,19 @@ type ExceptionDetails = {
     contextCode: string | null;
     postContextCode: string | null;
   }[];
-};
+}
 
-export type errorModalType = {
+export interface errorModalType {
   error?: boolean;
   details: DetailsType | null;
-};
+}
 
 const initialState: errorModalType = {
   error: false,
   details: null,
 };
 
-const errorSlice = createSlice({
+const errorSlice = createAppSlice({
   name: "errorHandler",
   initialState,
   reducers: {
@@ -66,7 +67,7 @@ export const dispatchNetworkError =
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (err: any) => (dispatch: Dispatch<Action>) => {
     const errorTitle = "An error occurred";
-    const isValError: boolean = false;
+    const isValError = false;
     const displayStatusCode = true;
     const message = err?.data?.message;
     dispatch(

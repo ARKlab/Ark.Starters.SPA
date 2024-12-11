@@ -126,7 +126,7 @@ const VideoGamesForm = () => {
                                 {...input}
                                 icon={
                                   genreLoading ? (
-                                    <Spinner />
+                                    <Spinner data-role='spinner' />
                                   ) : (
                                     <MdArrowDropDown />
                                   )

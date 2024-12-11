@@ -2,26 +2,28 @@
 /// <reference types="vite/client" />
 /// <reference types="vite-plugin-svgr/client" />
 
-import { defineConfig, loadEnv } from "vite";
+import msw from "@iodigital/vite-plugin-msw";
 import react from "@vitejs/plugin-react-swc";
-import eslint from "vite-plugin-eslint";
 import copy from "rollup-plugin-copy";
+import { defineConfig, loadEnv } from "vite";
+import eslint from "vite-plugin-eslint2";
 import { i18nAlly } from "vite-plugin-i18n-ally";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
+import legacy from "vite-plugin-legacy-swc";
+import { VitePWA } from "vite-plugin-pwa";
 import { reactClickToComponent } from "vite-plugin-react-click-to-component";
 import svgr from "vite-plugin-svgr";
-import { VitePWA } from "vite-plugin-pwa";
+
 import { supportedLngs } from "./src/config/lang";
-import legacy from "vite-plugin-legacy-swc";
 
 const chunkSizeLimit = 10048;
-const defaultLang = Object.keys(supportedLngs)[0];
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   return {
     plugins: [
+      msw({ mode: "browser", handlers: [] }),
       legacy({
         targets: ["defaults"],
         modernTargets: [
@@ -88,9 +90,13 @@ export default defineConfig(({ mode }) => {
       i18nAlly(),
       eslint({
         fix: true,
-        lintOnStart: true,
+        build: true,
+        lintOnStart: mode != "e2e",
+        lintInWorker: mode == "development",
         cache: true,
+        cacheLocation: "node_modules/.vite/.eslintcache",
         exclude: ["**/node_modules/**", "**/build/**", "**/public/**", "**/dev-dist/**", "virtual:**"],
+        include: ["./src/**/*.{ts,tsx}"],
       }),
     ],
     test: {
@@ -101,6 +107,8 @@ export default defineConfig(({ mode }) => {
       // you might want to disable it, if you don't have tests that rely on CSS
       // since parsing CSS is slow
       css: true,
+
+      exclude: ["**/node_modules/**", "**/build/**", "**/public/**", "**/dev-dist/**", "virtual:**", "**/cypress/**"],
     },
     build: {
       emptyOutDir: true,
@@ -122,14 +130,14 @@ export default defineConfig(({ mode }) => {
       sourcemap: true,
     },
     server: {
-      port: 3000,
+      port: parseInt(process.env.PORT ?? "", 10) || 3000,
       open: true,
       proxy: {
         "/connectionStrings.cjs": "http://localhost:4000",
       },
     },
     preview: {
-      port: 3000,
+      port: parseInt(process.env.PORT ?? "", 10) || 3000,
       open: true,
       proxy: {
         "/connectionStrings.cjs": "http://localhost:4000",

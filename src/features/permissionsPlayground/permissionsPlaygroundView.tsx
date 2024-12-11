@@ -24,7 +24,7 @@ const PlaygroundView = () => {
   const user = useAppSelector(userSelector);
   const [requiredPermission, setRequiredPermission] = useState<string>("mega:admin");
   const [inputValue, setInputValue] = useState<string>(requiredPermission);
-  const permissions: string[] = user?.permissions || [];
+  const permissions: string[] = user?.permissions ?? [];
   const { t } = useTranslation();
   const navigate = useNavigate();
   return (
@@ -58,10 +58,18 @@ const PlaygroundView = () => {
             <Input
               placeholder={t("permissionsPlayground_permissionPlaceholder")}
               value={inputValue}
-              onChange={event => { setInputValue(event.target.value); }}
+              onChange={event => {
+                setInputValue(event.target.value);
+              }}
             />
             <InputRightElement width="4.5rem">
-              <Button h="1.75rem" size="sm" onClick={() => { setRequiredPermission(inputValue); }}>
+              <Button
+                h="1.75rem"
+                size="sm"
+                onClick={() => {
+                  setRequiredPermission(inputValue);
+                }}
+              >
                 {t("permissionsPlayground_setButton")}
               </Button>
             </InputRightElement>
@@ -87,7 +95,13 @@ const PlaygroundView = () => {
           <Heading size="md" my={"20px"}>
             {t("permissionsPlayground_goToProtectedRoute")}
           </Heading>
-          <Button onClick={() => { navigate("/protectedRoute"); }}>Go!</Button>
+          <Button
+            onClick={() => {
+              void navigate("/protectedRoute");
+            }}
+          >
+            Go!
+          </Button>
         </Box>
       </Box>
     </Box>
