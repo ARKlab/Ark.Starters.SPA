@@ -109,7 +109,7 @@ export const i18nSetup = async () => {
     const _changeLanguage = i18next.changeLanguage;
     i18next.changeLanguage = async (lang: string, ...args) => {
       // Load resources before language change
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+       
       await asyncLoadResource(lang);
       return _changeLanguage(lang, ...args);
     };
