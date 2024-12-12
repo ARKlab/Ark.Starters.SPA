@@ -7,19 +7,20 @@ import {
   Th,
   Thead,
   Tr,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import * as z from "zod";
 
-import { useGetConfigQuery } from "./configTableApi";
+import { useAppDispatch } from "../../app/hooks";
+import { dispatchNetworkError } from "../../lib/errorHandler/errorHandler";
+
+import { useGetConfigQuery, usePostConfigMutation } from "./configTableApi";
 import { TableRow } from "./TableRow";
-
-// import { useGetConfigQuery } from "./configTableApi";
-
-// import { useAppDispatch } from "../../app/hooks";
 
 export type Employee = {
   name: string
@@ -28,39 +29,79 @@ export type Employee = {
 }
 
 const schema = z.object({
-  table: z.array(
-    z.object({
-      name: z.string().max(10).refine((x) => !x.endsWith("Kail"), {
-        message: "Kail is not allowed",
-      }),
-      surName: z.string().min(1),
-      employed: z.boolean(),
-    })
-  ),
+  table: z
+    .array(
+      z.object({
+        name: z.string().max(10).refine((x) => !x.endsWith("Kail"), {
+          message: "Kail is not allowed",
+        }),
+        surName: z.string().min(1),
+        employed: z.boolean(),
+      })
+    )
+    .refine((table) => {
+      const names = table.map(t => t.name);
+      const uniqueName = new Set(names);
+      return uniqueName.size === names.length;
+    }, { message: 'Duplicate names ar not allowed' }),
 });
 
 
 export default function EditableTableExample() {
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
+  const toast = useToast();
+
+  const [
+    postConfig,
+    { isLoading: postConfigIsLoading, isSuccess: postConfigSuccess },
+  ] = usePostConfigMutation();
 
   const { data, isLoading } = useGetConfigQuery(null, {
     refetchOnReconnect: true,
     refetchOnMountOrArgChange: true,
   })
 
-  const onSubmit = async (_: { table: Employee[] }) => {
-    await undefined;
+  const onSubmit = async (values: { table: Employee[] }) => {
+    console.log("OnSubmit: ", values);
+    await postConfig({ employees: values.table, throwError: false })
+      .unwrap()
+      .catch((e) => {
+        dispatch(dispatchNetworkError(e));
+      });
   };
+
+  async function throwError() {
+    await postConfig({ employees: getValues().table, throwError: true })
+      .unwrap()
+      .catch((e) => {
+        dispatch(dispatchNetworkError(e));
+      });
+  }
+
+  useEffect(() => {
+    if (postConfigSuccess) {
+      toast({
+        title: 'Config Submitted!',
+        description: 'Configuration has been submitted successfully',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+        position: 'bottom-right',
+      });
+    }
+  }, [postConfigSuccess, toast])
 
   //#region FormConfiguration
   const {
     control,
     handleSubmit,
     reset,
-    formState: { errors, isValid, isSubmitting, isDirty }
+    formState: { errors, isValid, isSubmitting, isDirty },
+    getValues
   } = useForm({
-    defaultValues: { table: data || [] },
-    values: { table: data || [] },
+    defaultValues: { table: data ?? [] },
+    values: { table: data ?? [] },
     mode: "onBlur",
     resolver: zodResolver(schema)
   });
@@ -92,21 +133,21 @@ export default function EditableTableExample() {
         </Button>
         <Button
           type="submit"
-          isDisabled={isSubmitting || !isValid}
+          isDisabled={isSubmitting || postConfigIsLoading || !isValid}
           isLoading={isSubmitting}
         >
           {t("submit")}
         </Button>
-        {/* <Button
+        <Button
           type="submit"
-          isDisabled={submitting || pristine || hasValidationErrors}
-          isLoading={submitting || postConfigIsLoading}
-          onClick={() => {
-            form.change('throwError', true)
+          isDisabled={isSubmitting || !isDirty || !errors}
+          isLoading={isSubmitting || postConfigIsLoading}
+          onClick={async () => {
+            await throwError()
           }}
         >
           {t("triggerError")}
-        </Button> */}
+        </Button>
         <Button
           isDisabled={!isDirty}
           onClick={() => { reset(); }}
@@ -142,7 +183,7 @@ export default function EditableTableExample() {
         </Tbody>
       </Table>
 
-    </VStack>
+    </VStack >
   )
 }
 
