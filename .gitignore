@@ -30,3 +30,4 @@ cypress/videos
 cypress/downloads
 
 .nyc_output/
+debug.log
