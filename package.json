@@ -70,7 +70,7 @@
     "@iodigital/vite-plugin-msw": "2.0.0",
     "@svgr/plugin-jsx": "8.1.0",
     "@svgr/plugin-svgo": "8.1.0",
-    "@swc/plugin-emotion": "7.0.3",
+    "@swc/plugin-emotion": "8.0.2",
     "@testing-library/cypress": "10.0.2",
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.1.0",
