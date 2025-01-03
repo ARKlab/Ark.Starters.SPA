@@ -1,24 +1,26 @@
 import {
-  Button,
   Box,
+  Button,
   Card,
-  UnorderedList,
+  Flex,
   ListItem,
   Text,
-  Flex,
+  UnorderedList
 } from "@chakra-ui/react";
 import type { ReactNode } from "react";
-import { useState, Children } from "react";
-import { Form } from "react-final-form";
+import { Children, useState } from "react";
+import type { UseFormProps } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
-export function Wizard<SchemaType extends object>({
-  onSubmit,
-  children
-}: {
+type WizardProps<SchemaType extends object> = {
   onSubmit: (v: SchemaType) => void;
   children: ReactNode;
-}) {
+  formProps?: UseFormProps<SchemaType>;
+};
+
+export function Wizard<SchemaType extends object>(props: WizardProps<SchemaType>) {
+  const { onSubmit, children, formProps } = props;
+
   const [page, setPage] = useState(0);
   const activePage = Children.toArray(children)[page];
   const isLastPage = page === Children.count(children) - 1;
@@ -27,56 +29,60 @@ export function Wizard<SchemaType extends object>({
 
   const previous = () => { setPage(Math.max(page - 1, 0)); };
 
-  const handleSubmit = (values: SchemaType) => {
+  const form = useForm<SchemaType>(formProps);
+
+  const { handleSubmit, formState: { isSubmitting }, getValues } = form;
+
+  const _onSubmit = (values: SchemaType) => {
     if (isLastPage) {
-      onSubmit(values); return;
+      onSubmit(values);
     } else {
       next();
     }
   };
 
-  return (
-    <Form<SchemaType>
-      onSubmit={handleSubmit}
-      render={({ handleSubmit, submitting, values }) => {
-        return (
-          <form onSubmit={handleSubmit}>
-            <Box>{activePage}</Box>
-            <Box className="buttons" mt={4}>
-              <Flex gap={"20px"}>
-                {page > 0 && (
-                  <Button type="button" onClick={previous}>
-                    « Previous
-                  </Button>
-                )}
-                {!isLastPage && (
-                  <>
-                    <Button type="submit">Next »</Button>
-                  </>
-                )}
-                {isLastPage && (
-                  <Button type="submit" disabled={submitting}>
-                    Submit
-                  </Button>
-                )}
-              </Flex>
-            </Box>
+  return <FormProvider {...form}>
+    <form onSubmit={handleSubmit(_onSubmit)}>
+      <Box>
+        {activePage}
+      </Box>
 
-            <Card mt={4} padding={"10px"} bgColor={"brand.primary"} w={"300px"}>
-              <Text>Form Data:</Text>
-              <UnorderedList>
-                {Object.entries(values).map(([key, value]) => (
-                  <ListItem key={key}>
-                    {key}: <b>{String(value)}</b>
-                  </ListItem>
-                ))}
-              </UnorderedList>
-            </Card>
-          </form>
-        );
-      }}
-    />
-  );
+      <Box className="buttons" mt={4}>
+        <Flex gap={"20px"}>
+          {page > 0 && (
+            <Button type="button" onClick={previous}>
+              « Previous
+            </Button>
+          )}
+          {!isLastPage && (
+            <>
+              <Button type="submit">Next »</Button>
+            </>
+          )}
+          {isLastPage && (
+            <Button type="submit" disabled={isSubmitting}>
+              Submit
+            </Button>
+          )}
+        </Flex>
+      </Box>
+
+      <Card mt={4} padding={".5rem 1rem"} bgColor={"brand.primary"} w={"50%s"}>
+        <Text fontWeight={'bold'}>
+          Form Data:
+        </Text>
+
+        <UnorderedList>
+          {Object.entries(getValues()).map(([key, value]) => (
+            <ListItem key={key}>
+              {key}: <b>{String(value)}</b>
+            </ListItem>
+          ))}
+        </UnorderedList>
+
+      </Card>
+    </form>
+  </FormProvider>;
 };
 
 export const WizardPage = ({ children }: { children: ReactNode }) => (

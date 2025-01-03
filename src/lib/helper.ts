@@ -112,3 +112,50 @@ const arrDataBuilder = ({
       return "";
   }
 };
+
+/**
+ * This is the "whole set" validator for the form. of course for us is a table but it is in fact a form
+ * In our configuration pattern this would be primarily used for primary key validation so i made it generic to accept a list of props
+ * to check for combinations of duplicates
+ * @param propsToCheck 
+ * @returns 
+ */
+export function primaryKeyValidator<T>(propsToCheck: (keyof T)[]) {
+  return (values: { table?: T[] }) => {
+    const table = values.table;
+
+    if (!table)
+      return null;
+
+    const errors: { table?: { _rowError?: string[] }[] } = {};
+
+    const seen = new Map<string, number[]>();
+
+    table.forEach((row, index) => {
+      // Build key <Prop1Value>|<Prop2Value>|...|<PropNValue>
+      const key = propsToCheck.map((prop) => row[prop]).join('|');
+
+      if (seen.has(key)) {
+        seen.get(key)?.push(index);
+      } else {
+        seen.set(key, [index]);
+      }
+    });
+
+    seen.forEach((indexes) => {
+      if (indexes.length > 1) {
+        indexes.forEach((index) => {
+          errors.table = errors.table ?? [];
+          errors.table[index] = errors.table[index] || { _rowError: [] };
+          errors.table[index]._rowError?.push(`Duplicate ${propsToCheck.join(', ')} values found at indexes: ${indexes.join(', ')}`);
+        });
+      }
+    });
+
+    return errors.table?.length
+      ? errors
+      : null;
+  };
+}
+
+
