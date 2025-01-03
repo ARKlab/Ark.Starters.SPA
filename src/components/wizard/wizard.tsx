@@ -33,7 +33,7 @@ export function Wizard<SchemaType extends object>(props: WizardProps<SchemaType>
 
   const _onSubmit = (values: SchemaType) => {
     if (isLastPage) {
-      onSubmit(values); return;
+      onSubmit(values);
     } else {
       next();
     }

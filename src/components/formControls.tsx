@@ -77,7 +77,6 @@ export const InputControl = (props: InputControlProps) => {
           <Input {...field} {...inputProps} id={name} placeholder={placeholder} />
         )}
       />
-      <pre>{JSON.stringify(control, null, 2)}</pre>
       <FieldError name={name} />
     </FieldControl>
   );

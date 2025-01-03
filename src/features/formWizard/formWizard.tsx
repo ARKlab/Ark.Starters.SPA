@@ -1,4 +1,5 @@
 import { Box, Heading, Stack } from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
 import * as z from "zod";
 
@@ -7,7 +8,7 @@ import { Wizard, WizardPage } from "../../components/wizard/wizard";
 
 const sleep = async (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 const _wizardSchema = z.object({
   firstName: z.string().min(6),
   lastname: z.string().min(6),
@@ -38,7 +39,10 @@ export default function WizardFormView() {
     <Box>
       <Heading>{t("wizard_form_title")}</Heading>
       <Box marginTop={"20px"}>
-        <Wizard<Schema> onSubmit={onSubmit}>
+        <Wizard<Schema> 
+          onSubmit={onSubmit}
+          formProps={{ mode: 'onChange', resolver: zodResolver(_wizardSchema) }}
+        >
           <WizardPage>
             <Stack spacing={4}>
               <InputControl name="firstName"  label='Last name' placeholder={t("wizard_first_name_placeholder")} />
