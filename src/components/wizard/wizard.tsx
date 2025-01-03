@@ -9,10 +9,10 @@ import {
 } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 import { Children, useState } from "react";
-import type { FieldValues, UseFormProps } from "react-hook-form";
+import type { UseFormProps } from "react-hook-form";
 import { FormProvider, useForm } from "react-hook-form";
 
-type WizardProps<SchemaType extends FieldValues> = {
+type WizardProps<SchemaType extends object> = {
   onSubmit: (v: SchemaType) => void;
   children: ReactNode;
   formProps?: UseFormProps<SchemaType>;
