@@ -2,6 +2,7 @@ import {
   Button,
   Heading,
   HStack,
+  Spinner,
   Table,
   Tbody,
   Th,
@@ -28,24 +29,40 @@ export type Employee = {
   employed: boolean
 }
 
-const schema = z.object({
+const configTableSchema = z.object({
   table: z
     .array(
       z.object({
-        name: z.string().max(10).refine((x) => !x.endsWith("Kail"), {
-          message: "Kail is not allowed",
-        }),
+        name: z.string()
+          .min(3)
+          .max(10)
+          .refine((x) => !x.endsWith("Kail"),
+            {
+              message: "Kail is not allowed",
+            }),
         surName: z.string().min(1),
         employed: z.boolean(),
       })
     )
-    .refine((table) => {
-      const names = table.map(t => t.name);
-      const uniqueName = new Set(names);
-      return uniqueName.size === names.length;
-    }, { message: 'Duplicate names ar not allowed' }),
+    .superRefine((table, ctx) => {
+      const names = table.reduce<Record<string, number>>((acc, x) => {
+        acc[x.name] = (acc[x.name] || 0) + 1;
+        return acc;
+      }, {});
+
+      table.forEach((t, idx) => {
+        if (names[t.name] > 1) {
+          ctx.addIssue({
+            code: "custom",
+            message: "Duplicate names are not allowed",
+            path: [idx, "name"]
+          });
+        }
+      });
+    })
 });
 
+type ConfigTableType = z.infer<typeof configTableSchema>;
 
 export default function EditableTableExample() {
   const dispatch = useAppDispatch();
@@ -99,11 +116,11 @@ export default function EditableTableExample() {
     reset,
     formState: { errors, isValid, isSubmitting, isDirty },
     getValues
-  } = useForm({
+  } = useForm<ConfigTableType>({
     defaultValues: { table: data ?? [] },
     values: { table: data ?? [] },
-    mode: "onBlur",
-    resolver: zodResolver(schema)
+    mode: "onChange",
+    resolver: zodResolver(configTableSchema)
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -169,7 +186,11 @@ export default function EditableTableExample() {
           {
             isLoading
               ?
-              "isLoading"
+              <tr>
+                <td colSpan={100} align="center" style={{ padding: '2rem' }}>
+                  <Spinner />
+                </td>
+              </tr>
               :
               fields.map((f, i) => (
                 <TableRow
@@ -183,7 +204,6 @@ export default function EditableTableExample() {
           }
         </Tbody>
       </Table>
-
     </VStack >
   )
 }
