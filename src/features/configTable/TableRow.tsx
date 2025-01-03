@@ -9,10 +9,14 @@ import type { Employee } from "./configTable";
 type TableRowProps = {
   control: Control<{ table: Employee[] }>
   errors?: FieldErrors<{ table: Employee[] }>;
-  index: number
+  index: number;
+  onDelete: () => void;
 };
 
-export function TableRow({ control, index, errors }: TableRowProps) {
+export function TableRow(props: TableRowProps) {
+  const { control, index, errors, onDelete } = props;
+
+
   return (
     <Tr>
       <Td>
@@ -62,6 +66,7 @@ export function TableRow({ control, index, errors }: TableRowProps) {
         <IconButton
           icon={<FaTrash />}
           aria-label="Delete row"
+          onClick={onDelete}
         />
       </Td>
     </Tr>

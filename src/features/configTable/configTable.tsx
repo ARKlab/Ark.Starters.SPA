@@ -106,7 +106,7 @@ export default function EditableTableExample() {
     resolver: zodResolver(schema)
   });
 
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "table",
   });
@@ -177,6 +177,7 @@ export default function EditableTableExample() {
                   control={control}
                   index={i}
                   errors={errors}
+                  onDelete={() => { remove(i); }}
                 />
               ))
           }
