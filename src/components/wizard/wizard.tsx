@@ -3,7 +3,9 @@ import {
   Button,
   Card,
   Flex,
-  Text
+  ListItem,
+  Text,
+  UnorderedList
 } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 import { Children, useState } from "react";
@@ -28,7 +30,7 @@ export function Wizard<SchemaType extends object>(props: WizardProps<SchemaType>
   const previous = () => { setPage(Math.max(page - 1, 0)); };
 
   const form = useForm<SchemaType>(formProps);
-  
+
   const { handleSubmit, formState: { isSubmitting }, getValues } = form;
 
   const _onSubmit = (values: SchemaType) => {
@@ -70,7 +72,14 @@ export function Wizard<SchemaType extends object>(props: WizardProps<SchemaType>
           Form Data:
         </Text>
 
-        <pre>{JSON.stringify(getValues(), null, 2)}</pre>
+        <UnorderedList>
+          {Object.entries(getValues()).map(([key, value]) => (
+            <ListItem key={key}>
+              {key}: <b>{String(value)}</b>
+            </ListItem>
+          ))}
+        </UnorderedList>
+
       </Card>
     </form>
   </FormProvider>;
