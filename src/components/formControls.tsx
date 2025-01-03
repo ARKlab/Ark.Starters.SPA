@@ -48,7 +48,7 @@ export const FieldError = ({ name }: FieldErrorProps) => {
   const {
     formState: { errors },
   } = useFormContext();
-  return <FormErrorMessage>{errors[name]?.message?.toString()}</FormErrorMessage>;
+  return <FormErrorMessage>{errors[name]?.message as string}</FormErrorMessage>;
 };
 
 type InputControlProps = {
