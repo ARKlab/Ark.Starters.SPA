@@ -12,7 +12,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import * as z from "zod";
@@ -79,22 +79,20 @@ export default function EditableTableExample() {
     refetchOnMountOrArgChange: true,
   })
 
+  const [throwError, setThrowError] = useState<boolean>(false);
+
   const onSubmit = async (values: { table: Employee[] }) => {
     console.log("OnSubmit: ", values);
-    await postConfig({ employees: values.table, throwError: false })
+    try {
+      await postConfig({ employees: values.table, throwError })
       .unwrap()
       .catch((e) => {
         dispatch(dispatchNetworkError(e));
       });
+    }  finally{
+      setThrowError(false)
+    }
   };
-
-  async function throwError() {
-    await postConfig({ employees: getValues().table, throwError: true })
-      .unwrap()
-      .catch((e) => {
-        dispatch(dispatchNetworkError(e));
-      });
-  }
 
   useEffect(() => {
     if (postConfigSuccess) {
@@ -115,7 +113,6 @@ export default function EditableTableExample() {
     handleSubmit,
     reset,
     formState: { errors, isValid, isSubmitting, isDirty },
-    getValues
   } = useForm<ConfigTableType>({
     defaultValues: { table: data ?? [] },
     values: { table: data ?? [] },
@@ -159,8 +156,8 @@ export default function EditableTableExample() {
           type="submit"
           isDisabled={isSubmitting || !isDirty || !errors}
           isLoading={isSubmitting || postConfigIsLoading}
-          onClick={async () => {
-            await throwError()
+          onClick={() => {
+            setThrowError(true);
           }}
         >
           {t("triggerError")}
