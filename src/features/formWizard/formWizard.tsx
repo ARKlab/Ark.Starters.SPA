@@ -45,18 +45,18 @@ export default function WizardFormView() {
         >
           <WizardPage>
             <Stack spacing={4}>
-              <InputControl name="firstName"  label='Last name' placeholder={t("wizard_first_name_placeholder")} />
-              <InputControl name="lastName"   label='Last name' placeholder={t("wizard_last_name_placeholder")} />
-              <InputControl name="email"      label='E-mail'    placeholder={t("wizard_email_placeholder")} />
-              <InputControl name="password"   label='Password'  placeholder={t("wizard_password_placeholder")} inputProps={{ type: 'password' }} />
+              <InputControl name="firstName"  label={t('firstname')} placeholder={t("wizard_first_name_placeholder")} />
+              <InputControl name="lastName"   label={t('lastname')} placeholder={t("wizard_last_name_placeholder")} />
+              <InputControl name="email"      label={t('email')}    placeholder={t("wizard_email_placeholder")} />
+              <InputControl name="password"   label={t('password')}  placeholder={t("wizard_password_placeholder")} inputProps={{ type: 'password' }} />
             </Stack>
           </WizardPage>
 
           <WizardPage>
             <Stack spacing={4}>
-              <InputControl name="phone"           label="Phone"            placeholder={t("wizard_phone_placeholder")} />
-              <InputControl name="billingAddress"  label="Billing address"  placeholder={t("wizard_billing_address_placeholder")} />
-              <InputControl name="shippingAddress" label="Shipping address" placeholder={t("wizard_shipping_address_placeholder")} />
+              <InputControl name="phone"           label={t('Phone')}            placeholder={t("wizard_phone_placeholder")} />
+              <InputControl name="billingAddress"  label={t('billing_address')}  placeholder={t("wizard_billing_address_placeholder")} />
+              <InputControl name="shippingAddress" label={t('shipping_address')} placeholder={t("wizard_shipping_address_placeholder")} />
             </Stack>
           </WizardPage>
 
