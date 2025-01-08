@@ -1,34 +1,27 @@
 import {
   Button,
-  Center,
-  HStack,
   Heading,
-  IconButton,
+  HStack,
   Spinner,
   Table,
   Tbody,
-  Td,
   Th,
   Thead,
   Tr,
-  VStack,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
-import arrayMutators from "final-form-arrays";
-import { useEffect } from "react";
-import { Form, useFormState } from "react-final-form";
-import { FieldArray } from "react-final-form-arrays";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { FaTrash } from "react-icons/fa";
 import * as z from "zod";
 
 import { useAppDispatch } from "../../app/hooks";
-import { CheckboxControl, InputControl } from "../../components/reactFinalFormControls";
 import { dispatchNetworkError } from "../../lib/errorHandler/errorHandler";
-import { useRenderCount } from "../../lib/useRenderCount";
-import { zod2FieldValidator } from "../../lib/zod2FormValidator";
 
 import { useGetConfigQuery, usePostConfigMutation } from "./configTableApi";
+import { TableRow } from "./TableRow";
 
 export type Employee = {
   name: string
@@ -36,78 +29,70 @@ export type Employee = {
   employed: boolean
 }
 
-const nameValidator = z
-  .string()
-  .max(10)
-  .refine((x) => !x.endsWith('Kail'), { message: 'Kail is not allowed' })
-
-//This is the "whole set" validator for the form. of course for us is a table but it is in fact a form
-//In our configuration pattern this would be primarily used for primary key validation so i made it generic to accept a list of props
-//to check for combinations of duplicates
-const primaryKeyValidator =
-  (propsToCheck: string[]) => (values: { table?: Employee[] }) => {
-    const errors: { table?: { _rowError?: string[] }[] } = {}
-
-    const table = values.table
-
-    if (!table) {
-      return errors
-    }
-
-    const propValues = table.map((e) =>
-      propsToCheck.map((prop) => e[prop as keyof Employee]).join('|'),
+const configTableSchema = z.object({
+  table: z
+    .array(
+      z.object({
+        name: z.string()
+          .min(3)
+          .max(10)
+          .refine((x) => !x.endsWith("Kail"),
+            {
+              message: "Kail is not allowed",
+            }),
+        surName: z.string().min(1),
+        employed: z.boolean(),
+      })
     )
-    const duplicates: string[] = []
+    .superRefine((table, ctx) => {
+      const names = table.reduce<Record<string, number>>((acc, x) => {
+        acc[x.name] = (acc[x.name] || 0) + 1;
+        return acc;
+      }, {});
 
-    propValues.forEach((value) => {
-      const duplicateIndexes = propValues.reduce<number[]>(
-        (indexes, propValue, index) => {
-          if (propValue === value) {
-            indexes.push(index)
-          }
-          return indexes
-        },
-        [],
-      )
-
-      if (duplicateIndexes.length > 1 && !duplicates.includes(value)) {
-        duplicates.push(value)
-
-        duplicateIndexes.forEach((index) => {
-          errors.table = errors.table ?? []
-          errors.table[index] = errors.table[index] || { _rowError: [] }
-          const e = errors.table[index]._rowError ?? []
-
-          e.push(
-            `Duplicate ${propsToCheck.join(
-              ', ',
-            )} values are not allowed at indexes: ${duplicateIndexes.join(
-              ', ',
-            )}`,
-          )
-          errors.table[index]._rowError = e;
-        })
-      }
+      table.forEach((t, idx) => {
+        if (names[t.name] > 1) {
+          ctx.addIssue({
+            code: "custom",
+            message: "Duplicate names are not allowed",
+            path: [idx, "name"]
+          });
+        }
+      });
     })
+});
 
-    return errors
-  }
-
+type ConfigTableType = z.infer<typeof configTableSchema>;
 
 export default function EditableTableExample() {
+  const dispatch = useAppDispatch();
+  const { t } = useTranslation();
+  const toast = useToast();
+
   const [
     postConfig,
     { isLoading: postConfigIsLoading, isSuccess: postConfigSuccess },
   ] = usePostConfigMutation();
 
-  const { data, isLoading: getConfigIsLoading } = useGetConfigQuery(null, {
+  const { data, isLoading } = useGetConfigQuery(null, {
     refetchOnReconnect: true,
     refetchOnMountOrArgChange: true,
   })
 
-  const toast = useToast();
+  const [throwError, setThrowError] = useState<boolean>(false);
 
-  const dispatch = useAppDispatch()
+  const onSubmit = async (values: { table: Employee[] }) => {
+    console.log("OnSubmit: ", values);
+    try {
+      await postConfig({ employees: values.table, throwError })
+      .unwrap()
+      .catch((e) => {
+        dispatch(dispatchNetworkError(e));
+      });
+    }  finally{
+      setThrowError(false)
+    }
+  };
 
   useEffect(() => {
     if (postConfigSuccess) {
@@ -122,163 +107,101 @@ export default function EditableTableExample() {
     }
   }, [postConfigSuccess, toast])
 
-  type FormValue = {
-    table: Employee[];
-    throwError: boolean;
-  };
+  //#region FormConfiguration
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors, isValid, isSubmitting, isDirty },
+  } = useForm<ConfigTableType>({
+    defaultValues: { table: data ?? [] },
+    values: { table: data ?? [] },
+    mode: "onChange",
+    resolver: zodResolver(configTableSchema)
+  });
 
-  const onSubmit = async (values: FormValue) => {
-    await postConfig({ employees: values.table, throwError: values.throwError })
-      .unwrap()
-      .catch((e) => {
-        dispatch(dispatchNetworkError(e));
-      });
-  };
-  const { t } = useTranslation();
-
-
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "table",
+  });
+  //#endregion
 
   return (
-    <Form<FormValue>
-      onSubmit={onSubmit}
-      initialValues={{ table: data }}
-      mutators={{
-        ...arrayMutators,
-      }}
-      validate={primaryKeyValidator(['name', 'surName'])}
-      render={({
-        handleSubmit,
-        form: {
-          mutators: { push },
-        },
-        form,
-        submitting,
-        pristine,
-        hasValidationErrors,
-      }) => {
-        return (
-          <VStack as="form" onSubmit={handleSubmit} spacing={6}>
-            <Heading>{t("employee")}</Heading>
-            <HStack spacing={4}>
-              <Button
-                onClick={() =>
-                  void push('table', {
-                    name: '',
-                    surName: '',
-                    employed: false,
-                  })
-                }
-                colorScheme="green"
-                aria-label="Add Employee"
-              >
-                {t("new")}
-              </Button>
-              <Button
-                type="submit"
-                isDisabled={submitting || pristine || hasValidationErrors}
-                isLoading={submitting}
-                onClick={() => {
-                  form.change('throwError', false)
-                }}
-              >
-                {t("submit")}
-              </Button>
-              <Button
-                type="submit"
-                isDisabled={submitting || pristine || hasValidationErrors}
-                isLoading={submitting || postConfigIsLoading}
-                onClick={() => {
-                  form.change('throwError', true)
-                }}
-              >
-                {t("triggerError")}
-              </Button>
-              <Button
-                onClick={() => { form.reset(); }}
-                isDisabled={submitting || pristine}
-              >
-                {t("reset")}
-              </Button>
-            </HStack>
-            <Table variant="simple">
-              <Thead>
-                <Tr>
-                  <Th>{t("firstname")}</Th>
-                  <Th>{t("lastname")}</Th>
-                  <Th>{t("employed")}</Th>
-                  <Th>{t("actions")}</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {getConfigIsLoading ? (
-                  <Tr>
-                    <Td colSpan={4}>
-                      <Center>
-                        <Spinner data-role='spinner' />
-                      </Center>
-                    </Td>
-                  </Tr>
-                ) : (
-                  <FieldArray<Employee> name="table" render={({ fields }) =>
-                    fields.map((name, index) => {
-                      return (
-                        <TableRow
-                          key={name}
-                          name={name}
-                          index={index}
-                          onDelete={() => fields.remove(index)}
-                        />
-                      )
-                    })}>
-                  </FieldArray>
-                )}
-              </Tbody>
-            </Table>
-          </VStack>
-        )
-      }}
-    />
+    <VStack as="form" onSubmit={handleSubmit(onSubmit)} spacing={6}>
+      <Heading>{t("employee")}</Heading>
+
+      <HStack spacing={4}>
+        <Button
+          onClick={() => {
+            append({
+              name: '',
+              surName: '',
+              employed: false,
+            });
+          }
+          }
+          colorScheme="green"
+          aria-label="Add Employee"
+        >
+          {t("new")}
+        </Button>
+        <Button
+          type="submit"
+          isDisabled={isSubmitting || postConfigIsLoading || !isValid}
+          isLoading={isSubmitting}
+        >
+          {t("submit")}
+        </Button>
+        <Button
+          type="submit"
+          isDisabled={isSubmitting || !isDirty || !errors}
+          isLoading={isSubmitting || postConfigIsLoading}
+          onClick={() => {
+            setThrowError(true);
+          }}
+        >
+          {t("triggerError")}
+        </Button>
+        <Button
+          isDisabled={!isDirty}
+          onClick={() => { reset(); }}
+        >
+          {t("reset")}
+        </Button>
+      </HStack>
+
+      <Table variant="simple">
+        <Thead>
+          <Tr>
+            <Th>{t("firstname")}</Th>
+            <Th>{t("lastname")}</Th>
+            <Th>{t("employed")}</Th>
+            <Th>{t("actions")}</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {
+            isLoading
+              ?
+              <tr>
+                <td colSpan={100} align="center" style={{ padding: '2rem' }}>
+                  <Spinner />
+                </td>
+              </tr>
+              :
+              fields.map((f, i) => (
+                <TableRow
+                  key={i + f.id + 'row'}
+                  control={control}
+                  index={i}
+                  errors={errors}
+                  onDelete={() => { remove(i); }}
+                />
+              ))
+          }
+        </Tbody>
+      </Table>
+    </VStack >
   )
 }
 
-const TableRow = (props: {
-  name: string
-  index: number
-  onDelete: () => void
-}) => {
-  const { name, onDelete } = props
-  const { t } = useTranslation();
-
-  const renderCount = useRenderCount();
-
-  const { submitting } = useFormState({ subscription: { submitting: true } });
-
-  return (
-    <Tr>
-      <Td>
-        <InputControl
-          validate={zod2FieldValidator(nameValidator)}
-          name={`${name}.name`}
-        />
-      </Td>
-      <Td>
-        <InputControl
-          name={`${name}.surName`}
-        />
-      </Td>
-      <Td>
-        <CheckboxControl name={`${name}.employed`} label={t("employed")} />
-      </Td>
-      <Td>
-        <IconButton
-          isDisabled={submitting}
-          icon={<FaTrash />}
-          onClick={onDelete}
-          colorScheme="red"
-          aria-label="Remove Employee"
-        />
-        {renderCount}
-      </Td>
-    </Tr>
-  )
-}

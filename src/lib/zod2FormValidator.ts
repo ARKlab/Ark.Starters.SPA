@@ -2,8 +2,8 @@ import { set } from "lodash-es";
 import type { z } from "zod";
 
 /*
-final form with form array error format:
-{ "table": [ { "name": ["error 1"] } ] }
+  form with form array error format:
+  { "table": [ { "name": ["error 1"] } ] }
 */
 
 export const zod2FormValidator = (schema: z.ZodTypeAny) => (values: Record<string, unknown>) => {
