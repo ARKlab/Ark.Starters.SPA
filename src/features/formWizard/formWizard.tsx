@@ -5,10 +5,8 @@ import * as z from "zod";
 
 import { CheckboxControl, InputControl } from "../../components/formControls";
 import { Wizard, WizardPage } from "../../components/wizard/wizard";
+import { delay } from "../../lib/helper";
 
-const sleep = async (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
- 
 const _wizardSchema = z.object({
   firstName: z.string().min(6),
   lastname: z.string().min(6),
@@ -31,7 +29,7 @@ export default function WizardFormView() {
   const { t } = useTranslation();
 
   const onSubmit = async (values: Schema) => {
-    await sleep(300);
+    await delay(300);
     window.alert(JSON.stringify(values, null, 2));
   };
 
@@ -39,31 +37,31 @@ export default function WizardFormView() {
     <Box>
       <Heading>{t("wizard_form_title")}</Heading>
       <Box marginTop={"20px"}>
-        <Wizard<Schema> 
+        <Wizard<Schema>
           onSubmit={onSubmit}
           formProps={{ mode: 'onChange', resolver: zodResolver(_wizardSchema) }}
         >
           <WizardPage>
             <Stack spacing={4}>
-              <InputControl name="firstName"  label={t('firstname')} placeholder={t("wizard_first_name_placeholder")} />
-              <InputControl name="lastName"   label={t('lastname')} placeholder={t("wizard_last_name_placeholder")} />
-              <InputControl name="email"      label={t('email')}    placeholder={t("wizard_email_placeholder")} />
-              <InputControl name="password"   label={t('password')}  placeholder={t("wizard_password_placeholder")} inputProps={{ type: 'password' }} />
+              <InputControl name="firstName" label={t('firstname')} placeholder={t("wizard_first_name_placeholder")} />
+              <InputControl name="lastName" label={t('lastname')} placeholder={t("wizard_last_name_placeholder")} />
+              <InputControl name="email" label={t('email')} placeholder={t("wizard_email_placeholder")} />
+              <InputControl name="password" label={t('password')} placeholder={t("wizard_password_placeholder")} inputProps={{ type: 'password' }} />
             </Stack>
           </WizardPage>
 
           <WizardPage>
             <Stack spacing={4}>
-              <InputControl name="phone"           label={t('Phone')}            placeholder={t("wizard_phone_placeholder")} />
-              <InputControl name="billingAddress"  label={t('billing_address')}  placeholder={t("wizard_billing_address_placeholder")} />
+              <InputControl name="phone" label={t('Phone')} placeholder={t("wizard_phone_placeholder")} />
+              <InputControl name="billingAddress" label={t('billing_address')} placeholder={t("wizard_billing_address_placeholder")} />
               <InputControl name="shippingAddress" label={t('shipping_address')} placeholder={t("wizard_shipping_address_placeholder")} />
             </Stack>
           </WizardPage>
 
           <WizardPage>
             <Stack spacing={4}>
-              <CheckboxControl name="newsletter"       label={t("wizard_newsletter_label")} />
-              <CheckboxControl name="specialOffers"    label={t("wizard_special_offers_label")} />
+              <CheckboxControl name="newsletter" label={t("wizard_newsletter_label")} />
+              <CheckboxControl name="specialOffers" label={t("wizard_special_offers_label")} />
               <CheckboxControl name="smsNotifications" label={t("wizard_sms_notifications_label")} />
             </Stack>
           </WizardPage>
