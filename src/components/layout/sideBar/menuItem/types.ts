@@ -7,6 +7,7 @@ export type MainSectionType = {
   path?: string;
   authenticatedOnly?: boolean;
   component?: ReactNode;
+  lazy?: () => Promise<{ default: React.ComponentType<unknown> }>;
   permissions?: string[];
 };
 
@@ -14,5 +15,4 @@ export type SubsectionMenuItemType = {
   isInMenu: boolean;
   icon?: IconType;
   externalUrl?: string;
-  isEntryPoint?: boolean;
 } & MainSectionType;
