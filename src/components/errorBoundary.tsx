@@ -1,13 +1,14 @@
-import React from 'react'
-import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary'
-import { useLocation } from 'react-router-dom'
+import React from "react";
+import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
+import { useLocation } from "react-router-dom";
 
-import { ErrorDisplay } from './errorDisplay'
+import { ErrorDisplay } from "./errorDisplay";
 
-const FatalError = ({ error }: { error: Error }) => ErrorDisplay({ ...error })
+const FatalError = ({ error }: { error: Error }) =>
+  ErrorDisplay({ message: error.message, name: error.name, stack: error.stack });
 
 export const ErrorBoundary = ({ children }: { children?: React.ReactNode }) => {
-  const { pathname, search } = useLocation()
+  const { pathname, search } = useLocation();
   return (
     <ReactErrorBoundary
       FallbackComponent={FatalError}
@@ -15,5 +16,5 @@ export const ErrorBoundary = ({ children }: { children?: React.ReactNode }) => {
     >
       {children}
     </ReactErrorBoundary>
-  )
-}
+  );
+};
