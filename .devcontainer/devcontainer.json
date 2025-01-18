@@ -1,12 +1,18 @@
 {
-    "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
-    "customizations": {
-        "vscode": {
-            "extensions": [
-                "esbenp.prettier-vscode",
-                "dbaeumer.vscode-eslint",
-                "lokalise.i18n-ally"
-            ]
-        }
+  "build": { "dockerfile": "Dockerfile" },
+  "customizations": {
+    "vscode": {
+      "extensions": ["esbenp.prettier-vscode", "dbaeumer.vscode-eslint", "lokalise.i18n-ally"]
     }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/desktop-lite:1": {}
+  },
+  "portsAttributes": {
+    "6080": {
+      "label": "desktop"
+    }
+  },
+  "forwardPorts": [6080],
+  "postCreateCommand": "npm ci"
 }
