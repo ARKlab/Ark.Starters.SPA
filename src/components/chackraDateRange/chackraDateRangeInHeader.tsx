@@ -21,7 +21,7 @@ export const ChackraDateRangeInHeader = (props: {
     <InputGroup zIndex={'dropdown'}>
       <RangeDatepicker
         configs={{
-          dateFormat: dateFormat ? dateFormat : 'dd-MM-yyyy',
+          dateFormat: dateFormat ?? 'dd-MM-yyyy',
         }}
         selectedDates={value}
         onDateChange={(e) => { handleOnChange(e); }}
