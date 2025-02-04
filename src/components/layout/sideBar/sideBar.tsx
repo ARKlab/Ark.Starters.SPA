@@ -91,7 +91,8 @@ const SidebarContent = ({ ...rest }: BoxProps) => {
                 <AccordionIcon />
               </AccordionButton>
             </h2>
-            <AccordionPanel pb={4} key={section.label + "accordionPanel" + index}>
+
+            <AccordionPanel p={0} key={section.label + "accordionPanel" + index}>
               {section.subsections?.map((x, indexSub) =>
                 x.isInMenu ? (
                   doINeedAnInnerAccordion(x) ? (

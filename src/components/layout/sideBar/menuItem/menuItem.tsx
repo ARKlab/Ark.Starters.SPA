@@ -1,23 +1,32 @@
 import {
-  Flex,
   Link as ChakraLink,
+  Flex,
   Icon,
   Text,
   WrapItem,
-} from '@chakra-ui/react'
-import { Link as ReactRouterLink } from 'react-router-dom'
+} from '@chakra-ui/react';
+import { useMemo } from 'react';
+import { Link as ReactRouterLink, useLocation } from 'react-router-dom';
 
-import type { SubsectionMenuItemType } from './types'
+import type { SubsectionMenuItemType } from './types';
 
-export default function MenuItem({
-  label,
-  path,
-  icon,
-  externalUrl,
-}: Omit<
-  SubsectionMenuItemType,
-  'isInMenu' | 'component' | 'authenticatedOnly'
->) {
+type MenuItemProps = Omit<SubsectionMenuItemType, 'isInMenu' | 'component' | 'authenticatedOnly'>;
+
+export default function MenuItem(props: MenuItemProps) {
+  const {
+    label,
+    path = '',
+    icon,
+    externalUrl
+  } = props;
+
+  const location = useLocation();
+
+  const isActive = useMemo(
+    () => location.pathname.startsWith(path),
+    [location, path]
+  );
+
   return (
     <ChakraLink
       _hover={{ textDecoration: 'none' }}
@@ -32,6 +41,8 @@ export default function MenuItem({
           transitionDuration: '0.4s',
           transitionTimingFunction: 'ease-in-out',
         }}
+        background={isActive ? 'brand.selected' : undefined}
+        p={".25em 1em"}
       >
         <Flex
           justifyContent="space-between"
