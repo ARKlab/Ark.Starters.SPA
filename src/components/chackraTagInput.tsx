@@ -50,7 +50,7 @@ const ChackraTagInput: React.FC<TagInputProps> = ({
   };
 
   return (
-    <FormControl mr="2%">
+    <FormControl>
       <FormLabel>
         <Text as="b">{title}</Text>
       </FormLabel>
