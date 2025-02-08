@@ -125,7 +125,7 @@
     "vite-plugin-react-click-to-component": "3.1.0",
     "vite-plugin-static-copy": "2.2.0",
     "vite-plugin-svgr": "4.3.0",
-    "vitest": "3.0.4",
+    "vitest": "3.0.5",
     "wait-on": "8.0.2",
     "web-vitals": "4.2.4"
   },
