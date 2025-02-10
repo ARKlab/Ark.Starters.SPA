@@ -19,7 +19,7 @@
     "cross-fetch": "4.1.0",
     "date-fns": "4.1.0",
     "dayzed": "3.2.3",
-    "framer-motion": "12.4.0",
+    "framer-motion": "12.4.1",
     "i18next": "24.2.2",
     "js-cookie": "3.0.5",
     "lodash-es": "4.17.21",
