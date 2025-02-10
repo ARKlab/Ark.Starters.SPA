@@ -71,7 +71,7 @@
     "@iodigital/vite-plugin-msw": "2.0.0",
     "@svgr/plugin-jsx": "8.1.0",
     "@svgr/plugin-svgo": "8.1.0",
-    "@swc/core": "1.10.14",
+    "@swc/core": "1.10.15",
     "@swc/plugin-emotion": "8.6.0",
     "@testing-library/cypress": "10.0.3",
     "@testing-library/jest-dom": "6.6.3",
