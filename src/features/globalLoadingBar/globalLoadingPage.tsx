@@ -1,5 +1,7 @@
-import { Box, Button, Heading, Text, Wrap, WrapItem } from "@chakra-ui/react";
+import { Box, Heading, HStack, Text, Flex } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
+
+import { Button } from "../../components/ui/button";
 
 import { useSlowGetQuery, useFastMutationMutation, useSlowMutationMutation } from "./globalLoadingApi";
 
@@ -19,18 +21,18 @@ const GlobalLoadingBarPage = () => {
         <Text>
           {t('globalloadingbar.description')}
         </Text>
-        <Wrap spacing={1} my={"20px"}>
-          <WrapItem>
-            <Button onClick={async () => triggerSlow()} isLoading={get.isLoading || slow.isLoading} isDisabled={get.isLoading || slow.isLoading}>
+        <HStack wrap="wrap" gap={1} my={"20px"}>
+          <Flex align="flex-start">
+            <Button onClick={async () => triggerSlow()} loading={get.isLoading || slow.isLoading} disabled={get.isLoading || slow.isLoading}>
               {t('globalloadingbar.slowButtonText')}
             </Button>
-          </WrapItem>
-          <WrapItem>
-            <Button onClick={async () => triggerFast()} isLoading={get.isLoading || fast.isLoading} isDisabled={get.isLoading || slow.isLoading}>
+          </Flex>
+          <Flex align="flex-start">
+            <Button onClick={async () => triggerFast()} loading={get.isLoading || fast.isLoading} disabled={get.isLoading || slow.isLoading}>
               {t('globalloadingbar.fastButtonText')}
             </Button>
-          </WrapItem>
-        </Wrap>
+          </Flex>
+        </HStack>
       </Box>
     </Box>
   );

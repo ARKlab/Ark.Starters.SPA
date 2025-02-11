@@ -1,8 +1,11 @@
-import { useToast, Text, Button } from '@chakra-ui/react';
+import { Text, Button } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 // eslint-disable-next-line import/no-unresolved
 import { useRegisterSW } from 'virtual:pwa-register/react'
+
+import { Toaster } from "./ui/toaster";
+import { toaster } from "./ui/toaster-helper";
 
 
 
@@ -30,13 +33,12 @@ export const PWABadge = () => {
     })
 
     const { t } = useTranslation('template');
-    const toast = useToast();
+    const toast = Toaster();
 
     useEffect(() => {
         if (offlineReady) {
-            toast({
-                isClosable: true,
-                status: 'info',
+            toaster.create({
+                type: 'info',
                 title: t('pwaBadge.offlineReady.title'),
                 description: t('pwaBadge.offlineReady.body')
             })
@@ -46,16 +48,18 @@ export const PWABadge = () => {
 
     useEffect(() => {
         const id = 'pwa.needRefresh';
-        if (needRefresh && !toast.isActive(id)) {
-            toast({
+        if (needRefresh) {
+            toaster.create({
                 id: id,
-                isClosable: true,
-                onCloseComplete: () => { setNeedRefresh(false); },
-                status: 'warning',
+                action: {
+                    label: "close",
+                    onClick: () => { setNeedRefresh(false); },
+                },
+                type: 'warning',
                 title: t('pwaBadge.newVersion.title'),
                 description: (<><Text>{t('pwaBadge.newVersion.body')}</Text><Button colorScheme='red' size={'sm'} onClick={async () => updateServiceWorker(true)}>{t('pwaBadge.newVersion.reload')}</Button></>),
                 duration: 9999999,
-                position: 'top',
+                placement: 'top',
             });
         }
     }, [needRefresh, setNeedRefresh, t, toast, updateServiceWorker]);

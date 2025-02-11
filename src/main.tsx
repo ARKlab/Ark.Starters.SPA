@@ -6,6 +6,7 @@ import {
 import CenterSpinner from "./components/centerSpinner";
 import { PWABadge } from './components/pwaBadge';
 import SEO from './components/seo';
+import { Toaster } from './components/ui/toaster';
 import useLocalizeDocumentAttributes from './lib/i18n/useLocalizeDocumentAttributes';
 import { router } from "./lib/router";
 
@@ -25,6 +26,7 @@ const Main = () => {
         />
         <RouterProvider router={router} />
       </Suspense>
+      <Toaster />
       <PWABadge />
     </>
   );

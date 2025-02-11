@@ -2,7 +2,7 @@ import {
   Button,
   Box,
   Card,
-  UnorderedList,
+  List,
   ListItem,
   Text,
   Flex,
@@ -62,16 +62,16 @@ export function Wizard<SchemaType extends object>({
               </Flex>
             </Box>
 
-            <Card mt={4} padding={"10px"} bgColor={"brand.primary"} w={"300px"}>
+            <Card.Root mt={4} padding={"10px"} bgColor={"brand.primary"} w={"300px"}>
               <Text>Form Data:</Text>
-              <UnorderedList>
+              <List.Root>
                 {Object.entries(values).map(([key, value]) => (
                   <ListItem key={key}>
                     {key}: <b>{String(value)}</b>
                   </ListItem>
                 ))}
-              </UnorderedList>
-            </Card>
+              </List.Root>
+            </Card.Root>
           </form>
         );
       }}

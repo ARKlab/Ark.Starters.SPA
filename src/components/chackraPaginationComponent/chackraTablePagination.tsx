@@ -1,6 +1,6 @@
-import { Button, Select, Stack } from '@chakra-ui/react'
+import { Button, Stack, SelectRoot, createListCollection } from "@chakra-ui/react";
 import * as R from 'ramda'
-import type { JSX, MouseEventHandler } from "react"
+import { useMemo, type JSX, type MouseEventHandler } from "react"
 import {
   MdChevronLeft,
   MdChevronRight,
@@ -40,29 +40,30 @@ const PaginationComponent = ({
     page < pageMaxSub ? R.add(page, pageMaxRange) : totalPages
 
   const pageRange = R.range(pageMinRangeVal, page < 3 ? 5 : pageMaxRangeVal)
+
+  const collection = useMemo(() => {
+    return createListCollection({
+      items: [10, 20, 30, 40, 50],
+    });
+  }, []);
+
   if (isLoading) return <></>
   return (
     <div>
       {count > pageSize ? (
         <>
-          <Stack
-            spacing={4}
-            direction="row"
-            align="center"
-            justifyContent="center"
-            my="20px"
-          >
-            <Select
-              w="8em"
-              value={pageSize}
-              onChange={(e) => onPageSizeChange(Number(e.target.value))}
+          <Stack gap={4} direction="row" align="center" justifyContent="center" my="20px">
+            <SelectRoot
+              collection={collection}
+              value={[String(pageSize)]}
+              onValueChange={value => onPageSizeChange(Number(value))}
             >
-              {[10, 20, 30, 40, 50].map((pageSize) => (
+              {[10, 20, 30, 40, 50].map(pageSize => (
                 <option key={pageSize} value={pageSize}>
                   Show {pageSize}
                 </option>
               ))}
-            </Select>
+            </SelectRoot>
 
             <PageItem
               display={page > pageMinRange}
@@ -77,7 +78,7 @@ const PaginationComponent = ({
               value={<MdChevronLeft />}
             />
             {pageRange.map((p: number, i: number) => {
-              const pVal = R.add(1, p)
+              const pVal = R.add(1, p);
               return (
                 <PageItem
                   display={(pVal - 1) * pageSize < count}
@@ -87,7 +88,7 @@ const PaginationComponent = ({
                   value={pVal}
                   currentPage={page === pVal}
                 />
-              )
+              );
             })}
             <PageItem
               display={page < totalPages}
@@ -95,36 +96,27 @@ const PaginationComponent = ({
               title="Next"
               value={<MdChevronRight />}
             />
-            <PageItem
-              display={page < pageMaxSub}
-              onChange={() => onPageChange(totalPages)}
-              value={<MdLastPage />}
-            />
+            <PageItem display={page < pageMaxSub} onChange={() => onPageChange(totalPages)} value={<MdLastPage />} />
           </Stack>
         </>
       ) : (
-        <Stack
-          spacing={4}
-          direction="row"
-          align="center"
-          justifyContent="center"
-          my="20px"
-        >
-          <Select
+        <Stack gap={4} direction="row" align="center" justifyContent="center" my="20px">
+          <SelectRoot
             w="8em"
-            value={pageSize}
-            onChange={(e) => onPageSizeChange(Number(e.target.value))}
+            collection={collection}
+            value={[String(pageSize)]}
+            onChange={value => onPageSizeChange(Number(value))}
           >
-            {[10, 20, 30, 40, 50].map((pageSize) => (
+            {[10, 20, 30, 40, 50].map(pageSize => (
               <option key={pageSize} value={pageSize}>
                 Show {pageSize}
               </option>
             ))}
-          </Select>
+          </SelectRoot>
         </Stack>
       )}
     </div>
-  )
+  );
 }
 
 export default PaginationComponent
@@ -150,10 +142,10 @@ const PageItem = ({
     (x: unknown) => x === true,
     () => (
       <Button
-        isDisabled={disable}
+        disabled={disable}
         onClick={onChange}
         title={title}
-        variant={currentPage ? 'outline' : ''}
+        variant={currentPage ? 'outline' : 'plain'}
       >
         {value}
       </Button>

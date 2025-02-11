@@ -12,7 +12,8 @@
       "vitest/globals",
       "vite-plugin-pwa/pwa-assets",
       "vite-plugin-pwa/client",
-      "vite-plugin-i18n-ally/client"
+      "vite-plugin-i18n-ally/client",
+      "@chakra-ui/react"
     ],
     "allowJs": false,
     "skipLibCheck": true,
@@ -29,13 +30,6 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": [
-    "./src"
-  ],
-  "files": [
-    "./vitest.setup.ts",
-    "./vite.config.ts",
-    "./pwa-assets.config.ts",
-    "./src/lib/useRenderCount.ts"
-  ]
+  "include": ["./src", "node_modules/@chakra-ui/react/**/*"],
+  "files": ["./vitest.setup.ts", "./vite.config.ts", "./pwa-assets.config.ts", "./src/lib/useRenderCount.ts"]
 }

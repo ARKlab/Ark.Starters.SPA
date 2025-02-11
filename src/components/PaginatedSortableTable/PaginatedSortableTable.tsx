@@ -1,17 +1,4 @@
-import {
-  Box,
-  Button,
-  Center,
-  HStack,
-  Spinner,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-  VStack,
-} from '@chakra-ui/react'
+import { Box, Button, Center, HStack, Spinner, Table, VStack } from "@chakra-ui/react";
 import type {
   Column,
   ColumnDef,
@@ -123,7 +110,6 @@ export function PaginatedSortableTable<T>(
   );
   const { t } = useTranslation();
   const table = useReactTable<T>({
-    //this is the definition of the table
     data: tableData,
     columns,
     getPaginationRowModel: getPaginationRowModel(),
@@ -170,84 +156,64 @@ export function PaginatedSortableTable<T>(
     <DndProvider backend={HTML5Backend}>
       <Box overflowX="auto">
         <Button onClick={resetOrder} hidden={!isSortable}>
-          {/*This should be only demostrative and should be outside of the component*/}
           {t("movies_resetcolumnsorder")}
         </Button>
-        <Table variant="simple" my="30px" minHeight={'500px'}>
-          <Thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <Tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <Th key={header.id} verticalAlign='top'>
+        <Table.Root variant="line" my="30px" minHeight={"500px"}>
+          <Table.Header>
+            {table.getHeaderGroups().map(headerGroup => (
+              <Table.Row key={headerGroup.id}>
+                {headerGroup.headers.map(header => (
+                  <Table.ColumnHeader key={header.id} verticalAlign="top">
                     {header.isPlaceholder ? null : (
-                      <>
-                        <VStack spacing="2" align="start" justify='space-between'>
-                          <HStack spacing="1">
-                            <Box>
-                              {isDraggable ? (
-                                <DraggableColumnHeader
-                                  key={header.id}
-                                  header={header}
-                                  table={table}
-                                />
-                              ) : (
-                                flexRender(
-                                  header.column.columnDef.header,
-                                  header.getContext(),
-                                )
-                              )}
-                            </Box>
-                            <ColumnSorter column={header.column} />
-                          </HStack>
+                      <VStack gap="2" align="start" justify="space-between">
+                        <HStack gap="1">
                           <Box>
-                            {header.column.getCanFilter() &&
-                              !disableHeaderFilters ? (
-                              <Filter<T>
-                                column={header.column}
-                                table={table}
-                                isLoading={isFetching}
-                              />
-                            ) : null}
+                            {isDraggable ? (
+                              <DraggableColumnHeader key={header.id} header={header} table={table} />
+                            ) : (
+                              flexRender(header.column.columnDef.header, header.getContext())
+                            )}
                           </Box>
-                        </VStack>
-                      </>
+                          <ColumnSorter column={header.column} />
+                        </HStack>
+                        <Box>
+                          {header.column.getCanFilter() && !disableHeaderFilters ? (
+                            <Filter<T> column={header.column} table={table} isLoading={isFetching} />
+                          ) : null}
+                        </Box>
+                      </VStack>
                     )}
-                  </Th>
+                  </Table.ColumnHeader>
                 ))}
-              </Tr>
+              </Table.Row>
             ))}
-          </Thead>
-          <Tbody>
+          </Table.Header>
+          <Table.Body>
             {isLoading || isFetching ? (
-              <Tr>
-                <Td colSpan={columns.length}>
+              <Table.Row>
+                <Table.Cell colSpan={columns.length}>
                   <Center>
-                    <Spinner data-role='spinner' />
+                    <Spinner data-role="spinner" />
                   </Center>
-                </Td>
-              </Tr>
+                </Table.Cell>
+              </Table.Row>
             ) : table.getRowModel().rows.length > 0 ? (
-              table.getRowModel().rows.map((row) => (
-                <Tr key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <Td key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </Td>
+              table.getRowModel().rows.map(row => (
+                <Table.Row key={row.id}>
+                  {row.getVisibleCells().map(cell => (
+                    <Table.Cell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Table.Cell>
                   ))}
-                </Tr>
+                </Table.Row>
               ))
             ) : (
-              <Tr>
-                <Td colSpan={columns.length}>
+              <Table.Row>
+                <Table.Cell colSpan={columns.length}>
                   <Center>No data</Center>
-                </Td>
-              </Tr>
+                </Table.Cell>
+              </Table.Row>
             )}
-          </Tbody>
-        </Table>
+          </Table.Body>
+        </Table.Root>
         <PaginationComponent
           page={table.getState().pagination.pageIndex}
           pageSize={table.getState().pagination.pageSize}
@@ -258,58 +224,49 @@ export function PaginatedSortableTable<T>(
         />
       </Box>
     </DndProvider>
-  )
+  );
 }
 
-function Filter<T>({
-  column,
-  isLoading,
-}: {
-  column: Column<T>
-  table: ReactTable<T>
-  isLoading: boolean
-}) {
-  const columnFilterValue = column.getFilterValue()
-  const columnFacetedUniqueValues = column.getFacetedUniqueValues()
+function Filter<T>({ column, isLoading }: { column: Column<T>; table: ReactTable<T>; isLoading: boolean }) {
+  const columnFilterValue = column.getFilterValue();
+  const columnFacetedUniqueValues = column.getFacetedUniqueValues();
 
   const sortedUniqueValues = useMemo(() => {
     switch (column.columnDef.meta?.type) {
-      case 'string':
-        return Array.from(columnFacetedUniqueValues.keys()).sort().map(x => String(x));
+      case "string":
+        return Array.from(columnFacetedUniqueValues.keys())
+          .sort()
+          .map(x => String(x));
       default:
         return [];
     }
-  }, [column, columnFacetedUniqueValues])
+  }, [column, columnFacetedUniqueValues]);
 
-  //You can add all the filters you need and want here, even multiple per column (min max for numbers for example)
   switch (column.columnDef.meta?.type) {
-    case 'date':
-      return (
-        <ChackraDateRangeInHeader
-          onChange={column.setFilterValue}
-          isLoading={isLoading}
-        />
-      )
-    case 'number':
-    case 'string':
+    case "date":
+      return <ChackraDateRangeInHeader onChange={column.setFilterValue} isLoading={isLoading} />;
+    case "number":
+    case "string":
       return (
         <>
-          <datalist id={column.id + 'list'}>
-            {sortedUniqueValues.slice(0, 5000).map((value) => (
+          <datalist id={column.id + "list"}>
+            {sortedUniqueValues.slice(0, 5000).map(value => (
               <option value={value} key={value} />
             ))}
           </datalist>
           <DebouncedInputColumnHeader
             type="text"
-            value={(columnFilterValue ?? '') as string}
-            onChange={(value) => { column.setFilterValue(value); }}
+            value={(columnFilterValue ?? "") as string}
+            onChange={value => {
+              column.setFilterValue(value);
+            }}
             placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
             className="w-36 border shadow rounded"
-            list={column.id + 'list'}
+            list={column.id + "list"}
           />
         </>
-      )
+      );
     default:
-      return <></>
+      return <></>;
   }
 }

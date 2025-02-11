@@ -1,22 +1,16 @@
-import type { ToastPosition } from '@chakra-ui/react';
-import { Box, Button, Heading, Wrap, WrapItem, useToast } from '@chakra-ui/react';
+import { Box, Button, HStack, Heading } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
+import type { Placement } from "../../../node_modules/@zag-js/toast/dist/index.d.ts";
+import { toaster } from "../../components/ui/toaster-helper";
+
 const NotificationPlaygroundView = () => {
-
-  const toast = useToast();
-
-  const sendNotification = (
-    title: string,
-    message: string,
-    duration: number,
-    position: ToastPosition,
-  ) => {
-    toast({
+  const sendNotification = (title: string, message: string, duration: number, placement: Placement) => {
+    toaster.create({
       title: title,
       description: message,
       duration: duration,
-      position: position,
+      placement: placement,
     });
   };
 
@@ -29,40 +23,62 @@ const NotificationPlaygroundView = () => {
         <Heading size="md" my={"20px"}>
           {t("notification_example")}
         </Heading>
-        <Wrap spacing={1} my={"20px"}>
-          <WrapItem>
-            <Button onClick={() => { sendNotification("Very Short Norification", notificationBody, 2000, "top"); }}>
+        <HStack wrap="wrap" gap={1} my={"20px"}>
+          <HStack wrap="wrap" align="flex">
+            <Button
+              onClick={() => {
+                sendNotification("Very Short Norification", notificationBody, 2000, "top");
+              }}
+            >
               {t("top")} "Very Short Norification"
             </Button>
-          </WrapItem>
-          <WrapItem>
-            <Button onClick={() => { sendNotification("Short Notification", notificationBody, 3000, "top-left"); }}>
+          </HStack>
+          <HStack wrap="wrap" align="flex">
+            <Button
+              onClick={() => {
+                sendNotification("Short Notification", notificationBody, 3000, "top-start");
+              }}
+            >
               {t("topleft")} "Short Notification"
             </Button>
-          </WrapItem>
-          <WrapItem>
-            <Button onClick={() => { sendNotification("Medium Notification", notificationBody, 4000, "top-right"); }}>
+          </HStack>
+          <HStack wrap="wrap" align="flex">
+            <Button
+              onClick={() => {
+                sendNotification("Medium Notification", notificationBody, 4000, "top-end");
+              }}
+            >
               {t("topright")} "Medium Notification"
             </Button>
-          </WrapItem>
-          <WrapItem>
-            <Button onClick={() => { sendNotification("Long Notification", notificationBody, 6000, "bottom-left"); }}>
+          </HStack>
+          <HStack wrap="wrap" align="flex">
+            <Button
+              onClick={() => {
+                sendNotification("Long Notification", notificationBody, 6000, "bottom-start");
+              }}
+            >
               {t("bottomleft")} "Long Notification"
             </Button>
-          </WrapItem>
-          <WrapItem>
+          </HStack>
+          <HStack wrap="wrap" align="flex">
             <Button
-              onClick={() => { sendNotification("Very Long Notification", notificationBody, 8000, "bottom-right"); }}
+              onClick={() => {
+                sendNotification("Very Long Notification", notificationBody, 8000, "bottom-end");
+              }}
             >
               {t("bottomright")} "Very Long Notification"
             </Button>
-          </WrapItem>
-          <WrapItem>
-            <Button onClick={() => { sendNotification("Very Long Notification", notificationBody, 8000, "bottom"); }}>
+          </HStack>
+          <HStack wrap="wrap" align="flex">
+            <Button
+              onClick={() => {
+                sendNotification("Very Long Notification", notificationBody, 8000, "bottom");
+              }}
+            >
               {t("bottom")} "Very Long Notification"
             </Button>
-          </WrapItem>
-        </Wrap>
+          </HStack>
+        </HStack>
       </Box>
     </Box>
   );

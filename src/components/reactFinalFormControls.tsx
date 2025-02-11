@@ -1,40 +1,32 @@
 import type {
-  FormControlProps
+  FieldPropsProvider
 } from "@chakra-ui/react";
 import {
-  Checkbox,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
   Input
 } from "@chakra-ui/react";
 import React from "react";
 import type { UseFieldConfig } from "react-final-form";
 import { useField } from "react-final-form";
 
+import { Checkbox } from "./ui/checkbox";
+import { Field } from "./ui/field";
+
 export const FieldControl = ({
   name,
   ...rest
-}: { name: string } & FormControlProps) => {
+}: { name: string } & typeof FieldPropsProvider) => {
   const {
     meta: { error, touched, submitting },
   } = useField(name, {
     subscription: { touched: true, error: true, submitting: true },
   });
   return (
-    <FormControl
+    <Field
       {...rest}
-      isInvalid={!!error && touched}
-      isDisabled={submitting}
+      invalid={!!error && touched}
+      disabled={submitting}
     />
   );
-};
-
-export const FieldError = ({ name }: { name: string }) => {
-  const {
-    meta: { error },
-  } = useField(name, { subscription: { error: true } });
-  return <FormErrorMessage>{error}</FormErrorMessage>;
 };
 
 export const InputControl = ({
@@ -47,17 +39,17 @@ export const InputControl = ({
   label?: React.ReactNode;
   placeholder?: string;
 } & UseFieldConfig<string>) => {
-  const { input } = useField(name, rest);
+  const {
+    input,
+    meta: { error, touched },
+  } = useField(name, rest);
+
+  const isInvalid = touched && !!error;
+
   return (
-    <FieldControl name={name}>
-      {(label ? <FormLabel htmlFor={name}>{label}</FormLabel> : null)}
-      <Input
-        {...input}
-        id={name}
-        placeholder={placeholder}
-      />
-      <FieldError name={name} />
-    </FieldControl >
+    <Field label={label} invalid={isInvalid} errorText={isInvalid ? error : undefined}>
+      <Input {...input} id={name} placeholder={placeholder} />
+    </Field>
   );
 };
 
@@ -70,16 +62,15 @@ export const CheckboxControl = ({
 }) => {
   const { input, meta } = useField(name);
   return (
-    <FormControl isInvalid={meta.error && meta.touched}>
+    <Field invalid={meta.error && meta.touched} errorText={meta.error}>
       <Checkbox
         {...input}
         size="md"
-        isChecked={input.checked}
+        checked={input.checked}
         onChange={input.onChange}
       >
         {label}
       </Checkbox>
-      <FormErrorMessage>{meta.error}</FormErrorMessage>
-    </FormControl>
+    </Field>
   );
 };

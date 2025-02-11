@@ -1,12 +1,12 @@
 import {
   Button,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
+  DialogRoot,
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogBackdrop,
 } from '@chakra-ui/react'
 import type { JSX } from "react"
 
@@ -42,23 +42,23 @@ export const ChackraUIBaseModal = (props: {
     )
   }
   if (!props.onClose) props.onClose = () => { /* do nothing */ }
-  let overlay = <ModalOverlay />
+  let overlay = <DialogBackdrop />;
   if (props.blurredOverlay)
-    overlay = <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(5px)" />
+    overlay = <DialogBackdrop bg="blackAlpha.300" backdropFilter="blur(5px)" />;
   return (
     <>
-      <Modal isOpen={props.isOpen} onClose={props.onClose} size={props.size}>
+      <DialogRoot open={props.isOpen} onOpenChange={props.onClose} size={props.size}>
         {overlay}
-        <ModalContent>
-          <ModalHeader>{props.title}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>{props.body}</ModalBody>
-          <ModalFooter>
+        <DialogContent>
+          <DialogHeader>{props.title}</DialogHeader>
+          <DialogCloseTrigger />
+          <DialogBody>{props.body}</DialogBody>
+          <DialogFooter>
             {submitSegment}
             {footerCloseButton}
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+          </DialogFooter>
+        </DialogContent>
+      </DialogRoot>
     </>
   )
 }

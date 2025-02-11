@@ -1,7 +1,7 @@
-import { TriangleDownIcon, TriangleUpIcon, UpDownIcon } from '@chakra-ui/icons'
-import { IconButton } from '@chakra-ui/react'
+import { Icon, IconButton } from '@chakra-ui/react'
 import type { Column, SortDirection } from '@tanstack/react-table'
 import React from 'react'
+import { MdArrowDropUp, MdArrowDropDown, MdSwapVert } from "react-icons/md";
 
 export const ColumnSorter = <T,>({
   column,
@@ -19,16 +19,20 @@ export const ColumnSorter = <T,>({
       aria-label="Sort"
       size="xs"
       onClick={column.getToggleSortingHandler()}
-      icon={<ColumnSorterIcon sorted={sorted} />}
-      variant={sorted ? 'light' : 'transparent'}
-      color={'primary'}
-    />
-  )
-}
+      variant={sorted ? "subtle" : "ghost"}
+      color="primary"
+    >
+      <ColumnSorterIcon sorted={sorted} />
+    </IconButton>
+  );
+};
 
 const ColumnSorterIcon = ({ sorted }: { sorted: false | SortDirection }) => {
-  if (sorted === 'asc') return <TriangleUpIcon aria-label="sorted ascending" />
-  if (sorted === 'desc')
-    return <TriangleDownIcon aria-label="sorted descending" />
-  return <UpDownIcon aria-label="sort" />
-}
+  if (sorted === 'asc') {
+    return <Icon><MdArrowDropUp/></Icon>;
+  }
+  if (sorted === 'desc') {
+    return <Icon><MdArrowDropDown/></Icon>;
+  }
+  return <Icon><MdSwapVert/></Icon>;
+};

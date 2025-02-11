@@ -1,18 +1,11 @@
 import {
-  Button,
   Center,
   HStack,
   Heading,
   IconButton,
   Spinner,
   Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
   VStack,
-  useToast,
 } from "@chakra-ui/react";
 import arrayMutators from "final-form-arrays";
 import { useEffect } from "react";
@@ -24,6 +17,9 @@ import * as z from "zod";
 
 import { useAppDispatch } from "../../app/hooks";
 import { CheckboxControl, InputControl } from "../../components/reactFinalFormControls";
+import { Button } from "../../components/ui/button";
+import { Toaster } from "../../components/ui/toaster";
+import { toaster } from "../../components/ui/toaster-helper";
 import { dispatchNetworkError } from "../../lib/errorHandler/errorHandler";
 import { useRenderCount } from "../../lib/useRenderCount";
 import { zod2FieldValidator } from "../../lib/zod2FormValidator";
@@ -105,19 +101,18 @@ export default function EditableTableExample() {
     refetchOnMountOrArgChange: true,
   })
 
-  const toast = useToast();
+  const toast = Toaster();
 
   const dispatch = useAppDispatch()
 
   useEffect(() => {
     if (postConfigSuccess) {
-      toast({
+      toaster.create({
         title: 'Config Submitted!',
         description: 'Configuration has been submitted successfully',
-        status: 'success',
+        type: 'success',
         duration: 5000,
-        isClosable: true,
-        position: 'bottom-right',
+        placement: 'bottom-end',
       });
     }
   }, [postConfigSuccess, toast])
@@ -157,14 +152,14 @@ export default function EditableTableExample() {
         hasValidationErrors,
       }) => {
         return (
-          <VStack as="form" onSubmit={handleSubmit} spacing={6}>
+          <VStack as="form" onSubmit={handleSubmit} gap={6}>
             <Heading>{t("employee")}</Heading>
-            <HStack spacing={4}>
+            <HStack gap={4}>
               <Button
                 onClick={() =>
-                  void push('table', {
-                    name: '',
-                    surName: '',
+                  void push("table", {
+                    name: "",
+                    surName: "",
                     employed: false,
                   })
                 }
@@ -175,67 +170,65 @@ export default function EditableTableExample() {
               </Button>
               <Button
                 type="submit"
-                isDisabled={submitting || pristine || hasValidationErrors}
-                isLoading={submitting}
+                disabled={submitting || pristine || hasValidationErrors}
+                loading={submitting}
                 onClick={() => {
-                  form.change('throwError', false)
+                  form.change("throwError", false);
                 }}
               >
                 {t("submit")}
               </Button>
               <Button
                 type="submit"
-                isDisabled={submitting || pristine || hasValidationErrors}
-                isLoading={submitting || postConfigIsLoading}
+                disabled={submitting || pristine || hasValidationErrors}
+                loading={submitting || postConfigIsLoading}
                 onClick={() => {
-                  form.change('throwError', true)
+                  form.change("throwError", true);
                 }}
               >
                 {t("triggerError")}
               </Button>
               <Button
-                onClick={() => { form.reset(); }}
-                isDisabled={submitting || pristine}
+                onClick={() => {
+                  form.reset();
+                }}
+                disabled={submitting || pristine}
               >
                 {t("reset")}
               </Button>
             </HStack>
-            <Table variant="simple">
-              <Thead>
-                <Tr>
-                  <Th>{t("firstname")}</Th>
-                  <Th>{t("lastname")}</Th>
-                  <Th>{t("employed")}</Th>
-                  <Th>{t("actions")}</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
+            <Table.Root variant="line">
+              <Table.Header>
+                <Table.Row>
+                  <Table.ColumnHeader>{t("firstname")}</Table.ColumnHeader>
+                  <Table.ColumnHeader>{t("lastname")}</Table.ColumnHeader>
+                  <Table.ColumnHeader>{t("employed")}</Table.ColumnHeader>
+                  <Table.ColumnHeader>{t("actions")}</Table.ColumnHeader>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
                 {getConfigIsLoading ? (
-                  <Tr>
-                    <Td colSpan={4}>
+                  <Table.Row>
+                    <Table.Cell colSpan={4}>
                       <Center>
-                        <Spinner data-role='spinner' />
+                        <Spinner data-role="spinner" />
                       </Center>
-                    </Td>
-                  </Tr>
+                    </Table.Cell>
+                  </Table.Row>
                 ) : (
-                  <FieldArray<Employee> name="table" render={({ fields }) =>
-                    fields.map((name, index) => {
-                      return (
-                        <TableRow
-                          key={name}
-                          name={name}
-                          index={index}
-                          onDelete={() => fields.remove(index)}
-                        />
-                      )
-                    })}>
-                  </FieldArray>
+                  <FieldArray<Employee>
+                    name="table"
+                    render={({ fields }) =>
+                      fields.map((name, index) => {
+                        return <TableRow key={name} name={name} index={index} onDelete={() => fields.remove(index)} />;
+                      })
+                    }
+                  ></FieldArray>
                 )}
-              </Tbody>
-            </Table>
+              </Table.Body>
+            </Table.Root>
           </VStack>
-        )
+        );
       }}
     />
   )
@@ -254,31 +247,32 @@ const TableRow = (props: {
   const { submitting } = useFormState({ subscription: { submitting: true } });
 
   return (
-    <Tr>
-      <Td>
+    <Table.Row>
+      <Table.Cell>
         <InputControl
           validate={zod2FieldValidator(nameValidator)}
           name={`${name}.name`}
         />
-      </Td>
-      <Td>
+      </Table.Cell>
+      <Table.Cell>
         <InputControl
           name={`${name}.surName`}
         />
-      </Td>
-      <Td>
+      </Table.Cell>
+      <Table.Cell>
         <CheckboxControl name={`${name}.employed`} label={t("employed")} />
-      </Td>
-      <Td>
-        <IconButton
-          isDisabled={submitting}
-          icon={<FaTrash />}
+      </Table.Cell>
+      <Table.Cell>
+        {/*<IconButton
+          disabled={submitting}
           onClick={onDelete}
           colorScheme="red"
           aria-label="Remove Employee"
-        />
+        >
+          <FaTrash />
+        </IconButton>*/}
         {renderCount}
-      </Td>
-    </Tr>
+      </Table.Cell>
+    </Table.Row>
   )
 }

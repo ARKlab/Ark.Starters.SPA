@@ -1,8 +1,10 @@
-import { Button, Input, InputGroup, InputRightElement } from '@chakra-ui/react'
+import { Button, Input, HStack } from '@chakra-ui/react'
 import { useState } from 'react'
 import { TiTimes } from 'react-icons/ti'
 
-import type { InputHeaderWithClearProps } from './chackraInputFilterWithClear'
+import { InputGroup } from '../ui/input-group';
+
+import type { InputHeaderWithClearProps } from "./chackraInputFilterWithClear";
 
 export const ChackraInputHeaderFilterWithClear: React.FC<
   InputHeaderWithClearProps
@@ -25,20 +27,19 @@ export const ChackraInputHeaderFilterWithClear: React.FC<
   }
 
   return (
-    <InputGroup>
-      <Input
-        size={'sm'}
-        isRequired={true}
-        value={inputValue}
-        onChange={handleChange}
-      />
-      {inputValue && (
-        <InputRightElement my={'-5px'}>
-          <Button rounded={'full'} size="xs" onClick={handleClear}>
-            <TiTimes />
-          </Button>
-        </InputRightElement>
-      )}
-    </InputGroup>
-  )
-}
+    <HStack width="full">
+      <InputGroup
+        flex="1"
+        endElement={
+          inputValue && (
+            <Button size="xs" rounded="full" onClick={handleClear} aria-label="Clear input">
+              <TiTimes />
+            </Button>
+          )
+        }
+      >
+        <Input value={inputValue} onChange={handleChange} size="sm" placeholder="Type here..." />
+      </InputGroup>
+    </HStack>
+  );
+};

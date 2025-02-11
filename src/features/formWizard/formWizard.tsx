@@ -1,9 +1,10 @@
-import { Box, FormControl, FormErrorMessage, Heading, Input, Stack } from "@chakra-ui/react";
+import { Box, Heading, Input, Stack } from "@chakra-ui/react";
 import { Field } from "react-final-form";
 import { useTranslation } from "react-i18next";
 import * as z from "zod";
 
 import { CheckboxControl } from "../../components/reactFinalFormControls";
+import { Field as FormField } from "../../components/ui/field";
 import { Wizard, WizardPage } from "../../components/wizard/wizard";
 import { zod2FieldValidator } from "../../lib/zod2FormValidator";
 
@@ -48,71 +49,64 @@ const WizardFormView = () => {
       <Box marginTop={"20px"}>
         <Wizard<Schema> onSubmit={onSubmit}>
           <WizardPage>
-            <Stack spacing={4}>
+            <Stack gap={4}>
               <Field name="firstName" validate={zod2FieldValidator(required)}>
                 {({ input, meta: { error, touched } }) => (
-                  <FormControl isInvalid={error && touched}>
+                  <FormField invalid={error && touched} errorText={error}>
                     <Input {...input} type="text" placeholder={t("wizard_first_name_placeholder")} />
-                    <FormErrorMessage>{error}</FormErrorMessage>
-                  </FormControl>
+                  </FormField>
                 )}
               </Field>
               <Field name="lastName" validate={zod2FieldValidator(required)}>
                 {({ input, meta: { error, touched } }) => (
-                  <FormControl isInvalid={error && touched}>
+                  <FormField invalid={error && touched} errorText={error}>
                     <Input {...input} type="text" placeholder={t("wizard_last_name_placeholder")} />
-                    <FormErrorMessage>{error}</FormErrorMessage>
-                  </FormControl>
+                  </FormField>
                 )}
               </Field>
               <Field name="email" validate={zod2FieldValidator(emailSchema)}>
                 {({ input, meta: { error, touched } }) => (
-                  <FormControl isInvalid={error && touched}>
+                  <FormField invalid={error && touched} errorText={error}>
                     <Input {...input} type="email" placeholder={t("wizard_email_placeholder")} />
-                    <FormErrorMessage>{error}</FormErrorMessage>
-                  </FormControl>
+                  </FormField>
                 )}
               </Field>
               <Field name="password" validate={zod2FieldValidator(passwordComplexity)}>
                 {({ input, meta: { error, touched } }) => (
-                  <FormControl isInvalid={error && touched}>
+                  <FormField invalid={error && touched} errorText={error}>
                     <Input {...input} type="password" placeholder={t("wizard_password_placeholder")} />
-                    <FormErrorMessage>{error}</FormErrorMessage>
-                  </FormControl>
+                  </FormField>
                 )}
               </Field>
             </Stack>
           </WizardPage>
           <WizardPage>
-            <Stack spacing={4}>
+            <Stack gap={4}>
               <Field name="phone" validate={zod2FieldValidator(phoneSchema)}>
                 {({ input, meta: { error, touched } }) => (
-                  <FormControl isInvalid={error && touched}>
+                  <FormField invalid={error && touched} errorText={error}>
                     <Input {...input} type="text" placeholder={t("wizard_phone_placeholder")} />
-                    <FormErrorMessage>{error}</FormErrorMessage>
-                  </FormControl>
+                  </FormField>
                 )}
               </Field>
               <Field name="billingAddress" validate={zod2FieldValidator(required)}>
                 {({ input, meta: { error, touched } }) => (
-                  <FormControl isInvalid={error && touched}>
+                  <FormField invalid={error && touched} errorText={error}>
                     <Input {...input} type="text" placeholder={t("wizard_billing_address_placeholder")} />
-                    <FormErrorMessage>{error}</FormErrorMessage>
-                  </FormControl>
+                  </FormField>
                 )}
               </Field>
               <Field name="shippingAddress" validate={zod2FieldValidator(required)}>
                 {({ input, meta: { error, touched } }) => (
-                  <FormControl isInvalid={error && touched}>
+                  <FormField invalid={error && touched} errorText={error}>
                     <Input {...input} type="text" placeholder={t("wizard_shipping_address_placeholder")} />
-                    <FormErrorMessage>{error}</FormErrorMessage>
-                  </FormControl>
+                  </FormField>
                 )}
               </Field>
             </Stack>
           </WizardPage>
           <WizardPage>
-            <Stack spacing={4}>
+            <Stack gap={4}>
               <CheckboxControl name="newsletter" label={t("wizard_newsletter_label")} />
               <CheckboxControl name="specialOffers" label={t("wizard_special_offers_label")} />
               <CheckboxControl name="smsNotifications" label={t("wizard_sms_notifications_label")} />

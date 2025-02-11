@@ -1,10 +1,10 @@
 import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
+  DialogRoot,
+  DialogBody,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogBackdrop,
   Button,
 } from "@chakra-ui/react";
 import type { ReactNode } from "react";
@@ -24,33 +24,32 @@ export const ConfirmationDialog = (props: {
 
   return (
     <>
-      <AlertDialog
-        isOpen={props.isOpen}
-        leastDestructiveRef={closeRef}
-        onClose={props.onClose}
-        closeOnOverlayClick={false}
+      <DialogRoot
+        role="alertdialog"
+        open={props.isOpen}
+        onOpenChange={props.onClose}
       >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+        <DialogBackdrop>
+          <DialogContent>
+            <DialogHeader fontSize="lg" fontWeight="bold">
               {props.title}
-            </AlertDialogHeader>
-            <AlertDialogBody>{props.body}</AlertDialogBody>
-            <AlertDialogFooter>
+            </DialogHeader>
+            <DialogBody>{props.body}</DialogBody>
+            <DialogFooter>
               <Button ref={closeRef} onClick={props.onClose}>
-                {t('confirmationDialog.button.close')}
+                {t("confirmationDialog.button.close")}
               </Button>
               <If condition={props.onConfirm !== undefined}>
                 <Then>
                   <Button colorScheme="red" onClick={props.onConfirm} ml={3}>
-                    {t('confirmationDialog.button.confirm')}
+                    {t("confirmationDialog.button.confirm")}
                   </Button>
                 </Then>
               </If>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
+            </DialogFooter>
+          </DialogContent>
+        </DialogBackdrop>
+      </DialogRoot>
     </>
   );
 };

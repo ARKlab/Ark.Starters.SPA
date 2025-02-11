@@ -13,8 +13,10 @@ import ProtectedRoute from "./authentication/components/protectedRoute";
 import Unauthorized from "./authentication/unauthorized";
 import { ErrorFallback } from "./errorFallback";
 
-const wrapComponent = (x: MainSectionType) => {
+const wrapComponent = (x: MainSectionType | SubsectionMenuItemType) => {
   const checkPermissions = x.permissions && x.permissions.length > 0;
+
+  console.log(`Wrapping component: ${x.label}, Path: ${x.path}, Authenticated Only: ${x.authenticatedOnly}`);
 
   return (
     <>
@@ -41,28 +43,30 @@ const wrapComponent = (x: MainSectionType) => {
 const renderSections = (s?: SubsectionMenuItemType[]) => {
   return s
     ?.filter(x => x.path !== undefined)
-    .map((x, i) =>
-      x.path === "" && !x.subsections ? ( // index route, shall not have children
+    .map((x, i) => {
+      console.log(x);
+      return x.path === "" && !x.subsections ? ( // index route, shall not have children
         <Route key={i} index element={wrapComponent(x)} />
       ) : (
         <Route key={i} path={x.path} element={wrapComponent(x)}>
           {renderSections(x.subsections)}
         </Route>
-      ),
-    );
+      );
+    });
 };
 
 const routes = mainSections
   .filter(x => x.path !== undefined)
-  .map((x, i) =>
-    x.path === "" && !x.subsections ? ( // index route, shall not have children
+  .map((x, i) => {
+    console.log(`Creating route: ${x.label}, Path: ${x.path}`);
+    return x.path === "" && !x.subsections ? ( // index route, shall not have children
       <Route key={i} index element={wrapComponent(x)} />
     ) : (
       <Route key={i} path={x.path} element={wrapComponent(x)}>
         {renderSections(x.subsections)}
       </Route>
-    ),
-  );
+    );
+  });
 
 export const router = createBrowserRouter(
   createRoutesFromChildren(
@@ -82,11 +86,9 @@ export const router = createBrowserRouter(
       v7_fetcherPersist: true,
       v7_normalizeFormMethod: true,
       v7_partialHydration: true,
-      v7_skipActionErrorRevalidation: true
-    }
-  }
-
+      v7_skipActionErrorRevalidation: true,
+    },
+  },
 );
 
-if (window.Cypress)
-  window.router = router;
+if (window.Cypress) window.router = router;

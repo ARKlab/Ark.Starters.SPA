@@ -1,15 +1,14 @@
 import {
-  Accordion,
   AccordionItem,
-  AccordionIcon,
   Badge,
   Box,
   Card,
   Code,
   Flex,
-  AccordionButton,
-  AccordionPanel,
   Button,
+  AccordionRoot,
+  AccordionItemContent,
+  AccordionItemTrigger,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
@@ -47,26 +46,24 @@ const ProblemDetailsModalBody = (props: { problem: DetailsType | null }) => {
         <Badge colorScheme="red">ERROR {problem?.status}</Badge>
       </Flex>
       <Flex my="20px">
-        <Card>
+        <Card.Root>
           <Code colorScheme="grey">{problem?.originalDetail ? problem.originalDetail : problem?.message}</Code>
-        </Card>
+        </Card.Root>
       </Flex>
       <Flex my="20px">
-        <Accordion w="full">
-          <AccordionItem>
-            <h2>
-              <AccordionButton>
-                <Box as="span" flex="1" textAlign="left">
-                  StackTrace
-                </Box>
-                <AccordionIcon />
-              </AccordionButton>
-            </h2>
-            <AccordionPanel pb={4}>
+        <AccordionRoot w="full">
+          <AccordionItem value="stackTrace">
+            <AccordionItemTrigger>
+              <Box as="span" flex="1" textAlign="left">
+                StackTrace
+              </Box>
+            </AccordionItemTrigger>
+
+            <AccordionItemContent pb={4}>
               {problem?.exceptionDetails ? problem.exceptionDetails[0].raw : "No StackTrace found"}
-            </AccordionPanel>
+            </AccordionItemContent>
           </AccordionItem>
-        </Accordion>
+        </AccordionRoot>
       </Flex>
       <Flex justifyContent={"center"}>
         <Button

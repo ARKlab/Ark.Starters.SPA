@@ -12,7 +12,7 @@ const DetailsPageExampleMainView = () => {
           {t("notification_example")}
         </Heading>
         {t("detailspage_clickIdToViewDetails")}
-        <List>
+        <List.Root>
           <ListItem>
             <Link to="1">ID# 1</Link>
           </ListItem>
@@ -25,7 +25,7 @@ const DetailsPageExampleMainView = () => {
           <ListItem>
             <Link to="4">ID# 4</Link>
           </ListItem>
-        </List>
+        </List.Root>
       </Box>
     </Box>
   );

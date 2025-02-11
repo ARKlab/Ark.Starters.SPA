@@ -1,9 +1,11 @@
-import { Box, Heading, StackDivider, VStack, Text, useToast, FormControl, Input, FormErrorMessage, FormLabel } from "@chakra-ui/react";
+import { Box, Heading, VStack, Text, Input, Separator, FieldRoot } from "@chakra-ui/react";
 import { useState } from "react";
 import { Field, Form } from "react-final-form";
 import { useTranslation } from "react-i18next";
 import * as z from 'zod';
 
+import { Field as FormField } from "../../components/ui/field";
+import { toaster } from "../../components/ui/toaster-helper";
 import { LocaleSwitcher } from "../../lib/i18n/localeSwitcher";
 import { zod2FormValidator } from "../../lib/zod2FormValidator";
 
@@ -23,11 +25,10 @@ type Test = z.infer<typeof TestSchema>;
 
 const LocalizationPage = () => {
   const { t } = useTranslation();
-  const toast = useToast();
   const [apples, setApples] = useState(0);
 
   const submit = () => {
-    toast({
+    toaster.create({
       title: t('localization-samples.submit'),
       description: t('localization-samples.submit-message'),
     });
@@ -39,24 +40,14 @@ const LocalizationPage = () => {
 
   return (
     <Box>
-      <Heading noOfLines={1} size="xl">
-        {t('localization-samples.title')}
-      </Heading>
-      <VStack
-        divider={<StackDivider borderColor="gray.200" />}
-        spacing={4}
-        align="stretch"
-      >
+      <Heading size="xl">{t("localization-samples.title")}</Heading>
+      <VStack separator={<Separator borderColor="gray.200" />} gap={4} align="stretch">
         <Box my="20px">
-          <Heading noOfLines={1} size="md">
-            {t('localization-samples.locale-switcher')}
-          </Heading>
+          <Heading size="md">{t("localization-samples.locale-switcher")}</Heading>
           <LocaleSwitcher />
         </Box>
         <Box my="20px">
-          <Heading noOfLines={1} size="md">
-            {t("localization_simple_text")}
-          </Heading>
+          <Heading size="md">{t("localization_simple_text")}</Heading>
           <Text>{t("hello_world")}</Text>
         </Box>
         <Box my="20px">
@@ -71,14 +62,10 @@ const LocalizationPage = () => {
                     type="text"
                     render={({ input, meta: { error, touched } }) => {
                       return (
-                        <FormControl
-                          isInvalid={!!error && touched}
-                          isDisabled={submitting}
-                        >
-                          <FormLabel htmlFor="name">{t('name')}</FormLabel>
+                        <FormField invalid={!!error && touched} disabled={submitting} title={t("name")} errorText={error}>
+                          {/*<FormLabel htmlFor="name">{t("name")}</FormLabel>*/}
                           <Input {...input} />
-                          <FormErrorMessage>{error}</FormErrorMessage>
-                        </FormControl>
+                        </FormField>
                       );
                     }}
                   />
@@ -88,14 +75,10 @@ const LocalizationPage = () => {
                     type="text"
                     render={({ input, meta: { error, touched } }) => {
                       return (
-                        <FormControl
-                          isInvalid={!!error && touched}
-                          isDisabled={submitting}
-                        >
-                          <FormLabel htmlFor="fieldName">FieldName</FormLabel>
+                        <FormField invalid={!!error && touched} disabled={submitting} title={"FieldName"} errorText={error}>
+                          {/*<FormLabel htmlFor="fieldName">FieldName</FormLabel>*/}
                           <Input {...input} />
-                          <FormErrorMessage>{error}</FormErrorMessage>
-                        </FormControl>
+                        </FormField>
                       );
                     }}
                   />
@@ -106,17 +89,10 @@ const LocalizationPage = () => {
                     parse={p}
                     render={({ input, meta: { error, touched } }) => {
                       return (
-                        <FormControl
-                          isInvalid={!!error && touched}
-                          isDisabled={submitting}
-                        >
-                          <FormLabel htmlFor="customErrorInline">
-                            {t('translation-samples.custom-error')}
-                          </FormLabel>
+                        <FormField invalid={!!error && touched} disabled={submitting} title={t("translation-samples.custom-error")} errorText={error}>
+                          {/*<FormLabel htmlFor="customErrorInline">{t("translation-samples.custom-error")}</FormLabel>*/}
                           <Input {...input} />
-
-                          <FormErrorMessage>{error}</FormErrorMessage>
-                        </FormControl>
+                        </FormField>
                       );
                     }}
                   />
@@ -126,25 +102,23 @@ const LocalizationPage = () => {
           />
         </Box>
         <Box my="20px">
-          <Heading noOfLines={1} size="md">
-            {t("localization_dynamic_text")}
-          </Heading>
+          <Heading size="md">{t("localization_dynamic_text")}</Heading>
           <Text my="10px" fontSize={"sm"}>
             {t("localization_dynamic_text_explanation")}
           </Text>
-          <FormControl>
+          <FieldRoot>
             {t("localization_control_label")}
             <Input
               w="3em"
               id="apples"
               type="number"
               value={apples}
-              onChange={(e) => { setApples(Number(e.target.value)); }}
+              onChange={e => {
+                setApples(Number(e.target.value));
+              }}
             />
-          </FormControl>
-          <Text fontSize="2xl">
-            {t("localization_example_1", { number: apples })}
-          </Text>
+          </FieldRoot>
+          <Text fontSize="2xl">{t("localization_example_1", { number: apples })}</Text>
         </Box>
       </VStack>
     </Box>

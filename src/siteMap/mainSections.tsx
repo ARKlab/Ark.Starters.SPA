@@ -213,6 +213,13 @@ export const mainSections: MainSectionType[] = [
   },
 ];
 
+mainSections.forEach(section => {
+  console.log(`Section: ${section.label}, Path: ${section.path}`);
+  section.subsections?.forEach(subsection => {
+    console.log(`  Subsection: ${subsection.label}, Path: ${subsection.path}`);
+  });
+});
+
 export function getEntryPointPath(sections: MainSectionType[]): string {
   for (const section of sections) {
     for (const subsection of section.subsections ?? []) {

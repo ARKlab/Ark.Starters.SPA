@@ -1,16 +1,12 @@
-import {
-  Button,
-  FormControl,
-  FormLabel,
-  InputGroup,
-  InputRightElement,
-  Text,
-} from "@chakra-ui/react";
-import { RangeDatepicker } from "chakra-dayzed-datepicker";
+import { Button, Input, HStack } from "@chakra-ui/react";
 import { useState } from "react";
+import DatePicker from "react-datepicker";
 import { TiTimes } from "react-icons/ti";
+import "react-datepicker/dist/react-datepicker.css"; // Import required styles for react-datepicker
 
-import { formatDateToString } from "../../lib/helper";
+import { formatDateToString } from "../../lib/helper"; // Moved to the correct position
+import { Field } from "../ui/field";
+import { InputGroup } from "../ui/input-group";
 
 export const ChackraDateRange = (props: {
   handleInputChange: (name: string, value: unknown) => void;
@@ -19,61 +15,52 @@ export const ChackraDateRange = (props: {
   label: string;
   dateFormat?: string;
 }) => {
+  const { handleInputChange, propForm, propTo, label, dateFormat } = props;
 
-  const [fromToRange, setFromToRange] = useState<Date[]>([]);
+  const [fromToRange, setFromToRange] = useState<[Date | null, Date | null] | null>([null, null]);
 
-  const handleFromToDataRangeChange = (
-    value: Date[],
-    d1: string,
-    d2: string
-  ) => {
-    if (value.length === 0) {
-      props.handleInputChange(d1, "");
-      props.handleInputChange(d2, "");
+  const handleFromToDataRangeChange = (dates: [Date | null, Date | null] | null, d1: string, d2: string) => {
+    if (!dates || dates.some(date => date === null)) {
+      handleInputChange(d1, "");
+      handleInputChange(d2, "");
+      setFromToRange([null, null]);
+    } else {
+      handleInputChange(d1, formatDateToString(dates[0]));
+      handleInputChange(d2, formatDateToString(dates[1]));
+      setFromToRange(dates);
     }
-    if (value[0]) {
-      props.handleInputChange(d1, formatDateToString(value[0]));
-    }
-    if (value[1]) {
-      props.handleInputChange(d2, formatDateToString(value[1]));
-    }
-
-    setFromToRange(value);
   };
 
   return (
-    <FormControl mr="2%">
-      <FormLabel>
-        <Text color="brand.dark" as="b">
-          {props.label}
-        </Text>
-      </FormLabel>
-
-      <InputGroup zIndex={"dropdown"}>
-        <RangeDatepicker
-          configs={{
-            dateFormat: props.dateFormat ? props.dateFormat : "dd-MM-yyyy",
+    <Field mr="2%" label={label}>
+      <HStack zIndex="dropdown">
+        <DatePicker
+          selected={fromToRange?.[0] ?? undefined} // Changed to nullish coalescing
+          startDate={fromToRange?.[0] ?? undefined} // Changed to nullish coalescing
+          endDate={fromToRange?.[1] ?? undefined} // Changed to nullish coalescing
+          onChange={dates => {
+            handleFromToDataRangeChange(dates, propForm, propTo);
           }}
-          selectedDates={fromToRange}
-          onDateChange={(e) =>
-            { handleFromToDataRangeChange(e, props.propForm, props.propTo); }
-          }
+          selectsRange
+          dateFormat={dateFormat ?? "dd-MM-yyyy"} // Changed to nullish coalescing
+          isClearable={false}
+          customInput={<Input placeholder="Select date range" />}
         />
-        {fromToRange.length > 0 && (
-          <InputRightElement width="4.5rem" right="-11px">
+        {fromToRange?.[0] && fromToRange[1] && (
+          <InputGroup width="4.5rem" right="-11px">
             <Button
-              rounded={"full"}
+              rounded="full"
               h="1rem"
               size="xs"
-              onClick={(_) =>
-                { handleFromToDataRangeChange([], props.propForm, props.propTo); }
-              }
+              onClick={() => {
+                handleFromToDataRangeChange(null, propForm, propTo);
+              }}
             >
               <TiTimes />
             </Button>
-          </InputRightElement>
+          </InputGroup>
         )}
-      </InputGroup>
-    </FormControl>
+      </HStack>
+    </Field>
   );
 };
