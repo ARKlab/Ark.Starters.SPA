@@ -1,15 +1,5 @@
- 
-import type {
-  FormControlProps,
-  InputProps
-} from "@chakra-ui/react";
-import {
-  Checkbox,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input
-} from "@chakra-ui/react";
+import type { InputProps } from "@chakra-ui/react";
+import { Checkbox, Field, Input } from "@chakra-ui/react";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
@@ -19,36 +9,28 @@ type FieldControlProps = {
 } & FormControlProps;
 
 export const FieldControl = (props: FieldControlProps) => {
-  const {
-    name,
-    children,
-    ...rest
-  } = props;
+  const { name, children, ...rest } = props;
 
   const {
     formState: { errors, isSubmitting },
   } = useFormContext();
 
   return (
-    <FormControl
-      {...rest}
-      isInvalid={!!errors[name]}
-      isDisabled={isSubmitting}
-    >
+    <Field.Root {...rest} invalid={!!errors[name]} disabled={isSubmitting}>
       {children}
-    </FormControl>
+    </Field.Root>
   );
 };
 
 type FieldErrorProps = {
-  name: string
+  name: string;
 };
 
 export const FieldError = ({ name }: FieldErrorProps) => {
   const {
     formState: { errors },
   } = useFormContext();
-  return <FormErrorMessage>{errors[name]?.message as string}</FormErrorMessage>;
+  return <Field.ErrorText>{errors[name]?.message as string}</Field.ErrorText>;
 };
 
 type InputControlProps = {
@@ -59,12 +41,7 @@ type InputControlProps = {
 };
 
 export const InputControl = (props: InputControlProps) => {
-  const {
-    name,
-    label,
-    placeholder,
-    inputProps,
-  } = props;
+  const { name, label, placeholder, inputProps } = props;
 
   const { control } = useFormContext();
   return (
@@ -73,9 +50,7 @@ export const InputControl = (props: InputControlProps) => {
       <Controller
         name={name}
         control={control}
-        render={({ field }) => (
-          <Input {...field} {...inputProps} id={name} placeholder={placeholder} />
-        )}
+        render={({ field }) => <Input {...field} {...inputProps} id={name} placeholder={placeholder} />}
       />
       <FieldError name={name} />
     </FieldControl>
@@ -88,10 +63,7 @@ type CheckboxControlProps = {
 };
 
 export const CheckboxControl = (props: CheckboxControlProps) => {
-  const {
-    label,
-    name,
-  } = props;
+  const { label, name } = props;
 
   const { control } = useFormContext();
 
@@ -104,7 +76,9 @@ export const CheckboxControl = (props: CheckboxControlProps) => {
           <Checkbox
             {...field}
             isChecked={field.value}
-            onChange={(e) => { field.onChange(e.target.checked); }}
+            onChange={e => {
+              field.onChange(e.target.checked);
+            }}
           >
             {label}
           </Checkbox>

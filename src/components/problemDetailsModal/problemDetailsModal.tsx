@@ -44,11 +44,11 @@ const ProblemDetailsModalBody = (props: { problem: DetailsType | null }) => {
   return (
     <>
       <Flex>
-        <Badge colorScheme="red">ERROR {problem?.status}</Badge>
+        <Badge colorPalette="red">ERROR {problem?.status}</Badge>
       </Flex>
       <Flex my="20px">
         <Card>
-          <Code colorScheme="grey">{problem?.originalDetail ? problem.originalDetail : problem?.message}</Code>
+          <Code colorPalette="grey">{problem?.originalDetail ? problem.originalDetail : problem?.message}</Code>
         </Card>
       </Flex>
       <Flex my="20px">
@@ -71,7 +71,7 @@ const ProblemDetailsModalBody = (props: { problem: DetailsType | null }) => {
       <Flex justifyContent={"center"}>
         <Button
           onClick={() => {
-            void navigate(0);
+            navigate(0);
           }}
         >
           Reload Page

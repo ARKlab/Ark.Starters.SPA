@@ -15,21 +15,16 @@ import { If, Then } from "react-if";
 export const ConfirmationDialog = (props: {
   title: ReactNode;
   body: ReactNode;
-  isOpen: boolean;
+  open: boolean;
   onConfirm?: () => void;
   onClose: () => void;
 }) => {
   const closeRef = useRef<HTMLButtonElement>(null);
-  const { t } = useTranslation('template');
+  const { t } = useTranslation("template");
 
   return (
     <>
-      <AlertDialog
-        isOpen={props.isOpen}
-        leastDestructiveRef={closeRef}
-        onClose={props.onClose}
-        closeOnOverlayClick={false}
-      >
+      <AlertDialog open={props.open} leastDestructiveRef={closeRef} onClose={props.onClose} closeOnOverlayClick={false}>
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -38,12 +33,12 @@ export const ConfirmationDialog = (props: {
             <AlertDialogBody>{props.body}</AlertDialogBody>
             <AlertDialogFooter>
               <Button ref={closeRef} onClick={props.onClose}>
-                {t('confirmationDialog.button.close')}
+                {t("confirmationDialog.button.close")}
               </Button>
               <If condition={props.onConfirm !== undefined}>
                 <Then>
-                  <Button colorScheme="red" onClick={props.onConfirm} ml={3}>
-                    {t('confirmationDialog.button.confirm')}
+                  <Button colorPalette="red" onClick={props.onConfirm} ml={3}>
+                    {t("confirmationDialog.button.confirm")}
                   </Button>
                 </Then>
               </If>

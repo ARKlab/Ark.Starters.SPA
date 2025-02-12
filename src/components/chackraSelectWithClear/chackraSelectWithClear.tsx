@@ -1,14 +1,5 @@
-import {
-  Button,
-  FormControl,
-  FormLabel,
-  InputGroup,
-  InputRightElement,
-  Select,
-  Spinner,
-  Text,
-} from "@chakra-ui/react";
-import type { JSX } from "react"
+import { Button, Field, FormLabel, InputGroup, InputRightElement, Select, Spinner, Text } from "@chakra-ui/react";
+import type { JSX } from "react";
 import { useState } from "react";
 import { MdArrowDropDown } from "react-icons/md";
 import { TiTimes } from "react-icons/ti";
@@ -41,7 +32,7 @@ const ChackraSelectWithClear: React.FC<SelectWithClearProps> = ({
   };
 
   return (
-    <FormControl mr="2%">
+    <Field.Root mr="2%">
       <FormLabel>
         <Text color="brand.dark" as="b">
           {title}
@@ -49,10 +40,10 @@ const ChackraSelectWithClear: React.FC<SelectWithClearProps> = ({
       </FormLabel>
       <InputGroup>
         <Select
-          isRequired={true}
+          required={true}
           value={selectValue}
           onChange={handleChange}
-          icon={isLoading ? <Spinner data-role='spinner' /> : <MdArrowDropDown />}
+          icon={isLoading ? <Spinner data-role="spinner" /> : <MdArrowDropDown />}
         >
           {options}
         </Select>
@@ -64,7 +55,7 @@ const ChackraSelectWithClear: React.FC<SelectWithClearProps> = ({
           </InputRightElement>
         )}
       </InputGroup>
-    </FormControl>
+    </Field.Root>
   );
 };
 

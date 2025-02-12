@@ -1,4 +1,3 @@
-
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { useCallback } from "react";
@@ -13,7 +12,7 @@ export const LocaleSwitcher = () => {
     async (k: string) => {
       await i18n.changeLanguage(k);
     },
-    [i18n]
+    [i18n],
   );
 
   if (Object.entries(supportedLngs).length < 2) {
@@ -21,13 +20,9 @@ export const LocaleSwitcher = () => {
   }
   return (
     <Menu>
-      {({ isOpen }) => (
+      {({ open }: { open: boolean }) => (
         <>
-          <MenuButton
-            as={Button}
-            rightIcon={<ChevronDownIcon />}
-            isActive={isOpen}
-          >
+          <MenuButton as={Button} rightIcon={<ChevronDownIcon />} isActive={open}>
             {i18n.language}
           </MenuButton>
           <MenuList>

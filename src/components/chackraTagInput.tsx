@@ -1,4 +1,4 @@
-import { Badge, Box, FormControl, FormLabel, Input, InputGroup, Text } from "@chakra-ui/react";
+import { Badge, Box, Field, FormLabel, Input, InputGroup, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import { TiTimes } from "react-icons/ti";
 
@@ -50,7 +50,7 @@ const ChackraTagInput: React.FC<TagInputProps> = ({
   };
 
   return (
-    <FormControl>
+    <Field.Root>
       <FormLabel>
         <Text as="b">{title}</Text>
       </FormLabel>
@@ -59,7 +59,7 @@ const ChackraTagInput: React.FC<TagInputProps> = ({
           {tags.map(tag => (
             <Badge
               key={tag}
-              colorScheme="blue"
+              colorPalette="blue"
               display="flex"
               alignItems="center"
               borderRadius="full"
@@ -89,7 +89,7 @@ const ChackraTagInput: React.FC<TagInputProps> = ({
           />
         </Box>
       </InputGroup>
-    </FormControl>
+    </Field.Root>
   );
 };
 

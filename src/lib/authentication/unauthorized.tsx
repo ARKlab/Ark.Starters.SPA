@@ -6,11 +6,11 @@ import { Login } from "./authenticationSlice";
 import { useAuthContext } from "./components/useAuthContext";
 
 const Unauthorized = () => {
-  const { isLogged } = useAuthContext()
+  const { isLogged } = useAuthContext();
 
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   function login() {
-    void dispatch(Login())
+    void dispatch(Login());
   }
   return (
     <Box>
@@ -22,7 +22,7 @@ const Unauthorized = () => {
           <Text fontSize="lg" mt={4}>
             You need to be logged in to view this page.
           </Text>
-          <Button colorScheme="teal" variant="outline" mt={4} onClick={login}>
+          <Button colorPalette="teal" variant="outline" mt={4} onClick={login}>
             Login
           </Button>
         </>
@@ -32,7 +32,7 @@ const Unauthorized = () => {
         </Text>
       )}
     </Box>
-  )
-}
+  );
+};
 
-export default Unauthorized
+export default Unauthorized;

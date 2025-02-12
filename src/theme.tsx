@@ -1,63 +1,53 @@
-import type { StyleFunctionProps } from '@chakra-ui/react';
-import { extendTheme, baseTheme, withDefaultColorScheme } from '@chakra-ui/react';
-import { mode } from "@chakra-ui/theme-tools";
+import { createSystem, defaultConfig } from "@chakra-ui/react";
 
-const config = {
-  useSystemColorMode: true,
-  initialColorMode: 'system'
-}
-export const theme = extendTheme({
-  config,
-  styles: {
-    global: (props: StyleFunctionProps) => {
-      const bgLight = props.theme.colors.gray[50];
-      const bgDark = props.theme.colors.gray[900];
-      return {
-        "html, body": {
-          background: mode(bgLight, bgDark)(props),
+export const theme = createSystem(defaultConfig, {
+  globalCss: {
+    "html, body": {
+      margin: 0,
+      padding: 0,
+    },
+  },
+  theme: {
+    semanticTokens: {
+      colors: {
+        header: {
+          bg: {
+            default: { value: "gray.50" },
+            _dark: { value: "cyan.900" },
+          },
         },
-      };
-    },
-  },
-  colors: {
-    brandPalette: {
-      100: '#e4f1ff',
-      200: '#7F7A91',
-      300: '#5A5766',
-      500: '#4094D0',
-      600: '#104378',
-      700: '#FFE6B9',
-      800: '#E4572E',
-      900: '#ffffff',
-    },
-    brand: {
-      primary: '#4094d0',
-      selected: '#104378',
-      dark: '#194069',
-      darken: '#282c37',
-    }
-  },
-  semanticTokens: {
-    colors: {
-      header: {
-        bg: {
-          default: baseTheme.colors.gray[500],
-          _dark: baseTheme.colors.gray[800],
+        sider: {
+          bg: {
+            default: { value: "gray.50" },
+            _dark: { value: "cyan.900" },
+          },
         },
       },
-      sider: {
-        bg: {
-          default: baseTheme.colors.white,
-          _dark: baseTheme.colors.gray[800],
+    },
+    tokens: {
+      colors: {
+        brandPalette: {
+          100: { value: "#e4f1ff" },
+          200: { value: "#7F7A91" },
+          300: { value: "#5A5766" },
+          500: { value: "#4094D0" },
+          600: { value: "#104378" },
+          700: { value: "#FFE6B9" },
+          800: { value: "#E4572E" },
+          900: { value: "#ffffff" },
         },
-      }
-    }
-  },
-  fonts: {
-    heading: `'PTSansRegular', sans-serif`,
-    body: `'PTSansRegular', sans-serif`,
-  },
+        brand: {
+          primary: { value: "#4094d0" },
+          selected: { value: "#104378" },
+          dark: { value: "#194069" },
+          darken: { value: "#282c37" },
+        },
 
-},
-  withDefaultColorScheme({ colorScheme: 'brandPalette' }),
-)
+        fonts: {
+          heading: { value: `'PTSansRegular', sans-serif` },
+          body: { value: `'PTSansRegular', sans-serif` },
+        },
+      },
+    },
+  },
+});

@@ -1,16 +1,4 @@
-import {
-  Button,
-  Heading,
-  HStack,
-  Spinner,
-  Table,
-  Tbody,
-  Th,
-  Thead,
-  Tr,
-  useToast,
-  VStack,
-} from "@chakra-ui/react";
+import { Button, Heading, HStack, Spinner, Table, Tbody, Th, Thead, Tr, useToast, VStack } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -24,25 +12,25 @@ import { useGetConfigQuery, usePostConfigMutation } from "./configTableApi";
 import { TableRow } from "./TableRow";
 
 export type Employee = {
-  name: string
-  surName: string
-  employed: boolean
-}
+  name: string;
+  surName: string;
+  employed: boolean;
+};
 
 const configTableSchema = z.object({
   table: z
     .array(
       z.object({
-        name: z.string()
+        name: z
+          .string()
           .min(3)
           .max(10)
-          .refine((x) => !x.endsWith("Kail"),
-            {
-              message: "Kail is not allowed",
-            }),
+          .refine(x => !x.endsWith("Kail"), {
+            message: "Kail is not allowed",
+          }),
         surName: z.string().min(1),
         employed: z.boolean(),
-      })
+      }),
     )
     .superRefine((table, ctx) => {
       const names = table.reduce<Record<string, number>>((acc, x) => {
@@ -55,11 +43,11 @@ const configTableSchema = z.object({
           ctx.addIssue({
             code: "custom",
             message: "Duplicate names are not allowed",
-            path: [idx, "name"]
+            path: [idx, "name"],
           });
         }
       });
-    })
+    }),
 });
 
 type ConfigTableType = z.infer<typeof configTableSchema>;
@@ -69,15 +57,12 @@ export default function EditableTableExample() {
   const { t } = useTranslation();
   const toast = useToast();
 
-  const [
-    postConfig,
-    { isLoading: postConfigIsLoading, isSuccess: postConfigSuccess },
-  ] = usePostConfigMutation();
+  const [postConfig, { isLoading: postConfigIsLoading, isSuccess: postConfigSuccess }] = usePostConfigMutation();
 
   const { data, isLoading } = useGetConfigQuery(null, {
     refetchOnReconnect: true,
     refetchOnMountOrArgChange: true,
-  })
+  });
 
   const [throwError, setThrowError] = useState<boolean>(false);
 
@@ -85,27 +70,27 @@ export default function EditableTableExample() {
     console.log("OnSubmit: ", values);
     try {
       await postConfig({ employees: values.table, throwError })
-      .unwrap()
-      .catch((e) => {
-        dispatch(dispatchNetworkError(e));
-      });
-    }  finally{
-      setThrowError(false)
+        .unwrap()
+        .catch(e => {
+          dispatch(dispatchNetworkError(e));
+        });
+    } finally {
+      setThrowError(false);
     }
   };
 
   useEffect(() => {
     if (postConfigSuccess) {
       toast({
-        title: 'Config Submitted!',
-        description: 'Configuration has been submitted successfully',
-        status: 'success',
+        title: "Config Submitted!",
+        description: "Configuration has been submitted successfully",
+        status: "success",
         duration: 5000,
         isClosable: true,
-        position: 'bottom-right',
+        position: "bottom-right",
       });
     }
-  }, [postConfigSuccess, toast])
+  }, [postConfigSuccess, toast]);
 
   //#region FormConfiguration
   const {
@@ -117,7 +102,7 @@ export default function EditableTableExample() {
     defaultValues: { table: data ?? [] },
     values: { table: data ?? [] },
     mode: "onChange",
-    resolver: zodResolver(configTableSchema)
+    resolver: zodResolver(configTableSchema),
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -134,27 +119,22 @@ export default function EditableTableExample() {
         <Button
           onClick={() => {
             append({
-              name: '',
-              surName: '',
+              name: "",
+              surName: "",
               employed: false,
             });
-          }
-          }
-          colorScheme="green"
+          }}
+          colorPalette="green"
           aria-label="Add Employee"
         >
           {t("new")}
         </Button>
-        <Button
-          type="submit"
-          isDisabled={isSubmitting || postConfigIsLoading || !isValid}
-          isLoading={isSubmitting}
-        >
+        <Button type="submit" disabled={isSubmitting || postConfigIsLoading || !isValid} isLoading={isSubmitting}>
           {t("submit")}
         </Button>
         <Button
           type="submit"
-          isDisabled={isSubmitting || !isDirty || !errors}
+          disabled={isSubmitting || !isDirty || !errors}
           isLoading={isSubmitting || postConfigIsLoading}
           onClick={() => {
             setThrowError(true);
@@ -163,8 +143,10 @@ export default function EditableTableExample() {
           {t("triggerError")}
         </Button>
         <Button
-          isDisabled={!isDirty}
-          onClick={() => { reset(); }}
+          disabled={!isDirty}
+          onClick={() => {
+            reset();
+          }}
         >
           {t("reset")}
         </Button>
@@ -180,28 +162,27 @@ export default function EditableTableExample() {
           </Tr>
         </Thead>
         <Tbody>
-          {
-            isLoading
-              ?
-              <tr>
-                <td colSpan={100} align="center" style={{ padding: '2rem' }}>
-                  <Spinner />
-                </td>
-              </tr>
-              :
-              fields.map((f, i) => (
-                <TableRow
-                  key={i + f.id + 'row'}
-                  control={control}
-                  index={i}
-                  errors={errors}
-                  onDelete={() => { remove(i); }}
-                />
-              ))
-          }
+          {isLoading ? (
+            <tr>
+              <td colSpan={100} align="center" style={{ padding: "2rem" }}>
+                <Spinner />
+              </td>
+            </tr>
+          ) : (
+            fields.map((f, i) => (
+              <TableRow
+                key={i + f.id + "row"}
+                control={control}
+                index={i}
+                errors={errors}
+                onDelete={() => {
+                  remove(i);
+                }}
+              />
+            ))
+          )}
         </Tbody>
       </Table>
-    </VStack >
-  )
+    </VStack>
+  );
 }
-

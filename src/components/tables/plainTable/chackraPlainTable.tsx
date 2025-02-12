@@ -10,7 +10,7 @@ import { isErrorWithMessage, isFetchBaseQueryError } from "../../../lib/errorHan
 
 export type PlainTablePropsType<T extends ZodRawShape> = {
   data: z.infer<ZodObject<T>>[] | undefined;
-  colorscheme?: string;
+  colorPalette?: string;
   variant?: string;
   isLoading: boolean;
   isError: boolean;
@@ -20,7 +20,7 @@ export type PlainTablePropsType<T extends ZodRawShape> = {
 
 export const ChackraPlainTable = <T extends ZodRawShape>({
   data,
-  colorscheme = "grey",
+  colorPalette = "grey",
   variant = "striped",
   isLoading,
   isError,
@@ -48,7 +48,7 @@ export const ChackraPlainTable = <T extends ZodRawShape>({
   const headers = Object.keys(schema.shape) as (keyof T)[];
   return (
     <TableContainer my="30px">
-      <Table variant={variant} colorScheme={colorscheme}>
+      <Table variant={variant} colorPalette={colorPalette}>
         <Thead>
           <Tr>
             {headers.map(header => (
@@ -70,7 +70,7 @@ export const ChackraPlainTable = <T extends ZodRawShape>({
               <Tr>
                 <Td colSpan={headers.length}>
                   <Center>
-                    <Spinner data-role='spinner' />
+                    <Spinner data-role="spinner" />
                   </Center>
                 </Td>
               </Tr>

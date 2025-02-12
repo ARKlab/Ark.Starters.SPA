@@ -1,11 +1,4 @@
-import {
-  Button,
-  FormControl,
-  FormLabel,
-  InputGroup,
-  InputRightElement,
-  Text,
-} from "@chakra-ui/react";
+import { Button, Field, FormLabel, InputGroup, InputRightElement, Text } from "@chakra-ui/react";
 import { RangeDatepicker } from "chakra-dayzed-datepicker";
 import { useState } from "react";
 import { TiTimes } from "react-icons/ti";
@@ -19,14 +12,9 @@ export const ChackraDateRange = (props: {
   label: string;
   dateFormat?: string;
 }) => {
-
   const [fromToRange, setFromToRange] = useState<Date[]>([]);
 
-  const handleFromToDataRangeChange = (
-    value: Date[],
-    d1: string,
-    d2: string
-  ) => {
+  const handleFromToDataRangeChange = (value: Date[], d1: string, d2: string) => {
     if (value.length === 0) {
       props.handleInputChange(d1, "");
       props.handleInputChange(d2, "");
@@ -42,7 +30,7 @@ export const ChackraDateRange = (props: {
   };
 
   return (
-    <FormControl mr="2%">
+    <Field.Root mr="2%">
       <FormLabel>
         <Text color="brand.dark" as="b">
           {props.label}
@@ -55,9 +43,9 @@ export const ChackraDateRange = (props: {
             dateFormat: props.dateFormat ?? "dd-MM-yyyy",
           }}
           selectedDates={fromToRange}
-          onDateChange={(e) =>
-            { handleFromToDataRangeChange(e, props.propForm, props.propTo); }
-          }
+          onDateChange={e => {
+            handleFromToDataRangeChange(e, props.propForm, props.propTo);
+          }}
         />
         {fromToRange.length > 0 && (
           <InputRightElement width="4.5rem" right="-11px">
@@ -65,15 +53,15 @@ export const ChackraDateRange = (props: {
               rounded={"full"}
               h="1rem"
               size="xs"
-              onClick={(_) =>
-                { handleFromToDataRangeChange([], props.propForm, props.propTo); }
-              }
+              onClick={_ => {
+                handleFromToDataRangeChange([], props.propForm, props.propTo);
+              }}
             >
               <TiTimes />
             </Button>
           </InputRightElement>
         )}
       </InputGroup>
-    </FormControl>
+    </Field.Root>
   );
 };
