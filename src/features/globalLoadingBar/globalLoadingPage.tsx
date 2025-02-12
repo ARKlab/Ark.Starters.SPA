@@ -16,7 +16,7 @@ const GlobalLoadingBarPage = () => {
       <Heading>{t("globalloadingbar.title")}</Heading>
       <Box>
         <Text>{t("globalloadingbar.description")}</Text>
-        <Wrap spacing={1} my={"20px"}>
+        <Wrap gap={1} my={"20px"}>
           <WrapItem>
             <Button
               onClick={async () => triggerSlow()}

@@ -62,7 +62,7 @@ export default function LocalizationPage() {
       <Heading noOfLines={1} size="xl">
         {t("localization-samples.title")}
       </Heading>
-      <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
+      <VStack divider={<StackDivider borderColor="gray.200" />} gap={4} align="stretch">
         <Box my="20px">
           <Heading noOfLines={1} size="md">
             {t("localization-samples.locale-switcher")}
