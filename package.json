@@ -52,7 +52,7 @@
     "preview:connectionStrings": "cross-env PORT=4000 node --watch -- public/connectionStrings.cjs",
     "prepreview:app": "wait-on --log --timeout 30000 http-get://localhost:4000",
     "preview:app": "cross-env PORT=4321 vite preview",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:ui": "vitest --ui",

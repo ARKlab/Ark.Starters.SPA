@@ -18,6 +18,7 @@ jobs:
         with:
           node-version: "22.x"
       - run: npm ci
+      - run: npm run lint
       - run: npm run build
       - name: Cypress E2E
         uses: cypress-io/github-action@v6

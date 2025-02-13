@@ -20,6 +20,15 @@ export default tseslint.config(
     pluginChaiFriendly.configs.recommendedFlat,
     jsxA11y.flatConfigs.strict,
     {
+        rules: {
+            'mocha/no-exclusive-tests': 'error',
+            'mocha/no-skipped-tests': 'error',
+            'mocha/no-mocha-arrows': 'off',
+            'cypress/no-unnecessary-waiting': 'off',
+            'mocha/no-top-level-hooks': 'off'
+        }
+    },
+    {
         linterOptions: {
             reportUnusedDisableDirectives: "warn"
         }
