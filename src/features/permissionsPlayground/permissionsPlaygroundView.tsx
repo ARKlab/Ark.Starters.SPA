@@ -1,22 +1,11 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Heading,
-  Input,
-  InputGroup,
-  InputRightElement,
-  List,
-  ListIcon,
-  ListItem,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Button, Separator, Heading, Input, List, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MdCheckCircle } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
 import { useAppSelector } from "../../app/hooks";
+import { InputGroup } from "../../components/ui/input-group";
 import { userSelector } from "../../lib/authentication/authenticationSlice";
 import ProtectedComponent from "../../lib/authentication/components/protectedComponent";
 
@@ -38,23 +27,40 @@ const PlaygroundView = () => {
           })}
         </Heading>
         <Box>
-          <List bg={"orange.100"} w="20%" color={"black"}>
+          <List.Root bg={"orange.100"} w="20%" color={"black"}>
             {permissions.map(permission => {
               return (
-                <ListItem key={permission}>
-                  <ListIcon as={MdCheckCircle} color="green.500" />
+                <List.Item key={permission}>
+                  <List.Indicator asChild color="green.500">
+                    <MdCheckCircle />
+                  </List.Indicator>
                   {permission}
-                </ListItem>
+                </List.Item>
               );
             })}
-          </List>
+          </List.Root>
           {permissions.length === 0 && <Text>{t("permissionsPlayground_noPermissions")}</Text>}
-          <Divider my={"20px"} />
+          <Separator my={"20px"} />
           <Heading size="md" my={"20px"}>
             {t("permissionsPlayground_componentTitle")}
           </Heading>
           <Text my="10px">{t("permissionsPlayground_setPermission")}</Text>
-          <InputGroup w={"20%"}>
+          <InputGroup
+            w={"20%"}
+            endElement={
+              <Box width="4.5rem">
+                <Button
+                  h="1.75rem"
+                  size="sm"
+                  onClick={() => {
+                    setRequiredPermission(inputValue);
+                  }}
+                >
+                  {t("permissionsPlayground_setButton")}
+                </Button>
+              </Box>
+            }
+          >
             <Input
               placeholder={t("permissionsPlayground_permissionPlaceholder")}
               value={inputValue}
@@ -62,17 +68,6 @@ const PlaygroundView = () => {
                 setInputValue(event.target.value);
               }}
             />
-            <InputRightElement width="4.5rem">
-              <Button
-                h="1.75rem"
-                size="sm"
-                onClick={() => {
-                  setRequiredPermission(inputValue);
-                }}
-              >
-                {t("permissionsPlayground_setButton")}
-              </Button>
-            </InputRightElement>
           </InputGroup>
           <Heading size="sm" my={"20px"}>
             {t("permissionsPlayground_protectedComponent")}
@@ -90,14 +85,14 @@ const PlaygroundView = () => {
             </Box>
           </ProtectedComponent>
         </Box>
-        <Divider my={"20px"} />
+        <Separator my={"20px"} />
         <Box>
           <Heading size="md" my={"20px"}>
             {t("permissionsPlayground_goToProtectedRoute")}
           </Heading>
           <Button
-            onClick={() => {
-              void navigate("/protectedRoute");
+            onClick={async () => {
+              await navigate("/protectedRoute");
             }}
           >
             Go!

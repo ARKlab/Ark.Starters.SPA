@@ -1,7 +1,9 @@
-import { Button, Select, Stack } from "@chakra-ui/react";
+import { Button, NativeSelectField, Stack } from "@chakra-ui/react";
 import * as R from "ramda";
 import type { JSX, MouseEventHandler } from "react";
 import { MdChevronLeft, MdChevronRight, MdFirstPage, MdLastPage } from "react-icons/md";
+
+import { NativeSelectRoot } from "../ui/native-select";
 
 type PaginationComponentTypes = {
   count: number;
@@ -37,13 +39,15 @@ const PaginationComponent = ({
       {count > pageSize ? (
         <>
           <Stack gap={4} direction="row" align="center" justifyContent="center" my="20px">
-            <Select w="8em" value={pageSize} onChange={e => onPageSizeChange(Number(e.target.value))}>
-              {[10, 20, 30, 40, 50].map(pageSize => (
-                <option key={pageSize} value={pageSize}>
-                  Show {pageSize}
-                </option>
-              ))}
-            </Select>
+            <NativeSelectRoot w="8em">
+              <NativeSelectField value={pageSize} onChange={e => onPageSizeChange(Number(e.target.value))}>
+                {[10, 20, 30, 40, 50].map(pageSize => (
+                  <option key={pageSize} value={pageSize}>
+                    Show {pageSize}
+                  </option>
+                ))}
+              </NativeSelectField>
+            </NativeSelectRoot>
 
             <PageItem
               display={page > pageMinRange}
@@ -81,13 +85,15 @@ const PaginationComponent = ({
         </>
       ) : (
         <Stack gap={4} direction="row" align="center" justifyContent="center" my="20px">
-          <Select w="8em" value={pageSize} onChange={e => onPageSizeChange(Number(e.target.value))}>
-            {[10, 20, 30, 40, 50].map(pageSize => (
-              <option key={pageSize} value={pageSize}>
-                Show {pageSize}
-              </option>
-            ))}
-          </Select>
+          <NativeSelectRoot w="8em">
+            <NativeSelectField value={pageSize} onChange={e => onPageSizeChange(Number(e.target.value))}>
+              {[10, 20, 30, 40, 50].map(pageSize => (
+                <option key={pageSize} value={pageSize}>
+                  Show {pageSize}
+                </option>
+              ))}
+            </NativeSelectField>
+          </NativeSelectRoot>
         </Stack>
       )}
     </div>
@@ -109,7 +115,7 @@ const PageItem = ({ display, onChange, title, disable, currentPage, value }: Pag
   R.ifElse(
     (x: unknown) => x === true,
     () => (
-      <Button disabled={disable} onClick={onChange} title={title} variant={currentPage ? "outline" : ""}>
+      <Button disabled={disable} onClick={onChange} title={title} variant={currentPage ? "outline" : "solid"}>
         {value}
       </Button>
     ),

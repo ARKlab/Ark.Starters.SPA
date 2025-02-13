@@ -1,20 +1,18 @@
-import {
-  Accordion,
-  AccordionItem,
-  Box,
-  Button,
-  Container,
-  Field,
-  Input,
-  Select,
-  Spacer,
-  Spinner,
-} from "@chakra-ui/react";
-import { useEffect } from "react";
+import { Box, Button, Container, Field, FieldLabel, Input, Spacer, Spinner } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { MdArrowDropDown } from "react-icons/md";
 import * as z from "zod";
+
+import {
+  AccordionItem,
+  AccordionItemContent,
+  AccordionItemTrigger,
+  AccordionRoot,
+} from "../../components/ui/accordion";
+import { NativeSelectField, NativeSelectRoot } from "../../components/ui/native-select";
+import { Toaster, toaster } from "../../components/ui/toaster";
 
 import { useGetVideoGamesGenresQuery, useInsertNewVideoGameMutation } from "./videoGamesApiSlice";
 import type { VideoGame } from "./videoGamesSampleDataAndTypes";
@@ -36,11 +34,10 @@ const ratingValidator = z.string().refine(
 
 function VideoGamesForm() {
   const { t } = useTranslation();
-  const toast = useToast();
 
   const [insertNewVideoGame, { isSuccess: insertSuccess }] = useInsertNewVideoGameMutation();
 
-  const [flag, setFlag] = useBoolean();
+  const [flag, setFlag] = useState(false);
   const { data: genres, isLoading: genreLoading } = useGetVideoGamesGenresQuery();
 
   const {
@@ -53,140 +50,153 @@ function VideoGamesForm() {
   async function onSubmit(values: VideoGame) {
     await insertNewVideoGame(values);
     reset();
-    setFlag.toggle();
+    setFlag(!flag);
   }
 
   useEffect(() => {
     if (insertSuccess) {
-      toast({
+      toaster.create({
         title: "Inserted!",
         description: "Game saved successfully",
-        status: "success",
         duration: 4000,
-        isClosable: true,
-        position: "bottom-right",
+        type: "success",
       });
     }
-  }, [insertSuccess, toast]);
+  }, [insertSuccess]);
 
   return (
-    <Accordion allowToggle index={flag ? 0 : -1} onChange={setFlag.toggle} my="30px">
-      <AccordionItem>
-        <AccordionButton>{t("games_add_video_game")}</AccordionButton>
-        <AccordionPanel pb={4}>
-          <Container maxW="container.md">
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Box mb={4}>
-                <Field.Root invalid={!!errors.title} id="title">
-                  <FormLabel>{t("games_title_placeholder")}</FormLabel>
-                  <Controller
-                    name="title"
-                    control={control}
-                    rules={{ required: "Title is required" }}
-                    render={({ field }) => <Input {...field} placeholder={t("games_title_placeholder")} />}
-                  />
-                  <Field.ErrorText>{errors.title?.message}</Field.ErrorText>
-                </Field.Root>
+    <>
+      <AccordionRoot
+        collapsible
+        multiple
+        onChange={() => {
+          setFlag(!flag);
+        }}
+        my="30px"
+      >
+        <AccordionItem value="addVideoGame">
+          <AccordionItemTrigger>{t("games_add_video_game")}</AccordionItemTrigger>
+          <AccordionItemContent pb={4}>
+            <Container maxW="container.md">
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <Box mb={4}>
+                  <Field.Root invalid={!!errors.title} id="title">
+                    <FieldLabel>{t("games_title_placeholder")}</FieldLabel>
+                    <Controller
+                      name="title"
+                      control={control}
+                      rules={{ required: "Title is required" }}
+                      render={({ field }) => <Input {...field} placeholder={t("games_title_placeholder")} />}
+                    />
+                    <Field.ErrorText>{errors.title?.message}</Field.ErrorText>
+                  </Field.Root>
 
-                <Spacer height="20px" />
+                  <Spacer height="20px" />
 
-                <Field.Root>
-                  <FormLabel>{t("games_genre_placeholder")}</FormLabel>
-                  <Controller
-                    name="genre"
-                    control={control}
-                    render={({ field }) => (
-                      <Select {...field} icon={genreLoading ? <Spinner data-role="spinner" /> : <MdArrowDropDown />}>
-                        {genres?.map(genre => (
-                          <option key={genre.id} value={genre.name}>
-                            {genre.name}
-                          </option>
-                        ))}
-                      </Select>
-                    )}
-                  />
-                </Field.Root>
+                  <Field.Root>
+                    <FieldLabel>{t("games_genre_placeholder")}</FieldLabel>
+                    <Controller
+                      name="genre"
+                      control={control}
+                      render={({ field }) => (
+                        <NativeSelectRoot
+                          {...field}
+                          icon={genreLoading ? <Spinner data-role="spinner" /> : <MdArrowDropDown />}
+                        >
+                          <NativeSelectField>
+                            {genres?.map(genre => (
+                              <option key={genre.id} value={genre.name}>
+                                {genre.name}
+                              </option>
+                            ))}
+                          </NativeSelectField>
+                        </NativeSelectRoot>
+                      )}
+                    />
+                  </Field.Root>
 
-                <Spacer height="20px" />
+                  <Spacer height="20px" />
 
-                <Field.Root invalid={!!errors.releaseYear}>
-                  <FormLabel>Release Year</FormLabel>
-                  <Controller
-                    name="releaseYear"
-                    control={control}
-                    rules={{
-                      validate: value => yearValidator.safeParse(value).success || "Invalid year",
-                    }}
-                    render={({ field }) => <Input {...field} placeholder="Release Year" />}
-                  />
-                  <Field.ErrorText>{errors.releaseYear?.message}</Field.ErrorText>
-                </Field.Root>
+                  <Field.Root invalid={!!errors.releaseYear}>
+                    <FieldLabel>Release Year</FieldLabel>
+                    <Controller
+                      name="releaseYear"
+                      control={control}
+                      rules={{
+                        validate: value => yearValidator.safeParse(value).success || "Invalid year",
+                      }}
+                      render={({ field }) => <Input {...field} placeholder="Release Year" />}
+                    />
+                    <Field.ErrorText>{errors.releaseYear?.message}</Field.ErrorText>
+                  </Field.Root>
 
-                <Spacer height="20px" />
+                  <Spacer height="20px" />
 
-                <Field.Root invalid={!!errors.developer}>
-                  <FormLabel>Developer</FormLabel>
-                  <Controller
-                    name="developer"
-                    control={control}
-                    rules={{ required: "Developer is required" }}
-                    render={({ field }) => <Input {...field} placeholder="Developer" />}
-                  />
-                  <Field.ErrorText>{errors.developer?.message}</Field.ErrorText>
-                </Field.Root>
+                  <Field.Root invalid={!!errors.developer}>
+                    <FieldLabel>Developer</FieldLabel>
+                    <Controller
+                      name="developer"
+                      control={control}
+                      rules={{ required: "Developer is required" }}
+                      render={({ field }) => <Input {...field} placeholder="Developer" />}
+                    />
+                    <Field.ErrorText>{errors.developer?.message}</Field.ErrorText>
+                  </Field.Root>
 
-                <Spacer height="20px" />
+                  <Spacer height="20px" />
 
-                <Field.Root invalid={!!errors.platform}>
-                  <FormLabel>System</FormLabel>
-                  <Controller
-                    name="platform"
-                    control={control}
-                    rules={{ required: "Platform is required" }}
-                    render={({ field }) => <Input {...field} placeholder="System" />}
-                  />
-                  <Field.ErrorText>{errors.platform?.message}</Field.ErrorText>
-                </Field.Root>
+                  <Field.Root invalid={!!errors.platform}>
+                    <FieldLabel>System</FieldLabel>
+                    <Controller
+                      name="platform"
+                      control={control}
+                      rules={{ required: "Platform is required" }}
+                      render={({ field }) => <Input {...field} placeholder="System" />}
+                    />
+                    <Field.ErrorText>{errors.platform?.message}</Field.ErrorText>
+                  </Field.Root>
 
-                <Spacer height="20px" />
+                  <Spacer height="20px" />
 
-                <Field.Root invalid={!!errors.rating}>
-                  <FormLabel>Rating</FormLabel>
-                  <Controller
-                    name="rating"
-                    control={control}
-                    rules={{
-                      validate: value => ratingValidator.safeParse(value).success || "Invalid rating",
-                    }}
-                    render={({ field }) => <Input {...field} placeholder="Rating" />}
-                  />
-                  <Field.ErrorText>{errors.rating?.message}</Field.ErrorText>
-                </Field.Root>
+                  <Field.Root invalid={!!errors.rating}>
+                    <FieldLabel>Rating</FieldLabel>
+                    <Controller
+                      name="rating"
+                      control={control}
+                      rules={{
+                        validate: value => ratingValidator.safeParse(value).success || "Invalid rating",
+                      }}
+                      render={({ field }) => <Input {...field} placeholder="Rating" />}
+                    />
+                    <Field.ErrorText>{errors.rating?.message}</Field.ErrorText>
+                  </Field.Root>
 
-                <Spacer height="20px" />
+                  <Spacer height="20px" />
 
-                <Field.Root invalid={!!errors.salesMillions}>
-                  <FormLabel>Sells (Millions)</FormLabel>
-                  <Controller
-                    name="salesMillions"
-                    control={control}
-                    rules={{ required: "Sells are required" }}
-                    render={({ field }) => <Input {...field} placeholder="Sells (Millions)" />}
-                  />
-                  <Field.ErrorText>{errors.salesMillions?.message}</Field.ErrorText>
-                </Field.Root>
+                  <Field.Root invalid={!!errors.salesMillions}>
+                    <FieldLabel>Sells (Millions)</FieldLabel>
+                    <Controller
+                      name="salesMillions"
+                      control={control}
+                      rules={{ required: "Sells are required" }}
+                      render={({ field }) => <Input {...field} placeholder="Sells (Millions)" />}
+                    />
+                    <Field.ErrorText>{errors.salesMillions?.message}</Field.ErrorText>
+                  </Field.Root>
 
-                <Spacer height="20px" />
+                  <Spacer height="20px" />
 
-                <Button mt={4} colorPalette="teal" isLoading={isSubmitting} type="submit">
-                  {t("games_save_button")}
-                </Button>
-              </Box>
-            </form>
-          </Container>
-        </AccordionPanel>
-      </AccordionItem>
-    </Accordion>
+                  <Button mt={4} colorPalette="teal" loading={isSubmitting} type="submit">
+                    {t("games_save_button")}
+                  </Button>
+                </Box>
+              </form>
+            </Container>
+          </AccordionItemContent>
+        </AccordionItem>
+      </AccordionRoot>
+      <Toaster />
+    </>
   );
 }
 

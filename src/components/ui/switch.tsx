@@ -19,8 +19,8 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
         <ChakraSwitch.Control>
           <ChakraSwitch.Thumb>
             {thumbLabel && (
-              <ChakraSwitch.ThumbIndicator fallback={thumbLabel?.off}>
-                {thumbLabel?.on}
+              <ChakraSwitch.ThumbIndicator fallback={thumbLabel.off}>
+                {thumbLabel.on}
               </ChakraSwitch.ThumbIndicator>
             )}
           </ChakraSwitch.Thumb>

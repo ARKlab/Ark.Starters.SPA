@@ -1,4 +1,4 @@
-import { Box, Button, Center, HStack, Spinner, Table, Tbody, Td, Th, Thead, Tr, VStack } from "@chakra-ui/react";
+import { Box, Button, Center, HStack, Spinner, Table, VStack } from "@chakra-ui/react";
 import type {
   Column,
   ColumnDef,
@@ -76,9 +76,9 @@ export function PaginatedSortableTable<T>(props: PaginatedSortableTableProps<T>)
     columns.filter(x => x.id != undefined).map(column => column.id!), //must start out with populated columnOrder so we can splice
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const resetOrder = () => {
-    setColumnOrder(columns.filter(x => x.id != undefined).map(column => column.id!));
+    //eslint-disable-next-line
+    setColumnOrder(columns.filter(x => x.id !== undefined).map(column => column.id!));
   };
 
   const { data, isLoading, isFetching } = useQueryHook({
@@ -152,12 +152,12 @@ export function PaginatedSortableTable<T>(props: PaginatedSortableTableProps<T>)
           {/*This should be only demostrative and should be outside of the component*/}
           {t("movies_resetcolumnsorder")}
         </Button>
-        <Table variant="simple" my="30px" minHeight={"500px"}>
-          <Thead>
+        <Table.Root my="30px" minHeight={"500px"}>
+          <Table.Header>
             {table.getHeaderGroups().map(headerGroup => (
-              <Tr key={headerGroup.id}>
+              <Table.Row key={headerGroup.id}>
                 {headerGroup.headers.map(header => (
-                  <Th key={header.id} verticalAlign="top">
+                  <Table.ColumnHeader key={header.id} verticalAlign="top">
                     {header.isPlaceholder ? null : (
                       <>
                         <VStack gap="2" align="start" justify="space-between">
@@ -179,37 +179,37 @@ export function PaginatedSortableTable<T>(props: PaginatedSortableTableProps<T>)
                         </VStack>
                       </>
                     )}
-                  </Th>
+                  </Table.ColumnHeader>
                 ))}
-              </Tr>
+              </Table.Row>
             ))}
-          </Thead>
-          <Tbody>
+          </Table.Header>
+          <Table.Body>
             {isLoading || isFetching ? (
-              <Tr>
-                <Td colSpan={columns.length}>
+              <Table.Row>
+                <Table.Cell colSpan={columns.length}>
                   <Center>
                     <Spinner data-role="spinner" />
                   </Center>
-                </Td>
-              </Tr>
+                </Table.Cell>
+              </Table.Row>
             ) : table.getRowModel().rows.length > 0 ? (
               table.getRowModel().rows.map(row => (
-                <Tr key={row.id}>
+                <Table.Row key={row.id}>
                   {row.getVisibleCells().map(cell => (
-                    <Td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Td>
+                    <Table.Cell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Table.Cell>
                   ))}
-                </Tr>
+                </Table.Row>
               ))
             ) : (
-              <Tr>
-                <Td colSpan={columns.length}>
+              <Table.Row>
+                <Table.Cell colSpan={columns.length}>
                   <Center>No data</Center>
-                </Td>
-              </Tr>
+                </Table.Cell>
+              </Table.Row>
             )}
-          </Tbody>
-        </Table>
+          </Table.Body>
+        </Table.Root>
         <PaginationComponent
           page={table.getState().pagination.pageIndex}
           pageSize={table.getState().pagination.pageSize}
@@ -223,7 +223,7 @@ export function PaginatedSortableTable<T>(props: PaginatedSortableTableProps<T>)
   );
 }
 
-function Filter<T>({ column, isLoading }: { column: Column<T>; table: ReactTable<T>; isLoading: boolean }) {
+function Filter<T>({ column }: { column: Column<T>; table: ReactTable<T>; isLoading: boolean }) {
   const columnFilterValue = column.getFilterValue();
   const columnFacetedUniqueValues = column.getFacetedUniqueValues();
 
@@ -241,7 +241,7 @@ function Filter<T>({ column, isLoading }: { column: Column<T>; table: ReactTable
   //You can add all the filters you need and want here, even multiple per column (min max for numbers for example)
   switch (column.columnDef.meta?.type) {
     case "date":
-      return <ChackraDateRangeInHeader onChange={column.setFilterValue} isLoading={isLoading} />;
+      return <ChackraDateRangeInHeader />;
     case "number":
     case "string":
       return (

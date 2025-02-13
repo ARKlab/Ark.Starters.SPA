@@ -1,12 +1,14 @@
 import type { InputProps } from "@chakra-ui/react";
-import { Checkbox, Field, Input } from "@chakra-ui/react";
+import { Field, FieldLabel, Input } from "@chakra-ui/react";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
+
+import { Checkbox } from "./ui/checkbox";
 
 type FieldControlProps = {
   name: string;
   children: React.ReactNode;
-} & FormControlProps;
+};
 
 export const FieldControl = (props: FieldControlProps) => {
   const { name, children, ...rest } = props;
@@ -46,7 +48,7 @@ export const InputControl = (props: InputControlProps) => {
   const { control } = useFormContext();
   return (
     <FieldControl name={name}>
-      {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
+      {label && <FieldLabel htmlFor={name}>{label}</FieldLabel>}
       <Controller
         name={name}
         control={control}
@@ -75,9 +77,9 @@ export const CheckboxControl = (props: CheckboxControlProps) => {
         render={({ field }) => (
           <Checkbox
             {...field}
-            isChecked={field.value}
+            checked={field.value}
             onChange={e => {
-              field.onChange(e.target.checked);
+              field.onChange(e.target);
             }}
           >
             {label}

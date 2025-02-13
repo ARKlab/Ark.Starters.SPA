@@ -1,8 +1,10 @@
-import { useToast, Text, Button } from "@chakra-ui/react";
+import { Text, Button } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 // eslint-disable-next-line import/no-unresolved
 import { useRegisterSW } from "virtual:pwa-register/react";
+
+import { toaster } from "./ui/toaster";
 
 export const PWABadge = () => {
   const period = 1000 * 60 * 2; //ms
@@ -26,30 +28,23 @@ export const PWABadge = () => {
   });
 
   const { t } = useTranslation("template");
-  const toast = useToast();
-
   useEffect(() => {
     if (offlineReady) {
-      toast({
-        isClosable: true,
-        status: "info",
+      toaster.create({
+        type: "info",
         title: t("pwaBadge.offlineReady.title"),
         description: t("pwaBadge.offlineReady.body"),
       });
       setOfflineReady(false);
     }
-  }, [offlineReady, setOfflineReady, t, toast]);
+  }, [offlineReady, setOfflineReady, t]);
 
   useEffect(() => {
     const id = "pwa.needRefresh";
-    if (needRefresh && !toast.isActive(id)) {
-      toast({
+    if (needRefresh) {
+      toaster.create({
         id: id,
-        isClosable: true,
-        onCloseComplete: () => {
-          setNeedRefresh(false);
-        },
-        status: "warning",
+        type: "warning",
         title: t("pwaBadge.newVersion.title"),
         description: (
           <>
@@ -60,10 +55,10 @@ export const PWABadge = () => {
           </>
         ),
         duration: 9999999,
-        position: "top",
+        placement: "top",
       });
     }
-  }, [needRefresh, setNeedRefresh, t, toast, updateServiceWorker]);
+  }, [needRefresh, setNeedRefresh, t, updateServiceWorker]);
 
   return <></>;
 };

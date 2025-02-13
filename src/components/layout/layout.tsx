@@ -6,6 +6,7 @@ import CenterSpinner from "../centerSpinner";
 import { ErrorBoundary } from "../errorBoundary";
 import { GdprConsentDialog } from "../gdprConsentDialog";
 import { ProblemDetailsModal } from "../problemDetailsModal/problemDetailsModal";
+import { Toaster } from "../ui/toaster";
 
 import Header from "./header/view";
 import { LayoutContextProvider } from "./LayoutContextProvider";
@@ -15,42 +16,44 @@ const Layout = () => {
   return (
     <LayoutContextProvider>
       <Grid
-        h={'100vh'}
-        w={'100vw'}
+        h={"100vh"}
+        w={"100vw"}
         gridTemplateAreas={`'header header'
                             'nav content'
                             `}
-        gridTemplateColumns={'auto 1fr'}
-        gridTemplateRows={'4rem 1fr auto'}
+        gridTemplateColumns={"auto 1fr"}
+        gridTemplateRows={"4rem 1fr auto"}
       >
-        <GridItem area={'header'} position={'sticky'} top={0} left={0} zIndex={'banner'}>
+        <GridItem area={"header"} position={"sticky"} top={0} left={0} zIndex={"banner"}>
           <Header />
         </GridItem>
 
-        <GridItem area={'nav'} position={'sticky'} left={0} top={'4rem'} zIndex={'banner'} overflowY={'auto'} overflowX={'hidden'}>
+        <GridItem
+          area={"nav"}
+          position={"sticky"}
+          left={0}
+          top={"4rem"}
+          zIndex={"banner"}
+          overflowY={"auto"}
+          overflowX={"hidden"}
+        >
           <SimpleSidebar />
         </GridItem>
 
-
-        <GridItem area={'content'} as={'main'} p={4} overflow={'auto'}>
+        <GridItem area={"content"} as={"main"} p={4} overflow={"auto"} bg={"page"}>
           <ErrorBoundary>
-            <Suspense
-              fallback={
-                <CenterSpinner />
-              }
-            >
+            <Suspense fallback={<CenterSpinner />}>
               <Outlet />
             </Suspense>
           </ErrorBoundary>
         </GridItem>
-
-
       </Grid>
 
       <ProblemDetailsModal />
       <GdprConsentDialog />
+      <Toaster />
     </LayoutContextProvider>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

@@ -1,4 +1,4 @@
-import { Button, Heading, HStack, Spinner, Table, Tbody, Th, Thead, Tr, useToast, VStack } from "@chakra-ui/react";
+import { Button, Heading, HStack, Spinner, Table, VStack } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import * as z from "zod";
 
 import { useAppDispatch } from "../../app/hooks";
+import { toaster } from "../../components/ui/toaster";
 import { dispatchNetworkError } from "../../lib/errorHandler/errorHandler";
 
 import { useGetConfigQuery, usePostConfigMutation } from "./configTableApi";
@@ -55,7 +56,6 @@ type ConfigTableType = z.infer<typeof configTableSchema>;
 export default function EditableTableExample() {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const toast = useToast();
 
   const [postConfig, { isLoading: postConfigIsLoading, isSuccess: postConfigSuccess }] = usePostConfigMutation();
 
@@ -64,7 +64,7 @@ export default function EditableTableExample() {
     refetchOnMountOrArgChange: true,
   });
 
-  const [throwError, setThrowError] = useState<boolean>(false);
+  const [throwError, setError] = useState<boolean>(false);
 
   const onSubmit = async (values: { table: Employee[] }) => {
     console.log("OnSubmit: ", values);
@@ -75,22 +75,21 @@ export default function EditableTableExample() {
           dispatch(dispatchNetworkError(e));
         });
     } finally {
-      setThrowError(false);
+      setError(false);
     }
   };
 
   useEffect(() => {
     if (postConfigSuccess) {
-      toast({
+      toaster.create({
         title: "Config Submitted!",
         description: "Configuration has been submitted successfully",
-        status: "success",
+        type: "success",
         duration: 5000,
-        isClosable: true,
-        position: "bottom-right",
+        placement: "bottom-end",
       });
     }
-  }, [postConfigSuccess, toast]);
+  }, [postConfigSuccess]);
 
   //#region FormConfiguration
   const {
@@ -129,15 +128,15 @@ export default function EditableTableExample() {
         >
           {t("new")}
         </Button>
-        <Button type="submit" disabled={isSubmitting || postConfigIsLoading || !isValid} isLoading={isSubmitting}>
+        <Button type="submit" disabled={isSubmitting || postConfigIsLoading || !isValid} loading={isSubmitting}>
           {t("submit")}
         </Button>
         <Button
           type="submit"
           disabled={isSubmitting || !isDirty || !errors}
-          isLoading={isSubmitting || postConfigIsLoading}
+          loading={isSubmitting || postConfigIsLoading}
           onClick={() => {
-            setThrowError(true);
+            setError(true);
           }}
         >
           {t("triggerError")}
@@ -152,16 +151,16 @@ export default function EditableTableExample() {
         </Button>
       </HStack>
 
-      <Table variant="simple">
-        <Thead>
-          <Tr>
-            <Th>{t("firstname")}</Th>
-            <Th>{t("lastname")}</Th>
-            <Th>{t("employed")}</Th>
-            <Th>{t("actions")}</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
+      <Table.Root>
+        <Table.Header>
+          <Table.Row>
+            <Table.ColumnHeader>{t("firstname")}</Table.ColumnHeader>
+            <Table.ColumnHeader>{t("lastname")}</Table.ColumnHeader>
+            <Table.ColumnHeader>{t("employed")}</Table.ColumnHeader>
+            <Table.ColumnHeader>{t("actions")}</Table.ColumnHeader>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
           {isLoading ? (
             <tr>
               <td colSpan={100} align="center" style={{ padding: "2rem" }}>
@@ -181,8 +180,8 @@ export default function EditableTableExample() {
               />
             ))
           )}
-        </Tbody>
-      </Table>
+        </Table.Body>
+      </Table.Root>
     </VStack>
   );
 }

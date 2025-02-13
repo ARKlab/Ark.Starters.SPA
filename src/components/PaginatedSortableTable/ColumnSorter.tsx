@@ -1,34 +1,31 @@
-import { TriangleDownIcon, TriangleUpIcon, UpDownIcon } from '@chakra-ui/icons'
-import { IconButton } from '@chakra-ui/react'
-import type { Column, SortDirection } from '@tanstack/react-table'
-import React from 'react'
+import { IconButton } from "@chakra-ui/react";
+import type { Column, SortDirection } from "@tanstack/react-table";
+import React from "react";
+import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
+import { RiExpandUpDownFill } from "react-icons/ri";
 
-export const ColumnSorter = <T,>({
-  column,
-}: {
-  column: Column<T>
-}) => {
+export const ColumnSorter = <T,>({ column }: { column: Column<T> }) => {
   if (!column.getCanSort()) {
-    return null
+    return null;
   }
 
-  const sorted = column.getIsSorted()
+  const sorted = column.getIsSorted();
 
   return (
     <IconButton
       aria-label="Sort"
       size="xs"
       onClick={column.getToggleSortingHandler()}
-      icon={<ColumnSorterIcon sorted={sorted} />}
-      variant={sorted ? 'light' : 'transparent'}
-      color={'primary'}
-    />
-  )
-}
+      variant={sorted ? "plain" : "ghost"}
+      color={"primary"}
+    >
+      <ColumnSorterIcon sorted={sorted} />
+    </IconButton>
+  );
+};
 
 const ColumnSorterIcon = ({ sorted }: { sorted: false | SortDirection }) => {
-  if (sorted === 'asc') return <TriangleUpIcon aria-label="sorted ascending" />
-  if (sorted === 'desc')
-    return <TriangleDownIcon aria-label="sorted descending" />
-  return <UpDownIcon aria-label="sort" />
-}
+  if (sorted === "asc") return <GoTriangleUp aria-label="sorted ascending" />;
+  if (sorted === "desc") return <GoTriangleDown aria-label="sorted descending" />;
+  return <RiExpandUpDownFill aria-label="sort" />;
+};

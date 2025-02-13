@@ -1,4 +1,4 @@
-import { Button, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
+import { Button, Input, InputAddon, Stack } from "@chakra-ui/react";
 import { useState } from "react";
 import { TiTimes } from "react-icons/ti";
 
@@ -23,15 +23,15 @@ export const ChackraInputHeaderFilterWithClear: React.FC<InputHeaderWithClearPro
   };
 
   return (
-    <InputGroup>
+    <Stack>
       <Input size={"sm"} required={true} value={inputValue} onChange={handleChange} />
       {inputValue && (
-        <InputRightElement my={"-5px"}>
+        <InputAddon my={"-5px"}>
           <Button rounded={"full"} size="xs" onClick={handleClear}>
             <TiTimes />
           </Button>
-        </InputRightElement>
+        </InputAddon>
       )}
-    </InputGroup>
+    </Stack>
   );
 };

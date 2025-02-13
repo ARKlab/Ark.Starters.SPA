@@ -1,10 +1,12 @@
+import { ChakraProvider } from "@chakra-ui/react";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
 
 import LazyLoad from "./components/lazyLoad";
-import { Provider } from "./components/ui/provider";
+import { ColorModeProvider } from "./components/ui/color-mode";
 import reportWebVitals from "./reportWebVitals";
+import { theme } from "./theme";
 
 /**
  * ReactErrorBoundary at this level renders a Chakra-less/Redux-less context as they failed.
@@ -37,9 +39,11 @@ const root = createRoot(rootElement);
 root.render(
   <StrictMode>
     <ReactErrorBoundary fallbackRender={fallbackRender}>
-      <Provider>
-        <LazyLoad loader={async () => import("./initGlobals")} />
-      </Provider>
+      <ChakraProvider value={theme}>
+        <ColorModeProvider>
+          <LazyLoad loader={async () => import("./initGlobals")} />
+        </ColorModeProvider>
+      </ChakraProvider>
     </ReactErrorBoundary>
   </StrictMode>,
 );

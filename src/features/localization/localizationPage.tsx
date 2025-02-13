@@ -1,12 +1,12 @@
-import { Box, Flex, Field, Heading, Input, Text, VStack } from "@chakra-ui/react";
+import { Box, Flex, Field, Heading, Input, Text, VStack, FieldLabel, StackSeparator } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import * as z from "zod";
 
+import { Toaster, toaster } from "../../components/ui/toaster";
 import { LocaleSwitcher } from "../../lib/i18n/localeSwitcher";
-
 /**
  * This will be used as a Resolver and Validator
  * to convert the form data into a schema
@@ -34,11 +34,10 @@ type FormSchemaType = z.infer<typeof FormSchema>;
 
 export default function LocalizationPage() {
   const { t } = useTranslation();
-  const toast = useToast();
   const [apples, setApples] = useState(0);
 
   function onSubmit() {
-    toast({
+    toaster.create({
       title: t("localization-samples.submit"),
       description: t("localization-samples.submit-message"),
     });
@@ -59,19 +58,19 @@ export default function LocalizationPage() {
 
   return (
     <Box>
-      <Heading noOfLines={1} size="xl">
+      <Heading lineClamp={1} size="xl">
         {t("localization-samples.title")}
       </Heading>
-      <VStack divider={<StackDivider borderColor="gray.200" />} gap={4} align="stretch">
+      <VStack separator={<StackSeparator borderColor="gray.200" />} gap={4} align="stretch">
         <Box my="20px">
-          <Heading noOfLines={1} size="md">
+          <Heading lineClamp={1} size="md">
             {t("localization-samples.locale-switcher")}
           </Heading>
           <LocaleSwitcher />
         </Box>
 
         <Box my="20px">
-          <Heading noOfLines={1} size="md">
+          <Heading lineClamp={1} size="md">
             {t("localization_simple_text")}
           </Heading>
           <Text>{t("hello_world")}</Text>
@@ -90,26 +89,26 @@ export default function LocalizationPage() {
           </Heading>
 
           <Field.Root invalid={!!errors.labelName} disabled={isSubmitting}>
-            <FormLabel htmlFor="labelName">{t("name")}</FormLabel>
+            <FieldLabel htmlFor="labelName">{t("name")}</FieldLabel>
             <Input id="labelName" {...register("labelName")} />
             <Field.ErrorText>{errors.labelName?.message}</Field.ErrorText>
           </Field.Root>
 
           <Field.Root invalid={!!errors.fieldName} disabled={isSubmitting}>
-            <FormLabel htmlFor="fieldName">FieldName</FormLabel>
+            <FieldLabel htmlFor="fieldName">FieldName</FieldLabel>
             <Input id="fieldName" {...register("fieldName")} />
             <Field.ErrorText>{errors.fieldName?.message}</Field.ErrorText>
           </Field.Root>
 
           <Field.Root invalid={!!errors.customErrorInline} disabled={isSubmitting}>
-            <FormLabel htmlFor="customErrorInline">{t("translation-samples.custom-error")}</FormLabel>
+            <FieldLabel htmlFor="customErrorInline">{t("translation-samples.custom-error")}</FieldLabel>
             <Input id="customErrorInline" {...register("customErrorInline")} type="number" />
             <Field.ErrorText>{errors.customErrorInline?.message}</Field.ErrorText>
           </Field.Root>
         </Flex>
 
         <Box my="20px">
-          <Heading noOfLines={1} size="md">
+          <Heading lineClamp={1} size="md">
             {t("localization_dynamic_text")}
           </Heading>
           <Text my="10px" fontSize={"sm"}>
@@ -130,6 +129,7 @@ export default function LocalizationPage() {
           <Text fontSize="2xl">{t("localization_example_1", { number: apples })}</Text>
         </Box>
       </VStack>
+      <Toaster />
     </Box>
   );
 }

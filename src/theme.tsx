@@ -11,15 +11,15 @@ export const theme = createSystem(defaultConfig, {
     semanticTokens: {
       colors: {
         header: {
-          bg: {
-            default: { value: "gray.50" },
-            _dark: { value: "cyan.900" },
-          },
+          value: { base: "{colors.blue.200}", _dark: "{colors.cyan.900}" },
+        },
+        page: {
+          value: { base: "white", _dark: "{colors.cyan.900}" },
         },
         sider: {
-          bg: {
-            default: { value: "gray.50" },
-            _dark: { value: "cyan.900" },
+          value: {
+            base: "gray.50",
+            _dark: "cyan.900",
           },
         },
       },

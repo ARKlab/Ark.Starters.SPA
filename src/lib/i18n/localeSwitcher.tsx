@@ -1,8 +1,9 @@
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { FaChevronDown } from "react-icons/fa";
 
+import { MenuItemGroup, MenuTrigger, MenuContent, MenuItem, MenuRoot } from "../../components/ui/menu";
 import { supportedLngs } from "../../config/lang";
 
 export const LocaleSwitcher = () => {
@@ -19,21 +20,22 @@ export const LocaleSwitcher = () => {
     return <></>;
   }
   return (
-    <Menu>
-      {({ open }: { open: boolean }) => (
-        <>
-          <MenuButton as={Button} rightIcon={<ChevronDownIcon />} isActive={open}>
-            {i18n.language}
-          </MenuButton>
-          <MenuList>
-            {Object.entries(supportedLngs).map(([k, v]) => (
-              <MenuItem key={k} onClick={async () => swith(k)}>
-                {v}
-              </MenuItem>
-            ))}
-          </MenuList>
-        </>
-      )}
-    </Menu>
+    <MenuRoot>
+      <MenuTrigger>
+        <Button variant={"ghost"}>
+          {i18n.language}
+          <FaChevronDown size={"sm"} />
+        </Button>
+      </MenuTrigger>
+      <MenuContent>
+        <MenuItemGroup title={"Language"}>
+          {Object.entries(supportedLngs).map(([k, v]) => (
+            <MenuItem value={k} key={k} onClick={async () => swith(k)}>
+              {v}
+            </MenuItem>
+          ))}
+        </MenuItemGroup>
+      </MenuContent>
+    </MenuRoot>
   );
 };

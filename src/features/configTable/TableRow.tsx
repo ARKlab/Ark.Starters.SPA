@@ -1,7 +1,9 @@
-import { Checkbox, Field, IconButton, Input, Td, Tr } from "@chakra-ui/react";
+import { Field, IconButton, Input, Table } from "@chakra-ui/react";
 import type { Control, FieldErrors } from "react-hook-form";
 import { Controller } from "react-hook-form";
 import { FaTrash } from "react-icons/fa";
+
+import { Checkbox } from "../../components/ui/checkbox";
 
 import type { Employee } from "./configTable";
 
@@ -16,8 +18,8 @@ export function TableRow(props: TableRowProps) {
   const { control, index, errors, onDelete } = props;
 
   return (
-    <Tr>
-      <Td>
+    <Table.Row>
+      <Table.Cell>
         <Controller
           name={`table.${index}.name`}
           control={control}
@@ -28,8 +30,8 @@ export function TableRow(props: TableRowProps) {
             </Field.Root>
           )}
         />
-      </Td>
-      <Td>
+      </Table.Cell>
+      <Table.Cell>
         <Controller
           name={`table.${index}.surName`}
           control={control}
@@ -40,18 +42,20 @@ export function TableRow(props: TableRowProps) {
             </Field.Root>
           )}
         />
-      </Td>
+      </Table.Cell>
 
-      <Td>
+      <Table.Cell>
         <Controller
           name={`table.${index}.employed`}
           control={control}
-          render={({ field }) => <Checkbox {...field} value={""} isChecked={field.value} />}
+          render={({ field }) => <Checkbox {...field} value={""} checked={field.value} />}
         />
-      </Td>
-      <Td>
-        <IconButton icon={<FaTrash />} aria-label="Delete row" onClick={onDelete} />
-      </Td>
-    </Tr>
+      </Table.Cell>
+      <Table.Cell>
+        <IconButton aria-label="Delete row" onClick={onDelete}>
+          <FaTrash />
+        </IconButton>
+      </Table.Cell>
+    </Table.Row>
   );
 }

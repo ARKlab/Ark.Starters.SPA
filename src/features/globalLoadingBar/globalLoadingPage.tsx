@@ -20,7 +20,7 @@ const GlobalLoadingBarPage = () => {
           <WrapItem>
             <Button
               onClick={async () => triggerSlow()}
-              isLoading={get.isLoading || slow.isLoading}
+              loading={get.isLoading || slow.isLoading}
               disabled={get.isLoading || slow.isLoading}
             >
               {t("globalloadingbar.slowButtonText")}
@@ -29,7 +29,7 @@ const GlobalLoadingBarPage = () => {
           <WrapItem>
             <Button
               onClick={async () => triggerFast()}
-              isLoading={get.isLoading || fast.isLoading}
+              loading={get.isLoading || fast.isLoading}
               disabled={get.isLoading || slow.isLoading}
             >
               {t("globalloadingbar.fastButtonText")}
