@@ -1,4 +1,3 @@
-/*eslint-disable */
 import { HttpResponse } from "msw";
 
 import { url } from "../../src/features/configTable/config.mocks";

@@ -41,6 +41,9 @@ export const theme = createSystem(defaultConfig, {
           selected: { value: "#104378" },
           dark: { value: "#194069" },
           darken: { value: "#282c37" },
+          errorBackGround: { value: "#ff6565" },
+          errorTextRed: { value: "#460e0e" },
+          grayText: { value: "#7F7A91" },
         },
 
         fonts: {

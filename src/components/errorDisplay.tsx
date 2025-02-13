@@ -12,7 +12,7 @@ export function ErrorDisplay({ name, message, stack }: { name?: string; message?
           flexDirection="column"
           justifyContent="center"
           alignItems="center"
-          bg={"red.500"}
+          bg={"brand.errorBackGround"}
           rounded={"50px"}
           w={"55px"}
           h={"55px"}
@@ -31,7 +31,7 @@ export function ErrorDisplay({ name, message, stack }: { name?: string; message?
           <Heading as="h2" size="xl" mt={6} mb={2}>
             {name ?? "Sorry, unknown error."}
           </Heading>
-          <Text color={"gray.500"}>{message}</Text>
+          <Text color={"brand.grayText"}>{message}</Text>
           <CodeBlock>{stack}</CodeBlock>
         </VStack>
       </Container>
