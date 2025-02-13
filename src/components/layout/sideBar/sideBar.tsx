@@ -58,9 +58,10 @@ export default function SimpleSidebar() {
 }
 
 const SidebarContent = ({ ...rest }: BoxProps) => {
+  const defaultValue = mainSections[0].label + "accordionItem" + 0;
   return (
     <Box as={"nav"} {...rest}>
-      <AccordionRoot borderStyle={"none"} borderWidth={0} collapsible multiple>
+      <AccordionRoot borderStyle={"none"} borderWidth={0} collapsible multiple defaultValue={[defaultValue]}>
         {mainSections.map((section, index) => (
           <AccordionItem
             value={section.label + "accordionItem" + index}
