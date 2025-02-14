@@ -59,7 +59,7 @@ const ChackraTagInput: React.FC<TagInputProps> = ({
           {tags.map(tag => (
             <Badge
               key={tag}
-              colorPalette="blue"
+              colorPalette="bluePalette"
               display="flex"
               alignItems="center"
               borderRadius="full"

@@ -72,13 +72,13 @@ export function PaginatedSortableTable<T>(props: PaginatedSortableTableProps<T>)
   }, [externalFilters, externalFiltersState]);
 
   const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    columns.filter(x => x.id != undefined).map(column => column.id!), //must start out with populated columnOrder so we can splice
+    columns.filter((x): x is ColumnDef<T> & { id: string } => x.id !== undefined).map(column => column.id), //must start out with populated columnOrder so we can splice
   );
 
   const resetOrder = () => {
-    //eslint-disable-next-line
-    setColumnOrder(columns.filter(x => x.id !== undefined).map(column => column.id!));
+    setColumnOrder(
+      columns.filter((x): x is ColumnDef<T> & { id: string } => x.id !== undefined).map(column => column.id),
+    );
   };
 
   const { data, isLoading, isFetching } = useQueryHook({

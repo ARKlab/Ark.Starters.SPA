@@ -55,7 +55,7 @@ function Option(props: OptionProps) {
           name={name}
           control={control}
           render={({ field }) => (
-            <Switch {...field} colorPalette="teal" size="lg" checked={field.value} readOnly={required} />
+            <Switch {...field} colorPalette="bluePalettee" size="lg" checked={field.value} readOnly={required} />
           )}
         />
       </Flex>
@@ -110,7 +110,7 @@ export const GdprConsentDialog = () => {
           </DialogBody>
           <DialogFooter gap={2}>
             <ButtonGroup gap={1}>
-              <Button colorPalette="gray" onClick={onOpen}>
+              <Button colorPalette="grayPalette" onClick={onOpen}>
                 Customize
               </Button>
               <LocaleSwitcher></LocaleSwitcher>
@@ -128,7 +128,7 @@ export const GdprConsentDialog = () => {
                 {t("reject")}
               </Button>
               <Button
-                colorPalette="red"
+                colorPalette="redPalette"
                 onClick={() => {
                   actions.acceptAll();
                   onClose();
@@ -207,7 +207,7 @@ export const GdprConsentDialog = () => {
           <DialogFooter gap={2}>
             <Box>
               <Button
-                colorPalette="gray"
+                colorPalette="grayPalette"
                 onClick={() => {
                   reset({ necessary: true });
                   onClose();
@@ -218,7 +218,7 @@ export const GdprConsentDialog = () => {
             </Box>
             <Spacer />
             <ButtonGroup gap={1}>
-              <Button colorPalette="red" type="submit">
+              <Button colorPalette="redPalette" type="submit">
                 {t("accept")}
               </Button>
             </ButtonGroup>

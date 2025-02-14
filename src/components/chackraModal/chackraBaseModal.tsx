@@ -35,7 +35,7 @@ export const ChackraUIBaseModal = (props: {
     );
   if (props.footerCloseButton) {
     footerCloseButton = (
-      <Button colorPalette="red" mr={3} onClick={props.onClose}>
+      <Button colorPalette="redPalette" mr={3} onClick={props.onClose}>
         Close
       </Button>
     );

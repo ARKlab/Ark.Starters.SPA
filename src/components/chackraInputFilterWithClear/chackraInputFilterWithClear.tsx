@@ -33,7 +33,7 @@ export const ChackraInputFilterWithClear: React.FC<InputWithClearProps> = ({
   };
 
   return (
-    <Field.Root mr="2%">
+    <Field.Root>
       <FieldLabel>
         <Text color="brand.dark" as="b">
           {title}

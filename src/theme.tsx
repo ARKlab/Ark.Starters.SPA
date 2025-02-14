@@ -22,6 +22,52 @@ export const theme = createSystem(defaultConfig, {
             _dark: "cyan.900",
           },
         },
+        bluePalette: {
+          //PaletteExample
+          solid: { value: "#2563eb" }, //The bold fill color of the color.
+          contrast: { value: "#ffffff" }, //The text color that goes on solid color.
+          fg: { value: "#a3cfff" }, //The foreground color used for text, icons, etc.
+          muted: { value: "#14204a" }, //The muted color of the color.
+          subtle: { value: "#1a3478" }, //The subtle color of the color.
+          emphasized: { value: "#173da6" }, //The emphasized version of the subtle color.
+          focusRing: { value: "#2563eb" }, //The focus ring color when interactive element is focused.
+        },
+        redPalette: {
+          solid: { value: "#ff5630" },
+          contrast: { value: "#ffffff" },
+          fg: { value: "#ff745f" },
+          muted: { value: "#b00020" },
+          subtle: { value: "#ff745f" },
+          emphasized: { value: "#ff745f" },
+          focusRing: { value: "#ff5630" },
+        },
+        tealPalette: {
+          solid: { value: "#00875a" },
+          contrast: { value: "#ffffff" },
+          fg: { value: "#00b8a9" },
+          muted: { value: "#005f54" },
+          subtle: { value: "#00b8a9" },
+          emphasized: { value: "#00b8a9" },
+          focusRing: { value: "#00875a" },
+        },
+        grayPalette: {
+          solid: { value: "#42526e" },
+          contrast: { value: "#ffffff" },
+          fg: { value: "#6b778c" },
+          muted: { value: "#1c1f2b" },
+          subtle: { value: "#6b778c" },
+          emphasized: { value: "#6b778c" },
+          focusRing: { value: "#42526e" },
+        },
+        greenPalette: {
+          solid: { value: "#16a34a" },
+          contrast: { value: "#ffffff" },
+          fg: { value: "#86efac" },
+          muted: { value: "#36B37E" },
+          subtle: { value: "#042713" },
+          emphasized: { value: "#116932" },
+          focusRing: { value: "#16a34a" },
+        },
       },
     },
     tokens: {
