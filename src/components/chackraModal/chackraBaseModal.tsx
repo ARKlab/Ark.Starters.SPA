@@ -24,7 +24,6 @@ export const ChackraUIBaseModal = (props: {
   if (props.submitButton)
     submitSegment = (
       <Button
-        colorPalette="brandPalette"
         mr={3}
         onClick={() => {
           executeSubmit();

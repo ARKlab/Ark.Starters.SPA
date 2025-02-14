@@ -81,7 +81,6 @@ const theme = createSystem(defaultConfig, {
           dark: { value: "#194069" },
           errorBackGround: { value: "#ff6565" },
           errorText: { value: "#460e0e" },
-          mutedText: { value: "#7F7A91" },
         },
 
         fonts: {

@@ -22,7 +22,7 @@ export const LocaleSwitcher = () => {
   return (
     <MenuRoot>
       <MenuTrigger>
-        <Button variant={"ghost"} colorPalette={"brandPalette"}>
+        <Button variant={"ghost"}>
           {i18n.language}
           <GoChevronDown />
         </Button>
