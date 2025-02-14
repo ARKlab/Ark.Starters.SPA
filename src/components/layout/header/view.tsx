@@ -14,6 +14,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { FiMenu } from "react-icons/fi";
 import { Else, If, Then } from "react-if";
+import { Link as ReactRouterLink } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { Login, Logout, authSelector } from "../../../lib/authentication/authenticationSlice";
@@ -90,8 +91,10 @@ const Header = () => {
         <HStack gap={2} pl={2}>
           <LinkBox>
             <Center>
-              <LinkOverlay asChild href={"/"}>
-                <Logo />
+              <LinkOverlay asChild>
+                <ReactRouterLink to="/">
+                  <Logo />
+                </ReactRouterLink>
               </LinkOverlay>
             </Center>
           </LinkBox>
