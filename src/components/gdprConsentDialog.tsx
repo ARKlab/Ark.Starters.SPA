@@ -110,9 +110,7 @@ export const GdprConsentDialog = () => {
           </DialogBody>
           <DialogFooter gap={2}>
             <ButtonGroup gap={1}>
-              <Button colorPalette="brand" onClick={onOpen}>
-                Customize
-              </Button>
+              <Button onClick={onOpen}>Customize</Button>
               <LocaleSwitcher></LocaleSwitcher>
             </ButtonGroup>
             <Spacer />
