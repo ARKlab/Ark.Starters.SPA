@@ -6,7 +6,7 @@ import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
 import LazyLoad from "./components/lazyLoad";
 import { ColorModeProvider } from "./components/ui/color-mode";
 import reportWebVitals from "./reportWebVitals";
-import { theme } from "./theme";
+import theme from "./theme";
 
 /**
  * ReactErrorBoundary at this level renders a Chakra-less/Redux-less context as they failed.
