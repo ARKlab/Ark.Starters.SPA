@@ -9,7 +9,7 @@
     "@chakra-ui/icons": "2.2.4",
     "@chakra-ui/react": "2.10.5",
     "@chakra-ui/theme-tools": "2.2.6",
-    "@hookform/resolvers": "3.10.0",
+    "@hookform/resolvers": "4.0.0",
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.0",
     "@react-icons/all-files": "4.1.0",
