@@ -33,7 +33,7 @@ const ProblemDetailsModalBody = (props: { problem: DetailsType | null }) => {
   return (
     <>
       <Flex>
-        <Badge colorPalette="redPalette">ERROR {problem?.status}</Badge>
+        <Badge colorPalette="errorPalette">ERROR {problem?.status}</Badge>
       </Flex>
       <Flex my="20px">
         <Card.Root>

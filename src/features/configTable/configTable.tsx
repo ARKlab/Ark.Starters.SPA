@@ -123,7 +123,6 @@ export default function EditableTableExample() {
               employed: false,
             });
           }}
-          colorPalette="greenPalette"
           aria-label="Add Employee"
         >
           {t("new")}

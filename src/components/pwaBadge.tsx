@@ -49,7 +49,7 @@ export const PWABadge = () => {
         description: (
           <>
             <Text>{t("pwaBadge.newVersion.body")}</Text>
-            <Button colorPalette="redPalette" size={"sm"} onClick={async () => updateServiceWorker(true)}>
+            <Button colorPalette="errorPalette" size={"sm"} onClick={async () => updateServiceWorker(true)}>
               {t("pwaBadge.newVersion.reload")}
             </Button>
           </>

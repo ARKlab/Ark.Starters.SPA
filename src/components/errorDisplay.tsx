@@ -31,7 +31,7 @@ export function ErrorDisplay({ name, message, stack }: { name?: string; message?
           <Heading as="h2" size="xl" mt={6} mb={2}>
             {name ?? "Sorry, unknown error."}
           </Heading>
-          <Text color={"brand.grayText"}>{message}</Text>
+          <Text color={"brand.mutedText"}>{message}</Text>
           <CodeBlock>{stack}</CodeBlock>
         </VStack>
       </Container>

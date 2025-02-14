@@ -22,7 +22,7 @@ export type PlainTablePropsType<T extends ZodRawShape> = {
 
 export const ChackraPlainTable = <T extends ZodRawShape>({
   data,
-  colorPalette = "grey",
+  colorPalette = "brand",
   variant = "line",
   striped = true,
   isLoading,

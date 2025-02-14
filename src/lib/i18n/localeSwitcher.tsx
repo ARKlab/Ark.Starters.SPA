@@ -1,7 +1,7 @@
 import { Button } from "@chakra-ui/react";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { FaChevronDown } from "react-icons/fa";
+import { GoChevronDown } from "react-icons/go";
 
 import { MenuItemGroup, MenuTrigger, MenuContent, MenuItem, MenuRoot } from "../../components/ui/menu";
 import { supportedLngs } from "../../config/lang";
@@ -22,9 +22,9 @@ export const LocaleSwitcher = () => {
   return (
     <MenuRoot>
       <MenuTrigger>
-        <Button variant={"ghost"}>
+        <Button variant={"ghost"} colorPalette={"brandPalette"}>
           {i18n.language}
-          <FaChevronDown size={"sm"} />
+          <GoChevronDown />
         </Button>
       </MenuTrigger>
       <MenuContent>

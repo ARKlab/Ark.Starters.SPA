@@ -1,7 +1,8 @@
 import { createSystem, defaultConfig } from "@chakra-ui/react";
 
-export const theme = createSystem(defaultConfig, {
+const theme = createSystem(defaultConfig, {
   globalCss: {
+    html: { colorPalette: "brand" },
     "html, body": {
       margin: 0,
       padding: 0,
@@ -22,7 +23,18 @@ export const theme = createSystem(defaultConfig, {
             _dark: "cyan.900",
           },
         },
-        bluePalette: {
+        brand: {
+          selected: { value: { base: "{colors.blue.200}", _dark: "{colors.cyan.900}" } },
+          solid: { value: "#2563eb" },
+          contrast: { value: "#ffffff" },
+          fg: { value: "#a3cfff" },
+          muted: { value: "#14204a" },
+          subtle: { value: "#1a3478" },
+          emphasized: { value: "#173da6" },
+          focusRing: { value: "#2563eb" },
+          sideBarItem: { value: { base: "black", _dark: "white" } },
+        },
+        primaryPalette: {
           //PaletteExample
           solid: { value: "#2563eb" }, //The bold fill color of the color.
           contrast: { value: "#ffffff" }, //The text color that goes on solid color.
@@ -32,7 +44,7 @@ export const theme = createSystem(defaultConfig, {
           emphasized: { value: "#173da6" }, //The emphasized version of the subtle color.
           focusRing: { value: "#2563eb" }, //The focus ring color when interactive element is focused.
         },
-        redPalette: {
+        errorPalette: {
           solid: { value: "#ff5630" },
           contrast: { value: "#ffffff" },
           fg: { value: "#ff745f" },
@@ -41,16 +53,7 @@ export const theme = createSystem(defaultConfig, {
           emphasized: { value: "#ff745f" },
           focusRing: { value: "#ff5630" },
         },
-        tealPalette: {
-          solid: { value: "#00875a" },
-          contrast: { value: "#ffffff" },
-          fg: { value: "#00b8a9" },
-          muted: { value: "#005f54" },
-          subtle: { value: "#00b8a9" },
-          emphasized: { value: "#00b8a9" },
-          focusRing: { value: "#00875a" },
-        },
-        grayPalette: {
+        mutedPalette: {
           solid: { value: "#42526e" },
           contrast: { value: "#ffffff" },
           fg: { value: "#6b778c" },
@@ -58,15 +61,6 @@ export const theme = createSystem(defaultConfig, {
           subtle: { value: "#6b778c" },
           emphasized: { value: "#6b778c" },
           focusRing: { value: "#42526e" },
-        },
-        greenPalette: {
-          solid: { value: "#16a34a" },
-          contrast: { value: "#ffffff" },
-          fg: { value: "#86efac" },
-          muted: { value: "#36B37E" },
-          subtle: { value: "#042713" },
-          emphasized: { value: "#116932" },
-          focusRing: { value: "#16a34a" },
         },
       },
     },
@@ -84,12 +78,10 @@ export const theme = createSystem(defaultConfig, {
         },
         brand: {
           primary: { value: "#4094d0" },
-          selected: { value: "#104378" },
           dark: { value: "#194069" },
-          darken: { value: "#282c37" },
           errorBackGround: { value: "#ff6565" },
-          errorTextRed: { value: "#460e0e" },
-          grayText: { value: "#7F7A91" },
+          errorText: { value: "#460e0e" },
+          mutedText: { value: "#7F7A91" },
         },
 
         fonts: {
@@ -100,3 +92,5 @@ export const theme = createSystem(defaultConfig, {
     },
   },
 });
+
+export default theme;
