@@ -1,4 +1,3 @@
-/*eslint-disable*/
 "use client";
 
 import { NativeSelect as Select } from "@chakra-ui/react";
@@ -27,7 +26,7 @@ interface NativeSelectItem {
 }
 
 interface NativeSelectField extends Select.FieldProps {
-  items?: Array<string | NativeSelectItem>;
+  items?: (string | NativeSelectItem)[];
 }
 
 export const NativeSelectField = React.forwardRef<HTMLSelectElement, NativeSelectField>(

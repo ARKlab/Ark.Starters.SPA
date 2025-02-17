@@ -1,4 +1,3 @@
-/*eslint-disable*/
 "use client";
 
 import type { CollectionItem } from "@chakra-ui/react";
