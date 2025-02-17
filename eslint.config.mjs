@@ -11,6 +11,10 @@ import pluginMocha from "eslint-plugin-mocha";
 import pluginChaiFriendly from "eslint-plugin-chai-friendly";
 
 export default tseslint.config(
+  {
+    ignores: ["src/components/ui/**/*.{ts,tsx}"],
+  },
+
   eslint.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
@@ -19,6 +23,15 @@ export default tseslint.config(
   pluginCypress.configs.recommended,
   pluginChaiFriendly.configs.recommendedFlat,
   jsxA11y.flatConfigs.strict,
+  {
+    rules: {
+      "mocha/no-exclusive-tests": "error",
+      "mocha/no-skipped-tests": "error",
+      "mocha/no-mocha-arrows": "off",
+      "cypress/no-unnecessary-waiting": "off",
+      "mocha/no-top-level-hooks": "off",
+    },
+  },
   {
     linterOptions: {
       reportUnusedDisableDirectives: "warn",
@@ -182,18 +195,5 @@ export default tseslint.config(
       "dev-dist/**",
       "eslint.config.mjs",
     ],
-  },
-  {
-    files: ["src/components/ui/**/*.{ts,tsx}"],
-    rules: {
-      "@typescript-eslint/unbound-method": "off",
-      "@typescript-eslint/no-empty-object-type": "off",
-      "react-refresh/only-export-components": "off",
-      "@typescript-eslint/prefer-nullish-coalescing": "off",
-      "no-redeclare": "off",
-      "@typescript-eslint/no-unnecessary-condition": "off",
-      "@typescript-eslint/no-base-to-string": "off",
-      "@typescript-eslint/restrict-template-expressions": "off",
-    },
   },
 );
