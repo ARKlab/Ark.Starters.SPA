@@ -52,7 +52,7 @@ export function TableRow(props: TableRowProps) {
         />
       </Table.Cell>
       <Table.Cell>
-        <IconButton aria-label="Delete row" onClick={onDelete} colorPalette={"errorPalette"} size="xs">
+        <IconButton aria-label="Delete row" onClick={onDelete} colorPalette={"error"} size="xs">
           <FaTrash />
         </IconButton>
       </Table.Cell>

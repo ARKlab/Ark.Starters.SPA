@@ -34,7 +34,7 @@ const theme = createSystem(defaultConfig, {
           focusRing: { value: "#2563eb" },
           sideBarItem: { value: { base: "black", _dark: "white" } },
         },
-        primaryPalette: {
+        primary: {
           //PaletteExample
           solid: { value: "#2563eb" }, //The bold fill color of the color.
           contrast: { value: "#ffffff" }, //The text color that goes on solid color.
@@ -44,7 +44,7 @@ const theme = createSystem(defaultConfig, {
           emphasized: { value: "#173da6" }, //The emphasized version of the subtle color.
           focusRing: { value: "#2563eb" }, //The focus ring color when interactive element is focused.
         },
-        errorPalette: {
+        error: {
           solid: { value: "#ff5630" },
           contrast: { value: "#ffffff" },
           fg: { value: "#ff745f" },
@@ -53,14 +53,14 @@ const theme = createSystem(defaultConfig, {
           emphasized: { value: "#ff745f" },
           focusRing: { value: "#ff5630" },
         },
-        mutedPalette: {
-          solid: { value: "#42526e" },
-          contrast: { value: "#ffffff" },
-          fg: { value: "#6b778c" },
-          muted: { value: "#1c1f2b" },
-          subtle: { value: "#6b778c" },
-          emphasized: { value: "#6b778c" },
-          focusRing: { value: "#42526e" },
+        code: {
+          solid: { value: { base: "#f5f5f5", _dark: "#2d2d2d" } },
+          contrast: { value: { base: "#d63384", _dark: "#ff79c6" } },
+          fg: { value: { base: "#007acc", _dark: "#61dafb" } },
+          muted: { value: { base: "#d69d85", _dark: "#e06c75" } },
+          subtle: { value: { base: "#795e26", _dark: "#d19a66" } },
+          emphasized: { value: { base: "#6a9955", _dark: "#98c379" } },
+          focusRing: { value: { base: "#b5cea8", _dark: "#56b6c2" } },
         },
       },
     },

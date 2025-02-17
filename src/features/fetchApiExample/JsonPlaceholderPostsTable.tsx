@@ -27,7 +27,7 @@ const JsonPlaceholderPostsTable = () => {
     <>
       <Heading>{t("fetch_example_Page")}</Heading>
       <ChackraPlainTable
-        colorPalette="primaryPalette"
+        colorPalette="primary"
         data={data}
         //isFetching here would show the spinner each poll. If you want to show spinner only on initial load, use isLoading
         isLoading={isLoading}

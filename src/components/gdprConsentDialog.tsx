@@ -55,7 +55,7 @@ function Option(props: OptionProps) {
           name={name}
           control={control}
           render={({ field }) => (
-            <Switch {...field} colorPalette="primaryPalettee" size="lg" checked={field.value} readOnly={required} />
+            <Switch {...field} colorPalette="primarye" size="lg" checked={field.value} readOnly={required} />
           )}
         />
       </Flex>
@@ -126,7 +126,7 @@ export const GdprConsentDialog = () => {
                 {t("reject")}
               </Button>
               <Button
-                colorPalette="errorPalette"
+                colorPalette="error"
                 onClick={() => {
                   actions.acceptAll();
                   onClose();
@@ -158,7 +158,7 @@ export const GdprConsentDialog = () => {
           </DialogHeader>
 
           <DialogBody>
-            <VStack separator={<StackSeparator borderColor="gray.200" />} gap={4} align="stretch">
+            <VStack separator={<StackSeparator borderColor="border.muted" />} gap={4} align="stretch">
               <Text>
                 <Trans t={t} i18nKey="customize">
                   The options provided in this section allow you to customize your consent preferences for any tracking
@@ -215,7 +215,7 @@ export const GdprConsentDialog = () => {
             </Box>
             <Spacer />
             <ButtonGroup gap={1}>
-              <Button colorPalette="errorPalette" type="submit">
+              <Button colorPalette="error" type="submit">
                 {t("accept")}
               </Button>
             </ButtonGroup>

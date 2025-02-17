@@ -1,17 +1,14 @@
-import { Box, Button, HStack, Heading, createToaster } from "@chakra-ui/react";
+import { Box, Button, HStack, Heading } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
-import type { Placement } from "../../../node_modules/@zag-js/toast/dist/index.d.ts";
+import { Toaster, toaster } from "../../components/ui/toaster";
 
 const NotificationPlaygroundView = () => {
-  const sendNotification = (title: string, message: string, duration: number, placement: Placement) => {
-    const toaster = createToaster({ placement: placement, pauseOnPageIdle: true });
-
+  const sendNotification = (title: string, message: string, duration: number) => {
     toaster.create({
       title: title,
       description: message,
       duration: duration,
-      placement: placement,
     });
   };
 
@@ -28,7 +25,7 @@ const NotificationPlaygroundView = () => {
           <HStack wrap="wrap" align="flex">
             <Button
               onClick={() => {
-                sendNotification("Very Short Norification", notificationBody, 2000, "top");
+                sendNotification("Very Short Norification", notificationBody, 2000);
               }}
             >
               {t("top")} "Very Short Norification"
@@ -37,7 +34,7 @@ const NotificationPlaygroundView = () => {
           <HStack wrap="wrap" align="flex">
             <Button
               onClick={() => {
-                sendNotification("Short Notification", notificationBody, 3000, "top-start");
+                sendNotification("Short Notification", notificationBody, 3000);
               }}
             >
               {t("topleft")} "Short Notification"
@@ -46,7 +43,7 @@ const NotificationPlaygroundView = () => {
           <HStack wrap="wrap" align="flex">
             <Button
               onClick={() => {
-                sendNotification("Medium Notification", notificationBody, 4000, "top-end");
+                sendNotification("Medium Notification", notificationBody, 4000);
               }}
             >
               {t("topright")} "Medium Notification"
@@ -55,7 +52,7 @@ const NotificationPlaygroundView = () => {
           <HStack wrap="wrap" align="flex">
             <Button
               onClick={() => {
-                sendNotification("Long Notification", notificationBody, 6000, "bottom-start");
+                sendNotification("Long Notification", notificationBody, 6000);
               }}
             >
               {t("bottomleft")} "Long Notification"
@@ -64,7 +61,7 @@ const NotificationPlaygroundView = () => {
           <HStack wrap="wrap" align="flex">
             <Button
               onClick={() => {
-                sendNotification("Very Long Notification", notificationBody, 8000, "bottom-end");
+                sendNotification("Very Long Notification", notificationBody, 8000);
               }}
             >
               {t("bottomright")} "Very Long Notification"
@@ -73,7 +70,7 @@ const NotificationPlaygroundView = () => {
           <HStack wrap="wrap" align="flex">
             <Button
               onClick={() => {
-                sendNotification("Very Long Notification", notificationBody, 8000, "bottom");
+                sendNotification("Very Long Notification", notificationBody, 8000);
               }}
             >
               {t("bottom")} "Very Long Notification"
@@ -81,6 +78,7 @@ const NotificationPlaygroundView = () => {
           </HStack>
         </HStack>
       </Box>
+      <Toaster />
     </Box>
   );
 };

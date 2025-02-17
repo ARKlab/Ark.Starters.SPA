@@ -12,7 +12,7 @@ export function ErrorDisplay({ name, message, stack }: { name?: string; message?
           flexDirection="column"
           justifyContent="center"
           alignItems="center"
-          bg={"brand.errorBackGround"}
+          bg={"bg.error"}
           rounded={"50px"}
           w={"55px"}
           h={"55px"}

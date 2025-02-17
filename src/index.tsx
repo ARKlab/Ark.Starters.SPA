@@ -20,8 +20,8 @@ function fallbackRender({ error }: { error: Error }) {
   return (
     <div role="alert">
       <p>Fatal error. Reload the Browser (F5)</p>
-      <pre style={{ color: "brand.errorText" }}>{error.message}</pre>
-      <pre style={{ color: "brand.errorText" }}>{error.stack}</pre>
+      <pre style={{ color: "fg.error" }}>{error.message}</pre>
+      <pre style={{ color: "fg.error" }}>{error.stack}</pre>
     </div>
   );
 }

@@ -27,7 +27,7 @@ export const ConfirmationDialog = (props: {
             <DialogCloseTrigger ref={closeRef}>{t("confirmationDialog.button.close")}</DialogCloseTrigger>
             <If condition={props.onConfirm !== undefined}>
               <Then>
-                <Button colorPalette="errorPalette" onClick={props.onConfirm} ml={3}>
+                <Button colorPalette="error" onClick={props.onConfirm} ml={3}>
                   {t("confirmationDialog.button.confirm")}
                 </Button>
               </Then>

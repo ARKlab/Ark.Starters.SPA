@@ -27,11 +27,11 @@ const PlaygroundView = () => {
           })}
         </Heading>
         <Box>
-          <List.Root bg={"orange.100"} w="20%">
+          <List.Root bg={"bg.error"} w="20%">
             {permissions.map(permission => {
               return (
                 <List.Item key={permission}>
-                  <List.Indicator asChild color="green.500">
+                  <List.Indicator asChild color="bg.success">
                     <MdCheckCircle />
                   </List.Indicator>
                   {permission}
@@ -74,7 +74,7 @@ const PlaygroundView = () => {
           </Heading>
           <ProtectedComponent
             permissions={requiredPermission.split(",")}
-            fallBackComponent={<Box colorPalette={"errorPalette"}>{t("permissionsPlayground_noPermission")}</Box>}
+            fallBackComponent={<Box colorPalette={"error"}>{t("permissionsPlayground_noPermission")}</Box>}
           >
             <Box>{t("permissionsPlayground_havePermission")}</Box>
           </ProtectedComponent>
