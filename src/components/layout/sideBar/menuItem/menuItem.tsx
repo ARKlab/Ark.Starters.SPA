@@ -30,7 +30,7 @@ export default function MenuItem(props: MenuItemProps) {
             alignItems="center"
             width="100%"
             height={"2.5em"}
-            color={"brand.sideBarItem"}
+            color={"brand.contrast"}
           >
             {icon && (
               <Icon

@@ -41,9 +41,7 @@ const ChackraSelectWithClear: React.FC<SelectWithClearProps> = ({
   return (
     <Field.Root mr="2%">
       <FieldLabel>
-        <Text color="brand.dark" as="b">
-          {title}
-        </Text>
+        <Text as="b">{title}</Text>
       </FieldLabel>
       <Stack>
         {isLoading ? (

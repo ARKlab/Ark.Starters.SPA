@@ -12,7 +12,7 @@ const theme = createSystem(defaultConfig, {
     semanticTokens: {
       colors: {
         header: {
-          value: { base: "{colors.blue.200}", _dark: "{colors.cyan.900}" },
+          value: { base: "{colors.blue.200}", _dark: "{colors.cyan.700}" },
         },
         page: {
           value: { base: "white", _dark: "{colors.cyan.900}" },
@@ -26,13 +26,15 @@ const theme = createSystem(defaultConfig, {
         brand: {
           selected: { value: { base: "{colors.blue.200}", _dark: "{colors.cyan.900}" } },
           solid: { value: "#2563eb" },
-          contrast: { value: "#ffffff" },
+          contrast: {
+            value: { base: "black", _dark: "white" },
+          },
+
           fg: { value: "#a3cfff" },
           muted: { value: "#14204a" },
           subtle: { value: "#1a3478" },
           emphasized: { value: "#173da6" },
           focusRing: { value: "#2563eb" },
-          sideBarItem: { value: { base: "black", _dark: "white" } },
         },
         primary: {
           //PaletteExample
