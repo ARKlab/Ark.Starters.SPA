@@ -50,6 +50,8 @@
   "localization_dynamic_text_explanation": "Questo esempio mostra come i valori dinamici possano cambiare posizione se richiesto dalla lingua selezionata.",
   "localization_example_1": "Nel cesto ci sono {{number}} mele.",
   "localization_simple_text": "Traduzione testo semplice",
+  "form_error": "Errori dei Form",
+  "form_values": "Valori del Form",
   "movies_actors": "Attori",
   "movies_applyexternalfilter": "Applica Filtro Esterno",
   "movies_director": "Regista",
