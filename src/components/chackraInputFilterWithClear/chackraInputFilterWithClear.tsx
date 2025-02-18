@@ -35,9 +35,7 @@ export const ChackraInputFilterWithClear: React.FC<InputWithClearProps> = ({
   return (
     <Field.Root>
       <FieldLabel>
-        <Text color="brand.dark" as="b">
-          {title}
-        </Text>
+        <Text as="b">{title}</Text>
       </FieldLabel>
       <Stack>
         <Input required={true} value={inputValue} onChange={handleChange} />

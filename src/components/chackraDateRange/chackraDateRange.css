@@ -1,0 +1,33 @@
+[data-scope="date-picker"] {
+  z-index: 8;
+}
+[data-scope="date-picker"][data-part="view"] {
+  width: fit-content;
+  border: 1px solid #e5e5e5;
+  background-color: var(--chakra-colors-page);
+  z-index: 11000;
+}
+[data-scope="date-picker"][data-part="view-control"] {
+  display: flex;
+  justify-content: space-between;
+}
+[data-scope="date-picker"][data-part="table-cell-trigger"][data-in-range][data-range-start] {
+  background-color: var(--chakra-colors-color-palette-solid);
+}
+[data-scope="date-picker"][data-part="table-cell-trigger"][data-in-range][data-range-end] {
+  background-color: var(--chakra-colors-color-palette-solid);
+}
+[data-scope="date-picker"][data-part="table-cell-trigger"][data-in-range][data-selected] {
+  background-color: var(--chakra-colors-color-palette-solid);
+}
+[data-scope="date-picker"][data-part="table-cell-trigger"][data-in-range] {
+  background-color: var(--chakra-colors-color-palette-subtle);
+  color: var(--chakra-colors-color-palette-contrast);
+}
+[data-scope="date-picker"][data-part="table-cell-trigger"][data-disabled] {
+  color: var(--chakra-colors-fg-subtle);
+}
+
+[data-scope="date-picker"][data-part="table-cell-trigger"] {
+  color: var(--chakra-colors-color-palette-contrast);
+}
