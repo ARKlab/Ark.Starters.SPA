@@ -1,15 +1,5 @@
-import type {
-  InputProps
-} from "@chakra-ui/react";
-import {
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  InputGroup,
-  Text,
-  InputRightElement
-} from "@chakra-ui/react";
+import type { InputProps } from "@chakra-ui/react";
+import { Button, Field, FieldLabel, Input, InputAddon, Stack, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import { TiTimes } from "react-icons/ti";
 
@@ -43,22 +33,22 @@ export const ChackraInputFilterWithClear: React.FC<InputWithClearProps> = ({
   };
 
   return (
-    <FormControl mr="2%">
-      <FormLabel>
+    <Field.Root>
+      <FieldLabel>
         <Text color="brand.dark" as="b">
           {title}
         </Text>
-      </FormLabel>
-      <InputGroup>
-        <Input isRequired={true} value={inputValue} onChange={handleChange} />
+      </FieldLabel>
+      <Stack>
+        <Input required={true} value={inputValue} onChange={handleChange} />
         {inputValue && (
-          <InputRightElement>
+          <InputAddon>
             <Button rounded={"full"} h="1rem" size="xs" onClick={handleClear}>
               <TiTimes />
             </Button>
-          </InputRightElement>
+          </InputAddon>
         )}
-      </InputGroup>
-    </FormControl>
+      </Stack>
+    </Field.Root>
   );
 };

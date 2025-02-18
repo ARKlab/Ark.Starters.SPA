@@ -1,26 +1,23 @@
-import {
-  Button,
-  FormControl,
-  FormLabel,
-  InputGroup,
-  InputRightElement,
-  Select,
-  Spinner,
-  Text,
-} from "@chakra-ui/react";
-import type { JSX } from "react"
+import { createListCollection, Field, FieldLabel, Spinner, Stack, Text } from "@chakra-ui/react";
 import { useState } from "react";
-import { MdArrowDropDown } from "react-icons/md";
-import { TiTimes } from "react-icons/ti";
 
+import { SelectContent, SelectItem, SelectRoot, SelectTrigger, SelectValueText } from "../ui/select";
+
+export interface Item {
+  label: string;
+  value: string;
+  disabled?: boolean;
+}
 interface SelectWithClearProps {
   handleInputChange: (name: string, value: string) => void;
-  options: JSX.Element[];
+  options: Item[];
   title: string;
   propName: string;
   isLoading?: boolean;
 }
 
+//THE SELECT COMPONENT USED FOR THIS SUPPORTS MULTIPLE SELECTION. THIS IMPLEMENTATION ONLY SUPPORTS SINGLE SELECTION
+// TO DO A SIMILAR COMPONENT THAT HANDLE ONLY MULTIPLE SELECTION
 const ChackraSelectWithClear: React.FC<SelectWithClearProps> = ({
   handleInputChange,
   options,
@@ -30,41 +27,51 @@ const ChackraSelectWithClear: React.FC<SelectWithClearProps> = ({
 }) => {
   const [selectValue, setSelectValue] = useState<string>();
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectValue(e.target.value);
-    handleInputChange(propName, e.target.value);
+  const handleChange = (items: Item[]) => {
+    if (items.length === 0) {
+      setSelectValue("");
+      handleInputChange(propName, "");
+      return;
+    }
+    setSelectValue(items[0].value);
+    handleInputChange(propName, items[0].value);
   };
 
-  const handleClear = () => {
-    setSelectValue("");
-    handleInputChange(propName, "");
-  };
-
+  const optionCollection = createListCollection({ items: options });
   return (
-    <FormControl mr="2%">
-      <FormLabel>
+    <Field.Root mr="2%">
+      <FieldLabel>
         <Text color="brand.dark" as="b">
           {title}
         </Text>
-      </FormLabel>
-      <InputGroup>
-        <Select
-          isRequired={true}
-          value={selectValue}
-          onChange={handleChange}
-          icon={isLoading ? <Spinner data-role='spinner' /> : <MdArrowDropDown />}
-        >
-          {options}
-        </Select>
-        {selectValue && (
-          <InputRightElement>
-            <Button rounded={"full"} h="1rem" size="xs" onClick={handleClear}>
-              <TiTimes />
-            </Button>
-          </InputRightElement>
+      </FieldLabel>
+      <Stack>
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <SelectRoot
+            collection={optionCollection}
+            size="sm"
+            width="320px"
+            onValueChange={e => {
+              handleChange(e.items);
+            }}
+            value={selectValue ? [selectValue] : undefined}
+          >
+            <SelectTrigger clearable>
+              <SelectValueText />
+            </SelectTrigger>
+            <SelectContent>
+              {optionCollection.items.map(x => (
+                <SelectItem item={x} key={x.value}>
+                  {x.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </SelectRoot>
         )}
-      </InputGroup>
-    </FormControl>
+      </Stack>
+    </Field.Root>
   );
 };
 

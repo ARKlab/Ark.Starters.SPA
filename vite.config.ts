@@ -120,7 +120,7 @@ export default defineConfig(({ mode }) => {
           manualChunks: {
             react: ["react", "react-router-dom", "react-dom", "react-error-boundary", "react-helmet-async", "react-if"],
             rtk: ["@reduxjs/toolkit", "@reduxjs/toolkit/query", "@reduxjs/toolkit/react", "react-redux"],
-            chakra: ["@chakra-ui/react", "@emotion/react", "@emotion/styled", "framer-motion"],
+            chakra: ["@chakra-ui/react", "@emotion/react"],
             i18n: ["i18next", "react-i18next", "zod-i18n-map"],
             hookForm: ["react-hook-form", "@hookform/resolvers"],
             common: ["@tanstack/react-table", "ramda", "date-fns", "react-dnd", "react-dnd-html5-backend"],

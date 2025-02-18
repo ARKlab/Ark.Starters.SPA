@@ -1,4 +1,4 @@
-import { Box, Heading, List, ListItem } from "@chakra-ui/react";
+import { Box, Heading, List } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
@@ -12,20 +12,20 @@ const DetailsPageExampleMainView = () => {
           {t("notification_example")}
         </Heading>
         {t("detailspage_clickIdToViewDetails")}
-        <List>
-          <ListItem>
+        <List.Root>
+          <List.Item>
             <Link to="1">ID# 1</Link>
-          </ListItem>
-          <ListItem>
+          </List.Item>
+          <List.Item>
             <Link to="2">ID# 2</Link>
-          </ListItem>
-          <ListItem>
+          </List.Item>
+          <List.Item>
             <Link to="3">ID# 3</Link>
-          </ListItem>
-          <ListItem>
+          </List.Item>
+          <List.Item>
             <Link to="4">ID# 4</Link>
-          </ListItem>
-        </List>
+          </List.Item>
+        </List.Root>
       </Box>
     </Box>
   );

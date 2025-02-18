@@ -1,5 +1,5 @@
-import { ArrowBackIcon } from "@chakra-ui/icons";
 import { IconButton } from "@chakra-ui/react";
+import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 type BackButtonProps = {
@@ -11,13 +11,14 @@ const BackButton = ({ mx }: BackButtonProps) => {
   return (
     <IconButton
       aria-label="Go back"
-      icon={<ArrowBackIcon />}
       onClick={() => {
         void navigate(-1);
       }}
-      isRound
+      rounded={"full"}
       mx={mx ?? "0px"}
-    />
+    >
+      <FaArrowLeft />
+    </IconButton>
   );
 };
 

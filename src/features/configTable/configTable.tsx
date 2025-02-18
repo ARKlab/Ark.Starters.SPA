@@ -1,16 +1,4 @@
-import {
-  Button,
-  Heading,
-  HStack,
-  Spinner,
-  Table,
-  Tbody,
-  Th,
-  Thead,
-  Tr,
-  useToast,
-  VStack,
-} from "@chakra-ui/react";
+import { Button, Heading, HStack, Spinner, Table, VStack } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -18,31 +6,32 @@ import { useTranslation } from "react-i18next";
 import * as z from "zod";
 
 import { useAppDispatch } from "../../app/hooks";
+import { toaster } from "../../components/ui/toaster";
 import { dispatchNetworkError } from "../../lib/errorHandler/errorHandler";
 
 import { useGetConfigQuery, usePostConfigMutation } from "./configTableApi";
 import { TableRow } from "./TableRow";
 
 export type Employee = {
-  name: string
-  surName: string
-  employed: boolean
-}
+  name: string;
+  surName: string;
+  employed: boolean;
+};
 
 const configTableSchema = z.object({
   table: z
     .array(
       z.object({
-        name: z.string()
+        name: z
+          .string()
           .min(3)
           .max(10)
-          .refine((x) => !x.endsWith("Kail"),
-            {
-              message: "Kail is not allowed",
-            }),
+          .refine(x => !x.endsWith("Kail"), {
+            message: "Kail is not allowed",
+          }),
         surName: z.string().min(1),
         employed: z.boolean(),
-      })
+      }),
     )
     .superRefine((table, ctx) => {
       const names = table.reduce<Record<string, number>>((acc, x) => {
@@ -55,11 +44,11 @@ const configTableSchema = z.object({
           ctx.addIssue({
             code: "custom",
             message: "Duplicate names are not allowed",
-            path: [idx, "name"]
+            path: [idx, "name"],
           });
         }
       });
-    })
+    }),
 });
 
 type ConfigTableType = z.infer<typeof configTableSchema>;
@@ -67,45 +56,40 @@ type ConfigTableType = z.infer<typeof configTableSchema>;
 export default function EditableTableExample() {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const toast = useToast();
 
-  const [
-    postConfig,
-    { isLoading: postConfigIsLoading, isSuccess: postConfigSuccess },
-  ] = usePostConfigMutation();
+  const [postConfig, { isLoading: postConfigIsLoading, isSuccess: postConfigSuccess }] = usePostConfigMutation();
 
   const { data, isLoading } = useGetConfigQuery(null, {
     refetchOnReconnect: true,
     refetchOnMountOrArgChange: true,
-  })
+  });
 
-  const [throwError, setThrowError] = useState<boolean>(false);
+  const [throwError, setError] = useState<boolean>(false);
 
   const onSubmit = async (values: { table: Employee[] }) => {
     console.log("OnSubmit: ", values);
     try {
       await postConfig({ employees: values.table, throwError })
-      .unwrap()
-      .catch((e) => {
-        dispatch(dispatchNetworkError(e));
-      });
-    }  finally{
-      setThrowError(false)
+        .unwrap()
+        .catch(e => {
+          dispatch(dispatchNetworkError(e));
+        });
+    } finally {
+      setError(false);
     }
   };
 
   useEffect(() => {
     if (postConfigSuccess) {
-      toast({
-        title: 'Config Submitted!',
-        description: 'Configuration has been submitted successfully',
-        status: 'success',
+      toaster.create({
+        title: "Config Submitted!",
+        description: "Configuration has been submitted successfully",
+        type: "success",
         duration: 5000,
-        isClosable: true,
-        position: 'bottom-right',
+        placement: "bottom-end",
       });
     }
-  }, [postConfigSuccess, toast])
+  }, [postConfigSuccess]);
 
   //#region FormConfiguration
   const {
@@ -117,7 +101,7 @@ export default function EditableTableExample() {
     defaultValues: { table: data ?? [] },
     values: { table: data ?? [] },
     mode: "onChange",
-    resolver: zodResolver(configTableSchema)
+    resolver: zodResolver(configTableSchema),
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -127,81 +111,76 @@ export default function EditableTableExample() {
   //#endregion
 
   return (
-    <VStack as="form" onSubmit={handleSubmit(onSubmit)} spacing={6}>
+    <VStack as="form" onSubmit={handleSubmit(onSubmit)} gap={6}>
       <Heading>{t("employee")}</Heading>
 
-      <HStack spacing={4}>
+      <HStack gap={4}>
         <Button
           onClick={() => {
             append({
-              name: '',
-              surName: '',
+              name: "",
+              surName: "",
               employed: false,
             });
-          }
-          }
-          colorScheme="green"
+          }}
           aria-label="Add Employee"
         >
           {t("new")}
         </Button>
-        <Button
-          type="submit"
-          isDisabled={isSubmitting || postConfigIsLoading || !isValid}
-          isLoading={isSubmitting}
-        >
+        <Button type="submit" disabled={isSubmitting || postConfigIsLoading || !isValid} loading={isSubmitting}>
           {t("submit")}
         </Button>
         <Button
           type="submit"
-          isDisabled={isSubmitting || !isDirty || !errors}
-          isLoading={isSubmitting || postConfigIsLoading}
+          disabled={isSubmitting || !isDirty || !errors}
+          loading={isSubmitting || postConfigIsLoading}
           onClick={() => {
-            setThrowError(true);
+            setError(true);
           }}
         >
           {t("triggerError")}
         </Button>
         <Button
-          isDisabled={!isDirty}
-          onClick={() => { reset(); }}
+          disabled={!isDirty}
+          onClick={() => {
+            reset();
+          }}
         >
           {t("reset")}
         </Button>
       </HStack>
 
-      <Table variant="simple">
-        <Thead>
-          <Tr>
-            <Th>{t("firstname")}</Th>
-            <Th>{t("lastname")}</Th>
-            <Th>{t("employed")}</Th>
-            <Th>{t("actions")}</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {
-            isLoading
-              ?
-              <tr>
-                <td colSpan={100} align="center" style={{ padding: '2rem' }}>
-                  <Spinner />
-                </td>
-              </tr>
-              :
-              fields.map((f, i) => (
-                <TableRow
-                  key={i + f.id + 'row'}
-                  control={control}
-                  index={i}
-                  errors={errors}
-                  onDelete={() => { remove(i); }}
-                />
-              ))
-          }
-        </Tbody>
-      </Table>
-    </VStack >
-  )
+      <Table.Root>
+        <Table.Header>
+          <Table.Row>
+            <Table.ColumnHeader>{t("firstname")}</Table.ColumnHeader>
+            <Table.ColumnHeader>{t("lastname")}</Table.ColumnHeader>
+            <Table.ColumnHeader>{t("employed")}</Table.ColumnHeader>
+            <Table.ColumnHeader>{t("actions")}</Table.ColumnHeader>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {isLoading ? (
+            <tr>
+              <td colSpan={100} align="center" style={{ padding: "2rem" }}>
+                <Spinner />
+              </td>
+            </tr>
+          ) : (
+            fields.map((f, i) => (
+              <TableRow
+                key={i + f.id + "row"}
+                control={control}
+                index={i}
+                errors={errors}
+                onDelete={() => {
+                  remove(i);
+                }}
+              />
+            ))
+          )}
+        </Table.Body>
+      </Table.Root>
+    </VStack>
+  );
 }
-

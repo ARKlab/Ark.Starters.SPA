@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { useSlowGetQuery, useFastMutationMutation, useSlowMutationMutation } from "./globalLoadingApi";
 
 const GlobalLoadingBarPage = () => {
-
   const { t } = useTranslation();
 
   const get = useSlowGetQuery();
@@ -16,18 +15,24 @@ const GlobalLoadingBarPage = () => {
     <Box>
       <Heading>{t("globalloadingbar.title")}</Heading>
       <Box>
-        <Text>
-          {t('globalloadingbar.description')}
-        </Text>
-        <Wrap spacing={1} my={"20px"}>
+        <Text>{t("globalloadingbar.description")}</Text>
+        <Wrap gap={1} my={"20px"}>
           <WrapItem>
-            <Button onClick={async () => triggerSlow()} isLoading={get.isLoading || slow.isLoading} isDisabled={get.isLoading || slow.isLoading}>
-              {t('globalloadingbar.slowButtonText')}
+            <Button
+              onClick={async () => triggerSlow()}
+              loading={get.isLoading || slow.isLoading}
+              disabled={get.isLoading || slow.isLoading}
+            >
+              {t("globalloadingbar.slowButtonText")}
             </Button>
           </WrapItem>
           <WrapItem>
-            <Button onClick={async () => triggerFast()} isLoading={get.isLoading || fast.isLoading} isDisabled={get.isLoading || slow.isLoading}>
-              {t('globalloadingbar.fastButtonText')}
+            <Button
+              onClick={async () => triggerFast()}
+              loading={get.isLoading || fast.isLoading}
+              disabled={get.isLoading || slow.isLoading}
+            >
+              {t("globalloadingbar.fastButtonText")}
             </Button>
           </WrapItem>
         </Wrap>

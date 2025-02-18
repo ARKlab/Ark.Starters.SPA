@@ -1,8 +1,9 @@
 import { Box, Heading } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { ChackraDateRange } from "../../components/chackraDateRange/chackraDateRange";
 import { ChackraInputFilterWithClear } from "../../components/chackraInputFilterWithClear/chackraInputFilterWithClear";
+import type { Item } from "../../components/chackraSelectWithClear/chackraSelectWithClear";
 import ChackraSelectWithClear from "../../components/chackraSelectWithClear/chackraSelectWithClear";
 import ChackraTagInput from "../../components/chackraTagInput";
 
@@ -23,15 +24,11 @@ export default function ControlComponentsView() {
   function getOptionsFromEnumValues(
     enumObject: Record<string, string>,
     parser?: (value: string) => string,
-    excludeValues?: string[], // Step 1: Add optional parameter for exclusion
-  ) {
+    excludeValues?: string[],
+  ): Item[] {
     return Object.values(enumObject)
       .filter(value => !excludeValues?.includes(value)) // Step 2: Filter out excluded values
-      .map(value => (
-        <option key={value} value={value !== "NotSet" ? value : undefined}>
-          {parser ? parser(value) : value !== "NotSet" ? value : ""}
-        </option>
-      )); // Step 3: Map to option elements
+      .map(value => ({ label: value, value: parser ? parser(value) : value !== "NotSet" ? value : "" }) as Item);
   }
   return (
     <Box>
@@ -52,14 +49,7 @@ export default function ControlComponentsView() {
           title={"Select From Enum"}
           propName={"selectFromEnum"}
         />
-        <ChackraDateRange
-          handleInputChange={(name: string, value: unknown) => {
-            handleInputChange(name, value);
-          }}
-          propForm={"dateRangeFROM"}
-          propTo={"dateRangeTO"}
-          label={"Date Range Example"}
-        />
+        <ChackraDateRange />
         <ChackraInputFilterWithClear
           value={textFilterValue}
           handleInputChange={(name: string, value: unknown) => {

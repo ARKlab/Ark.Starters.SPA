@@ -1,22 +1,11 @@
-import {
-  Accordion,
-  AccordionItem,
-  AccordionIcon,
-  Badge,
-  Box,
-  Card,
-  Code,
-  Flex,
-  AccordionButton,
-  AccordionPanel,
-  Button,
-} from "@chakra-ui/react";
+import { Badge, Box, Card, Code, Flex, Button } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import type { DetailsType } from "../../lib/errorHandler/errorHandler";
 import { clearError, selectError } from "../../lib/errorHandler/errorHandler";
 import { ChackraUIBaseModal } from "../chackraModal/chackraBaseModal";
+import { AccordionItem, AccordionItemContent, AccordionItemTrigger, AccordionRoot } from "../ui/accordion";
 
 export const ProblemDetailsModal = () => {
   const problem = useAppSelector(selectError);
@@ -27,7 +16,7 @@ export const ProblemDetailsModal = () => {
   return (
     <ChackraUIBaseModal
       size={"xl"}
-      isOpen={therIsError}
+      open={therIsError}
       onClose={() => {
         dispatch(clearError());
       }}
@@ -44,34 +33,35 @@ const ProblemDetailsModalBody = (props: { problem: DetailsType | null }) => {
   return (
     <>
       <Flex>
-        <Badge colorScheme="red">ERROR {problem?.status}</Badge>
+        <Badge colorPalette="error">ERROR {problem?.status}</Badge>
       </Flex>
       <Flex my="20px">
-        <Card>
-          <Code colorScheme="grey">{problem?.originalDetail ? problem.originalDetail : problem?.message}</Code>
-        </Card>
+        <Card.Root>
+          <Card.Body>
+            <Code colorPalette="code">{problem?.originalDetail ? problem.originalDetail : problem?.message}</Code>
+          </Card.Body>
+        </Card.Root>
       </Flex>
       <Flex my="20px">
-        <Accordion w="full">
-          <AccordionItem>
+        <AccordionRoot w="full">
+          <AccordionItem value={"AccordionButton"}>
             <h2>
-              <AccordionButton>
+              <AccordionItemTrigger>
                 <Box as="span" flex="1" textAlign="left">
                   StackTrace
                 </Box>
-                <AccordionIcon />
-              </AccordionButton>
+              </AccordionItemTrigger>
             </h2>
-            <AccordionPanel pb={4}>
+            <AccordionItemContent pb={4}>
               {problem?.exceptionDetails ? problem.exceptionDetails[0].raw : "No StackTrace found"}
-            </AccordionPanel>
+            </AccordionItemContent>
           </AccordionItem>
-        </Accordion>
+        </AccordionRoot>
       </Flex>
       <Flex justifyContent={"center"}>
         <Button
-          onClick={() => {
-            void navigate(0);
+          onClick={async () => {
+            await navigate(0);
           }}
         >
           Reload Page

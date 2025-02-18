@@ -1,25 +1,18 @@
 //#region Imports
-import type { BoxProps } from "@chakra-ui/react";
-import {
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
-  Box,
-  Drawer,
-  DrawerBody,
-  DrawerCloseButton,
-  DrawerContent,
-  DrawerHeader,
-  DrawerOverlay,
-  useBreakpointValue,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Box, useBreakpointValue, type BoxProps } from "@chakra-ui/react";
 import { useCallback, useEffect } from "react";
 
 import useRouteChanged from "../../../lib/useRouteChanged";
 import { mainSections } from "../../../siteMap/mainSections";
+import { AccordionItem, AccordionItemContent, AccordionItemTrigger, AccordionRoot } from "../../ui/accordion";
+import {
+  DrawerBackdrop,
+  DrawerBody,
+  DrawerCloseTrigger,
+  DrawerContent,
+  DrawerHeader,
+  DrawerRoot,
+} from "../../ui/drawer";
 import { useLayoutContext } from "../useLayoutContext";
 
 import MenuItem from "./menuItem/menuItem";
@@ -28,57 +21,55 @@ import type { SubsectionMenuItemType } from "./menuItem/types";
 export default function SimpleSidebar() {
   const { isMobileSiderOpen, setMobileSiderOpen } = useLayoutContext();
 
-  const onClose = useCallback(() => {
+  const closeDrawer = useCallback(() => {
     setMobileSiderOpen(false);
   }, [setMobileSiderOpen]);
 
   // close drawer after clicking / navigating
-  useRouteChanged(onClose);
+  useRouteChanged(closeDrawer);
 
   // close drawer if screen gets bigger while drawer is open
   const isDesktop = useBreakpointValue({ base: false, lg: true });
   useEffect(() => {
-    if (isDesktop) onClose();
-  }, [onClose, isDesktop]);
+    if (isDesktop) closeDrawer();
+  }, [isDesktop, closeDrawer]);
 
   return (
     <>
-      <SidebarContent
-        display={{ base: "none", lg: "block" }}
-        w={60}
-        h={"full"}
-        borderRight="1px"
-        borderRightColor={useColorModeValue("gray.200", "gray.700")}
-        bg={"sider.bg"}
-      />
-      <Drawer
-        isOpen={isMobileSiderOpen}
-        placement="right"
-        onClose={onClose}
-        returnFocusOnClose={false}
-        onOverlayClick={onClose}
+      <SidebarContent display={{ base: "none", lg: "block" }} w={60} h={"full"} borderRight="1px" bg={"sider.bg"} />
+      <DrawerRoot
+        open={isMobileSiderOpen}
+        placement="end"
+        onOpenChange={e => {
+          setMobileSiderOpen(e.open);
+        }}
       >
-        <DrawerOverlay />
+        <DrawerBackdrop />
         <DrawerContent bg={"sider.bg"}>
-          <DrawerCloseButton></DrawerCloseButton>
+          <DrawerCloseTrigger />
           <DrawerHeader></DrawerHeader>
           <DrawerBody>
             <SidebarContent key={"SideBarContent"} />
           </DrawerBody>
         </DrawerContent>
-      </Drawer>
+      </DrawerRoot>
     </>
   );
 }
 
 const SidebarContent = ({ ...rest }: BoxProps) => {
+  const defaultValue = mainSections[0].label + "accordionItem" + 0;
   return (
     <Box as={"nav"} {...rest}>
-      <Accordion defaultIndex={[0]} allowMultiple borderStyle={"none"} borderWidth={0}>
+      <AccordionRoot borderStyle={"none"} borderWidth={0} collapsible multiple defaultValue={[defaultValue]}>
         {mainSections.map((section, index) => (
-          <AccordionItem border="none" key={section.label + "accordionItem" + index}>
+          <AccordionItem
+            value={section.label + "accordionItem" + index}
+            border="none"
+            key={section.label + "accordionItem" + index}
+          >
             <h2>
-              <AccordionButton
+              <AccordionItemTrigger
                 key={section.label + "accordionButton" + index}
                 _hover={{
                   background: "brand.primary",
@@ -88,11 +79,10 @@ const SidebarContent = ({ ...rest }: BoxProps) => {
                 <Box as="span" flex="1" textAlign="left">
                   {section.label}
                 </Box>
-                <AccordionIcon />
-              </AccordionButton>
+              </AccordionItemTrigger>
             </h2>
 
-            <AccordionPanel p={0} key={section.label + "accordionPanel" + index}>
+            <AccordionItemContent p={0} key={section.label + "accordionPanel" + index}>
               {section.subsections?.map((x, indexSub) =>
                 x.isInMenu ? (
                   doINeedAnInnerAccordion(x) ? (
@@ -112,10 +102,10 @@ const SidebarContent = ({ ...rest }: BoxProps) => {
                   )
                 ) : null,
               )}
-            </AccordionPanel>
+            </AccordionItemContent>
           </AccordionItem>
         ))}
-      </Accordion>
+      </AccordionRoot>
     </Box>
   );
 };
@@ -130,9 +120,9 @@ const InnerAccordionSections = (props: { section: SubsectionMenuItemType; parent
   const section = props.section;
   if (section.subsections)
     return (
-      <Accordion
-        defaultIndex={[0]}
-        allowMultiple
+      <AccordionRoot
+        collapsible
+        multiple
         my="0px"
         borderStyle={"hidden"}
         key={section.path + "accordion"}
@@ -140,9 +130,13 @@ const InnerAccordionSections = (props: { section: SubsectionMenuItemType; parent
         mx={"1"}
         borderWidth={0}
       >
-        <AccordionItem key={section.path + "AccordionItemInner"} border="none">
+        <AccordionItem
+          value={section.path + "AccordionItemInner"}
+          key={section.path + "AccordionItemInner"}
+          border="none"
+        >
           <h2>
-            <AccordionButton
+            <AccordionItemTrigger
               key={section.path + "AccordionButtonInner"}
               _hover={{
                 background: "brand.primary",
@@ -152,10 +146,9 @@ const InnerAccordionSections = (props: { section: SubsectionMenuItemType; parent
               <Box as="span" flex="1" textAlign="left">
                 {section.label}
               </Box>
-              <AccordionIcon mx={-3} />
-            </AccordionButton>
+            </AccordionItemTrigger>
           </h2>
-          <AccordionPanel pb={4} key={section.path + "AccordionPanelInner"}>
+          <AccordionItemContent pb={4} key={section.path + "AccordionPanelInner"}>
             {section.subsections.map((x, index) =>
               x.isInMenu ? (
                 <MenuItem
@@ -167,9 +160,9 @@ const InnerAccordionSections = (props: { section: SubsectionMenuItemType; parent
                 />
               ) : null,
             )}
-          </AccordionPanel>
+          </AccordionItemContent>
         </AccordionItem>
-      </Accordion>
+      </AccordionRoot>
     );
   else return <></>;
 };
