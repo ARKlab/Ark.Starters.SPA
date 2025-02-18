@@ -50,6 +50,8 @@
   "localization_dynamic_text_explanation": "This is to show the use of parameters in translations where the phrase construction requires to change the position of the dynamic value",
   "localization_example_1": "I have {{number}} apples in the basket.",
   "localization_simple_text": "Simple Text Translation",
+  "form_error": "Form Errors",
+  "form_values": "Form Values",
   "movies_actors": "Actors",
   "movies_applyexternalfilter": "Apply External Filter",
   "movies_director": "Director",

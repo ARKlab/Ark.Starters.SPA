@@ -18,7 +18,7 @@ export function TableRow(props: TableRowProps) {
   const { control, index, errors, onDelete } = props;
 
   return (
-    <Table.Row>
+    <Table.Row verticalAlign={"top"}>
       <Table.Cell>
         <Controller
           name={`table.${index}.name`}

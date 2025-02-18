@@ -1,6 +1,7 @@
 //#region Imports
 import { Box, useBreakpointValue, type BoxProps } from "@chakra-ui/react";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
+import { useLocation } from "react-router-dom";
 
 import useRouteChanged from "../../../lib/useRouteChanged";
 import { mainSections } from "../../../siteMap/mainSections";
@@ -59,6 +60,7 @@ export default function SimpleSidebar() {
 
 const SidebarContent = ({ ...rest }: BoxProps) => {
   const defaultValue = mainSections[0].label + "accordionItem" + 0;
+
   return (
     <Box as={"nav"} {...rest}>
       <AccordionRoot borderStyle={"none"} borderWidth={0} collapsible multiple defaultValue={[defaultValue]}>
@@ -75,6 +77,7 @@ const SidebarContent = ({ ...rest }: BoxProps) => {
                   background: "brand.primary",
                   color: "brandPalette.900",
                 }}
+                paddingRight={2}
               >
                 <Box as="span" flex="1" textAlign="left">
                   {section.label}
@@ -82,26 +85,15 @@ const SidebarContent = ({ ...rest }: BoxProps) => {
               </AccordionItemTrigger>
             </h2>
 
-            <AccordionItemContent p={0} key={section.label + "accordionPanel" + index}>
-              {section.subsections?.map((x, indexSub) =>
-                x.isInMenu ? (
-                  doINeedAnInnerAccordion(x) ? (
-                    <InnerAccordionSections
-                      key={x.path + "innerAccordionSections" + indexSub}
-                      section={x}
-                      parentPath={[section.path, x.path].join("/")}
-                    />
-                  ) : (
-                    <MenuItem
-                      key={x.path + "menuItem" + indexSub}
-                      path={[section.path, x.path].join("/")}
-                      externalUrl={x.externalUrl}
-                      label={x.label}
-                      icon={x.icon}
-                    />
-                  )
-                ) : null,
-              )}
+            <AccordionItemContent p={2} key={section.label + "accordionPanel" + index}>
+              {section.subsections?.map((x, indexSub) => (
+                <InnerMenuItems
+                  key={x.path + "innerMenuItems" + indexSub}
+                  section={x}
+                  path={section.path ?? ""}
+                  index={indexSub}
+                />
+              ))}
             </AccordionItemContent>
           </AccordionItem>
         ))}
@@ -165,4 +157,38 @@ const InnerAccordionSections = (props: { section: SubsectionMenuItemType; parent
       </AccordionRoot>
     );
   else return <></>;
+};
+
+const InnerMenuItems = (props: { section: SubsectionMenuItemType; path: string; index: number }) => {
+  const { section, path, index } = props;
+  const parentPath = [path, section.path].join("/");
+  const location = useLocation();
+  const isActive = useMemo(() => location.pathname.startsWith(parentPath), [location, parentPath]);
+
+  const key = section.path + "innerAccordionSections" + index;
+  if (!section.isInMenu) return null;
+
+  if (doINeedAnInnerAccordion(section)) {
+    return <InnerAccordionSections key={key} section={section} parentPath={parentPath} />;
+  }
+
+  return (
+    <Box
+      key={section.path + "menuItemBox" + index}
+      _hover={{
+        background: isActive ? "brand.selected" : "brand.primary",
+        color: "brandPalette.900",
+      }}
+      background={isActive ? "brand.selected" : undefined}
+      p={".25em 1em"}
+    >
+      <MenuItem
+        key={section.path + "menuItem" + index}
+        path={parentPath}
+        externalUrl={section.externalUrl}
+        label={section.label}
+        icon={section.icon}
+      />
+    </Box>
+  );
 };

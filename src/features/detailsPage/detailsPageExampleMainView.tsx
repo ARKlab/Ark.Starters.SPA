@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const DetailsPageExampleMainView = () => {
   const { t } = useTranslation();
   return (
-    <Box>
+    <Box ml={"20px"}>
       <Heading>{t("playground")}</Heading>
       <Box>
         <Heading size="md" my={"20px"}>
@@ -13,7 +13,7 @@ const DetailsPageExampleMainView = () => {
         </Heading>
         {t("detailspage_clickIdToViewDetails")}
         <List.Root>
-          <List.Item>
+          <List.Item asChild>
             <Link to="1">ID# 1</Link>
           </List.Item>
           <List.Item>
