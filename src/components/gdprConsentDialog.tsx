@@ -55,7 +55,7 @@ function Option(props: OptionProps) {
           name={name}
           control={control}
           render={({ field }) => (
-            <Switch {...field} colorPalette="primarye" size="lg" checked={field.value} readOnly={required} />
+            <Switch {...field} colorPalette="primary" size="lg" checked={field.value} readOnly={required} />
           )}
         />
       </Flex>
