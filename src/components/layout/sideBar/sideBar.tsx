@@ -37,7 +37,7 @@ export default function SimpleSidebar() {
 
   return (
     <>
-      <SidebarContent display={{ base: "none", lg: "block" }} w={"13vw"} h={"full"} borderRight="1px" bg={"sider.bg"} />
+      <SidebarContent display={{ base: "none", lg: "block" }} h={"full"} borderRight="1px" bg={"sider.bg"} />
       <DrawerRoot
         open={isMobileSiderOpen}
         placement="end"
