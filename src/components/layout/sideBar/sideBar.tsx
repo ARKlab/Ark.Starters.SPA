@@ -74,8 +74,8 @@ const SidebarContent = ({ ...rest }: BoxProps) => {
               <AccordionItemTrigger
                 key={section.label + "accordionButton" + index}
                 _hover={{
-                  background: "brand.primary",
-                  color: "brandPalette.900",
+                  background: "bg.info",
+                  color: "fg",
                 }}
                 paddingRight={2}
               >
@@ -176,7 +176,7 @@ const InnerMenuItems = (props: { section: SubsectionMenuItemType; path: string; 
     <Box
       key={section.path + "menuItemBox" + index}
       _hover={{
-        background: isActive ? "brand.selected" : "brand.primary",
+        background: isActive ? "brand.selected" : "bg.info",
         color: "brandPalette.900",
       }}
       background={isActive ? "brand.selected" : undefined}

@@ -11,8 +11,11 @@ const theme = createSystem(defaultConfig, {
   theme: {
     semanticTokens: {
       colors: {
-        inputBorder: {
-          value: { base: "{colors.gray.300}", _dark: "white" }, // Bordo bianco in dark mode
+        bg: {
+          info: { value: { _light: "{colors.brand.primary}", _dark: "{colors.cyan.700}" } }, // Sfondo bianco in dark mode
+        },
+        border: {
+          value: { _light: "{colors.gray.300}", _dark: "white" }, // Bordo bianco in dark mode
         },
         header: {
           value: { base: "{colors.blue.200}", _dark: "{colors.cyan.700}" },
