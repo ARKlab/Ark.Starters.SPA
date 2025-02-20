@@ -37,7 +37,7 @@ export default function SimpleSidebar() {
 
   return (
     <>
-      <SidebarContent display={{ base: "none", lg: "block" }} w={60} h={"full"} borderRight="1px" bg={"sider.bg"} />
+      <SidebarContent display={{ base: "none", lg: "block" }} w={"13vw"} h={"full"} borderRight="1px" bg={"sider.bg"} />
       <DrawerRoot
         open={isMobileSiderOpen}
         placement="end"
@@ -85,7 +85,7 @@ const SidebarContent = ({ ...rest }: BoxProps) => {
               </AccordionItemTrigger>
             </h2>
 
-            <AccordionItemContent p={2} key={section.label + "accordionPanel" + index}>
+            <AccordionItemContent key={section.label + "accordionPanel" + index}>
               {section.subsections?.map((x, indexSub) => (
                 <InnerMenuItems
                   key={x.path + "innerMenuItems" + indexSub}
@@ -180,7 +180,7 @@ const InnerMenuItems = (props: { section: SubsectionMenuItemType; path: string; 
         color: "brandPalette.900",
       }}
       background={isActive ? "brand.selected" : undefined}
-      p={".25em 1em"}
+      p={"0 1em"}
     >
       <MenuItem
         key={section.path + "menuItem" + index}

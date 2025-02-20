@@ -8,15 +8,16 @@ type MenuItemProps = Omit<SubsectionMenuItemType, "isInMenu" | "component" | "au
 export default function MenuItem(props: MenuItemProps) {
   const { label, path = "", icon, externalUrl } = props;
   return (
-    <ChakraLink asChild>
+    <ChakraLink asChild outline={"none"}>
       <ReactRouterLink to={externalUrl ?? path} target={externalUrl ? "_blank" : undefined}>
         <WrapItem>
           <Grid
             templateColumns="auto 1fr auto"
             alignItems="center"
-            width={"max-content"}
+            width={"100%"}
             height={"2.5em"}
             color={"brand.contrast"}
+            gap={3}
           >
             {icon && (
               <Icon
@@ -28,7 +29,7 @@ export default function MenuItem(props: MenuItemProps) {
                 as={icon}
               />
             )}
-            <Text mx="5">{label}</Text>
+            <Text>{label}</Text>
             <Box width="1em" /> {/* Placeholder to ensure consistent spacing */}
           </Grid>
         </WrapItem>
