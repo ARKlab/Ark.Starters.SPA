@@ -8,7 +8,7 @@ type MenuItemProps = Omit<SubsectionMenuItemType, "isInMenu" | "component" | "au
 export default function MenuItem(props: MenuItemProps) {
   const { label, path = "", icon, externalUrl } = props;
   return (
-    <ChakraLink asChild outline={"none"}>
+    <ChakraLink asChild outline={"none"} _hover={{ textDecoration: "none" }}>
       <ReactRouterLink to={externalUrl ?? path} target={externalUrl ? "_blank" : undefined}>
         <WrapItem>
           <Grid

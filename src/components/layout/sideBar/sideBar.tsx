@@ -72,6 +72,7 @@ const SidebarContent = ({ ...rest }: BoxProps) => {
           >
             <h2>
               <AccordionItemTrigger
+                borderRadius={0}
                 key={section.label + "accordionButton" + index}
                 _hover={{
                   background: "bg.info",
@@ -130,6 +131,7 @@ const InnerAccordionSections = (props: { section: SubsectionMenuItemType; parent
         >
           <h2>
             <AccordionItemTrigger
+              borderRadius={0}
               key={section.path + "AccordionButtonInner"}
               _hover={{
                 background: "brand.primary",
@@ -144,13 +146,15 @@ const InnerAccordionSections = (props: { section: SubsectionMenuItemType; parent
           <AccordionItemContent pb={4} key={section.path + "AccordionPanelInner"}>
             {section.subsections.map((x, index) =>
               x.isInMenu ? (
-                <MenuItem
-                  key={x.path + "AccordionMenuItemInner" + index}
-                  path={[props.parentPath, x.path].join("/")}
-                  externalUrl={x.externalUrl}
-                  label={x.label}
-                  icon={x.icon}
-                />
+                <Box key={section.path + "menuItemBox" + index} p={"0 1em"}>
+                  <MenuItem
+                    key={x.path + "AccordionMenuItemInner" + index}
+                    path={[props.parentPath, x.path].join("/")}
+                    externalUrl={x.externalUrl}
+                    label={x.label}
+                    icon={x.icon}
+                  />
+                </Box>
               ) : null,
             )}
           </AccordionItemContent>
