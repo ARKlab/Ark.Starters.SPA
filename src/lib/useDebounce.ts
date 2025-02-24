@@ -20,3 +20,23 @@ export default function useDebounce<T>(value: T, delay: number): T {
   )
   return debouncedValue
 }
+
+export function useDebouncedState<T>(value: T, delay: number): [T, (value: T) => void] {
+  // State and setters for debounced value
+  const [debouncedValue, setDebouncedValue] = useState<T>(value)
+
+  let timerId: NodeJS.Timeout | string | number | undefined;
+
+  function setValue(value: T) {
+    clearTimeout(timerId);
+
+    timerId = setTimeout(() => {
+      setDebouncedValue(value)
+    }, delay);
+  }
+
+  return [
+    debouncedValue,
+    setValue
+  ]
+}

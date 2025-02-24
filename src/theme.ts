@@ -11,6 +11,12 @@ const theme = createSystem(defaultConfig, {
   theme: {
     semanticTokens: {
       colors: {
+        bg: {
+          info: { value: { _light: "{colors.brand.primary}", _dark: "{colors.cyan.700}" } }, // Sfondo bianco in dark mode
+        },
+        border: {
+          value: { _light: "{colors.gray.300}", _dark: "white" }, // Bordo bianco in dark mode
+        },
         header: {
           value: { base: "{colors.blue.200}", _dark: "{colors.cyan.700}" },
         },
@@ -25,20 +31,19 @@ const theme = createSystem(defaultConfig, {
         },
         brand: {
           selected: { value: { base: "{colors.blue.200}", _dark: "{colors.cyan.900}" } },
-          solid: { value: "#2563eb" },
+          solid: { value: "#4a76ac" },
           contrast: {
             value: { base: "black", _dark: "white" },
           },
-
-          fg: { value: "#a3cfff" },
+          fg: { value: { base: "rgb(101, 131, 162)", _dark: "#a3cfff" } },
           muted: { value: "#14204a" },
-          subtle: { value: "#1a3478" },
+          subtle: { value: { base: "rgb(165, 197, 216)", _dark: "#1a3478" } },
           emphasized: { value: "#173da6" },
           focusRing: { value: "#2563eb" },
         },
         primary: {
           //PaletteExample
-          solid: { value: "#2563eb" }, //The bold fill color of the color.
+          solid: { value: "#4a76ac" }, //The bold fill color of the color.
           contrast: { value: "#ffffff" }, //The text color that goes on solid color.
           fg: { value: "#a3cfff" }, //The foreground color used for text, icons, etc.
           muted: { value: "#14204a" }, //The muted color of the color.
@@ -66,6 +71,7 @@ const theme = createSystem(defaultConfig, {
         },
       },
     },
+
     tokens: {
       colors: {
         brandPalette: {
@@ -78,13 +84,13 @@ const theme = createSystem(defaultConfig, {
           800: { value: "#E4572E" },
           900: { value: "#ffffff" },
         },
+
         brand: {
           primary: { value: "#4094d0" },
           dark: { value: "#194069" },
           errorBackGround: { value: "#ff6565" },
           errorText: { value: "#460e0e" },
         },
-
         fonts: {
           heading: { value: `'PTSansRegular', sans-serif` },
           body: { value: `'PTSansRegular', sans-serif` },

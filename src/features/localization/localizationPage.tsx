@@ -59,65 +59,57 @@ export default function LocalizationPage() {
   return (
     <Box>
       <Heading lineClamp={1} size="xl">
-        {t("localization-samples.title")}
+        {t("localization-samples.title")} <LocaleSwitcher />
       </Heading>
-      <VStack separator={<StackSeparator borderColor="gray.200" />} gap={4} align="stretch">
-        <Box my="20px">
+      <VStack separator={<StackSeparator borderColor="border" />} gap={4} align="stretch">
+        <Box my="5px" borderRadius={"md"} p={"20px"} bg={"header"}>
           <Heading lineClamp={1} size="md">
-            {t("localization-samples.locale-switcher")}
-          </Heading>
-          <LocaleSwitcher />
-        </Box>
-
-        <Box my="20px">
-          <Heading lineClamp={1} size="md">
-            {t("localization_simple_text")}
+            <strong>{t("localization_simple_text")}</strong>
           </Heading>
           <Text>{t("hello_world")}</Text>
         </Box>
 
-        <Box>
+        <Box my="5px" borderRadius={"md"} p={"20px"} bg={"header"}>
           <Heading size={"md"}>
-            <strong>Form errors:</strong>
+            <strong>{t("form_error")}:</strong>
           </Heading>
           <pre>{JSON.stringify(errors, (k: string, v: unknown) => (k !== "ref" ? v : ""), 2)}</pre>
+
+          <Flex as={"form"} onSubmit={handleSubmit(onSubmit)} display={"flex"} gap={"1rem"} flexFlow={"column"}>
+            <Heading size={"md"}>
+              <strong>{t("form_values")}:</strong>
+            </Heading>
+
+            <Field.Root invalid={!!errors.labelName} disabled={isSubmitting}>
+              <FieldLabel htmlFor="labelName">{t("name")}</FieldLabel>
+              <Input id="labelName" {...register("labelName")} />
+              <Field.ErrorText>{errors.labelName?.message}</Field.ErrorText>
+            </Field.Root>
+
+            <Field.Root invalid={!!errors.fieldName} disabled={isSubmitting}>
+              <FieldLabel htmlFor="fieldName">FieldName</FieldLabel>
+              <Input id="fieldName" {...register("fieldName")} />
+              <Field.ErrorText>{errors.fieldName?.message}</Field.ErrorText>
+            </Field.Root>
+
+            <Field.Root invalid={!!errors.customErrorInline} disabled={isSubmitting}>
+              <FieldLabel htmlFor="customErrorInline">{t("translation-samples.custom-error")}</FieldLabel>
+              <Input id="customErrorInline" {...register("customErrorInline")} type="number" />
+              <Field.ErrorText>{errors.customErrorInline?.message}</Field.ErrorText>
+            </Field.Root>
+          </Flex>
         </Box>
-
-        <Flex as={"form"} onSubmit={handleSubmit(onSubmit)} display={"flex"} gap={"1rem"} flexFlow={"column"}>
-          <Heading size={"md"}>
-            <strong>Form values:</strong>
-          </Heading>
-
-          <Field.Root invalid={!!errors.labelName} disabled={isSubmitting}>
-            <FieldLabel htmlFor="labelName">{t("name")}</FieldLabel>
-            <Input id="labelName" {...register("labelName")} />
-            <Field.ErrorText>{errors.labelName?.message}</Field.ErrorText>
-          </Field.Root>
-
-          <Field.Root invalid={!!errors.fieldName} disabled={isSubmitting}>
-            <FieldLabel htmlFor="fieldName">FieldName</FieldLabel>
-            <Input id="fieldName" {...register("fieldName")} />
-            <Field.ErrorText>{errors.fieldName?.message}</Field.ErrorText>
-          </Field.Root>
-
-          <Field.Root invalid={!!errors.customErrorInline} disabled={isSubmitting}>
-            <FieldLabel htmlFor="customErrorInline">{t("translation-samples.custom-error")}</FieldLabel>
-            <Input id="customErrorInline" {...register("customErrorInline")} type="number" />
-            <Field.ErrorText>{errors.customErrorInline?.message}</Field.ErrorText>
-          </Field.Root>
-        </Flex>
-
-        <Box my="20px">
+        <Box my="5px" borderRadius={"md"} p={"20px"} bg={"header"}>
           <Heading lineClamp={1} size="md">
-            {t("localization_dynamic_text")}
+            <strong>{t("localization_dynamic_text")}</strong>
           </Heading>
-          <Text my="10px" fontSize={"sm"}>
+          <Text my="5px" fontSize={"sm"}>
             {t("localization_dynamic_text_explanation")}
           </Text>
           <Field.Root>
             {t("localization_control_label")}
             <Input
-              w="3em"
+              w="10em"
               id="apples"
               type="number"
               value={apples}
@@ -126,7 +118,7 @@ export default function LocalizationPage() {
               }}
             />
           </Field.Root>
-          <Text fontSize="2xl">{t("localization_example_1", { number: apples })}</Text>
+          <Text my="3">{t("localization_example_1", { number: apples })}</Text>
         </Box>
       </VStack>
       <Toaster />

@@ -1,6 +1,5 @@
 import { Box, Link as ChakraLink, Grid, Icon, Text, WrapItem } from "@chakra-ui/react";
-import { useMemo } from "react";
-import { Link as ReactRouterLink, useLocation } from "react-router-dom";
+import { Link as ReactRouterLink } from "react-router-dom";
 
 import type { SubsectionMenuItemType } from "./types";
 
@@ -8,29 +7,17 @@ type MenuItemProps = Omit<SubsectionMenuItemType, "isInMenu" | "component" | "au
 
 export default function MenuItem(props: MenuItemProps) {
   const { label, path = "", icon, externalUrl } = props;
-
-  const location = useLocation();
-
-  const isActive = useMemo(() => location.pathname.startsWith(path), [location, path]);
   return (
-    <ChakraLink _hover={{ textDecoration: "none" }} asChild>
+    <ChakraLink asChild outline={"none"} _hover={{ textDecoration: "none" }}>
       <ReactRouterLink to={externalUrl ?? path} target={externalUrl ? "_blank" : undefined}>
-        <WrapItem
-          _hover={{
-            background: "brand.primary",
-            color: "brandPalette.900",
-            transitionDuration: "0.4s",
-            transitionTimingFunction: "ease-in-out",
-          }}
-          background={isActive ? "brand.selected" : undefined}
-          p={".25em 1em"}
-        >
+        <WrapItem>
           <Grid
             templateColumns="auto 1fr auto"
             alignItems="center"
-            width="100%"
+            width={"100%"}
             height={"2.5em"}
             color={"brand.contrast"}
+            gap={3}
           >
             {icon && (
               <Icon
@@ -42,7 +29,7 @@ export default function MenuItem(props: MenuItemProps) {
                 as={icon}
               />
             )}
-            <Text mx="5">{label}</Text>
+            <Text>{label}</Text>
             <Box width="1em" /> {/* Placeholder to ensure consistent spacing */}
           </Grid>
         </WrapItem>
