@@ -79,7 +79,7 @@ const SidebarContent = ({ ...rest }: BoxProps) => {
                 }}
                 paddingRight={2}
               >
-                <Box as="span" flex="1" textAlign="left">
+                <Box as="span" flex="1" textAlign="left" padding={"0 .5em"}>
                   {section.label}
                 </Box>
               </AccordionItemTrigger>
@@ -121,6 +121,7 @@ const InnerAccordionSections = (props: { section: SubsectionMenuItemType; parent
         width={"100%"}
         mx={"1"}
         borderWidth={0}
+        padding={"0 .5em"}
       >
         <AccordionItem
           value={section.path + "AccordionItemInner"}

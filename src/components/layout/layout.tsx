@@ -36,6 +36,7 @@ const Layout = () => {
           zIndex={"banner"}
           overflowY={"auto"}
           overflowX={"hidden"}
+          minW={"255px"}
         >
           <SimpleSidebar />
         </GridItem>
