@@ -38,7 +38,7 @@ const ProblemDetailsModalBody = (props: { problem: DetailsType | null }) => {
       <Flex my="20px">
         <Card.Root>
           <Card.Body>
-            <Code colorPalette="code">{problem?.originalDetail ? problem.originalDetail : problem?.message}</Code>
+            <Code colorPalette="code">{problem?.originalDetail ?? problem?.message}</Code>
           </Card.Body>
         </Card.Root>
       </Flex>
