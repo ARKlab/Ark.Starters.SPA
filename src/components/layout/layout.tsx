@@ -45,13 +45,13 @@ const Layout = () => {
           <ErrorBoundary>
             <Suspense fallback={<CenterSpinner />}>
               <Outlet />
+              <GdprConsentDialog />
+              <ProblemDetailsModal />
             </Suspense>
           </ErrorBoundary>
         </GridItem>
       </Grid>
 
-      <ProblemDetailsModal />
-      <GdprConsentDialog />
       <Toaster />
     </LayoutContextProvider>
   );
