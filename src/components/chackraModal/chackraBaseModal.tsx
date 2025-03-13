@@ -1,7 +1,7 @@
-import { Button, DialogHeader } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import type { JSX } from "react";
 
-import { DialogBody, DialogCloseTrigger, DialogContent, DialogFooter, DialogRoot } from "../ui/dialog";
+import { DialogBody, DialogCloseTrigger, DialogContent, DialogFooter, DialogHeader, DialogRoot } from "../ui/dialog";
 
 export const ChackraUIBaseModal = (props: {
   open: boolean;
@@ -49,7 +49,7 @@ export const ChackraUIBaseModal = (props: {
       <DialogRoot open={props.open} size={props.size}>
         <DialogContent>
           <DialogHeader>{props.title}</DialogHeader>
-          <DialogCloseTrigger />
+          <DialogCloseTrigger onClick={props.onClose} />
           <DialogBody>{props.body}</DialogBody>
           <DialogFooter>
             {submitSegment}

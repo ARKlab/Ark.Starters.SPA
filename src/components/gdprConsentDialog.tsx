@@ -3,11 +3,6 @@ import {
   Box,
   Button,
   ButtonGroup,
-  DialogBody,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogRoot,
   Field,
   FieldHelperText,
   FieldLabel,
@@ -31,6 +26,7 @@ import { LocaleSwitcher } from "../lib/i18n/localeSwitcher";
 import type { ConsentState } from "../lib/useGDPRConsent";
 import { useCookieConsent } from "../lib/useGDPRConsent";
 
+import { DialogBody, DialogContent, DialogFooter, DialogHeader, DialogRoot } from "./ui/dialog";
 import { Switch } from "./ui/switch";
 
 type OptionProps = {
@@ -67,6 +63,7 @@ function Option(props: OptionProps) {
 export const GdprConsentDialog = () => {
   const [consent, actions] = useCookieConsent();
   const ref = useRef<HTMLButtonElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const { open, onOpen, onClose } = useDisclosure();
   const { t } = useTranslation("gdpr");
 
@@ -91,7 +88,7 @@ export const GdprConsentDialog = () => {
         scrollBehavior={"inside"}
         size={"xl"}
       >
-        <DialogContent>
+        <DialogContent ref={contentRef}>
           <DialogHeader fontSize="lg" fontWeight="bold">
             <Text>
               <Icon mr={1} as={FaCookieBite} />
@@ -111,7 +108,7 @@ export const GdprConsentDialog = () => {
           <DialogFooter gap={2}>
             <ButtonGroup gap={1}>
               <Button onClick={onOpen}>Customize</Button>
-              <LocaleSwitcher></LocaleSwitcher>
+              <LocaleSwitcher portalRef={contentRef}></LocaleSwitcher>
             </ButtonGroup>
             <Spacer />
             <ButtonGroup gap={1}>

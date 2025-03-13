@@ -1,9 +1,9 @@
-import { Button, NativeSelectField, Stack } from "@chakra-ui/react";
+import { Button, Stack } from "@chakra-ui/react";
 import * as R from "ramda";
 import type { JSX, MouseEventHandler } from "react";
 import { MdChevronLeft, MdChevronRight, MdFirstPage, MdLastPage } from "react-icons/md";
 
-import { NativeSelectRoot } from "../ui/native-select";
+import { NativeSelectField, NativeSelectRoot } from "../ui/native-select";
 
 type PaginationComponentTypes = {
   count: number;

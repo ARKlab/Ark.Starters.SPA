@@ -7,7 +7,7 @@ import { LiaGlobeEuropeSolid } from "react-icons/lia";
 import { MenuItemGroup, MenuTrigger, MenuContent, MenuItem, MenuRoot } from "../../components/ui/menu";
 import { supportedLngs } from "../../config/lang";
 
-export const LocaleSwitcher = () => {
+export const LocaleSwitcher = ({portalRef}:{portalRef?: React.RefObject<HTMLElement>}) => {
   const { i18n } = useTranslation();
 
   const swith = useCallback(
@@ -22,14 +22,14 @@ export const LocaleSwitcher = () => {
   }
   return (
     <MenuRoot>
-      <MenuTrigger>
+      <MenuTrigger asChild>
         <Button variant={"ghost"} size={"sm"}>
           <LiaGlobeEuropeSolid />
           {i18n.language}
           <GoChevronDown />
         </Button>
       </MenuTrigger>
-      <MenuContent>
+      <MenuContent portalRef={portalRef}>
         <MenuItemGroup title={"Language"}>
           {Object.entries(supportedLngs).map(([k, v]) => (
             <MenuItem value={k} key={k} onClick={async () => swith(k)}>

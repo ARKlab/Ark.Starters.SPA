@@ -1,10 +1,10 @@
-import { Button, DialogCloseTrigger, DialogContent } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { If, Then } from "react-if";
 
-import { DialogBody, DialogFooter, DialogHeader, DialogRoot } from "../ui/dialog";
+import { DialogBody, DialogCloseTrigger, DialogContent, DialogFooter, DialogHeader, DialogRoot } from "../ui/dialog";
 
 export const ConfirmationDialog = (props: {
   title: ReactNode;
@@ -17,7 +17,7 @@ export const ConfirmationDialog = (props: {
 
   return (
     <>
-      <DialogRoot open={props.open} initialFocusEl={() => closeRef.current}>
+      <DialogRoot open={props.open} initialFocusEl={() => closeRef.current} role="alertdialog">
         <DialogContent>
           <DialogHeader fontSize="lg" fontWeight="bold">
             {props.title}
