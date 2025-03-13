@@ -1,7 +1,7 @@
 import { Box, Button, HStack, Heading } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
-import { Toaster, toaster } from "../../components/ui/toaster";
+import { toaster } from "../../components/ui/toaster";
 
 const NotificationPlaygroundView = () => {
   const sendNotification = (title: string, message: string, duration: number) => {
@@ -78,7 +78,6 @@ const NotificationPlaygroundView = () => {
           </HStack>
         </HStack>
       </Box>
-      <Toaster />
     </Box>
   );
 };

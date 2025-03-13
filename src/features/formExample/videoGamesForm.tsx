@@ -12,7 +12,7 @@ import {
   AccordionRoot,
 } from "../../components/ui/accordion";
 import { NativeSelectField, NativeSelectRoot } from "../../components/ui/native-select";
-import { Toaster, toaster } from "../../components/ui/toaster";
+import { toaster } from "../../components/ui/toaster";
 
 import { useGetVideoGamesGenresQuery, useInsertNewVideoGameMutation } from "./videoGamesApiSlice";
 import type { VideoGame } from "./videoGamesSampleDataAndTypes";
@@ -195,7 +195,6 @@ function VideoGamesForm() {
           </AccordionItemContent>
         </AccordionItem>
       </AccordionRoot>
-      <Toaster />
     </>
   );
 }

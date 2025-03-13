@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import * as z from "zod";
 
-import { Toaster, toaster } from "../../components/ui/toaster";
+import { toaster } from "../../components/ui/toaster";
 import { LocaleSwitcher } from "../../lib/i18n/localeSwitcher";
 /**
  * This will be used as a Resolver and Validator
@@ -121,7 +121,6 @@ export default function LocalizationPage() {
           <Text my="3">{t("localization_example_1", { number: apples })}</Text>
         </Box>
       </VStack>
-      <Toaster />
     </Box>
   );
 }

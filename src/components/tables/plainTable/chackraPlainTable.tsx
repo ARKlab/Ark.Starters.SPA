@@ -7,7 +7,7 @@ import { useAppDispatch } from "../../../app/hooks";
 import type { DetailsType } from "../../../lib/errorHandler/errorHandler";
 import { setError } from "../../../lib/errorHandler/errorHandler";
 import { isErrorWithMessage, isFetchBaseQueryError } from "../../../lib/errorHandler/errorHandlingLib";
-import { Toaster, toaster } from "../../ui/toaster";
+import { toaster } from "../../ui/toaster";
 
 export type PlainTablePropsType<T extends ZodRawShape> = {
   data: z.infer<ZodObject<T>>[] | undefined;
@@ -87,7 +87,6 @@ export const ChackraPlainTable = <T extends ZodRawShape>({
           </Table.Body>
         )}
       </Table.Root>
-      <Toaster />
     </>
   );
 };
