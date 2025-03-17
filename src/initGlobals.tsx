@@ -7,7 +7,7 @@ import { InitApp } from "./initApp";
 import AuthenticationProviderContext from "./lib/authentication/components/AuthenticationProviderContext";
 import { setError } from "./lib/errorHandler/errorHandler";
 
-const store = initStore(authProvider)
+const store = initStore({ authProvider })
 
 if (window.Cypress) {
   window.rtkq = {
@@ -26,13 +26,13 @@ window.addEventListener("unhandledrejection", (e: PromiseRejectionEvent) => {
       title: "unhandled promise rejection",
       message: e.reason?.message,
       status: e.reason?.code,
-      isValidationError: false
+      stack: e.reason?.stack
     },
   }))
 });
 
 // this component, to be loaded as LazyLoad, is required to move the import of the authProvider
-// which depends on 'window.customSettings' so that in case the customSettings are wrong
+// which depends on 'window.appSettings' so that in case the appSettings are wrong
 // A BLANK PAGE is avoided as exceptions from here are captured in the ErrorBoundary of the Index
 const InitGlobals = () => {
   return (

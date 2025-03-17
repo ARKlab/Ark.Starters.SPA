@@ -141,10 +141,10 @@ data: {
 ### Environment (env)
 
 The application initializes itself by reading environmental variables and injecting them into the Redux store (env). Additionally, the Authentication provider constructor receives _env_ as a parameter, containing all the necessary configurations.
-_env_ is an object of type **CustomSettingsType** defined as it follows:
+_env_ is an object of type **AppSettingsType** defined as it follows:
 
 ```typescript
-type CustomSettingsType = {
+type AppSettingsType = {
   clientID: string;
   domain: string;
   scopes: string;
@@ -189,7 +189,7 @@ AUTH0_RedirectUri = "yourRedirectUri";
 SERVICE_URL = "yourApi.com";
 ```
 
-##### connectionStrings.js
+##### connectionStrings.cjs
 
 ```javascript
 var http = require("http");
@@ -201,7 +201,7 @@ http
   .createServer(function (req, res) {
     res.writeHead(200, { "Content-Type": "text/javascript" });
     res.end(`
-  window.customSettings = {
+  window.appSettings = {
   clientID: "${process.env["AUTH0_ClientId"]}",
   domain: "${process.env["AUTH0_Domain"]}",
   audience: "${process.env["AUTH0_Audience"]}",
@@ -240,7 +240,7 @@ http
   .createServer(function (req, res) {
     res.writeHead(200, { "Content-Type": "text/javascript" });
     res.end(`
-  window.customSettings = {
+  window.appSettings = {
   clientID: "${process.env["MSAL_ClientId"]}",
   domain: "${process.env["MSAL_Domain"]}",
   scopes: "${process.env["MSAL_Scopes"]}",

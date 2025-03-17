@@ -1,8 +1,6 @@
 import type { Auth0ClientOptions } from "@auth0/auth0-spa-js";
 import { Auth0Client } from "@auth0/auth0-spa-js";
-import { z } from "zod";
 
-import type { CustomSettingsType } from "../../../config/global";
 import { router } from "../../router";
 import type { UserAccountInfo } from "../authTypes";
 import { LoginStatus } from "../authTypes";
@@ -10,20 +8,30 @@ import { LoginStatus } from "../authTypes";
 // this is kind of violation but we need to use react-router-dom navigation to unsure redirects after MSAL redirect works
 import type { AuthProvider } from "./authProviderInterface";
 
-const claimsUrl = "http://ark-energy.eu/claims/";
 const CODE_RE = /[?&]code=[^&]+/;
 const STATE_RE = /[?&]state=[^&]+/;
 const ERROR_RE = /[?&]error=[^&]+/;
 
-export const hasAuthParams = (searchParams = window.location.search): boolean =>
-  (CODE_RE.test(searchParams) || ERROR_RE.test(searchParams)) && STATE_RE.test(searchParams);
+export const hasAuthParams = (): boolean => {
+  const searchParams = window.location.search;
+  return (CODE_RE.test(searchParams) || ERROR_RE.test(searchParams)) && STATE_RE.test(searchParams);
+};
 
 export type Auth0Config = {
   auth0Config: Auth0ClientOptions;
+  permissionsClaims?: string[];
 };
 
 type AppState = {
   targetUrl?: string;
+};
+
+export type Auth0AuthProviderConfig = {
+  domain: string;
+  clientID: string;
+  redirectUri: string;
+  audience: string;
+  permissionsClaims?: string[];
 };
 
 export class Auth0AuthProvider implements AuthProvider {
@@ -34,20 +42,23 @@ export class Auth0AuthProvider implements AuthProvider {
   private config: Auth0Config;
   private userPermissions: string[] = [];
 
-  constructor(env: CustomSettingsType) {
-    const config: Auth0ClientOptions = {
-      domain: env.domain,
-      clientId: env.clientID,
+  constructor(config: Auth0AuthProviderConfig) {
+    const auth0config: Auth0ClientOptions = {
+      domain: config.domain,
+      clientId: config.clientID,
       cacheLocation: "localstorage",
       useCookiesForTransactions: true,
       useRefreshTokens: true,
       authorizationParams: {
-        redirect_uri: env.redirectUri,
-        audience: env.audience,
+        redirect_uri: config.redirectUri,
+        audience: config.audience,
         scope: "openid profile email",
       },
     };
-    this.config = { auth0Config: config };
+    this.config = {
+      auth0Config: auth0config,
+      permissionsClaims: config.permissionsClaims,
+    };
     this.auth0Client = new Auth0Client(this.config.auth0Config);
   }
   private notifySubscribers() {
@@ -61,9 +72,13 @@ export class Auth0AuthProvider implements AuthProvider {
     return permissions.includes(permission);
   }
   public async init() {
-    await this.isAuthenticated();
     if (hasAuthParams()) {
       await this.handleLoginRedirect();
+    } else {
+      await this.auth0Client.checkSession();
+    }
+    if (await this.auth0Client.isAuthenticated()) {
+      await this.getUserDetail();
     }
   }
 
@@ -98,7 +113,6 @@ export class Auth0AuthProvider implements AuthProvider {
 
     try {
       const result = await this.auth0Client.handleRedirectCallback<AppState>();
-      this.setLoginStatus(LoginStatus.Logged);
       target = result.appState?.targetUrl ?? "/";
       const relativePath = target.replace(window.location.origin, "");
       await router.navigate(relativePath, { replace: true });
@@ -111,9 +125,23 @@ export class Auth0AuthProvider implements AuthProvider {
   public async getUserDetail(): Promise<UserAccountInfo | null> {
     const currentAccounts = await this.auth0Client.getUser();
     const claims = await this.auth0Client.getIdTokenClaims();
-    const groups = claims?.[claimsUrl + "groups"];
-    const permissions = claims?.[claimsUrl + "permissions"];
-    this.userPermissions = permissions || [];
+
+    const permissions = [] as string[];
+    if (this.config.permissionsClaims) {
+      for (const claim of this.config.permissionsClaims) {
+        const claimValue = claims?.[claim];
+        if (claimValue) {
+          if (Array.isArray(claimValue)) {
+            const p = claimValue.map(p => new String(p).valueOf());
+            permissions.push(...p);
+          } else if (typeof claimValue === "string") {
+            permissions.push(...claimValue.split(" "));
+          }
+        }
+      }
+    }
+
+    this.userPermissions = permissions;
 
     if (!currentAccounts) {
       return null;
@@ -122,29 +150,13 @@ export class Auth0AuthProvider implements AuthProvider {
       return {
         username: currentAccounts.name ?? "",
         permissions: permissions,
-        groups: groups,
       } as UserAccountInfo;
     }
-  }
-
-  private async getUserPermissions(): Promise<string[]> {
-    const claims = await this.auth0Client.getIdTokenClaims();
-    const k = claimsUrl + "permissions";
-    const mappedClaims = z.record(z.enum([k]), z.array(z.string()).optional()).parse(claims);
-
-    return mappedClaims[k] ?? [];
   }
 
   //PRIVATE METHODS
   private setLoginStatus(status: LoginStatus) {
     this.loginStatus = status;
     this.notifySubscribers();
-  }
-  private async isAuthenticated(): Promise<boolean> {
-    try {
-      return await this.auth0Client.isAuthenticated();
-    } catch {
-      return false;
-    }
   }
 }

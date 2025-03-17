@@ -17,6 +17,7 @@
     "cross-fetch": "4.1.0",
     "date-fns": "4.1.0",
     "dayzed": "3.2.3",
+    "error-stack-parser": "^2.1.4",
     "i18next": "24.2.2",
     "js-cookie": "3.0.5",
     "lodash-es": "4.17.21",
@@ -35,6 +36,7 @@
     "react-if": "4.1.5",
     "react-redux": "9.2.0",
     "react-router-dom": "7.3.0",
+    "stacktrace-js": "^2.0.2",
     "usehooks-ts": "3.1.1",
     "zod": "3.24.2",
     "zod-i18n-map": "2.27.0"

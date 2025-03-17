@@ -74,12 +74,22 @@ export default tseslint.config(
             {
               name: "@reduxjs/toolkit",
               importNames: ["createSlice"],
-              message: "Please use thunk-able versions from `src/app/createAppSlice.ts` instead.",
+              message: "Please use pre-typed versions from from `src/app/createAppSlice.ts` instead.",
             },
             {
               name: "@reduxjs/toolkit",
               importNames: ["createAsyncThunk"],
-              message: "Please use thunk-able versions from `src/app/createAppAsyncThunk.ts` instead.",
+              message: "Please use pre-typed versions from `src/app/createAppAsyncThunk.ts` instead.",
+            },
+            {
+              name: "@reduxjs/toolkit/query",
+              importNames: ["fetchBaseQuery"],
+              message: "Please use appFetchQuery from `src/app/appFetchQuery.ts` instead.",
+            },
+            {
+              name: "@reduxjs/toolkit/query/react",
+              importNames: ["fetchBaseQuery"],
+              message: "Please use appFetchQuery from `src/app/appFetchQuery.ts` instead.",
             },
           ],
         },

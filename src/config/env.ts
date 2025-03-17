@@ -1,1 +1,1 @@
-export const env = window.customSettings;
+export const appSettings = window.appSettings;

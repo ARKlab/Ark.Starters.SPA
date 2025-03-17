@@ -1,11 +1,15 @@
-import { Badge, Box, Card, Code, Flex, Button } from "@chakra-ui/react";
+import { Box, Flex, Button, Stack } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import type { DetailsType } from "../../lib/errorHandler/errorHandler";
+import type { ErrorDetailsType } from "../../lib/errorHandler/errorHandler";
 import { clearError, selectError } from "../../lib/errorHandler/errorHandler";
 import { ChackraUIBaseModal } from "../chackraModal/chackraBaseModal";
+import CodeBlock from "../codeBlock";
+import { ParsedStackTrace } from "../errorDisplay";
 import { AccordionItem, AccordionItemContent, AccordionItemTrigger, AccordionRoot } from "../ui/accordion";
+
 
 export const ProblemDetailsModal = () => {
   const problem = useAppSelector(selectError);
@@ -27,46 +31,60 @@ export const ProblemDetailsModal = () => {
   );
 };
 
-const ProblemDetailsModalBody = (props: { problem: DetailsType | null }) => {
+
+const ProblemDetailsModalBody = (props: { problem: ErrorDetailsType | null }) => {
   const problem = props.problem;
   const navigate = useNavigate();
+  const { t } = useTranslation("template");
   return (
     <>
-      <Flex>
-        <Badge colorPalette="error">ERROR {problem?.status}</Badge>
-      </Flex>
-      <Flex my="20px">
-        <Card.Root>
-          <Card.Body>
-            <Code colorPalette="code">{problem?.originalDetail ?? problem?.message}</Code>
-          </Card.Body>
-        </Card.Root>
-      </Flex>
-      <Flex my="20px">
-        <AccordionRoot w="full">
-          <AccordionItem value={"AccordionButton"}>
-            <h2>
-              <AccordionItemTrigger>
-                <Box as="span" flex="1" textAlign="left">
-                  StackTrace
-                </Box>
-              </AccordionItemTrigger>
-            </h2>
-            <AccordionItemContent pb={4}>
-              {problem?.exceptionDetails ? problem.exceptionDetails[0].raw : "No StackTrace found"}
-            </AccordionItemContent>
-          </AccordionItem>
-        </AccordionRoot>
-      </Flex>
-      <Flex justifyContent={"center"}>
-        <Button
-          onClick={async () => {
-            await navigate(0);
-          }}
-        >
-          Reload Page
-        </Button>
-      </Flex>
+      <Stack>
+
+        <CodeBlock variant={"plain"}>{problem?.message}</CodeBlock>
+
+        {problem?.details ? (
+          <AccordionRoot w="full">
+            <AccordionItem value={"AccordionButton"}>
+              <h2>
+                <AccordionItemTrigger>
+                  <Box as="span" flex="1" textAlign="left">
+                    {t('errorHandler.details')}
+                  </Box>
+                </AccordionItemTrigger>
+              </h2>
+              <AccordionItemContent pb={4}>
+                <CodeBlock>{problem.details}</CodeBlock>
+              </AccordionItemContent>
+            </AccordionItem>
+          </AccordionRoot>
+        ) : null}
+
+        {problem?.stack ? (
+          <AccordionRoot w="full">
+            <AccordionItem value={"AccordionButton"}>
+              <h2>
+                <AccordionItemTrigger>
+                  <Box as="span" flex="1" textAlign="left">
+                    StackTrace
+                  </Box>
+                </AccordionItemTrigger>
+              </h2>
+              <AccordionItemContent pb={4}>
+                <ParsedStackTrace stack={problem.stack} />
+              </AccordionItemContent>
+            </AccordionItem>
+          </AccordionRoot>
+        ) : null}
+        <Flex justifyContent={"right"}>
+          <Button colorPalette={"error"}
+            onClick={async () => {
+              await navigate(0);
+            }}
+          >
+            {t("errorHandler.reload")}
+          </Button>
+        </Flex>
+      </Stack>
     </>
   );
 };

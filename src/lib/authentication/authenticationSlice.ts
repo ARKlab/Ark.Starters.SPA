@@ -54,16 +54,7 @@ export const authSlice = createAppSlice({
     error: null as SerializedError | null,
     data: null as AuthStoreType | null,
   },
-  reducers: c => ({
-    tokenReceived: c.reducer<string | null>((state, action) => {
-      if (state.data) {
-        state.data.token = action.payload;
-      }
-    }),
-    loggedOut: () => {
-      /* do nothing */
-    },
-  }),
+  reducers: _ => ({}),
   extraReducers: builder => {
     builder
       .addCase(DetectLoggedInUser.pending, state => {
@@ -173,13 +164,11 @@ export const authSlice = createAppSlice({
       });
   },
   selectors: {
-    tokenSelector: state => state.data?.token,
     userSelector: state => state.data?.userInfo,
   },
 });
-export const { tokenReceived, loggedOut } = authSlice.actions;
 
-export const { tokenSelector, userSelector } = authSlice.selectors;
+export const { userSelector } = authSlice.selectors;
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
 export const authSelector = authSlice.selectSlice;

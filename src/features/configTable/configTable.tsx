@@ -1,13 +1,11 @@
 import { Button, Heading, HStack, Spinner, Table, VStack } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import * as z from "zod";
 
-import { useAppDispatch } from "../../app/hooks";
 import { toaster } from "../../components/ui/toaster";
-import { dispatchNetworkError } from "../../lib/errorHandler/errorHandler";
 
 import { useGetConfigQuery, usePostConfigMutation } from "./configTableApi";
 import { TableRow } from "./TableRow";
@@ -54,10 +52,9 @@ const configTableSchema = z.object({
 type ConfigTableType = z.infer<typeof configTableSchema>;
 
 export default function EditableTableExample() {
-  const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
-  const [postConfig, { isLoading: postConfigIsLoading, isSuccess: postConfigSuccess }] = usePostConfigMutation();
+  const [postConfig, { isLoading: postConfigIsLoading }] = usePostConfigMutation();
 
   const { data, isLoading } = useGetConfigQuery(null, {
     refetchOnReconnect: true,
@@ -67,20 +64,10 @@ export default function EditableTableExample() {
   const [throwError, setError] = useState<boolean>(false);
 
   const onSubmit = async (values: { table: Employee[] }) => {
-    console.log("OnSubmit: ", values);
-    try {
-      await postConfig({ employees: values.table, throwError })
-        .unwrap()
-        .catch(e => {
-          dispatch(dispatchNetworkError(e));
-        });
-    } finally {
-      setError(false);
-    }
-  };
 
-  useEffect(() => {
-    if (postConfigSuccess) {
+    const r = await postConfig({ employees: values.table, throwError });
+    setError(false);
+    if (!r.error)
       toaster.create({
         title: "Config Submitted!",
         description: "Configuration has been submitted successfully",
@@ -88,8 +75,7 @@ export default function EditableTableExample() {
         duration: 5000,
         placement: "bottom-end",
       });
-    }
-  }, [postConfigSuccess]);
+  };
 
   //#region FormConfiguration
   const {

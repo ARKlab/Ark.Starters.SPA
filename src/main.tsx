@@ -1,4 +1,6 @@
+import { LocaleProvider } from "@chakra-ui/react"
 import { Suspense } from 'react'
+import { useTranslation } from "react-i18next";
 import {
   RouterProvider
 } from "react-router-dom";
@@ -12,19 +14,22 @@ import { router } from "./lib/router";
 
 const Main = () => {
   useLocalizeDocumentAttributes();
+  const { i18n } = useTranslation();
 
   return (
     <>
       <Suspense
         fallback={<CenterSpinner />}
       >
-        <SEO
-          title={import.meta.env.VITE_APP_TITLE}
-          description={import.meta.env.VITE_APP_DESCRIPTION}
-          name={import.meta.env.VITE_APP_COMPANY}
-        />
-        <RouterProvider router={router} />
-      </Suspense>
+        <LocaleProvider locale={i18n.language}>
+          <SEO
+            title={import.meta.env.VITE_APP_TITLE}
+            description={import.meta.env.VITE_APP_DESCRIPTION}
+            name={import.meta.env.VITE_APP_COMPANY}
+          />
+          <RouterProvider router={router} />
+        </LocaleProvider>
+      </Suspense >
       <PWABadge />
     </>
   );

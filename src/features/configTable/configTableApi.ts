@@ -1,10 +1,12 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+
+import { appFetchQuery } from "../../app/appFetchQuery";
 
 import type { Employee } from "./configTable";
 
 export const configTableApiSlice = createApi({
   reducerPath: "configTableApi",
-  baseQuery: fetchBaseQuery({
+  baseQuery: appFetchQuery({
     baseUrl: "https://config.api/",
   }),
   tagTypes: ["Employee/list"],
