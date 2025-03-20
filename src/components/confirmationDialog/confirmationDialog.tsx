@@ -2,7 +2,6 @@ import { Button } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { If, Then } from "react-if";
 
 import { DialogBody, DialogCloseTrigger, DialogContent, DialogFooter, DialogHeader, DialogRoot } from "../ui/dialog";
 
@@ -25,13 +24,12 @@ export const ConfirmationDialog = (props: {
           <DialogBody>{props.body}</DialogBody>
           <DialogFooter>
             <DialogCloseTrigger ref={closeRef}>{t("confirmationDialog.button.close")}</DialogCloseTrigger>
-            <If condition={props.onConfirm !== undefined}>
-              <Then>
-                <Button colorPalette="error" onClick={props.onConfirm} ml={3}>
-                  {t("confirmationDialog.button.confirm")}
-                </Button>
-              </Then>
-            </If>
+            {(props.onConfirm !== undefined ?
+              <Button colorPalette="error" onClick={props.onConfirm} ml={3}>
+                {t("confirmationDialog.button.confirm")}
+              </Button>
+              : undefined
+            )}
           </DialogFooter>
         </DialogContent>
       </DialogRoot>

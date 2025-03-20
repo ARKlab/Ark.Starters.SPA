@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { Else, If, Then } from "react-if";
 import type { RouteObject } from "react-router-dom";
 import { Outlet, createBrowserRouter } from "react-router-dom";
 
@@ -26,32 +25,22 @@ const wrapLazy = (x: MainSectionType) => {
   // assumption: x.label is unique across all routes
   if (lazy) element = <LazyLoad loader={lazy} key={x.label} />;
 
+  if (checkPermissions)
+    element =
+      <ProtectedRoute permissions={x.permissions}>
+        {element}
+      </ProtectedRoute>
+
+  if (x.authenticatedOnly)
+    element =
+      <AuthenticatedOnly>
+        {element}
+      </AuthenticatedOnly>
+
   return (
     <>
       <SEO title={x.label} />
-      <If condition={x.authenticatedOnly}>
-        <Then>
-          <If condition={checkPermissions}>
-            <Then>
-              {() => (
-                <AuthenticatedOnly>
-                  <ProtectedRoute permissions={x.permissions}>
-                    {element}
-                  </ProtectedRoute>
-                </AuthenticatedOnly>
-              )}
-            </Then>
-            <Else>
-              {() =>
-                <AuthenticatedOnly>
-                  {element}
-                </AuthenticatedOnly>
-              }
-            </Else>
-          </If>
-        </Then>
-        <Else>{element}</Else>
-      </If>
+      {element}
     </>
   );
 };

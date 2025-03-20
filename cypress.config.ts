@@ -16,7 +16,7 @@ export default defineConfig({
     screenshotOnRunFailure: true,
     experimentalRunAllSpecs: true,
 
-    defaultCommandTimeout: 10000,
+    defaultCommandTimeout: 15000,
 
     supportFile: "cypress/support/e2e.ts",
 

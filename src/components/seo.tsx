@@ -1,5 +1,3 @@
-import { Helmet } from 'react-helmet-async'
-
 export default function SEO({
   title,
   description,
@@ -11,12 +9,14 @@ export default function SEO({
   name?: string
   type?: string
 }) {
-  title =
-    title && title !== import.meta.env.VITE_APP_TITLE
-      ? title + ' | ' + import.meta.env.VITE_APP_TITLE
-      : title
+  title ??= import.meta.env.VITE_APP_TITLE;
+  if (title !== import.meta.env.VITE_APP_TITLE) title += ' | ' + import.meta.env.VITE_APP_TITLE
+
+  description ??= import.meta.env.VITE_APP_DESCRIPTION;
+  name ??= import.meta.env.VITE_APP_COMPANY;
+
   return (
-    <Helmet>
+    <>
       {title ? (
         <>
           <title>{title}</title>
@@ -42,6 +42,6 @@ export default function SEO({
           <meta name="twitter:card" content={type} />
         </>
       ) : null}
-    </Helmet>
+    </>
   )
 }
