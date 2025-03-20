@@ -1,4 +1,5 @@
 import { Button } from "@chakra-ui/react";
+import type { RefObject } from "react";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { GoChevronDown } from "react-icons/go";
@@ -7,7 +8,7 @@ import { LiaGlobeEuropeSolid } from "react-icons/lia";
 import { MenuItemGroup, MenuTrigger, MenuContent, MenuItem, MenuRoot } from "../../components/ui/menu";
 import { supportedLngs } from "../../config/lang";
 
-export const LocaleSwitcher = ({portalRef}:{portalRef?: React.RefObject<HTMLElement>}) => {
+export const LocaleSwitcher = ({ portalRef }: { portalRef?: React.RefObject<HTMLDivElement | null> }) => {
   const { i18n } = useTranslation();
 
   const swith = useCallback(
@@ -29,7 +30,7 @@ export const LocaleSwitcher = ({portalRef}:{portalRef?: React.RefObject<HTMLElem
           <GoChevronDown />
         </Button>
       </MenuTrigger>
-      <MenuContent portalRef={portalRef}>
+      <MenuContent portalRef={portalRef as RefObject<HTMLElement> | undefined}>
         <MenuItemGroup title={"Language"}>
           {Object.entries(supportedLngs).map(([k, v]) => (
             <MenuItem value={k} key={k} onClick={async () => swith(k)}>

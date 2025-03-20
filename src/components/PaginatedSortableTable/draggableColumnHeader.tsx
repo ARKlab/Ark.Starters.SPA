@@ -5,6 +5,7 @@ import type {
   Table as ReactTable,
 } from '@tanstack/react-table'
 import { flexRender } from '@tanstack/react-table'
+import { useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 
 const reorderColumn = (
@@ -29,7 +30,11 @@ export const DraggableColumnHeader = <T,>(props: {
   const { columnOrder } = getState()
   const { column } = header
 
-  const [, dropRef] = useDrop({
+  const dropRef = useRef<HTMLSpanElement>(null)
+  const previewRef = useRef<HTMLSpanElement>(null)
+  const dragRef = useRef<HTMLButtonElement>(null)
+
+  const [, dropConnector] = useDrop({
     accept: 'column',
     drop: (draggedColumn: Column<T>) => {
       const newColumnOrder = reorderColumn(
@@ -41,13 +46,17 @@ export const DraggableColumnHeader = <T,>(props: {
     },
   })
 
-  const [{ isDragging }, dragRef, previewRef] = useDrag({
+  const [{ isDragging }, dragConnector, previewConnector] = useDrag({
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
     item: () => column,
     type: 'column',
   })
+
+  dropConnector(dropRef);
+  previewConnector(previewRef);
+  dragConnector(dragRef);
 
   return (
     <span ref={dropRef} style={{ opacity: isDragging ? 0.5 : 1 }}>

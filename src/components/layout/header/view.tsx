@@ -13,7 +13,6 @@ import {
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { FiMenu } from "react-icons/fi";
-import { Else, If, Then } from "react-if";
 import { Link as ReactRouterLink } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
@@ -37,18 +36,11 @@ const UserMenu = () => {
   return (
     <MenuRoot>
       <MenuTrigger>
-        <If condition={isLogged}>
-          <Then>
-            <Avatar.Root>
-              <Avatar.Fallback name={user?.userInfo?.username ?? t("menu.user")} />
-            </Avatar.Root>
-          </Then>
-          <Else>
-            <Avatar.Root>
-              <Avatar.Icon />
-            </Avatar.Root>
-          </Else>
-        </If>
+        {(isLogged ? <Avatar.Root>
+          <Avatar.Fallback name={user?.userInfo?.username ?? t("menu.user")} />
+        </Avatar.Root> : <Avatar.Root>
+          <Avatar.Icon />
+        </Avatar.Root>)}
       </MenuTrigger>
       <MenuContent>
         <MenuItemGroup title={t("menu.options")}>
@@ -58,8 +50,8 @@ const UserMenu = () => {
         </MenuItemGroup>
         <MenuSeparator />
         <MenuItemGroup title={t("menu.account")}>
-          <If condition={isLogged}>
-            <Then>
+          {(isLogged ?
+            <>
               <WrapItem>
                 <MenuItem value={user?.userInfo?.username ?? t("menu.user")}>
                   {user?.userInfo?.username ?? t("menu.user")}
@@ -68,15 +60,14 @@ const UserMenu = () => {
               <MenuItem value={"exit"} onClick={async () => dispatch(Logout())}>
                 {t("menu.exit")}
               </MenuItem>
-            </Then>
-            <Else>
-              <WrapItem>
-                <MenuItem value={"login"} onClick={async () => dispatch(Login())}>
-                  {t("menu.login")}
-                </MenuItem>
-              </WrapItem>
-            </Else>
-          </If>
+            </>
+            :
+            <WrapItem>
+              <MenuItem value={"login"} onClick={async () => dispatch(Login())}>
+                {t("menu.login")}
+              </MenuItem>
+            </WrapItem>
+          )}
         </MenuItemGroup>
       </MenuContent>
     </MenuRoot>
@@ -108,24 +99,23 @@ const Header = () => {
             <UserMenu />
           </Center>
           <Center display={{ base: "block", lg: "none" }}>
-            <If condition={!isMobileSiderOpen}>
-              <Then>
-                <IconButton
-                  variant="outline"
-                  aria-label="open menu"
-                  onClick={() => {
-                    setMobileSiderOpen(true);
-                  }}
-                >
-                  <FiMenu />
-                </IconButton>
-              </Then>
-            </If>
+            {(isMobileSiderOpen ?
+              <IconButton
+                variant="outline"
+                aria-label="open menu"
+                onClick={() => {
+                  setMobileSiderOpen(true);
+                }}
+              >
+                <FiMenu />
+              </IconButton>
+              : undefined
+            )}
           </Center>
         </HStack>
       </Flex>
       <GlobalLoadingBar />
-    </Box>
+    </Box >
   );
 };
 

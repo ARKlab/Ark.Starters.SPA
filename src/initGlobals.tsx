@@ -1,4 +1,3 @@
-import { HelmetProvider } from "react-helmet-async";
 import { Provider } from "react-redux";
 
 import { initStore, resetApiActions } from "./app/configureStore";
@@ -38,9 +37,7 @@ const InitGlobals = () => {
   return (
     <AuthenticationProviderContext authProvider={authProvider}>
       <Provider store={store}>
-        <HelmetProvider>
-          <InitApp />
-        </HelmetProvider>
+        <InitApp />
       </Provider>
     </AuthenticationProviderContext>
   );

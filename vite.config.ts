@@ -118,7 +118,7 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks: {
-            react: ["react", "react-router-dom", "react-dom", "react-error-boundary", "react-helmet-async", "react-if"],
+            react: ["react", "react-router-dom", "react-dom", "react-error-boundary"],
             rtk: ["@reduxjs/toolkit", "@reduxjs/toolkit/query", "@reduxjs/toolkit/react", "react-redux"],
             chakra: ["@chakra-ui/react", "@emotion/react"],
             i18n: ["i18next", "react-i18next", "zod-i18n-map"],
