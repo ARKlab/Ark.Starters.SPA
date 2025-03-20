@@ -1,6 +1,7 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import { every, orderBy, filter } from "lodash-es";
 
+import { appFetchQuery } from "../../app/appFetchQuery";
 import type { ArkPagedQueryParameters, ListResponse } from "../../lib/apiTypes";
 import { delay } from "../../lib/helper";
 
@@ -9,7 +10,7 @@ import moviesData from "./fakeMoviesData";
 
 export const moviesApiSlice = createApi({
   reducerPath: "moviesApi",
-  baseQuery: fetchBaseQuery({
+  baseQuery: appFetchQuery({
     baseUrl: "https://bestMoviesApi.com/",
   }),
   tagTypes: ["Movies", "Page"],

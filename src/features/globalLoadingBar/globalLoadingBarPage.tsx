@@ -1,7 +1,7 @@
 import { Box, Button, Heading, Text, Wrap, WrapItem } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
-import { useSlowGetQuery, useFastMutationMutation, useSlowMutationMutation } from "./globalLoadingApi";
+import { useSlowGetQuery, useFastMutationMutation, useSlowMutationMutation } from "./globalLoadingSlice";
 
 const GlobalLoadingBarPage = () => {
   const { t } = useTranslation();

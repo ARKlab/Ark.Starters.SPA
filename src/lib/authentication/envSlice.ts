@@ -1,17 +1,14 @@
 import { createAppSlice } from "../../app/createAppSlice";
-import type { CustomSettingsType } from "../../config/global";
+import { appSettings } from "../../config/env";
+import type { AppSettingsType } from "../../config/global";
 
-const initialState: CustomSettingsType = window.customSettings;
+const initialState: AppSettingsType = appSettings;
 
 export const envSlice = createAppSlice({
   name: "env",
   initialState: initialState,
   reducers: {},
-  selectors: {
-    baseUrlSelector: s => s.serviceUrl,
-  },
 });
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
-export const customSettingsSelector = envSlice.selectSlice;
-export const { baseUrlSelector } = envSlice.selectors;
+export const appSettingsSelector = envSlice.selectSlice;

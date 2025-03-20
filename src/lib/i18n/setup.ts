@@ -64,7 +64,7 @@ export const i18nSetup = async () => {
               escapeValue: false,
             },
 
-            nsSeparator: ".",
+            nsSeparator: ":",
 
             react: {
               useSuspense: true,
@@ -109,7 +109,7 @@ export const i18nSetup = async () => {
     const _changeLanguage = i18next.changeLanguage;
     i18next.changeLanguage = async (lang: string, ...args) => {
       // Load resources before language change
-       
+
       await asyncLoadResource(lang);
       return _changeLanguage(lang, ...args);
     };

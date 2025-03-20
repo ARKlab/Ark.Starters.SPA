@@ -10,7 +10,7 @@ http
   .createServer(function (req, res) {
     res.writeHead(200, { "Content-Type": "text/javascript" });
     res.end(`
-      window.customSettings = {
+      window.appSettings = {
         clientID: "${process.env["MSAL_ClientId"]}",
         domain: "${process.env["MSAL_Domain"]}",
         scopes: "${process.env["MSAL_Scopes"]}",
@@ -30,7 +30,7 @@ http
   .createServer(function (req, res) {
     res.writeHead(200, { "Content-Type": "text/javascript" });
     res.end(`
-      window.customSettings = {
+      window.appSettings = {
         clientID: "${process.env["MSAL_ClientId"]}",
         domain: "${process.env["MSAL_Domain"]}",
         scopes: "${process.env["MSAL_Scopes"]}",
@@ -49,7 +49,7 @@ http
   .createServer(function (req, res) {
     res.writeHead(200, { "Content-Type": "text/javascript" });
     res.end(`
-      window.customSettings = {
+      window.appSettings = {
         clientID: "${process.env["AUTH0_ClientId"]}",
         domain: "${process.env["AUTH0_Domain"]}",
         audience: "${process.env["AUTH0_Audience"]}",

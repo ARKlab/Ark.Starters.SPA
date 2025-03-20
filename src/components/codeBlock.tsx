@@ -3,7 +3,7 @@ import React from "react";
 
 export default function CodeBlock({ children, ...rest }: { children?: React.ReactNode } & CodeProps) {
   return (
-    <Code {...rest} display="block" whiteSpace="pre" textAlign="start">
+    <Code variant={"subtle"} display="block" whiteSpace="pre" {...rest} >
       {children}
     </Code>
   );

@@ -1,11 +1,11 @@
 //Exxpandible global interface for window object
 declare global {
   interface Window {
-    customSettings: CustomSettingsType;
+    appSettings: AppSettingsType;
   }
 }
 
-export type CustomSettingsType = {
+export type AppSettingsType = {
   clientID: string;
   domain: string;
   scopes: string;

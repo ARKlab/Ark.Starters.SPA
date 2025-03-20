@@ -19,13 +19,13 @@ import { Link as ReactRouterLink } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { Login, Logout, authSelector } from "../../../lib/authentication/authenticationSlice";
 import { useAuthContext } from "../../../lib/authentication/components/useAuthContext";
+import { GlobalLoadingBar } from "../../../lib/GlobalLoadingBar";
 import { LocaleSwitcher } from "../../../lib/i18n/localeSwitcher";
 import { Logo } from "../../../logo";
 import { ColorModeButton } from "../../ui/color-mode";
 import { MenuContent, MenuItem, MenuItemGroup, MenuRoot, MenuSeparator } from "../../ui/menu";
 import { useLayoutContext } from "../useLayoutContext";
 
-import { GlobalLoadingBar } from "./GlobalLoadingBar";
 const UserMenu = () => {
   const dispatch = useAppDispatch();
   const { isLogged } = useAuthContext();

@@ -5,8 +5,9 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import { configTableApiSlice } from "../features/configTable/configTableApi";
 import { jsonPlaceholderApi } from "../features/fetchApiExample/jsonPlaceholderApi";
 import { videoGameApiSlice } from "../features/formExample/videoGamesApiSlice";
-import { globalLoadingSlice } from "../features/globalLoadingBar/globalLoadingApi";
+import { globalLoadingSlice } from "../features/globalLoadingBar/globalLoadingSlice";
 import { moviesApiSlice } from "../features/paginatedTable/paginatedTableApi";
+import { rtkqErrorHandlingApi } from "../features/rtkqErrorHandling/rtkqErrorHandlingApi";
 import { authSlice } from "../lib/authentication/authenticationSlice";
 import { envSlice } from "../lib/authentication/envSlice";
 import type { AuthProvider } from "../lib/authentication/providers/authProviderInterface";
@@ -22,6 +23,7 @@ const sliceReducers = combineSlices(
   videoGameApiSlice,
   jsonPlaceholderApi,
   moviesApiSlice,
+  rtkqErrorHandlingApi,
 
   globalLoadingSlice,
   {
@@ -30,17 +32,15 @@ const sliceReducers = combineSlices(
 );
 
 // Infer the `RootState` type from the root reducer
-export type RootState = ReturnType<typeof sliceReducers>;
+export type AppState = ReturnType<typeof sliceReducers>;
 
-export function initStore(authProviderInstance: AuthProvider) {
+export function initStore(extra: ExtraType) {
   const store = configureStore({
     reducer: sliceReducers,
     middleware: getDefaultMiddleware =>
       getDefaultMiddleware({
         thunk: {
-          extraArgument: {
-            authProvider: authProviderInstance,
-          },
+          extraArgument: extra,
           serializableCheck: true,
         },
       }).concat(
@@ -49,6 +49,7 @@ export function initStore(authProviderInstance: AuthProvider) {
         moviesApiSlice.middleware,
         videoGameApiSlice.middleware,
         globalLoadingSlice.middleware,
+        rtkqErrorHandlingApi.middleware,
       ),
   });
 
@@ -62,6 +63,7 @@ export const resetApiActions = [
   moviesApiSlice.util.resetApiState(),
   videoGameApiSlice.util.resetApiState(),
   globalLoadingSlice.util.resetApiState(),
+  rtkqErrorHandlingApi.util.resetApiState(),
 ];
 
 export type ExtraType = {
@@ -71,4 +73,4 @@ export type ExtraType = {
 export type AppStore = ReturnType<typeof initStore>;
 // Infer the `AppDispatch` type from the store itself
 export type AppDispatch = AppStore["dispatch"];
-export type AppThunk<ThunkReturnType = void> = ThunkAction<ThunkReturnType, RootState, ExtraType, Action>;
+export type AppThunk<ThunkReturnType = void> = ThunkAction<ThunkReturnType, AppState, ExtraType, Action>;

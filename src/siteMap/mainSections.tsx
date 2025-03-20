@@ -51,7 +51,14 @@ export const mainSections: MainSectionType[] = [
         label: "GlobalLoadingBar",
         icon: FaPlay,
         isInMenu: true,
-        lazy: async () => import("../features/globalLoadingBar/globalLoadingPage"),
+        lazy: async () => import("../features/globalLoadingBar/globalLoadingBarPage"),
+      },
+      {
+        path: "rtkqErrorHandling",
+        label: "rtkqErrorHandling",
+        icon: FaPlay,
+        isInMenu: true,
+        lazy: async () => import("../features/rtkqErrorHandling/rtkqErrorHandlingPage"),
       },
       {
         path: "permissionsPlayground",

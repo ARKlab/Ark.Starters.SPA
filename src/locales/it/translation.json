@@ -11,6 +11,8 @@
   "employee": "Dipendente",
   "fetch_example_Page": "Pagina di Esempio Fetch",
   "firstname": "Nome",
+  "form_error": "Errori dei Form",
+  "form_values": "Valori del Form",
   "games_add_video_game": "Aggiungi videogioco",
   "games_developer": "Sviluppatore",
   "games_developer_placeholder": "Sviluppatore",
@@ -50,8 +52,6 @@
   "localization_dynamic_text_explanation": "Questo esempio mostra come i valori dinamici possano cambiare posizione se richiesto dalla lingua selezionata.",
   "localization_example_1": "Nel cesto ci sono {{number}} mele.",
   "localization_simple_text": "Traduzione testo semplice",
-  "form_error": "Errori dei Form",
-  "form_values": "Valori del Form",
   "movies_actors": "Attori",
   "movies_applyexternalfilter": "Applica Filtro Esterno",
   "movies_director": "Regista",
@@ -84,6 +84,10 @@
   "playground": "Parco Giochi",
   "playground_details_id": "Dettagli per l'Id:",
   "reset": "Ripristina",
+  "rtkqErrorHandling": {
+    "description": "Prova come funziona la baseQuery RTKQ potenziata. Scegli una delle opzioni.",
+    "title": "Errore globale RTKQ"
+  },
   "shipping_address": "Indirizzo di spedizione",
   "submit": "Invia",
   "top": "In alto",

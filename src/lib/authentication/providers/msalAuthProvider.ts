@@ -3,7 +3,6 @@ import * as msal from "@azure/msal-browser";
 import { NavigationClient, EventType } from "@azure/msal-browser";
 import * as R from "ramda";
 
-import type { CustomSettingsType } from "../../../config/global";
 import { router } from "../../router";
 import type { UserAccountInfo } from "../authTypes";
 import { LoginStatus } from "../authTypes";
@@ -15,6 +14,7 @@ import type { AuthProvider } from "./authProviderInterface";
 export type MSALConfig = {
   msalConfig: msal.Configuration;
   scopes: string[];
+  permissionsClaims: string[];
 };
 
 // see https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-react/docs/performance.md
@@ -30,6 +30,15 @@ class CustomNavigationClient extends NavigationClient {
   }
 }
 
+export type MsalAuthProviderConfig = {
+  scopes: string;
+  clientID: string;
+  authority: string;
+  knownAuthorities: string;
+  redirectUri: string;
+  permissionsClaims: string[];
+};
+
 export class MsalAuthProvider implements AuthProvider {
   private config: MSALConfig;
   private myMSALObj: msal.IPublicClientApplication;
@@ -42,15 +51,15 @@ export class MsalAuthProvider implements AuthProvider {
   private idTokenClaims: msal.IdTokenClaims | null = null;
   private subscribers = new Set<(status: LoginStatus) => void>();
 
-  constructor(env: CustomSettingsType) {
-    const scopes = env.scopes.split(",");
-    const config: msal.Configuration = {
+  constructor(config: MsalAuthProviderConfig) {
+    const scopes = config.scopes.split(",");
+    const msalConfig: msal.Configuration = {
       auth: {
-        clientId: env.clientID,
-        authority: env.authority,
+        clientId: config.clientID,
+        authority: config.authority,
 
-        knownAuthorities: env.knownAuthorities.split(","),
-        redirectUri: env.redirectUri,
+        knownAuthorities: config.knownAuthorities.split(","),
+        redirectUri: config.redirectUri,
         postLogoutRedirectUri: window.origin,
         navigateToLoginRequestUrl: true,
       },
@@ -85,7 +94,7 @@ export class MsalAuthProvider implements AuthProvider {
         iframeHashTimeout: 20000,
       },
     };
-    this.config = { msalConfig: config, scopes: scopes };
+    this.config = { msalConfig: msalConfig, scopes: scopes, permissionsClaims: config.permissionsClaims };
 
     this.loginRequest = {
       scopes: ["openid", "offline_access"],
@@ -132,11 +141,14 @@ export class MsalAuthProvider implements AuthProvider {
   }
 
   private getUserPermissions(): string[] {
+    const permissions = [] as string[];
     if (this.idTokenClaims) {
-      const permissions = R.pathOr("", ["extension_Scope"], this.idTokenClaims).split(" ");
-      return permissions;
+      for (const claim of this.config.permissionsClaims) {
+        const p = R.pathOr("", [claim], this.idTokenClaims).split(" ");
+        permissions.push(...p);
+      }
     }
-    return [] as string[];
+    return permissions;
   }
 
   public async init(): Promise<void> {

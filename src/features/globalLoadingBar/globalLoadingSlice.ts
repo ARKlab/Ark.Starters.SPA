@@ -1,10 +1,11 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 
+import { appFetchQuery } from "../../app/appFetchQuery";
 import { delay } from "../../lib/helper";
 
 export const globalLoadingSlice = createApi({
   reducerPath: "globalLoadingApi",
-  baseQuery: fetchBaseQuery({
+  baseQuery: appFetchQuery({
     baseUrl: "https://sample.com/",
   }),
   endpoints: builder => ({

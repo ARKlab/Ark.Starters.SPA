@@ -1,40 +1,21 @@
-import type { Dispatch, PayloadAction } from "@reduxjs/toolkit";
-import type { ReactNode } from "react";
+import type { PayloadAction } from "@reduxjs/toolkit";
 
 import { createAppSlice } from "../../app/createAppSlice";
 
-export interface DetailsType {
-  title?: string;
-  message?: string;
-  btnTitle?: ReactNode;
+export interface ErrorDetailsType {
+  title?: string | null;
+  message?: string | null;
   status?: string;
-  displayStatus?: boolean;
-  isValidationError?: boolean;
-  originalTitle?: string;
-  originalDetail?: string;
-  exceptionDetails?: ExceptionDetails[] | null;
-  traceId?: string;
-}
+  details?: string | null;
+  stack?: string | null;
+  traceId?: string | null;
 
-interface ExceptionDetails {
-  message: string;
-  type: string;
-  raw: string;
-  stackFrames: {
-    filePath: string | null;
-    fileName: string | null;
-    function: string | null;
-    line: number | null;
-    preContextLine: string | null;
-    preContextCode: string | null;
-    contextCode: string | null;
-    postContextCode: string | null;
-  }[];
+  // TODO: add informations about the remote request in case of XHR as currently there are not info about the 'request' failed
 }
 
 export interface errorModalType {
   error?: boolean;
-  details: DetailsType | null;
+  details: ErrorDetailsType | null;
 }
 
 const initialState: errorModalType = {
@@ -60,32 +41,6 @@ const errorSlice = createAppSlice({
 export const { setError, clearError } = errorSlice.actions;
 
 export default errorSlice.reducer;
-
-type Action = ReturnType<typeof setError> | ReturnType<typeof clearError>;
-
-export const dispatchNetworkError =
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (err: any) => (dispatch: Dispatch<Action>) => {
-    const errorTitle = "An error occurred";
-    const isValError = false;
-    const displayStatusCode = true;
-    const message = err?.data?.message;
-    dispatch(
-      setError({
-        error: true,
-        details: {
-          title: errorTitle,
-          message: message,
-          status: err?.status,
-          isValidationError: isValError,
-          originalTitle: err?.response?.title,
-          originalDetail: err?.response?.detail,
-          displayStatus: displayStatusCode,
-          exceptionDetails: null,
-        },
-      }),
-    );
-  };
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
 export const selectError = errorSlice.selectSlice;
