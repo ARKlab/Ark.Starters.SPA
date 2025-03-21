@@ -54,7 +54,7 @@ export const ChackraPlainTable = <T extends ZodRawShape>({
               <Table.Row>
                 <Table.Cell colSpan={headers.length}>
                   <Center>
-                    <Spinner data-role="spinner" />
+                    <Spinner data-test="spinner" />
                   </Center>
                 </Table.Cell>
               </Table.Row>

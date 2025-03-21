@@ -12,7 +12,7 @@ describe("Config Table", () => {
   it("has correct labels", () => {
     cy.visit("/configTable");
     cy.title().should("match", /config table/i);
-    cy.get("[data-role='spinner']").should("not.exist");
+    cy.get("[data-test='spinner']").should("not.exist");
 
     cy.get("main h2").contains(/employee/i);
   });
@@ -21,7 +21,7 @@ describe("Config Table", () => {
     it("has correct rows count", () => {
       cy.visit("/configTable");
       cy.title().should("match", /config table/i);
-      cy.get("[data-role='spinner']").should("not.exist");
+      cy.get("[data-test='spinner']").should("not.exist");
 
       cy.get("table tbody tr").should("have.length", 20);
     });
