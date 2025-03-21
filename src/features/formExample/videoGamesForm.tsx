@@ -101,7 +101,7 @@ function VideoGamesForm() {
                       render={({ field }) => (
                         <NativeSelectRoot
                           {...field}
-                          icon={genreLoading ? <Spinner data-role="spinner" /> : <MdArrowDropDown />}
+                          icon={genreLoading ? <Spinner data-test="spinner" /> : <MdArrowDropDown />}
                         >
                           <NativeSelectField>
                             {genres?.map(genre => (

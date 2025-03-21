@@ -7,7 +7,7 @@ import CenterSpinner from "../../components/centerSpinner";
 import CodeBlock from "../../components/codeBlock";
 import { SelectContent, SelectItem, SelectRoot, SelectTrigger, SelectValueText } from "../../components/ui/select";
 
-import { useGetQuery, usePostMutation, type ResultOption } from "./rtkqErrorHandlingApi";
+import { useDownloadMutation, useGetQuery, usePostMutation, type ResultOption } from "./rtkqErrorHandlingApi";
 
 const GetResult = ({ option }: { option: ResultOption }) => {
   const { data, error, isFetching } = useGetQuery(option);
@@ -20,7 +20,7 @@ const GetResult = ({ option }: { option: ResultOption }) => {
     return <IoMdClose />;
   }
 
-  return <Stack><CodeBlock>{JSON.stringify(data)}</CodeBlock></Stack>;
+  return <Stack><CodeBlock data-test="query-results">{JSON.stringify(data)}</CodeBlock></Stack>;
 }
 
 const PostResult = ({ option }: { option: ResultOption }) => {
@@ -29,20 +29,39 @@ const PostResult = ({ option }: { option: ResultOption }) => {
   return <>
     <Stack>
       <Box><Button onClick={async () => post(option)} loading={result.isLoading}>Post</Button></Box>
-      {(result.data ? <CodeBlock>{JSON.stringify(result.data, null, 2)}</CodeBlock> : null)}
-      {(result.error ? <CodeBlock>{JSON.stringify(result.error, null, 2)}</CodeBlock> : null)}
+      {(result.data ? <CodeBlock data-test="mutation-results-data">{JSON.stringify(result.data, null, 2)}</CodeBlock> : null)}
+      {(result.error ? <CodeBlock data-test="mutation-results-error">{JSON.stringify(result.error, null, 2)}</CodeBlock> : null)}
     </Stack>
   </>;
 }
 
+const Download = () => {
+
+  const [download, { error, isLoading }] = useDownloadMutation();
+
+  return (<>
+    <Wrap gap={1} my={"20px"}>
+      <WrapItem>
+        <Button colorPalette={"primary"} loading={isLoading} disabled={isLoading} onClick={async () => download("Success")} data-test="download-success" >Download</Button>
+      </WrapItem>
+      <WrapItem>
+        <Button colorPalette={"error"} loading={isLoading} disabled={isLoading} onClick={async () => download("Failure")} data-test="download-failure" >Fail Download</Button>
+      </WrapItem>
+    </Wrap>
+
+    {(error ? <CodeBlock data-test="mutation-download-error">{JSON.stringify(error, null, 2)}</CodeBlock> : null)}
+  </>);
+}
+
 const RTKQErrorHandlingPage = () => {
   const { t } = useTranslation();
-  const [selectValue, setSelectValue] = useState<ResultOption>();
+  const [selectQueryValue, setSelectQueryValue] = useState<ResultOption>();
+  const [selectMutationValue, setSelectMutationValue] = useState<ResultOption>();
 
   const options = createListCollection({
     "items": [
       { label: "200", value: "200" as ResultOption },
-      { label: "200WithSchemaError", value: "200WithWrongSchema" as ResultOption },
+      { label: "200WithWrongSchema", value: "200WithWrongSchema" as ResultOption },
       { label: "400", value: "400" as ResultOption },
       { label: "429", value: "429" as ResultOption },
       { label: "500", value: "500" as ResultOption },
@@ -52,18 +71,20 @@ const RTKQErrorHandlingPage = () => {
   });
 
   return (
-    <Box>
+    <Stack >
       <Heading>{t("rtkqErrorHandling.title")}</Heading>
+      <Text>{t("rtkqErrorHandling.description")}</Text>
       <Box>
-        <Text>{t("rtkqErrorHandling.description")}</Text>
+        <Heading size={"md"}>RTK Query</Heading>
         <Wrap gap={1} my={"20px"}>
           <WrapItem>
             <SelectRoot
+              name="query"
               collection={options}
               size="sm"
               width="320px"
-              onValueChange={({ value }) => { setSelectValue(value[0] as ResultOption); }}
-              value={selectValue ? [selectValue] : undefined}
+              onValueChange={({ value }) => { setSelectQueryValue(value[0] as ResultOption); }}
+              value={selectQueryValue ? [selectQueryValue] : undefined}
             >
               <SelectTrigger clearable>
                 <SelectValueText />
@@ -78,12 +99,43 @@ const RTKQErrorHandlingPage = () => {
             </SelectRoot>
           </WrapItem>
         </Wrap>
-        <Heading size={"md"}>RTK Query</Heading>
-        {(selectValue !== undefined ? <GetResult option={selectValue} /> : null)}
-        <Heading size={"md"}>RTK Mutation</Heading>
-        {(selectValue !== undefined ? <PostResult option={selectValue} /> : null)}
+        {(selectQueryValue !== undefined ? <GetResult option={selectQueryValue} /> : null)}
       </Box>
-    </Box>
+
+      <Box>
+        <Heading size={"md"}>RTK Mutation</Heading>
+        <Wrap gap={1} my={"20px"}>
+          <WrapItem>
+            <SelectRoot
+              name="mutation"
+              collection={options}
+              size="sm"
+              width="320px"
+              onValueChange={({ value }) => { setSelectMutationValue(value[0] as ResultOption); }}
+              value={selectMutationValue ? [selectMutationValue] : undefined}
+            >
+              <SelectTrigger clearable>
+                <SelectValueText />
+              </SelectTrigger>
+              <SelectContent>
+                {options.items.map(x => (
+                  <SelectItem item={x} key={x.value}>
+                    {x.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </SelectRoot>
+          </WrapItem>
+        </Wrap>
+        {(selectMutationValue !== undefined ? <PostResult option={selectMutationValue} /> : null)}
+      </Box>
+
+
+      <Box>
+        <Heading size={"md"}>Download File</Heading>
+        <Download />
+      </Box>
+    </Stack>
   );
 };
 

@@ -42,9 +42,9 @@ const ProblemDetailsModalBody = (props: { problem: ErrorDetailsType | null }) =>
 
         <CodeBlock variant={"plain"}>{problem?.message}</CodeBlock>
 
-        {problem?.details ? (
-          <AccordionRoot w="full">
-            <AccordionItem value={"AccordionButton"}>
+        <AccordionRoot w="full" multiple>
+          {problem?.details ? (
+            <AccordionItem value={"details"}>
               <h2>
                 <AccordionItemTrigger>
                   <Box as="span" flex="1" textAlign="left">
@@ -56,12 +56,10 @@ const ProblemDetailsModalBody = (props: { problem: ErrorDetailsType | null }) =>
                 <CodeBlock>{problem.details}</CodeBlock>
               </AccordionItemContent>
             </AccordionItem>
-          </AccordionRoot>
-        ) : null}
+          ) : null}
 
-        {problem?.stack ? (
-          <AccordionRoot w="full">
-            <AccordionItem value={"AccordionButton"}>
+          {problem?.stack ? (
+            <AccordionItem value={"stack"}>
               <h2>
                 <AccordionItemTrigger>
                   <Box as="span" flex="1" textAlign="left">
@@ -73,8 +71,8 @@ const ProblemDetailsModalBody = (props: { problem: ErrorDetailsType | null }) =>
                 <ParsedStackTrace stack={problem.stack} />
               </AccordionItemContent>
             </AccordionItem>
-          </AccordionRoot>
-        ) : null}
+          ) : null}
+        </AccordionRoot>
         <Flex justifyContent={"right"}>
           <Button colorPalette={"error"}
             onClick={async () => {

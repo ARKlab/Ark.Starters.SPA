@@ -189,7 +189,7 @@ export function PaginatedSortableTable<T>(props: PaginatedSortableTableProps<T>)
               <Table.Row>
                 <Table.Cell colSpan={columns.length}>
                   <Center>
-                    <Spinner data-role="spinner" />
+                    <Spinner data-test="spinner" />
                   </Center>
                 </Table.Cell>
               </Table.Row>
