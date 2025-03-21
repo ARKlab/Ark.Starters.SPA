@@ -8,10 +8,10 @@ Cypress.Commands.add("actAsAnonUser", () => {
     () => {
       cy.visit("/null");
       cy.window({ timeout: 20000 }).should("have.property", "appReady", true);
-      cy.get("[data-role='spinner']").should("not.exist");
+      cy.get("[data-test='spinner']").should("not.exist");
 
-      cy.get("[data-role='gdpr-acceptAll']").should("be.visible");
-      cy.get("[data-role='gdpr-acceptAll']").click();
+      cy.get("[data-test='gdpr-acceptAll']").should("be.visible");
+      cy.get("[data-test='gdpr-acceptAll']").click();
     },
     {
       validate: () => {
@@ -23,7 +23,7 @@ Cypress.Commands.add("actAsAnonUser", () => {
 
   cy.visit("/null");
   cy.window({ timeout: 20000 }).should("have.property", "appReady", true);
-  cy.get("[data-role='spinner']").should("not.exist");
+  cy.get("[data-test='spinner']").should("not.exist");
 });
 
 Cypress.Commands.add("navigateViaMenu", (title: string | RegExp) => {
@@ -34,7 +34,7 @@ Cypress.Commands.add("navigateViaMenu", (title: string | RegExp) => {
   // see: https://github.com/cypress-io/cypress/issues/128
   cy.get("nav a").contains(title).parents("a").click();
   cy.title().should("match", title);
-  cy.get("[data-role='spinner']").should("not.exist");
+  cy.get("[data-test='spinner']").should("not.exist");
 });
 
 Cypress.Commands.add("navigateViaRoute", (route: string) => {
@@ -45,5 +45,5 @@ Cypress.Commands.add("navigateViaRoute", (route: string) => {
   // see: https://github.com/cypress-io/cypress/issues/128
   cy.window().its("router").invoke("navigate", route);
   cy.url().should("contain", route);
-  cy.get("[data-role='spinner']").should("not.exist");
+  cy.get("[data-test='spinner']").should("not.exist");
 });

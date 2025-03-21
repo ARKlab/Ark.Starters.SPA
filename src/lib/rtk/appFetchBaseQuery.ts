@@ -11,6 +11,7 @@ import type {
   FetchBaseQueryMeta,
   RetryOptions,
 } from "@reduxjs/toolkit/query";
+import { parse } from "@tinyhttp/content-disposition";
 
 import type { MaybePromise, Modify } from "../types";
 
@@ -46,6 +47,7 @@ export type ArkFetchBaseQueryArgs<
         extraOptions: unknown;
       },
     ) => MaybePromise<void | Headers>;
+    responseHandler?: FetchBaseQueryArgs["responseHandler"] | "blob";
   }
 >;
 
@@ -56,6 +58,52 @@ export type AuthOptions = {
   audience?: string | (() => string);
 };
 
+export function handleExportsDownload(blob: Blob, fileName?: string, mimeType?: string) {
+  const url = window.URL.createObjectURL(new Blob([blob], mimeType ? { type: mimeType } : undefined));
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", (fileName ?? "download") || "download");
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.URL.revokeObjectURL(url);
+}
+
+const betterContentTypeResponseHandler =
+  (orig: ArkFetchBaseQueryArgs["responseHandler"]) => async (response: Response) => {
+    // respect the configured 'typed' responseHandler for 'successful' requests while using 'best-guess' for failed requests
+    // this is based on the assumption that Devs configure the 'expected' result in case of success not of failures
+    if (response.status >= 200 && response.status < 300) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      if (orig === "json") return response.json();
+      if (orig === "blob") return response.blob();
+      if (orig === "text") return response.text();
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      if (typeof orig === "function") return orig(response);
+    }
+
+    const disposition = response.headers.get("Content-Disposition")?.trim();
+    const contentType = response.headers.get("Content-Type")?.trim();
+
+    if (defaultIsJsonContentType(response.headers))
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return response.json();
+
+    if (disposition) {
+      const parsed = parse(disposition);
+
+      if (parsed.type !== "inline") {
+        const fn = String(parsed.parameters.filename);
+        handleExportsDownload(await response.blob(), fn, contentType);
+        return undefined;
+      }
+    }
+
+    if (["application/octet-stream", "binary/octet-stream"].includes(contentType ?? "")) return response.blob();
+
+    return response.text();
+  };
+
 export function arkFetchBaseQuery(
   fetchConfig?: ArkFetchBaseQueryArgs,
   arkFetchConfig?: {
@@ -65,10 +113,11 @@ export function arkFetchBaseQuery(
 ) {
   if (!fetchConfig) fetchConfig = {};
 
-  const prepareHeaders = fetchConfig.prepareHeaders;
-
   fetchConfig.isJsonContentType ??= defaultIsJsonContentType;
   fetchConfig.timeout ??= 30 * 1000;
+  fetchConfig.responseHandler = betterContentTypeResponseHandler(fetchConfig.responseHandler);
+
+  const prepareHeaders = fetchConfig.prepareHeaders;
   fetchConfig.prepareHeaders = async (headers, api) => {
     const { arg } = api;
 
@@ -117,6 +166,9 @@ export function arkFetchBaseQuery(
     const timeout = extraOptions?.timeout ?? fetchConfig.timeout ?? 60 * 1000;
 
     const c = { ...fetchConfig, baseUrl, prepareHeaders, timeout } as FetchBaseQueryArgs;
+
+    if (typeof args === "object" && "responseHandler" in args)
+      args.responseHandler = betterContentTypeResponseHandler(args.responseHandler);
 
     const baseQuery = fetchBaseQuery(c);
 

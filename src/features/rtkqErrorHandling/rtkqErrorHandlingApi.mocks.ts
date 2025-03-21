@@ -61,4 +61,29 @@ export const handlers = [
   http.all(url + "/Timeout", async () => {
     await delay("infinite");
   }),
+  http.get(url + "/DownloadSuccess", async () => {
+    await delay(5000);
+    const e = new TextEncoder();
+    const uint8 = e.encode("Pippo");
+    return HttpResponse.arrayBuffer(uint8.buffer, {
+      headers: {
+        "Content-Type": "text/plain",
+        "Content-Disposition": "attachment; filename=puppa.txt",
+        "Access-Control-Expose-Headers": "Content-Disposition, Content-Encoding, ETag",
+      },
+    });
+  }),
+  http.get(url + "/DownloadFailure", () => {
+    return HttpResponse.json(
+      {
+        type: "https://example.com/probs/out-of-credit",
+        title: "You do not have enough credit.",
+        detail: "Your current balance is 30, but that costs 50.",
+        instance: "/account/12345/msgs/abc",
+        balance: 30,
+        accounts: ["/account/12345", "/account/67890"],
+      },
+      { status: 500, headers: { "Content-Type": "application/problem+json" } },
+    );
+  }),
 ];

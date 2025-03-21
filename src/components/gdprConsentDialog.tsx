@@ -118,7 +118,7 @@ export const GdprConsentDialog = () => {
                   actions.rejectNotNecessary();
                   onClose();
                 }}
-                data-role="gdpr-reject"
+                data-test="gdpr-reject"
               >
                 {t("reject")}
               </Button>
@@ -129,7 +129,7 @@ export const GdprConsentDialog = () => {
                   onClose();
                 }}
                 ml={3}
-                data-role="gdpr-acceptAll"
+                data-test="gdpr-acceptAll"
               >
                 {t("acceptAll")}
               </Button>

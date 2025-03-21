@@ -16,13 +16,19 @@ export const rtkqErrorHandlingApi = createApi({
       extraOptions: { dataSchema: z.object({ status: z.string() }) },
     }),
     post: builder.mutation<{ status: string }, ResultOption>({
-      query: (option: ResultOption) => ({
+      query: option => ({
         url: `/${option}`,
         method: "POST",
       }),
       extraOptions: { dataSchema: z.object({ status: z.string() }) },
     }),
+    download: builder.mutation<void, "Success" | "Failure">({
+      query: option => ({
+        url: "/Download" + option,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useGetQuery, usePostMutation } = rtkqErrorHandlingApi;
+export const { useGetQuery, usePostMutation, useDownloadMutation } = rtkqErrorHandlingApi;
