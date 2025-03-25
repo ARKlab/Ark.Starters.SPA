@@ -65,7 +65,7 @@
     "e2e:ci:run": "cross-env CYPRESS_BASE_URL=http://localhost:4321 npm run cypress:run"
   },
   "devDependencies": {
-    "@chakra-ui/cli": "3.13.0",
+    "@chakra-ui/cli": "3.14.2",
     "@cypress/code-coverage": "3.13.12",
     "@eslint/js": "9.23.0",
     "@iodigital/vite-plugin-msw": "2.0.0",
