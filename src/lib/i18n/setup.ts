@@ -82,7 +82,7 @@ export const i18nSetup = async () => {
         resolve();
       },
       onResourceLoaded: (resources, { language, namespace }) => {
-        i18next.addResourceBundle(language, namespace, resources);
+        i18next.addResourceBundle(language, namespace ?? "translation", resources);
       },
       fallbackLng,
       detection: [
