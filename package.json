@@ -67,7 +67,7 @@
   "devDependencies": {
     "@chakra-ui/cli": "3.13.0",
     "@cypress/code-coverage": "3.13.12",
-    "@eslint/js": "9.22.0",
+    "@eslint/js": "9.23.0",
     "@iodigital/vite-plugin-msw": "2.0.0",
     "@svgr/plugin-jsx": "8.1.0",
     "@svgr/plugin-svgo": "8.1.0",
