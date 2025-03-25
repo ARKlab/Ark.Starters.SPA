@@ -11,7 +11,7 @@ beforeEach(() => {
 
   cy.visit("/null");
   cy.window({ timeout: 20000 }).should("have.property", "appReady", true);
-  cy.get("[data-role='spinner']").should("not.exist");
+  cy.get("[data-test='spinner']").should("not.exist");
 });
 
 afterEach(() => {
