@@ -1,6 +1,6 @@
 import { Grid, GridItem } from "@chakra-ui/react";
 import { Suspense } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet } from "react-router";
 
 import CenterSpinner from "../centerSpinner";
 import { ErrorBoundary } from "../errorBoundary";

@@ -2,7 +2,7 @@ import { Box, Button, Separator, Heading, Input, List, Text } from "@chakra-ui/r
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MdCheckCircle } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 import { useAppSelector } from "../../app/hooks";
 import { InputGroup } from "../../components/ui/input-group";

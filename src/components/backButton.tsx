@@ -1,6 +1,6 @@
 import { IconButton } from "@chakra-ui/react";
 import { FaArrowLeft } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 type BackButtonProps = {
   mx?: string;

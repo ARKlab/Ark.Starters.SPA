@@ -1,7 +1,7 @@
 //#region Imports
 import { Box, useBreakpointValue, type BoxProps } from "@chakra-ui/react";
 import { useCallback, useEffect, useMemo } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 
 import useRouteChanged from "../../../lib/useRouteChanged";
 import { mainSections } from "../../../siteMap/mainSections";

@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa";
 import { RiMovie2Line } from "react-icons/ri";
 import { TbListDetails } from "react-icons/tb";
-import { Navigate } from "react-router-dom";
+import { Navigate } from "react-router";
 
 import { Bomb } from "../components/Bomb";
 import type { MainSectionType } from "../components/layout/sideBar/menuItem/types";

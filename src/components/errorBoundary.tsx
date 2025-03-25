@@ -1,6 +1,6 @@
 import React from "react";
 import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 
 import { ErrorDisplay } from "./errorDisplay";
 

@@ -5,7 +5,7 @@ import { router } from "../../router";
 import type { UserAccountInfo } from "../authTypes";
 import { LoginStatus } from "../authTypes";
 
-// this is kind of violation but we need to use react-router-dom navigation to unsure redirects after MSAL redirect works
+// this is kind of violation but we need to use react-router navigation to unsure redirects after MSAL redirect works
 import type { AuthProvider } from "./authProviderInterface";
 
 const CODE_RE = /[?&]code=[^&]+/;

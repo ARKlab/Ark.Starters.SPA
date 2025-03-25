@@ -1,6 +1,6 @@
 import type { http } from "msw";
 import { type SetupWorker } from "msw/browser";
-import { type Router } from "react-router-dom";
+import { type Router } from "react-router";
 
 declare global {
   interface Window {

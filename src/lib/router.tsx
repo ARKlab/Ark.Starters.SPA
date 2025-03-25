@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import type { RouteObject } from "react-router-dom";
-import { Outlet, createBrowserRouter } from "react-router-dom";
+import type { RouteObject } from "react-router";
+import { Outlet, createBrowserRouter } from "react-router";
 
 import Layout from "../components/layout/layout";
 import type { MainSectionType, SubsectionMenuItemType } from "../components/layout/sideBar/menuItem/types";
@@ -25,17 +25,9 @@ const wrapLazy = (x: MainSectionType) => {
   // assumption: x.label is unique across all routes
   if (lazy) element = <LazyLoad loader={lazy} key={x.label} />;
 
-  if (checkPermissions)
-    element =
-      <ProtectedRoute permissions={x.permissions}>
-        {element}
-      </ProtectedRoute>
+  if (checkPermissions) element = <ProtectedRoute permissions={x.permissions}>{element}</ProtectedRoute>;
 
-  if (x.authenticatedOnly)
-    element =
-      <AuthenticatedOnly>
-        {element}
-      </AuthenticatedOnly>
+  if (x.authenticatedOnly) element = <AuthenticatedOnly>{element}</AuthenticatedOnly>;
 
   return (
     <>
@@ -48,61 +40,57 @@ const wrapLazy = (x: MainSectionType) => {
 const renderSections = (s?: SubsectionMenuItemType[]) => {
   return s
     ?.filter(x => x.path !== undefined)
-    .map((x): RouteObject =>
-      x.path === "" && !x.subsections ? ( // index route, shall not have children
-        { index: true, element: wrapLazy(x) }
-      ) : (
-        { path: x.path, element: wrapLazy(x), children: renderSections(x.subsections) }
-      ),
+    .map(
+      (x): RouteObject =>
+        x.path === "" && !x.subsections // index route, shall not have children
+          ? { index: true, element: wrapLazy(x) }
+          : { path: x.path, element: wrapLazy(x), children: renderSections(x.subsections) },
     );
 };
 
 const routes = mainSections
   .filter(x => x.path !== undefined)
-  .map((x): RouteObject =>
-    x.path === "" && !x.subsections ? ( // index route, shall not have children
-      { index: true, element: wrapLazy(x) }
-    ) : (
-      { path: x.path, element: wrapLazy(x), children: renderSections(x.subsections) }
-    ),
+  .map(
+    (x): RouteObject =>
+      x.path === "" && !x.subsections // index route, shall not have children
+        ? { index: true, element: wrapLazy(x) }
+        : { path: x.path, element: wrapLazy(x), children: renderSections(x.subsections) },
   );
 
-export const router = createBrowserRouter([
+export const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      Component: Layout,
+      children: [
+        {
+          errorElement: <ErrorFallback />,
+          children: [
+            {
+              path: "auth-callback",
+              Component: AuthenticationCallback,
+            },
+            {
+              path: "Unauthorized",
+              Component: Unauthorized,
+            },
+            ...routes,
+            {
+              path: "null",
+              element: null,
+            },
+            {
+              path: "*",
+              Component: PageNotFound,
+            },
+          ],
+        },
+      ],
+    },
+  ],
   {
-    path: "/",
-    Component: Layout,
-    children: [
-      {
-        errorElement: <ErrorFallback />,
-        children: [
-          {
-            path: "auth-callback",
-            Component: AuthenticationCallback
-          },
-          {
-            path: "Unauthorized",
-            Component: Unauthorized
-          },
-          ...routes,
-          {
-            path: "null",
-            element: null
-          },
-          {
-            path: "*",
-            Component: PageNotFound
-          }
-        ]
-      }
-    ]
-  }
-],
-  {
-    future: {
-    }
-  }
-
+    future: {},
+  },
 );
 
-if (window.Cypress)
-  window.router = router;
+if (window.Cypress) window.router = router;

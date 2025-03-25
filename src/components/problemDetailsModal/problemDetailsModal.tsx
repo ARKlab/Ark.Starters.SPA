@@ -1,6 +1,6 @@
 import { Box, Flex, Button, Stack } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import type { ErrorDetailsType } from "../../lib/errorHandler/errorHandler";
@@ -9,7 +9,6 @@ import { ChackraUIBaseModal } from "../chackraModal/chackraBaseModal";
 import CodeBlock from "../codeBlock";
 import { ParsedStackTrace } from "../errorDisplay";
 import { AccordionItem, AccordionItemContent, AccordionItemTrigger, AccordionRoot } from "../ui/accordion";
-
 
 export const ProblemDetailsModal = () => {
   const problem = useAppSelector(selectError);
@@ -31,7 +30,6 @@ export const ProblemDetailsModal = () => {
   );
 };
 
-
 const ProblemDetailsModalBody = (props: { problem: ErrorDetailsType | null }) => {
   const problem = props.problem;
   const navigate = useNavigate();
@@ -39,7 +37,6 @@ const ProblemDetailsModalBody = (props: { problem: ErrorDetailsType | null }) =>
   return (
     <>
       <Stack>
-
         <CodeBlock variant={"plain"}>{problem?.message}</CodeBlock>
 
         <AccordionRoot w="full" multiple>
@@ -48,7 +45,7 @@ const ProblemDetailsModalBody = (props: { problem: ErrorDetailsType | null }) =>
               <h2>
                 <AccordionItemTrigger>
                   <Box as="span" flex="1" textAlign="left">
-                    {t('errorHandler.details')}
+                    {t("errorHandler.details")}
                   </Box>
                 </AccordionItemTrigger>
               </h2>
@@ -74,7 +71,8 @@ const ProblemDetailsModalBody = (props: { problem: ErrorDetailsType | null }) =>
           ) : null}
         </AccordionRoot>
         <Flex justifyContent={"right"}>
-          <Button colorPalette={"error"}
+          <Button
+            colorPalette={"error"}
             onClick={async () => {
               await navigate(0);
             }}

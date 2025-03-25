@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { FiMenu } from "react-icons/fi";
-import { Link as ReactRouterLink } from "react-router-dom";
+import { Link as ReactRouterLink } from "react-router";
 
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { Login, Logout, authSelector } from "../../../lib/authentication/authenticationSlice";
@@ -36,11 +36,15 @@ const UserMenu = () => {
   return (
     <MenuRoot>
       <MenuTrigger>
-        {(isLogged ? <Avatar.Root>
-          <Avatar.Fallback name={user?.userInfo?.username ?? t("menu.user")} />
-        </Avatar.Root> : <Avatar.Root>
-          <Avatar.Icon />
-        </Avatar.Root>)}
+        {isLogged ? (
+          <Avatar.Root>
+            <Avatar.Fallback name={user?.userInfo?.username ?? t("menu.user")} />
+          </Avatar.Root>
+        ) : (
+          <Avatar.Root>
+            <Avatar.Icon />
+          </Avatar.Root>
+        )}
       </MenuTrigger>
       <MenuContent>
         <MenuItemGroup title={t("menu.options")}>
@@ -50,7 +54,7 @@ const UserMenu = () => {
         </MenuItemGroup>
         <MenuSeparator />
         <MenuItemGroup title={t("menu.account")}>
-          {(isLogged ?
+          {isLogged ? (
             <>
               <WrapItem>
                 <MenuItem value={user?.userInfo?.username ?? t("menu.user")}>
@@ -61,7 +65,7 @@ const UserMenu = () => {
                 {t("menu.exit")}
               </MenuItem>
             </>
-            :
+          ) : (
             <WrapItem>
               <MenuItem value={"login"} onClick={async () => dispatch(Login())}>
                 {t("menu.login")}
@@ -99,7 +103,7 @@ const Header = () => {
             <UserMenu />
           </Center>
           <Center display={{ base: "block", lg: "none" }}>
-            {(isMobileSiderOpen ?
+            {isMobileSiderOpen ? (
               <IconButton
                 variant="outline"
                 aria-label="open menu"
@@ -109,13 +113,12 @@ const Header = () => {
               >
                 <FiMenu />
               </IconButton>
-              : undefined
-            )}
+            ) : undefined}
           </Center>
         </HStack>
       </Flex>
       <GlobalLoadingBar />
-    </Box >
+    </Box>
   );
 };
 

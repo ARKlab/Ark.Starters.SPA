@@ -9,7 +9,7 @@ import { LoginStatus } from "../authTypes";
 
 import type { AuthProvider } from "./authProviderInterface";
 
-// this is kind of violation but we need to use react-router-dom navigation to unsure redirects after MSAL redirect works
+// this is kind of violation but we need to use react-router navigation to unsure redirects after MSAL redirect works
 
 export type MSALConfig = {
   msalConfig: msal.Configuration;
