@@ -64,7 +64,6 @@ export default function EditableTableExample() {
   const [throwError, setError] = useState<boolean>(false);
 
   const onSubmit = async (values: { table: Employee[] }) => {
-
     const r = await postConfig({ employees: values.table, throwError });
     setError(false);
     if (!r.error)
@@ -73,7 +72,6 @@ export default function EditableTableExample() {
         description: "Configuration has been submitted successfully",
         type: "success",
         duration: 5000,
-        placement: "bottom-end",
       });
   };
 

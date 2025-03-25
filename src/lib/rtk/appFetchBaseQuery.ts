@@ -111,7 +111,7 @@ export function arkFetchBaseQuery(
     authConfig?: AuthOptions;
   },
 ) {
-  if (!fetchConfig) fetchConfig = {};
+  fetchConfig ??= {};
 
   fetchConfig.isJsonContentType ??= defaultIsJsonContentType;
   fetchConfig.timeout ??= 30 * 1000;

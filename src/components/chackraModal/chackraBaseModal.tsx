@@ -39,8 +39,7 @@ export const ChackraUIBaseModal = (props: {
       </Button>
     );
   }
-  if (!props.onClose)
-    props.onClose = () => {
+  props.onClose ??= () => {
       /* do nothing */
     };
 

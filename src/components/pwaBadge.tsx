@@ -55,7 +55,6 @@ export const PWABadge = () => {
           </>
         ),
         duration: 9999999,
-        placement: "top",
       });
     }
   }, [needRefresh, setNeedRefresh, t, updateServiceWorker]);
