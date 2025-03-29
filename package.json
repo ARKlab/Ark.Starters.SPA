@@ -5,7 +5,7 @@
   "private": true,
   "dependencies": {
     "@auth0/auth0-spa-js": "2.1.3",
-    "@azure/msal-browser": "4.8.0",
+    "@azure/msal-browser": "4.9.0",
     "@chakra-ui/react": "3.14.2",
     "@emotion/react": "11.14.0",
     "@hookform/resolvers": "4.1.3",
@@ -62,7 +62,7 @@
   },
   "devDependencies": {
     "@chakra-ui/cli": "3.14.2",
-    "@cypress/code-coverage": "3.13.12",
+    "@cypress/code-coverage": "3.14.0",
     "@eslint/js": "9.23.0",
     "@iodigital/vite-plugin-msw": "2.0.0",
     "@svgr/plugin-jsx": "8.1.0",
@@ -93,7 +93,7 @@
     "cypress-wait-until": "3.0.2",
     "dotenv": "16.4.7",
     "eslint": "9.23.0",
-    "eslint-import-resolver-typescript": "4.2.3",
+    "eslint-import-resolver-typescript": "4.2.4",
     "eslint-plugin-chai-friendly": "1.0.1",
     "eslint-plugin-cypress": "4.2.0",
     "eslint-plugin-import": "2.31.0",
