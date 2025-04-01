@@ -124,6 +124,12 @@ export class Auth0AuthProvider implements AuthProvider {
 
   public async getUserDetail(): Promise<UserAccountInfo | null> {
     const currentAccounts = await this.auth0Client.getUser();
+
+    if (!currentAccounts) {
+      this.userPermissions = [];
+      return null;
+    }
+
     const claims = await this.auth0Client.getIdTokenClaims();
 
     const permissions = [] as string[];
@@ -142,20 +148,16 @@ export class Auth0AuthProvider implements AuthProvider {
     }
 
     this.userPermissions = permissions;
-
-    if (!currentAccounts) {
-      return null;
-    } else {
-      this.setLoginStatus(LoginStatus.Logged);
-      return {
-        username: currentAccounts.name ?? "",
-        permissions: permissions,
-      } as UserAccountInfo;
-    }
+    this.setLoginStatus(LoginStatus.Logged);
+    return {
+      username: currentAccounts.name ?? "",
+      permissions: permissions,
+    } as UserAccountInfo;
   }
 
-  //PRIVATE METHODS
   private setLoginStatus(status: LoginStatus) {
+    if (this.loginStatus === status) return;
+
     this.loginStatus = status;
     this.notifySubscribers();
   }
