@@ -19,7 +19,7 @@ export const ParsedStackTrace = ({ stack }: { stack?: string }) => {
         s(res.map(x => x.toString()).join("\n"));
       }
     }
-  }, [stack]);
+  }, [stack, s]);
 
   return <CodeBlock>{v}</CodeBlock>;
 };

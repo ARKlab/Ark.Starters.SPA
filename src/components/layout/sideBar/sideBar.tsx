@@ -1,5 +1,5 @@
 //#region Imports
-import { Box, useBreakpointValue, type BoxProps } from "@chakra-ui/react";
+import { Box, type BoxProps } from "@chakra-ui/react";
 import { useCallback, useEffect, useMemo } from "react";
 import { useLocation } from "react-router";
 
@@ -20,7 +20,7 @@ import MenuItem from "./menuItem/menuItem";
 import type { SubsectionMenuItemType } from "./menuItem/types";
 
 export default function SimpleSidebar() {
-  const { isMobileSiderOpen, setMobileSiderOpen } = useLayoutContext();
+  const { isDesktop, isMobileSiderOpen, setMobileSiderOpen } = useLayoutContext();
 
   const closeDrawer = useCallback(() => {
     setMobileSiderOpen(false);
@@ -30,14 +30,14 @@ export default function SimpleSidebar() {
   useRouteChanged(closeDrawer);
 
   // close drawer if screen gets bigger while drawer is open
-  const isDesktop = useBreakpointValue({ base: false, lg: true });
   useEffect(() => {
     if (isDesktop) closeDrawer();
   }, [isDesktop, closeDrawer]);
 
-  return (
-    <>
-      <SidebarContent display={{ base: "none", lg: "block" }} h={"full"} borderRight="1px" bg={"sider.bg"} />
+  if (isDesktop)
+    return <SidebarContent h={"full"} borderRight="1px" bg={"sider.bg"} />
+  else {
+    return (
       <DrawerRoot
         open={isMobileSiderOpen}
         placement="end"
@@ -54,8 +54,9 @@ export default function SimpleSidebar() {
           </DrawerBody>
         </DrawerContent>
       </DrawerRoot>
-    </>
-  );
+
+    );
+  }
 }
 
 const SidebarContent = ({ ...rest }: BoxProps) => {
