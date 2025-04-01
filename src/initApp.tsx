@@ -1,7 +1,10 @@
+import { AppInsightsContext } from "@microsoft/applicationinsights-react-js";
 import { useRef, useState } from "react";
 
 import { useAppDispatch } from "./app/hooks";
 import CenterSpinner from "./components/centerSpinner";
+import { appSettings } from "./config/env";
+import { reactPlugin, setupAppInsights } from "./lib/applicationInsights";
 import { DetectLoggedInUser } from "./lib/authentication/authenticationSlice";
 import { useAuthContext } from "./lib/authentication/components/useAuthContext";
 import { i18nSetup } from "./lib/i18n/setup";
@@ -21,10 +24,14 @@ export function InitApp() {
 
         if (import.meta.env.DEV) {
             const { worker } = await import('./lib/mocks/browserWorker');
-            await worker.start({ onUnhandledRequest: "error" });
+            await worker.start({ onUnhandledRequest: "warn" });
         }
 
+        if (appSettings.applicationInsights)
+            setupAppInsights(appSettings.applicationInsights);
+
         await i18nSetup();
+
         await context.init();
         await dispatch(DetectLoggedInUser());
 
@@ -37,7 +44,9 @@ export function InitApp() {
     if (loading) return (<CenterSpinner />);
 
     return (<>
-        <Main />
+        <AppInsightsContext.Provider value={reactPlugin}>
+            <Main />
+        </AppInsightsContext.Provider>
     </>
 
     );

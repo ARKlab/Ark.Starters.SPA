@@ -5,8 +5,10 @@ import { MsalAuthProvider } from "../lib/authentication/providers/msalAuthProvid
 
 import { appSettings } from "./env";
 
+if (!appSettings.msal) throw new Error("MSAL settings not found in appSettings");
+
 export const authProvider: AuthProvider = new MsalAuthProvider({
-  ...appSettings,
+  ...appSettings.msal,
   permissionsClaims: ["extension_Scope"],
 });
 

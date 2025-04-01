@@ -79,7 +79,7 @@ const UserMenu = () => {
 };
 
 const Header = () => {
-  const { isMobileSiderOpen, setMobileSiderOpen } = useLayoutContext();
+  const { isDesktop, isMobileSiderOpen, setMobileSiderOpen } = useLayoutContext();
   return (
     <Box as="header" shadow={"sm"} bg={"header"}>
       <Flex paddingTop={"5px"} paddingBottom={"5px"}>
@@ -102,8 +102,8 @@ const Header = () => {
           <Center>
             <UserMenu />
           </Center>
-          <Center display={{ base: "block", lg: "none" }}>
-            {isMobileSiderOpen ? (
+          {!isDesktop && !isMobileSiderOpen ? (
+            <Center>
               <IconButton
                 variant="outline"
                 aria-label="open menu"
@@ -113,8 +113,8 @@ const Header = () => {
               >
                 <FiMenu />
               </IconButton>
-            ) : undefined}
-          </Center>
+            </Center>
+          ) : undefined}
         </HStack>
       </Flex>
       <GlobalLoadingBar />
