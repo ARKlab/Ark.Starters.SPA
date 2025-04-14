@@ -49,8 +49,6 @@ const configTableSchema = z.object({
     }),
 });
 
-type ConfigTableType = z.infer<typeof configTableSchema>;
-
 export default function EditableTableExample() {
   const { t } = useTranslation();
 
@@ -81,7 +79,7 @@ export default function EditableTableExample() {
     handleSubmit,
     reset,
     formState: { errors, isValid, isSubmitting, isDirty },
-  } = useForm<ConfigTableType>({
+  } = useForm({
     defaultValues: { table: data ?? [] },
     values: { table: data ?? [] },
     mode: "onChange",
