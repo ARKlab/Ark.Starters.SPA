@@ -27,11 +27,6 @@ const FormSchema = z.object({
     }),
 });
 
-/**
- * This will be used to infer the type of the form data
- */
-type FormSchemaType = z.infer<typeof FormSchema>;
-
 export default function LocalizationPage() {
   const { t } = useTranslation();
   const [apples, setApples] = useState(0);
@@ -48,7 +43,7 @@ export default function LocalizationPage() {
     register,
     watch,
     formState: { isSubmitting, errors },
-  } = useForm<FormSchemaType>({
+  } = useForm({
     resolver: zodResolver(FormSchema),
     mode: "onChange",
   });

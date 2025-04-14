@@ -25,7 +25,7 @@ export function Wizard<SchemaType extends object>(props: WizardProps<SchemaType>
     setPage(Math.max(page - 1, 0));
   };
 
-  const form = useForm<SchemaType>(formProps);
+  const form = useForm(formProps);
 
   const {
     handleSubmit,
