@@ -1,16 +1,16 @@
 /** Azure EntraId */
 /* */
-import type { AuthProvider } from "../lib/authentication/providers/authProviderInterface";
+import { NoopAuthProvider, type AuthProvider } from "../lib/authentication/providers/authProviderInterface";
 import { MsalAuthProvider } from "../lib/authentication/providers/msalAuthProvider";
 
 import { appSettings } from "./env";
 
-if (!appSettings.msal) throw new Error("MSAL settings not found in appSettings");
-
-export const authProvider: AuthProvider = new MsalAuthProvider({
-  ...appSettings.msal,
-  permissionsClaims: ["extension_Scope"],
-});
+export const authProvider: AuthProvider = appSettings.msal
+  ? new MsalAuthProvider({
+      ...appSettings.msal,
+      permissionsClaims: ["extension_Scope"],
+    })
+  : new NoopAuthProvider();
 
 /* */
 

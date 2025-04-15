@@ -1,9 +1,8 @@
 var http = require("http");
 var port = process.env.PORT;
 
-if (process.env.NODE_ENV === "development") {
-  require("dotenv").config({ path: ".env.local" });
-}
+require("dotenv").config({ path: [`.env.${process.env.NODE_ENV}.local`, `.env.${process.env.NODE_ENV}`, ".env.local", ".env"] });
+
 
 http
   .createServer(function (req, res) {
