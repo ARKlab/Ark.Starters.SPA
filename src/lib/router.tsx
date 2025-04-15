@@ -105,4 +105,4 @@ export const router = createBrowserRouter(
   },
 );
 
-if (window.Cypress) window.router = router;
+if (import.meta.env.DEV || import.meta.env.MODE === "e2e") window.router = router;

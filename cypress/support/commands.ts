@@ -7,7 +7,7 @@ Cypress.Commands.add("actAsAnonUser", () => {
     "acceptedCookies",
     () => {
       cy.visit("/null");
-      cy.window({ timeout: 20000 }).should("have.property", "appReady", true);
+      cy.window({ timeout: 30000 }).should("have.property", "appReady", true);
       cy.get("[data-test='spinner']").should("not.exist");
 
       cy.get("[data-test='gdpr-acceptAll']").should("be.visible");
@@ -22,7 +22,7 @@ Cypress.Commands.add("actAsAnonUser", () => {
   );
 
   cy.visit("/null");
-  cy.window({ timeout: 20000 }).should("have.property", "appReady", true);
+  cy.window({ timeout: 30000 }).should("have.property", "appReady", true);
   cy.get("[data-test='spinner']").should("not.exist");
 });
 

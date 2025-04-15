@@ -22,10 +22,11 @@ const chunkSizeLimit = 10048;
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
+
   return {
     plugins: [
       Info(),
-      msw({ mode: "browser", handlers: [] }),
+      msw({ mode: "browser", handlers: [], build: mode == "e2e" }),
       legacy({
         targets: ["defaults"],
         modernTargets: [
@@ -46,6 +47,7 @@ export default defineConfig(({ mode }) => {
       react({ jsxImportSource: "@emotion/react", plugins: [["@swc/plugin-emotion", {}]] }),
       reactClickToComponent(),
       VitePWA({
+        disable: mode == "e2e", // disable PWA in e2e mode due to conflict with MSW (only 1 ServiceWorker can be registered)
         pwaAssets: { disabled: false, config: true, htmlPreset: "2023", overrideManifestIcons: true },
         workbox: {
           maximumFileSizeToCacheInBytes: chunkSizeLimit * 1024,

@@ -8,7 +8,7 @@ import { setError } from "./lib/errorHandler/errorHandler";
 
 const store = initStore({ authProvider })
 
-if (window.Cypress) {
+if (import.meta.env.DEV || import.meta.env.MODE === "e2e") {
   window.rtkq = {
     resetCache: () => {
       for (const x of resetApiActions)

@@ -22,9 +22,10 @@ export function InitApp() {
         if (ref.current) return;
         ref.current = true; // only once
 
-        if (import.meta.env.DEV) {
+        if (import.meta.env.DEV || import.meta.env.MODE === "e2e") {
             const { worker } = await import('./lib/mocks/browserWorker');
             await worker.start({ onUnhandledRequest: "warn" });
+
         }
 
         if (appSettings.applicationInsights)
@@ -35,8 +36,7 @@ export function InitApp() {
         await context.init();
         await dispatch(DetectLoggedInUser());
 
-        if (window.Cypress)
-            window.appReady = true;
+        window.appReady = true;
 
         setLoading(false);
     }, [dispatch, setLoading]);
@@ -48,6 +48,5 @@ export function InitApp() {
             <Main />
         </AppInsightsContext.Provider>
     </>
-
     );
 }

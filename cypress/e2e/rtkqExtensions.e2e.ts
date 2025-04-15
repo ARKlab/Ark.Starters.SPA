@@ -1,4 +1,4 @@
-describe("Config Table", () => {
+describe("RTKQ Extensions", () => {
   beforeEach(() => {
     cy.actAsAnonUser();
     cy.navigateViaMenu(/rtkqerrorhandling/i);
