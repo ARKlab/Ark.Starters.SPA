@@ -200,6 +200,7 @@ export default tseslint.config(
       "public/**",
       "build/**",
       "dist/**",
+      "cypress/dist/**",
       ".github/**",
       ".swc/**",
       "dev-dist/**",
