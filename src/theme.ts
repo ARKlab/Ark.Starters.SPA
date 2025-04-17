@@ -1,12 +1,9 @@
 import { createSystem, defaultConfig } from "@chakra-ui/react";
 
 const theme = createSystem(defaultConfig, {
+  strictTokens: true,
   globalCss: {
     html: { colorPalette: "brand" },
-    "html, body": {
-      margin: 0,
-      padding: 0,
-    },
   },
   theme: {
     semanticTokens: {
