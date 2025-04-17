@@ -13,14 +13,17 @@ export default defineConfig({
     viewportWidth: 1280,
 
     video: false,
+
     screenshotOnRunFailure: true,
     experimentalRunAllSpecs: true,
+    experimentalMemoryManagement: true,
 
     defaultCommandTimeout: 15000,
 
     supportFile: "cypress/support/e2e.ts",
 
     specPattern: "**/*.e2e.{ts,tsx}",
+
     setupNodeEvents(on, config) {
       //codeCoverageTask(on, config);
 
@@ -32,6 +35,7 @@ export default defineConfig({
         }),
       );
       */
+
       return config;
     },
   },

@@ -20,14 +20,17 @@ function fallbackRender({ error }: { error: Error }) {
   return (
     <div role="alert">
       <p>Fatal error. Reload the Browser (F5)</p>
-      <pre style={{ color: "fg.error" }}>{error.message}</pre>
-      <pre style={{ color: "fg.error" }}>{error.stack}</pre>
+      <pre style={{ color: "red" }}>{error.message}</pre>
+      <pre style={{ color: "red" }}>{error.stack}</pre>
     </div>
   );
 }
 
 window.addEventListener("vite:preloadError", () => {
-  window.location.reload();
+  // reload the App if a dynamic import fails after App has been initialized
+  // see https://www.vidbeo.com/blog/reload-nuxt-spa-on-missing-chunk-error/
+  if (window.appReady)
+    window.location.reload();
 });
 
 const rootElement = document.getElementById("root");

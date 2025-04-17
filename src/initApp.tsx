@@ -1,7 +1,10 @@
+import { AppInsightsContext } from "@microsoft/applicationinsights-react-js";
 import { useRef, useState } from "react";
 
 import { useAppDispatch } from "./app/hooks";
 import CenterSpinner from "./components/centerSpinner";
+import { appSettings } from "./config/env";
+import { reactPlugin, setupAppInsights } from "./lib/applicationInsights";
 import { DetectLoggedInUser } from "./lib/authentication/authenticationSlice";
 import { useAuthContext } from "./lib/authentication/components/useAuthContext";
 import { i18nSetup } from "./lib/i18n/setup";
@@ -19,17 +22,21 @@ export function InitApp() {
         if (ref.current) return;
         ref.current = true; // only once
 
-        if (import.meta.env.DEV) {
+        if (import.meta.env.DEV || import.meta.env.MODE === "e2e") {
             const { worker } = await import('./lib/mocks/browserWorker');
-            await worker.start({ onUnhandledRequest: "error" });
+            await worker.start({ onUnhandledRequest: "warn" });
+
         }
 
+        if (appSettings.applicationInsights)
+            setupAppInsights(appSettings.applicationInsights);
+
         await i18nSetup();
+
         await context.init();
         await dispatch(DetectLoggedInUser());
 
-        if (window.Cypress)
-            window.appReady = true;
+        window.appReady = true;
 
         setLoading(false);
     }, [dispatch, setLoading]);
@@ -37,8 +44,9 @@ export function InitApp() {
     if (loading) return (<CenterSpinner />);
 
     return (<>
-        <Main />
+        <AppInsightsContext.Provider value={reactPlugin}>
+            <Main />
+        </AppInsightsContext.Provider>
     </>
-
     );
 }

@@ -5,6 +5,7 @@
 import msw from "@iodigital/vite-plugin-msw";
 import react from "@vitejs/plugin-react-swc";
 import copy from "rollup-plugin-copy";
+import Info from "unplugin-info/vite";
 import { defineConfig, loadEnv } from "vite";
 import eslint from "vite-plugin-eslint2";
 import { i18nAlly } from "vite-plugin-i18n-ally";
@@ -21,9 +22,11 @@ const chunkSizeLimit = 10048;
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
+
   return {
     plugins: [
-      msw({ mode: "browser", handlers: [] }),
+      Info(),
+      msw({ mode: "browser", handlers: [], build: mode == "e2e" }),
       legacy({
         targets: ["defaults"],
         modernTargets: [
@@ -44,6 +47,7 @@ export default defineConfig(({ mode }) => {
       react({ jsxImportSource: "@emotion/react", plugins: [["@swc/plugin-emotion", {}]] }),
       reactClickToComponent(),
       VitePWA({
+        disable: mode == "e2e", // disable PWA in e2e mode due to conflict with MSW (only 1 ServiceWorker can be registered)
         pwaAssets: { disabled: false, config: true, htmlPreset: "2023", overrideManifestIcons: true },
         workbox: {
           maximumFileSizeToCacheInBytes: chunkSizeLimit * 1024,
@@ -112,7 +116,7 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       emptyOutDir: true,
-      outDir: "build",
+      outDir: mode == "e2e" ? "cypress/dist" : "build",
       chunkSizeWarningLimit: chunkSizeLimit,
       target: "esnext",
       rollupOptions: {

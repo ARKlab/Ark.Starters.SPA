@@ -1,3 +1,7 @@
+import type { ApplicationInsightsConfig } from "../lib/applicationInsights";
+import type { Auth0AuthProviderConfig } from "../lib/authentication/providers/auth0AuthProvider";
+import type { MsalAuthProviderConfig } from "../lib/authentication/providers/msalAuthProvider";
+
 //Exxpandible global interface for window object
 declare global {
   interface Window {
@@ -6,13 +10,8 @@ declare global {
 }
 
 export type AppSettingsType = {
-  clientID: string;
-  domain: string;
-  scopes: string;
-  knownAuthorities: string;
-  signUpSignInPolicyId: string;
-  serviceUrl: string;
-  redirectUri: string;
-  authority: string;
-  audience: string;
+  auth0?: Auth0AuthProviderConfig;
+  msal?: MsalAuthProviderConfig;
+  applicationInsights?: ApplicationInsightsConfig;
+  serviceUrl?: string;
 };

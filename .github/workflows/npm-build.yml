@@ -24,8 +24,17 @@ jobs:
         uses: cypress-io/github-action@v6
         env:
           VITE_MODE: e2e
+          NODE_ENV: production
         with:
           install: false
-          start: npm start
-          wait-on: "http://localhost:3000, http://localhost:4000"
-          wait-on-timeout: 130
+          start: |
+            npm run e2e:ci:connectionStrings
+            npm run e2e:ci:app
+          wait-on: "http://localhost:4000, http://localhost:3000"
+          wait-on-timeout: 180
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+          if-no-files-found: ignore # 'warn' or 'error' are also available, defaults to `warn`

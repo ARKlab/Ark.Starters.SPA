@@ -121,14 +121,12 @@ export class MsalAuthProvider implements AuthProvider {
         const account = payload.account;
         this.myMSALObj.setActiveAccount(account);
         this.idTokenClaims = payload.idTokenClaims;
-        this.loginStatus = LoginStatus.Logged;
-        this.notifySubscribers();
+        this.setLoginStatus(LoginStatus.Logged);
       }
 
       if (event.eventType === EventType.LOGIN_FAILURE && event.payload) {
         this.idTokenClaims = null;
-        this.loginStatus = LoginStatus.Error;
-        this.notifySubscribers();
+        this.setLoginStatus(LoginStatus.Error);
       }
     });
     this.myMSALObj.setNavigationClient(new CustomNavigationClient());
@@ -153,9 +151,14 @@ export class MsalAuthProvider implements AuthProvider {
 
   public async init(): Promise<void> {
     await this.myMSALObj.initialize();
-    const accounts = this.myMSALObj.getAllAccounts();
-    if (accounts.length > 0) {
-      this.myMSALObj.setActiveAccount(accounts[0]);
+
+    this.myMSALObj.enableAccountStorageEvents();
+
+    if (!this.myMSALObj.getActiveAccount()) {
+      const accounts = this.myMSALObj.getAllAccounts();
+      if (accounts.length > 0) {
+        this.myMSALObj.setActiveAccount(accounts[0]);
+      }
     }
   }
 
@@ -191,6 +194,7 @@ export class MsalAuthProvider implements AuthProvider {
       this.subscribers.delete(subscriber);
     };
   }
+
   public async handleLoginRedirect(): Promise<void> {
     await this.myMSALObj.handleRedirectPromise();
   }
@@ -202,9 +206,7 @@ export class MsalAuthProvider implements AuthProvider {
         const resp = await this.myMSALObj.acquireTokenSilent(this.silentProfileRequest);
 
         this.idTokenClaims = resp.idTokenClaims;
-        this.loginStatus = LoginStatus.Logged;
-        this.notifySubscribers();
-
+        this.setLoginStatus(LoginStatus.Logged);
         return { username: account.username, permissions: this.getUserPermissions() } as UserAccountInfo;
       } catch (e) {
         if (e instanceof msal.InteractionRequiredAuthError) return null;
@@ -245,5 +247,12 @@ export class MsalAuthProvider implements AuthProvider {
       }
     }
     return null;
+  }
+
+  private setLoginStatus(status: LoginStatus) {
+    if (this.loginStatus === status) return;
+
+    this.loginStatus = status;
+    this.notifySubscribers();
   }
 }
