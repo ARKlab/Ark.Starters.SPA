@@ -60,7 +60,7 @@
     "e2e:start": "cross-env BROWSER=none VITE_MODE=e2e concurrently --kill-others \"npm:start\" \"npm:cypress:open\"",
     "e2e:ci": "concurrently --kill-others --success first \"npm:e2e:ci:*\"",
     "e2e:ci:connectionStrings": "cross-env PORT=4000 node -- public/connectionStrings.cjs",
-    "pree2e:ci:app": "cross-env NODE_ENV=production vite build --mode e2e",
+    "pree2e:ci:app": "cross-env NODE_ENV=production CYPRESS_COVERAGE=true vite build --mode e2e",
     "e2e:ci:app": "cross-env NODE_ENV=production BROWSER=none vite preview --mode e2e",
     "pree2e:ci:run": "wait-on --log --timeout 120000 http-get://localhost:4000 http-get://localhost:3000",
     "e2e:ci:run": "cross-env NODE_ENV=production npm run cypress:run"
@@ -97,6 +97,7 @@
     "cypress-localstorage-commands": "2.2.7",
     "cypress-wait-until": "3.0.2",
     "dotenv": "16.5.0",
+    "esbuild": "0.25.2",
     "eslint": "9.24.0",
     "eslint-import-resolver-typescript": "4.3.2",
     "eslint-plugin-chai-friendly": "1.0.1",
@@ -120,8 +121,8 @@
     "vite": "6.3.1",
     "vite-plugin-eslint2": "5.0.3",
     "vite-plugin-i18n-ally": "5.4.0",
-    "esbuild": "0.25.2",
     "vite-plugin-image-optimizer": "1.1.8",
+    "vite-plugin-istanbul": "^7.0.0",
     "vite-plugin-legacy-swc": "1.2.3",
     "vite-plugin-preload": "0.4.2",
     "vite-plugin-pwa": "1.0.0",
@@ -136,5 +137,11 @@
   "engines": {
     "node": "22.x",
     "npm": ">=10"
+  },
+  "nyc": {
+    "reporter": [
+      "lcov",
+      "cobertura"
+    ]
   }
 }

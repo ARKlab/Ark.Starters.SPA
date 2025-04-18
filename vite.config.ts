@@ -10,6 +10,7 @@ import { defineConfig, loadEnv } from "vite";
 import eslint from "vite-plugin-eslint2";
 import { i18nAlly } from "vite-plugin-i18n-ally";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
+import istanbul from "vite-plugin-istanbul";
 import legacy from "vite-plugin-legacy-swc";
 import { VitePWA } from "vite-plugin-pwa";
 import { reactClickToComponent } from "vite-plugin-react-click-to-component";
@@ -101,6 +102,12 @@ export default defineConfig(({ mode }) => {
         cacheLocation: "node_modules/.vite/.eslintcache",
         exclude: ["**/node_modules/**", "**/build/**", "**/public/**", "**/dev-dist/**", "virtual:**"],
         include: ["./src/**/*.{ts,tsx}"],
+      }),
+      istanbul({
+        cypress: true,
+        requireEnv: true,
+        include: ["src/"],
+        forceBuildInstrument: true,
       }),
     ],
     test: {

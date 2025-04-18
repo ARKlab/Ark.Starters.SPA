@@ -1,3 +1,4 @@
+import codeCoverageTask from "@cypress/code-coverage/task";
 import { defineConfig } from "cypress";
 
 export default defineConfig({
@@ -25,7 +26,7 @@ export default defineConfig({
     specPattern: "**/*.e2e.{ts,tsx}",
 
     setupNodeEvents(on, config) {
-      //codeCoverageTask(on, config);
+      codeCoverageTask(on, config);
 
       /*
       on(
