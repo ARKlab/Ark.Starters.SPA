@@ -68,7 +68,7 @@
   "devDependencies": {
     "@chakra-ui/cli": "3.16.1",
     "@cypress/code-coverage": "3.14.0",
-    "@eslint/js": "9.25.0",
+    "@eslint/js": "9.25.1",
     "@iodigital/vite-plugin-msw": "2.0.0",
     "@svgr/plugin-jsx": "8.1.0",
     "@svgr/plugin-svgo": "8.1.0",
@@ -99,7 +99,7 @@
     "dotenv": "16.5.0",
     "esbuild": "0.25.2",
     "eslint": "9.25.0",
-    "eslint-import-resolver-typescript": "4.3.3",
+    "eslint-import-resolver-typescript": "4.3.4",
     "eslint-plugin-chai-friendly": "1.0.1",
     "eslint-plugin-cypress": "4.2.1",
     "eslint-plugin-import": "2.31.0",
