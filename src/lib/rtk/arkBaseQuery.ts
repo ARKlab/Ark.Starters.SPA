@@ -6,7 +6,7 @@ import {
   type BaseQueryArg,
   type QueryReturnValue,
   type RetryOptions,
-} from "@reduxjs/toolkit/query/react";
+} from "@reduxjs/toolkit/query";
 
 import type { MaybePromise, Modify, UnwrapPromise } from "../types";
 

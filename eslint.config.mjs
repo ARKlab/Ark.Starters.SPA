@@ -91,6 +91,11 @@ export default tseslint.config(
               importNames: ["fetchBaseQuery"],
               message: "Please use appFetchQuery from `src/app/appFetchQuery.ts` instead.",
             },
+            {
+              name: "@reduxjs/toolkit/query/react",
+              importNames: ["retry"],
+              message: "Please use retry from `@reduxjs/toolkit/query` instead.",
+            },
           ],
         },
       ],
