@@ -19,14 +19,14 @@ export default tseslint.config(
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
   importPlugin.flatConfigs.recommended,
-  pluginMocha.configs.flat.recommended,
+  pluginMocha.configs.recommended,
   pluginCypress.configs.recommended,
   pluginChaiFriendly.configs.recommendedFlat,
   jsxA11y.flatConfigs.strict,
   {
     rules: {
       "mocha/no-exclusive-tests": "error",
-      "mocha/no-skipped-tests": "error",
+      "mocha/no-pending-tests": "error",
       "mocha/no-mocha-arrows": "off",
       "cypress/no-unnecessary-waiting": "off",
       "mocha/no-top-level-hooks": "off",
