@@ -120,7 +120,7 @@
     "unplugin-info": "1.2.2",
     "vite": "6.3.5",
     "vite-plugin-eslint2": "5.0.3",
-    "vite-plugin-i18n-ally": "5.4.0",
+    "vite-plugin-i18n-ally": "6.1.0",
     "vite-plugin-image-optimizer": "1.1.9",
     "vite-plugin-istanbul": "7.0.0",
     "vite-plugin-legacy-swc": "1.2.3",
