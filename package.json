@@ -114,7 +114,7 @@
     "prettier": "3.6.2",
     "rollup-plugin-copy": "3.5.0",
     "sharp": "0.34.2",
-    "svgo": "3.3.2",
+    "svgo": "4.0.0",
     "typescript": "5.8.3",
     "typescript-eslint": "8.35.0",
     "unplugin-info": "1.2.2",
