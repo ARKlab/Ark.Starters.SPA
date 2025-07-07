@@ -116,7 +116,7 @@
     "sharp": "0.34.2",
     "svgo": "4.0.0",
     "typescript": "5.8.3",
-    "typescript-eslint": "8.35.1",
+    "typescript-eslint": "8.36.0",
     "unplugin-info": "1.2.2",
     "vite": "6.3.5",
     "vite-plugin-eslint2": "5.0.4",
