@@ -96,7 +96,7 @@
     "cypress": "14.5.1",
     "cypress-localstorage-commands": "2.2.7",
     "cypress-wait-until": "3.0.2",
-    "dotenv": "17.0.1",
+    "dotenv": "17.1.0",
     "esbuild": "0.25.6",
     "eslint": "9.30.1",
     "eslint-import-resolver-typescript": "4.4.4",
