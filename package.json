@@ -6,7 +6,7 @@
   "dependencies": {
     "@auth0/auth0-spa-js": "2.3.0",
     "@azure/msal-browser": "4.16.0",
-    "@chakra-ui/react": "3.22.0",
+    "@chakra-ui/react": "3.23.0",
     "@emotion/react": "11.14.0",
     "@hookform/resolvers": "5.2.0",
     "@microsoft/applicationinsights-clickanalytics-js": "3.3.9",
@@ -66,7 +66,7 @@
     "e2e:ci:run": "cross-env NODE_ENV=production npm run cypress:run"
   },
   "devDependencies": {
-    "@chakra-ui/cli": "3.22.0",
+    "@chakra-ui/cli": "3.23.0",
     "@cypress/code-coverage": "3.14.5",
     "@eslint/js": "9.32.0",
     "@iodigital/vite-plugin-msw": "2.0.0",
@@ -75,7 +75,7 @@
     "@swc/core": "1.13.2",
     "@swc/plugin-emotion": "11.0.0",
     "@testing-library/cypress": "10.0.3",
-    "@testing-library/jest-dom": "6.6.3",
+    "@testing-library/jest-dom": "6.6.4",
     "@testing-library/react": "16.3.0",
     "@testing-library/user-event": "14.6.1",
     "@types/jest": "30.0.0",
