@@ -6,7 +6,7 @@
   "dependencies": {
     "@auth0/auth0-spa-js": "2.3.0",
     "@azure/msal-browser": "4.18.0",
-    "@chakra-ui/react": "3.24.0",
+    "@chakra-ui/react": "3.24.1",
     "@emotion/react": "11.14.0",
     "@hookform/resolvers": "5.2.1",
     "@microsoft/applicationinsights-clickanalytics-js": "3.3.9",
@@ -66,7 +66,7 @@
     "e2e:ci:run": "cross-env NODE_ENV=production npm run cypress:run"
   },
   "devDependencies": {
-    "@chakra-ui/cli": "3.24.0",
+    "@chakra-ui/cli": "3.24.1",
     "@cypress/code-coverage": "3.14.5",
     "@eslint/js": "9.32.0",
     "@iodigital/vite-plugin-msw": "2.0.0",
