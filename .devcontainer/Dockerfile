@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/vscode/devcontainers/typescript-node:22-bookworm
+FROM mcr.microsoft.com/vscode/devcontainers/typescript-node:24-bookworm
 
 # https://docs.cypress.io/guides/continuous-integration/introduction#Dependencies
 RUN apt-get update && \
