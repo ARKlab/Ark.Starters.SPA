@@ -124,7 +124,7 @@
     "vite-plugin-image-optimizer": "2.0.2",
     "vite-plugin-istanbul": "7.1.0",
     "vite-plugin-legacy-swc": "2.0.0",
-    "vite-plugin-preload": "0.4.2",
+    "vite-plugin-preload": "0.4.4",
     "vite-plugin-pwa": "1.0.3",
     "vite-plugin-react-click-to-component": "4.0.0",
     "vite-plugin-static-copy": "3.1.2",
