@@ -6,7 +6,7 @@
   "dependencies": {
     "@auth0/auth0-spa-js": "2.4.1",
     "@azure/msal-browser": "4.22.1",
-    "@chakra-ui/react": "3.26.0",
+    "@chakra-ui/react": "3.27.0",
     "@emotion/react": "11.14.0",
     "@hookform/resolvers": "5.2.1",
     "@microsoft/applicationinsights-clickanalytics-js": "3.3.9",
