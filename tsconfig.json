@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext",
+      "WebWorker"
+    ],
+    "types": [
+      "vite/client",
+      "vitest/globals",
+      "vite-plugin-pwa/pwa-assets",
+      "vite-plugin-pwa/client",
+      "vite-plugin-i18n-ally/client",
+      "unplugin-info/client"
+    ],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx"
+  },
+  "include": [
+    "./src"
+  ],
+  "files": [
+    "./vitest.setup.ts",
+    "./vite.config.ts",
+    "./pwa-assets.config.ts"
+  ]
+}

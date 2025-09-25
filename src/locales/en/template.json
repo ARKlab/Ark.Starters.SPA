@@ -1,0 +1,40 @@
+{
+  "confirmationDialog": {
+    "button": {
+      "close": "Close",
+      "confirm": "Confirm"
+    }
+  },
+  "errorHandler": {
+    "actionLabel": "Show Details",
+    "contactAdministrator": "Please contact administrator",
+    "details": "Details",
+    "error": "Unexpected error",
+    "reload": "Reload the page",
+    "submitting": "Submitting",
+    "success": "Success",
+    "timeout": "Timeout"
+  },
+  "errors": {
+    "notFoundPage": "This page could not be found"
+  },
+  "menu": {
+    "account": "Account",
+    "dark": "Dark",
+    "exit": "Exit",
+    "login": "Login",
+    "options": "Options",
+    "user": "User"
+  },
+  "pwaBadge": {
+    "newVersion": {
+      "body": "New Version is available. Refresh to update.",
+      "reload": "Reload",
+      "title": "New Version Available"
+    },
+    "offlineReady": {
+      "body": "App has been installed. You can start working offline.",
+      "title": "Offline Ready"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+    "accept": "Accettare",
+    "acceptAll": "Accettare tutti",
+    "customize": "Le opzioni fornite in questa sezione ti consentono di personalizzare le tue preferenze sul consenso per qualsiasi tecnologia di tracciamento utilizzata per gli scopi descritti di seguito. \nPer saperne di più su come questi tracker ci aiutano e su come funzionano, fai riferimento alla <1>politica sui cookie</1>. \nTieni presente che negare il consenso per uno scopo particolare potrebbe rendere non disponibili le funzionalità correlate.",
+    "marketing": {
+        "description": "Questi tracker ci aiutano a fornirti annunci personalizzati o contenuti di marketing e a misurare le loro prestazioni.",
+        "title": "Marketing"
+    },
+    "necessary": {
+        "description": "Questi tracker vengono utilizzati per attività strettamente necessarie per operare o fornire il servizio che ci hai richiesto e, pertanto, non richiedono il tuo consenso.",
+        "title": "Necessario"
+    },
+    "policy": "Noi e terze parti selezionate utilizziamo cookie o tecnologie simili per scopi tecnici e, con il tuo consenso, per altri scopi specificati nella <1>politica sui cookie</1>.",
+    "preferences": {
+        "description": "Questi tracker abilitano interazioni e funzionalità di base che ti consentono di accedere a funzionalità selezionate del nostro servizio e facilitare la tua comunicazione con noi.",
+        "title": "Preferenze"
+    },
+    "reject": "Rifiutare",
+    "statistics": {
+        "description": "Questi tracker ci aiutano a misurare il traffico e ad analizzare il tuo comportamento per migliorare il nostro servizio.",
+        "title": "Statistiche"
+    },
+    "title": "Abbiamo i Cookies!"
+}
