@@ -50,11 +50,11 @@ export class Auth0AuthProvider implements AuthProvider {
       clientId: config.clientID,
       cacheLocation: "localstorage",
       useCookiesForTransactions: true,
-      useRefreshTokens: true,
+      useRefreshTokens: false,
       authorizationParams: {
         redirect_uri: config.redirectUri,
-        audience: config.audience,
-        scope: "openid profile email",
+        // audience: config.audience, 
+        scope: "openid profile email contactInfo",
       },
     };
     this.config = {
@@ -96,10 +96,22 @@ export class Auth0AuthProvider implements AuthProvider {
     await this.auth0Client.logout();
   }
 
-  public async getToken() {
-    const token = await this.auth0Client.getTokenSilently();
+  public async getToken(audience?: string): Promise<string> {
+    const claims = await this.auth0Client.getIdTokenClaims();
+    if (claims && "__raw" in claims) {
+      return claims.__raw;
+    }
 
-    return token;
+    if (audience) {
+      return this.auth0Client.getTokenSilently({
+        authorizationParams: {
+          audience: audience,
+          scope: "openid profile email contactInfo",
+        },
+      });
+    }
+
+    return this.auth0Client.getTokenSilently();
   }
   public getLoginStatus(): LoginStatus {
     return this.loginStatus;
@@ -116,9 +128,30 @@ export class Auth0AuthProvider implements AuthProvider {
     try {
       const result = await this.auth0Client.handleRedirectCallback<AppState>();
       target = result.appState?.targetUrl ?? "/";
-      const relativePath = target.replace(window.location.origin, "");
+      
+      // Extract just the pathname from the target URL to avoid nested URLs
+      let relativePath = target;
+      try {
+        const targetUrl = new URL(target);
+        relativePath = targetUrl.pathname + targetUrl.search + targetUrl.hash;
+      } catch {
+        // If target is not a full URL, use it as-is (already relative)
+        relativePath = target.startsWith('/') ? target : '/' + target;
+      }
+      
       await router.navigate(relativePath, { replace: true });
     } catch (e) {
+      if (e instanceof Error && e.message.includes("Invalid state")) {
+        console.warn("Invalid state detected, clearing auth params and redirecting to home");
+        const url = new URL(window.location.href);
+        url.searchParams.delete("code");
+        url.searchParams.delete("state");
+        url.searchParams.delete("error");
+        window.history.replaceState({}, document.title, url.pathname);
+        await router.navigate("/", { replace: true });
+        return;
+      }
+
       this.setLoginStatus(LoginStatus.Error);
       throw e;
     }

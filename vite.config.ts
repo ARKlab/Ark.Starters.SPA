@@ -145,6 +145,52 @@ export default defineConfig(({ mode }) => {
       open: true,
       proxy: {
         "/connectionStrings.cjs": "http://localhost:4000",
+        "/api": {
+          target: "https://k4view-admin-test-k2e.azurewebsites.net",
+          changeOrigin: true,
+          secure: true,
+          configure: (proxy, _options) => {
+            proxy.on("proxyReq", (proxyReq, req, _res) => {
+              console.log(
+                "Proxying request:",
+                req.method,
+                req.url,
+                "-> https://k4view-admin-test-k2e.azurewebsites.net" + req.url,
+              );
+            });
+          },
+        },
+        // Backend API endpoints (userTypes, users, usersInfo, etc.)
+        "/userTypes": {
+          target: "https://k4view-admin-test-k2e.azurewebsites.net",
+          changeOrigin: true,
+          secure: true,
+          configure: (proxy, _options) => {
+            proxy.on("proxyReq", (proxyReq, req, _res) => {
+              console.log(
+                "Proxying userTypes request:",
+                req.method,
+                req.url,
+                "-> https://k4view-admin-test-k2e.azurewebsites.net" + req.url,
+              );
+            });
+          },
+        },
+        "/users": {
+          target: "https://k4view-admin-test-k2e.azurewebsites.net",
+          changeOrigin: true,
+          secure: true,
+        },
+        "/usersInfo": {
+          target: "https://k4view-admin-test-k2e.azurewebsites.net",
+          changeOrigin: true,
+          secure: true,
+        },
+        "/artesianAdmin": {
+          target: "https://k4view-admin-test-k2e.azurewebsites.net",
+          changeOrigin: true,
+          secure: true,
+        },
       },
     },
     preview: {

@@ -1,6 +1,4 @@
-import {
-  FaUsers,
-} from "react-icons/fa";
+import { FaUsers } from "react-icons/fa";
 import { Navigate } from "react-router";
 
 import type { MainSectionType } from "../components/layout/sideBar/menuItem/types";
@@ -16,7 +14,7 @@ export const mainSections: MainSectionType[] = [
         path: "",
         label: "index",
         isInMenu: false,
-        component: <Navigate to="jsonplaceholder" />,
+        component: <Navigate to="groupsManagement" />,
       },
 
       {

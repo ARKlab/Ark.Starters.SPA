@@ -31,6 +31,14 @@ export function InitApp() {
           if (request.url.includes("auth0.com")) {
             return;
           }
+          // Allow local API requests to go through proxy
+          if (request.url.includes("localhost") && request.url.includes("/api/")) {
+            return "bypass";
+          }
+          // Allow K4View backend requests to pass through
+          if (request.url.includes("k4view-admin-test-k2e.azurewebsites.net")) {
+            return "bypass";
+          }
           console.warn(
             "[MSW] Warning: intercepted a request without a matching request handler:",
             request.method,
