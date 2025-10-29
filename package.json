@@ -135,7 +135,7 @@
   },
   "engineStrict": true,
   "engines": {
-    "node": "22.x",
+    "node": "24.x",
     "npm": ">=10"
   },
   "nyc": {
