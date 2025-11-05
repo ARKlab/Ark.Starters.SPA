@@ -28,9 +28,7 @@ export const UserChangesModal = ({
   selectedUserType,
   userTypeName,
 }: UserChangesModalProps) => {
-  const filteredCurrentUsers = selectedUserType 
-    ? currentUsers.filter(user => user.UserType === selectedUserType)
-    : [];
+  const filteredCurrentUsers = selectedUserType ? currentUsers.filter(user => user.UserType === selectedUserType) : [];
 
   const hasChanges = usersToAdd.length > 0 || usersToRemove.length > 0;
 
@@ -95,7 +93,8 @@ export const UserChangesModal = ({
           <Text fontSize="xs" color="blue.700">
             <strong>Current group size:</strong> {filteredCurrentUsers.length} users
             <br />
-            <strong>After changes:</strong> {Math.max(0, filteredCurrentUsers.length + usersToAdd.length - usersToRemove.length)} users
+            <strong>After changes:</strong>{" "}
+            {Math.max(0, filteredCurrentUsers.length + usersToAdd.length - usersToRemove.length)} users
           </Text>
         </Box>
       )}

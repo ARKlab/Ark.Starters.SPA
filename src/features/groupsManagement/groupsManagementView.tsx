@@ -8,6 +8,8 @@ import { ChackraUIBaseModal } from "../../components/chackraModal/chackraBaseMod
 import { Checkbox } from "../../components/ui/checkbox";
 import { Login } from "../../lib/authentication/authenticationSlice";
 import { useAuthContext } from "../../lib/authentication/components/useAuthContext";
+import { hasArtesianAccess, isArtesianConfigured, logArtesianStatus } from "../artesian/artesianDetection";
+import { artesianHooks } from "../artesian/artesianIntegration";
 
 import { UserChangesModal } from "./userChangesModal";
 import { UserTransferModal } from "./userTransferModal";
@@ -77,7 +79,7 @@ interface SimpleMenuItem {
 const GroupsManagementView = () => {
   const dispatch = useAppDispatch();
   const { context, isLogged } = useAuthContext();
-  
+
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
   const [selectedUserType, setSelectedUserType] = useState<number | null>(null);
   const [userTypes, setUserTypes] = useState<UserType[]>([]);
@@ -101,6 +103,9 @@ const GroupsManagementView = () => {
     existingGroupName: string;
     currentGroupName: string;
   } | null>(null);
+  const [showCreateUserTypeModal, setShowCreateUserTypeModal] = useState(false);
+  const [newUserTypeName, setNewUserTypeName] = useState("");
+  const [isCreatingUserType, setIsCreatingUserType] = useState(false);
 
   const handleLogin = () => {
     void dispatch(Login());
@@ -288,12 +293,12 @@ const GroupsManagementView = () => {
     if (!trimmedName) return;
 
     // Check if user already exists in the current user type
-    const existingUsers = selectedUserType 
+    const existingUsers = selectedUserType
       ? users.filter(user => user.UserType === selectedUserType).map(user => user.Name)
       : [];
-    
+
     const isDuplicateInCurrentGroup = existingUsers.includes(trimmedName) || usersToAdd.includes(trimmedName);
-    
+
     if (isDuplicateInCurrentGroup) {
       return;
     }
@@ -309,7 +314,7 @@ const GroupsManagementView = () => {
           userName: trimmedName,
           existingGroupId: existingUser.UserType,
           existingGroupName: existingGroupName,
-          currentGroupName: currentGroupName
+          currentGroupName: currentGroupName,
         });
         setShowTransferModal(true);
       }
@@ -342,14 +347,9 @@ const GroupsManagementView = () => {
         return;
       }
 
-      const currentUsers = users
-        .filter(user => user.UserType === selectedUserType)
-        .map(user => user.Name);
+      const currentUsers = users.filter(user => user.UserType === selectedUserType).map(user => user.Name);
 
-      const finalUserList = [
-        ...currentUsers.filter(userName => !usersToRemove.has(userName)), 
-        ...usersToAdd 
-      ];
+      const finalUserList = [...currentUsers.filter(userName => !usersToRemove.has(userName)), ...usersToAdd];
 
       const selectedUserTypeData = userTypes.find(ut => ut.ID === selectedUserType);
       const groupName = selectedUserTypeData?.Name ?? "Unknown";
@@ -357,7 +357,7 @@ const GroupsManagementView = () => {
       const payload = {
         userType: selectedUserType,
         groupName: groupName,
-        users: finalUserList
+        users: finalUserList,
       };
 
       const response = await fetch("https://k4view-admin-test-k2e.azurewebsites.net/users/update", {
@@ -390,7 +390,6 @@ const GroupsManagementView = () => {
       setUsersToRemove(new Set());
       setIsRemoveMode(false);
       setShowModal(false);
-
     } catch (err) {
       setError(`Failed to update users: ${String(err)}`);
       console.error("Error updating users:", err);
@@ -420,49 +419,48 @@ const GroupsManagementView = () => {
       const token = await context.getToken();
       if (!token) return;
 
-      const existingGroupUsers = users.filter(user => 
-        user.UserType === transferData.existingGroupId && user.Name !== transferData.userName
+      const existingGroupUsers = users.filter(
+        user => user.UserType === transferData.existingGroupId && user.Name !== transferData.userName,
       );
-      
+
       const updateExistingGroupPayload = {
         userType: transferData.existingGroupId,
         groupName: transferData.existingGroupName,
-        users: existingGroupUsers.map(user => user.Name)
+        users: existingGroupUsers.map(user => user.Name),
       };
 
-      const removeResponse = await fetch('/users/update', {
-        method: 'POST',
+      const removeResponse = await fetch("/users/update", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(updateExistingGroupPayload),
       });
 
       if (!removeResponse.ok) {
-        throw new Error('Failed to remove user from existing group');
+        throw new Error("Failed to remove user from existing group");
       }
 
-      const usersResponse = await fetch('/users', {
+      const usersResponse = await fetch("/users", {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
-      
+
       if (usersResponse.ok) {
         const userData = (await usersResponse.json()) as User[];
         setUsers(userData);
       }
 
       setUsersToAdd(prev => [...prev, transferData.userName]);
-      
+
       setShowTransferModal(false);
       setTransferData(null);
       setNewUserName("");
-      
     } catch (error) {
-      console.error('Error transferring user:', error);
-      setAlertMessage('Failed to transfer user. Please try again.');
+      console.error("Error transferring user:", error);
+      setAlertMessage("Failed to transfer user. Please try again.");
       setShowAlertModal(true);
     }
   };
@@ -559,13 +557,147 @@ const GroupsManagementView = () => {
       if (userTypesResponse.ok) {
         const updatedUserTypes = (await userTypesResponse.json()) as UserType[];
         setUserTypes(updatedUserTypes);
-      }
 
+        // Artesian Integration: Trigger full workflow on user type configuration update
+        try {
+          if (isArtesianConfigured()) {
+            const updatedUserType = updatedUserTypes.find(ut => ut.ID === selectedUserType);
+            const userTypeName = selectedUserTypeData?.Name ?? "Unknown";
+
+            if (updatedUserType) {
+              logArtesianStatus(userTypeName, updatedUserType.Config);
+
+              if (hasArtesianAccess(updatedUserType.Config)) {
+                console.log(`[Artesian] Triggering full workflow for user type: ${userTypeName}`);
+
+                // Execute complete workflow: createGroup → updateGroup → updateACLPaths
+                await artesianHooks.onUpdateUserType(userTypeName, updatedUserType.ID, updatedUserType.Config);
+
+                console.log(`[Artesian] Successfully completed workflow for: ${userTypeName}`);
+              }
+            }
+          }
+        } catch (artesianError) {
+          console.warn("[Artesian] Error in workflow:", artesianError);
+        }
+      }
     } catch (err) {
       setError(`Failed to save configuration: ${String(err)}`);
       console.error("Error saving configuration:", err);
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  // Create User Type handlers
+  const handleShowCreateUserTypeModal = () => {
+    setNewUserTypeName("");
+    setShowCreateUserTypeModal(true);
+  };
+
+  const handleCreateUserTypeModalClose = () => {
+    setShowCreateUserTypeModal(false);
+    setNewUserTypeName("");
+  };
+
+  const handleCreateUserType = async () => {
+    if (!newUserTypeName.trim()) return;
+
+    try {
+      setIsCreatingUserType(true);
+      setError(null);
+
+      const token = await context.getToken();
+      if (!token) {
+        setError("No authentication token available");
+        return;
+      }
+
+      const userTypeName = newUserTypeName.trim();
+
+      // Step 1: Check if user type name already exists
+      const checkResponse = await fetch(
+        `https://k4view-admin-test-k2e.azurewebsites.net/userTypes/getName/${userTypeName}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (!checkResponse.ok) {
+        setError(`Failed to check user type name: HTTP ${checkResponse.status}: ${checkResponse.statusText}`);
+        return;
+      }
+
+      const checkResult = await checkResponse.json();
+
+      // If name already exists (not empty array), show error
+      if (Array.isArray(checkResult) && checkResult.length > 0) {
+        setError(`User type "${userTypeName}" already exists`);
+        return;
+      }
+
+      // Step 2: Create the user type if name doesn't exist
+      const createResponse = await fetch(
+        `https://k4view-admin-test-k2e.azurewebsites.net/userTypes/create/${userTypeName}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (!createResponse.ok) {
+        setError(`Failed to create user type: HTTP ${createResponse.status}: ${createResponse.statusText}`);
+        return;
+      }
+
+      // Step 3: Refresh the user types list to show the new user type
+      const userTypesResponse = await fetch("/userTypes", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (userTypesResponse.ok) {
+        const userTypesData = (await userTypesResponse.json()) as UserType[];
+        setUserTypes(userTypesData);
+
+        const newUserType = userTypesData.find(ut => ut.Name === userTypeName);
+        if (newUserType) {
+          setSelectedUserType(newUserType.ID);
+
+          // Artesian Integration: Trigger createGroup if user type has Artesian access
+          try {
+            if (isArtesianConfigured()) {
+              logArtesianStatus(userTypeName, newUserType.Config);
+
+              if (hasArtesianAccess(newUserType.Config)) {
+                console.log(`[Artesian] Triggering createGroup for user type: ${userTypeName}`);
+                await artesianHooks.onCreateUserType(userTypeName);
+                console.log(`[Artesian] Successfully created group: ${userTypeName}`);
+              }
+            }
+          } catch (artesianError) {
+            console.warn("[Artesian] Error creating group:", artesianError);
+          }
+        }
+      }
+
+      setShowCreateUserTypeModal(false);
+      setNewUserTypeName("");
+    } catch (error) {
+      console.error("Error creating user type:", error);
+      setError(error instanceof Error ? error.message : "Failed to create user type");
+    } finally {
+      setIsCreatingUserType(false);
     }
   };
 
@@ -593,7 +725,12 @@ const GroupsManagementView = () => {
         <Text fontSize="lg" color="red.500" textAlign="center">
           Error initialising, please refresh
         </Text>
-        <Button onClick={() => { window.location.reload(); }} colorPalette="blue">
+        <Button
+          onClick={() => {
+            window.location.reload();
+          }}
+          colorPalette="blue"
+        >
           Refresh Page
         </Button>
       </Flex>
@@ -631,7 +768,14 @@ const GroupsManagementView = () => {
               </VStack>
             )}
 
-            <Button variant="outline" justifyContent="flex-start" p="1" size="sm" alignSelf="flex-start">
+            <Button
+              variant="outline"
+              justifyContent="flex-start"
+              p="1"
+              size="sm"
+              alignSelf="flex-start"
+              onClick={handleShowCreateUserTypeModal}
+            >
               <Text fontSize="sm">Create User Type</Text>
             </Button>
           </VStack>
@@ -743,25 +887,23 @@ const GroupsManagementView = () => {
               )}
 
               <Box>
-                <Button 
-                  variant="outline" 
-                  justifyContent="flex-start" 
-                  p="1" 
-                  size="sm" 
+                <Button
+                  variant="outline"
+                  justifyContent="flex-start"
+                  p="1"
+                  size="sm"
                   alignSelf="flex-start"
                   onClick={handleSaveConfiguration}
                   disabled={!selectedUserType || isLoading}
                 >
-                  <Text fontSize="sm">
-                    {isSaving ? "Saving..." : "Save Configuration"}
-                  </Text>
+                  <Text fontSize="sm">{isSaving ? "Saving..." : "Save Configuration"}</Text>
                 </Button>
               </Box>
             </VStack>
           </Box>
         </Box>
 
-        <Box p="4" style={{ width: '400px' }}>
+        <Box p="4" style={{ width: "400px" }}>
           <Box p="4" borderRadius="md">
             <Flex justify="space-between" align="center" mb="4">
               <Heading size="md">
@@ -776,13 +918,15 @@ const GroupsManagementView = () => {
                   Add User:
                 </Text>
                 <HStack>
-                  <Input 
-                    placeholder="Enter username" 
-                    size="sm" 
+                  <Input
+                    placeholder="Enter username"
+                    size="sm"
                     value={newUserName}
-                    onChange={(e) => { setNewUserName(e.target.value); }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
+                    onChange={e => {
+                      setNewUserName(e.target.value);
+                    }}
+                    onKeyDown={e => {
+                      if (e.key === "Enter") {
                         handleAddUser();
                       }
                     }}
@@ -806,19 +950,21 @@ const GroupsManagementView = () => {
                       .filter(user => user.UserType === selectedUserType)
                       .map((user, index) => (
                         <HStack key={`existing-${index}`} justify="space-between" minH="6">
-                          <Text 
-                            fontSize="sm" 
+                          <Text
+                            fontSize="sm"
                             color={usersToRemove.has(user.Name) ? "red.500" : "gray.600"}
                             textDecoration={usersToRemove.has(user.Name) ? "line-through" : "none"}
                           >
                             {user.Name}
                           </Text>
                           {isRemoveMode && (
-                            <Button 
-                              variant="outline" 
-                              size="2xs" 
+                            <Button
+                              variant="outline"
+                              size="2xs"
                               colorScheme="red"
-                              onClick={() => { handleUserRemoveToggle(user.Name); }}
+                              onClick={() => {
+                                handleUserRemoveToggle(user.Name);
+                              }}
                             >
                               {usersToRemove.has(user.Name) ? "Undo" : "Remove"}
                             </Button>
@@ -834,20 +980,16 @@ const GroupsManagementView = () => {
                       Select a user type to view users
                     </Text>
                   ) : null}
-                  
+
                   {/* Newly added users */}
                   {usersToAdd.map((userName, index) => (
                     <HStack key={`new-${index}`} justify="space-between" minH="8">
-                      <Text 
-                        fontSize="sm" 
-                        color="green.600"
-                        fontWeight="medium"
-                      >
+                      <Text fontSize="sm" color="green.600" fontWeight="medium">
                         + {userName}
                       </Text>
-                      <Button 
-                        variant="outline" 
-                        size="2xs" 
+                      <Button
+                        variant="outline"
+                        size="2xs"
                         colorScheme="red"
                         onClick={() => {
                           removeUserFromAddList(userName);
@@ -864,15 +1006,11 @@ const GroupsManagementView = () => {
 
               <Box>
                 <HStack gap="2">
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    onClick={handleRemoveToggle}
-                  >
+                  <Button size="sm" variant="outline" onClick={handleRemoveToggle}>
                     {isRemoveMode ? "Cancel" : "Remove"}
                   </Button>
-                  <Button 
-                    size="sm" 
+                  <Button
+                    size="sm"
                     variant="outline"
                     onClick={handleShowModal}
                     disabled={usersToAdd.length === 0 && usersToRemove.size === 0}
@@ -894,7 +1032,7 @@ const GroupsManagementView = () => {
         usersToRemove={Array.from(usersToRemove)}
         currentUsers={users}
         selectedUserType={selectedUserType}
-        userTypeName={selectedUserType ? userTypes.find(ut => ut.ID === selectedUserType)?.Name ?? "Unknown" : ""}
+        userTypeName={selectedUserType ? (userTypes.find(ut => ut.ID === selectedUserType)?.Name ?? "Unknown") : ""}
       />
 
       {/* Transfer Modal for moving users between groups */}
@@ -915,13 +1053,46 @@ const GroupsManagementView = () => {
       {/* Alert Modal for user already in another group */}
       <ChackraUIBaseModal
         open={showAlertModal}
-        onClose={() => { setShowAlertModal(false); }}
+        onClose={() => {
+          setShowAlertModal(false);
+        }}
         footerCloseButton={true}
         title="User Already Exists"
         body={
           <Text fontSize="sm" color="gray.600">
             {alertMessage}
           </Text>
+        }
+        size="md"
+      />
+
+      {/* Create User Type Modal */}
+      <ChackraUIBaseModal
+        open={showCreateUserTypeModal}
+        onClose={handleCreateUserTypeModalClose}
+        onSubmit={handleCreateUserType}
+        submitButton={true}
+        submitButtonText={isCreatingUserType ? "Creating..." : "OK"}
+        footerCloseButton={true}
+        title="Create User Type"
+        body={
+          <VStack align="stretch" gap="4">
+            <Text fontSize="sm" color="gray.600">
+              Enter a name for the new user type:
+            </Text>
+            <Input
+              placeholder="User type name"
+              value={newUserTypeName}
+              onChange={e => {
+                setNewUserTypeName(e.target.value);
+              }}
+              onKeyDown={e => {
+                if (e.key === "Enter" && newUserTypeName.trim()) {
+                  void handleCreateUserType();
+                }
+              }}
+            />
+          </VStack>
         }
         size="md"
       />

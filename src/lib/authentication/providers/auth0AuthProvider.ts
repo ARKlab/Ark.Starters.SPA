@@ -53,7 +53,7 @@ export class Auth0AuthProvider implements AuthProvider {
       useRefreshTokens: false,
       authorizationParams: {
         redirect_uri: config.redirectUri,
-        // audience: config.audience, 
+        // audience: config.audience,
         scope: "openid profile email contactInfo",
       },
     };
@@ -128,7 +128,7 @@ export class Auth0AuthProvider implements AuthProvider {
     try {
       const result = await this.auth0Client.handleRedirectCallback<AppState>();
       target = result.appState?.targetUrl ?? "/";
-      
+
       // Extract just the pathname from the target URL to avoid nested URLs
       let relativePath = target;
       try {
@@ -136,9 +136,9 @@ export class Auth0AuthProvider implements AuthProvider {
         relativePath = targetUrl.pathname + targetUrl.search + targetUrl.hash;
       } catch {
         // If target is not a full URL, use it as-is (already relative)
-        relativePath = target.startsWith('/') ? target : '/' + target;
+        relativePath = target.startsWith("/") ? target : "/" + target;
       }
-      
+
       await router.navigate(relativePath, { replace: true });
     } catch (e) {
       if (e instanceof Error && e.message.includes("Invalid state")) {

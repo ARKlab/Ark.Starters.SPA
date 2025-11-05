@@ -3,7 +3,7 @@
 /// <reference types="vite-plugin-svgr/client" />
 
 import msw from "@iodigital/vite-plugin-msw";
-import react from "@vitejs/plugin-react-swc";
+import react from "@vitejs/plugin-react";
 import copy from "rollup-plugin-copy";
 import Info from "unplugin-info/vite";
 import { defineConfig, loadEnv } from "vite";
@@ -45,7 +45,7 @@ export default defineConfig(({ mode }) => {
         },
       }),
       ViteImageOptimizer(),
-      react({ jsxImportSource: "@emotion/react", plugins: [["@swc/plugin-emotion", {}]] }),
+      react({ jsxImportSource: "@emotion/react" }),
       reactClickToComponent(),
       VitePWA({
         disable: mode == "e2e", // disable PWA in e2e mode due to conflict with MSW (only 1 ServiceWorker can be registered)
@@ -139,6 +139,10 @@ export default defineConfig(({ mode }) => {
         },
       },
       sourcemap: true,
+    },
+    optimizeDeps: {
+      include: ["@react-pdf/renderer"],
+      exclude: [],
     },
     server: {
       port: parseInt(process.env.PORT ?? "", 10) || 3000,

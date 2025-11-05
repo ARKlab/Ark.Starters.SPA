@@ -13,7 +13,7 @@ export const ChackraUIBaseModal = (props: {
   title: string;
   body: JSX.Element;
   blurredOverlay?: boolean;
-  size: "xs" | "sm" | "md" | "lg" | "xl";
+  size: "xs" | "sm" | "md" | "lg" | "xl" | "full";
 }) => {
   const executeSubmit = () => {
     if (props.onSubmit) props.onSubmit();
@@ -24,7 +24,7 @@ export const ChackraUIBaseModal = (props: {
   if (props.submitButton)
     submitSegment = (
       <Button
-        mr={3}
+        mr="3"
         onClick={() => {
           executeSubmit();
         }}
@@ -34,7 +34,7 @@ export const ChackraUIBaseModal = (props: {
     );
   if (props.footerCloseButton) {
     footerCloseButton = (
-      <Button colorPalette="error" mr={3} onClick={props.onClose}>
+      <Button colorPalette="error" mr="3" onClick={props.onClose}>
         Close
       </Button>
     );
@@ -45,15 +45,19 @@ export const ChackraUIBaseModal = (props: {
 
   return (
     <>
-      <DialogRoot open={props.open} size={props.size}>
-        <DialogContent>
-          <DialogHeader><Heading> {props.title}</Heading></DialogHeader>
+      <DialogRoot open={props.open} size={props.size === "full" ? "xl" : props.size}>
+        <DialogContent style={props.size === "full" ? { maxWidth: "95vw", maxHeight: "95vh" } : undefined}>
+          <DialogHeader>
+            <Heading> {props.title}</Heading>
+          </DialogHeader>
           <DialogCloseTrigger onClick={props.onClose} />
           <DialogBody>{props.body}</DialogBody>
-          <DialogFooter>
-            {submitSegment}
-            {footerCloseButton}
-          </DialogFooter>
+          {(props.submitButton ?? props.footerCloseButton) && (
+            <DialogFooter>
+              {submitSegment}
+              {footerCloseButton}
+            </DialogFooter>
+          )}
         </DialogContent>
       </DialogRoot>
     </>

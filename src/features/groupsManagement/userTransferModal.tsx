@@ -25,17 +25,21 @@ export const UserTransferModal = ({
         <Text fontSize="sm" color="gray.600" mb="4">
           The user <strong>{userName}</strong> is already assigned to another group.
         </Text>
-        
+
         <VStack align="stretch" gap="3" p="4" bg="yellow.50" borderRadius="md">
           <HStack justify="space-between">
-            <Text fontSize="sm" fontWeight="medium" color="gray.700">Current assignment:</Text>
+            <Text fontSize="sm" fontWeight="medium" color="gray.700">
+              Current assignment:
+            </Text>
             <Badge colorPalette="orange" variant="solid">
               {existingGroupName}
             </Badge>
           </HStack>
-          
+
           <HStack justify="space-between">
-            <Text fontSize="sm" fontWeight="medium" color="gray.700">Requested assignment:</Text>
+            <Text fontSize="sm" fontWeight="medium" color="gray.700">
+              Requested assignment:
+            </Text>
             <Badge colorPalette="blue" variant="solid">
               {currentGroupName}
             </Badge>
@@ -43,7 +47,8 @@ export const UserTransferModal = ({
         </VStack>
 
         <Text fontSize="sm" color="gray.600" mt="4">
-          Would you like to remove <strong>{userName}</strong> from <strong>{existingGroupName}</strong> and add them to <strong>{currentGroupName}</strong>?
+          Would you like to remove <strong>{userName}</strong> from <strong>{existingGroupName}</strong> and add them to{" "}
+          <strong>{currentGroupName}</strong>?
         </Text>
       </Box>
 
@@ -58,13 +63,5 @@ export const UserTransferModal = ({
     </VStack>
   );
 
-  return (
-    <ChackraUIBaseModal
-      open={open}
-      onClose={onClose}
-      title="User Already Assigned"
-      body={modalBody}
-      size="md"
-    />
-  );
+  return <ChackraUIBaseModal open={open} onClose={onClose} title="User Already Assigned" body={modalBody} size="md" />;
 };

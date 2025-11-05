@@ -21,22 +21,26 @@ export function InitApp() {
 
   useAsyncEffect(async () => {
     if (ref.current) return;
-    ref.current = true; // only once
+    ref.current = true;
 
     if (import.meta.env.DEV || import.meta.env.MODE === "e2e") {
       const { worker } = await import("./lib/mocks/browserWorker");
       await worker.start({
         onUnhandledRequest: request => {
-          // Don't warn about Auth0 requests
           if (request.url.includes("auth0.com")) {
-            return;
+            return "bypass";
           }
-          // Allow local API requests to go through proxy
           if (request.url.includes("localhost") && request.url.includes("/api/")) {
             return "bypass";
           }
-          // Allow K4View backend requests to pass through
           if (request.url.includes("k4view-admin-test-k2e.azurewebsites.net")) {
+            return "bypass";
+          }
+          if (request.url.includes("k4view-portal-test-k2e.azurewebsites.net")) {
+            return "bypass";
+          }
+          if (request.url.includes("k4view-artesian-useradmin-test.azurewebsites.net")) {
+            console.warn("[MSW] Artesian request not handled by mock:", request.method, request.url);
             return "bypass";
           }
           console.warn(
@@ -44,6 +48,7 @@ export function InitApp() {
             request.method,
             request.url,
           );
+          return "bypass";
         },
       });
     }

@@ -12,6 +12,10 @@ import { userSelector } from "./lib/authentication/authenticationSlice";
 import useLocalizeDocumentAttributes from "./lib/i18n/useLocalizeDocumentAttributes";
 import { router } from "./lib/router";
 
+if (import.meta.env.DEV) {
+  void import("./features/artesian/artesianIntegrationTest");
+}
+
 const Main = () => {
   useLocalizeDocumentAttributes();
   const { i18n } = useTranslation();
