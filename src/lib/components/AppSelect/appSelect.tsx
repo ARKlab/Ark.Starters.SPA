@@ -73,7 +73,6 @@ const AppSelect: React.FC<AppSelectProps> = ({
             collection={optionCollection}
             size={size}
             onValueChange={e => {
-              console.log("onValueChange", e);
               onChange(e.items[0] ? e.items[0].value : undefined);
             }}
             value={value ? [value] : undefined}

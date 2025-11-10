@@ -63,7 +63,7 @@ const MovieTableView = () => {
       meta: { type: "date" },
     }),
   ] as ColumnDef<Movie>[];
-  const [filters, setFilters] = useState<Partial<Movie>>([]);
+  const [filters, setFilters] = useState<Partial<Movie>>({});
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -92,15 +92,6 @@ const MovieTableView = () => {
         <Button size="sm" onClick={toggleSidebar}>
           Filters
         </Button>
-        <Box mt={4}>
-          <AppFilters<Movie>
-            isOpen={isSidebarOpen}
-            onClose={toggleSidebar}
-            filters={filters}
-            filterDefinitions={filterDefinitions}
-            onFiltersChange={setFilters}
-          />
-        </Box>
         <Box mt={4}>
           <AppFilters<Movie>
             isOpen={isSidebarOpen}

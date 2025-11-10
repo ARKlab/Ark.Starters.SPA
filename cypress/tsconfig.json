@@ -3,8 +3,8 @@
     "include": [
         "./**/*.ts",
         "../src/global.d.ts",
-        "../cypress.config.ts"
-, "e2e/paginationComponent.e2e.tsx", "e2e/paginationComponent.e2e.tsx"    ],
+        "../cypress.config.ts", 
+        "e2e/paginationComponent.e2e.tsx"    ],
     "exclude": [],
     "compilerOptions": {
         "types": [

@@ -1,11 +1,9 @@
 /* eslint-disable*/
 import type { InputProps } from "@chakra-ui/react";
-import { Field, FieldLabel, Input, Stack, Text } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
-import { TiTimes } from "react-icons/ti";
+import { Field, Input, Stack, Text } from "@chakra-ui/react";
 
 import { InputGroup } from "../../../components/ui/input-group";
-import { prop } from "ramda";
+
 import { LiaTimesSolid } from "react-icons/lia";
 
 interface AppInputFilterProps {
