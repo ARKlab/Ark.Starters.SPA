@@ -4,11 +4,11 @@ import type { RouteObject } from "react-router";
 import { Outlet, createBrowserRouter } from "react-router";
 
 import Layout from "../components/layout/layout";
-import type { MainSectionType, SubsectionMenuItemType } from "../components/layout/sideBar/menuItem/types";
+import type { ArkRoute, ArkSubRoute } from "../siteMap/types";
 import LazyLoad from "../components/lazyLoad";
 import PageNotFound from "../components/pageNotFound";
 import SEO from "../components/seo";
-import { mainSections } from "../siteMap/mainSections";
+import { siteMap } from "../siteMap/siteMap";
 
 import { reactPlugin } from "./applicationInsights";
 import { AuthenticatedOnly } from "./authentication/components/authenticatedOnly";
@@ -17,14 +17,14 @@ import ProtectedRoute from "./authentication/components/protectedRoute";
 import Unauthorized from "./authentication/unauthorized";
 import { ErrorFallback } from "./errorFallback";
 
-const wrapLazy = (x: MainSectionType) => {
+const wrapLazy = (x: ArkRoute) => {
   const checkPermissions = x.permissions && x.permissions.length > 0;
 
   let element: ReactNode = <Outlet />;
   if (x.component) {
     const X = withAITracking(reactPlugin, () => <>{x.component}</>, x.label);
     element = <X />;
-  };
+  }
   // key={x.label} is needed to force a rerender when the route changes due to https://github.com/remix-run/react-router/issues/12474
   // assumption: x.label is unique across all routes
   // TODO: introduce x.id/x.slug to be used as key and tracking instead of x.label
@@ -33,7 +33,7 @@ const wrapLazy = (x: MainSectionType) => {
     const y = async () => {
       const res = await lazy();
       return { default: withAITracking(reactPlugin, res.default, x.label) };
-    }
+    };
     element = <LazyLoad loader={y} key={x.label} />;
   }
 
@@ -49,7 +49,7 @@ const wrapLazy = (x: MainSectionType) => {
   );
 };
 
-const renderSections = (s?: SubsectionMenuItemType[]) => {
+const renderSections = (s?: ArkSubRoute[]) => {
   return s
     ?.filter(x => x.path !== undefined)
     .map(
@@ -60,7 +60,7 @@ const renderSections = (s?: SubsectionMenuItemType[]) => {
     );
 };
 
-const routes = mainSections
+const routes = siteMap
   .filter(x => x.path !== undefined)
   .map(
     (x): RouteObject =>

@@ -2,6 +2,7 @@ import type { Action, ThunkAction } from "@reduxjs/toolkit";
 import { configureStore, combineSlices } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
+import { tableStateSlice } from "../components/AppArkApiTable/tableStateSlice";
 import { configTableApiSlice } from "../features/configTable/configTableApi";
 import { jsonPlaceholderApi } from "../features/fetchApiExample/jsonPlaceholderApi";
 import { videoGameApiSlice } from "../features/formExample/videoGamesApiSlice";
@@ -18,6 +19,7 @@ import errorReducer from "../lib/errorHandler/errorHandler";
 const sliceReducers = combineSlices(
   authSlice,
   envSlice,
+  tableStateSlice,
 
   configTableApiSlice,
   videoGameApiSlice,
@@ -28,6 +30,7 @@ const sliceReducers = combineSlices(
   globalLoadingSlice,
   {
     errorHandler: errorReducer,
+    table: tableStateSlice.reducer,
   },
 );
 

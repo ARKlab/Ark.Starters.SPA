@@ -1,0 +1,56 @@
+/* eslint-disable*/
+import type { InputProps } from "@chakra-ui/react";
+import { Field, FieldLabel, Input, Stack, Text } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
+import { TiTimes } from "react-icons/ti";
+
+import { InputGroup } from "../../../components/ui/input-group";
+import { prop } from "ramda";
+import { LiaTimesSolid } from "react-icons/lia";
+
+interface AppInputFilterProps {
+  value: string;
+  handleInputChange: (name: string, value: string) => void;
+  title: string;
+  propName: string;
+  disabled?: boolean;
+  isRequired?: boolean;
+}
+export interface AppInputFilterHeaderProps extends InputProps {
+  value: string | number;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+}
+
+export const AppInputFilter: React.FC<AppInputFilterProps> = ({
+  value,
+  handleInputChange,
+  title,
+  propName,
+  disabled,
+  isRequired,
+}) => {
+  const handleClear = () => {
+    handleInputChange(propName, "");
+  };
+
+  return (
+    <Field.Root mr={title ? "2%" : "0"} p={title ? "inherit" : "0"} m={title ? "inherit" : "0"}>
+      <Text as="b">{title}</Text>
+
+      <Stack w={"100%"}>
+        <InputGroup
+          endElementProps={{ _hover: { fontWeight: "bold", cursor: "pointer" }, color: "fg" }}
+          endElement={value && <LiaTimesSolid onClick={handleClear} />}
+        >
+          <Input
+            size={"sm"}
+            value={value}
+            onChange={e => handleInputChange(propName, e.target.value)}
+            disabled={disabled ?? false}
+            required={isRequired ?? false}
+          />
+        </InputGroup>
+      </Stack>
+    </Field.Root>
+  );
+};

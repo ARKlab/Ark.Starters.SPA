@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo } from "react";
 import { useLocation } from "react-router";
 
 import useRouteChanged from "../../../lib/useRouteChanged";
-import { mainSections } from "../../../siteMap/mainSections";
+import { siteMap } from "../../../siteMap/siteMap";
 import { AccordionItem, AccordionItemContent, AccordionItemTrigger, AccordionRoot } from "../../ui/accordion";
 import {
   DrawerBackdrop,
@@ -17,7 +17,7 @@ import {
 import { useLayoutContext } from "../useLayoutContext";
 
 import MenuItem from "./menuItem/menuItem";
-import type { SubsectionMenuItemType } from "./menuItem/types";
+import type { ArkSubRoute } from "../../../siteMap/types";
 
 export default function SimpleSidebar() {
   const { isDesktop, isMobileSiderOpen, setMobileSiderOpen } = useLayoutContext();
@@ -34,8 +34,7 @@ export default function SimpleSidebar() {
     if (isDesktop) closeDrawer();
   }, [isDesktop, closeDrawer]);
 
-  if (isDesktop)
-    return <SidebarContent h={"full"} borderRight="1px" bg={"sider.bg"} />
+  if (isDesktop) return <SidebarContent h={"full"} borderRight="1px" bg={"sider.bg"} />;
   else {
     return (
       <DrawerRoot
@@ -54,18 +53,17 @@ export default function SimpleSidebar() {
           </DrawerBody>
         </DrawerContent>
       </DrawerRoot>
-
     );
   }
 }
 
 const SidebarContent = ({ ...rest }: BoxProps) => {
-  const defaultValue = mainSections[0].label + "accordionItem" + 0;
+  const defaultValue = siteMap[0].label + "accordionItem" + 0;
 
   return (
     <Box as={"nav"} {...rest}>
       <AccordionRoot borderStyle={"none"} borderWidth={0} collapsible multiple defaultValue={[defaultValue]}>
-        {mainSections.map((section, index) => (
+        {siteMap.map((section, index) => (
           <AccordionItem
             value={section.label + "accordionItem" + index}
             border="none"
@@ -104,13 +102,13 @@ const SidebarContent = ({ ...rest }: BoxProps) => {
   );
 };
 
-function doINeedAnInnerAccordion(section: SubsectionMenuItemType) {
+function doINeedAnInnerAccordion(section: ArkSubRoute) {
   return (
     section.subsections && section.subsections.length > 0 && section.subsections.filter(x => x.isInMenu).length > 0
   );
 }
 
-const InnerAccordionSections = (props: { section: SubsectionMenuItemType; parentPath: string }) => {
+const InnerAccordionSections = (props: { section: ArkSubRoute; parentPath: string }) => {
   const section = props.section;
   if (section.subsections)
     return (
@@ -165,7 +163,7 @@ const InnerAccordionSections = (props: { section: SubsectionMenuItemType; parent
   else return <></>;
 };
 
-const InnerMenuItems = (props: { section: SubsectionMenuItemType; path: string; index: number }) => {
+const InnerMenuItems = (props: { section: ArkSubRoute; path: string; index: number }) => {
   const { section, path, index } = props;
   const parentPath = [path, section.path].join("/");
   const location = useLocation();

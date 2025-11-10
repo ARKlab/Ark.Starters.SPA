@@ -1,9 +1,9 @@
 import { Box, Link as ChakraLink, Grid, Icon, Text, WrapItem } from "@chakra-ui/react";
 import { Link as ReactRouterLink } from "react-router";
 
-import type { SubsectionMenuItemType } from "./types";
+import type { ArkSubRoute } from "../../../../siteMap/types";
 
-type MenuItemProps = Omit<SubsectionMenuItemType, "isInMenu" | "component" | "authenticatedOnly">;
+type MenuItemProps = Omit<ArkSubRoute, "isInMenu" | "component" | "authenticatedOnly">;
 
 export default function MenuItem(props: MenuItemProps) {
   const { label, path = "", icon, externalUrl } = props;

@@ -2,11 +2,10 @@ import { Box, Heading } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { useState } from "react";
 
-import { ChackraDateRange } from "../../components/chackraDateRange/chackraDateRange";
-import { ChackraInputFilterWithClear } from "../../components/chackraInputFilterWithClear/chackraInputFilterWithClear";
-import type { Item } from "../../components/chackraSelectWithClear/chackraSelectWithClear";
-import ChackraSelectWithClear from "../../components/chackraSelectWithClear/chackraSelectWithClear";
-import ChackraTagInput from "../../components/chackraTagInput";
+import { AppDateRange } from "../../lib/components/AppDateRange/appDateRange";
+import { AppInputFilter } from "../../lib/components/AppInputFilter/appInputFilter";
+import type { Item } from "../../lib/components/AppSelect/appSelect";
+import AppSelect from "../../lib/components/AppSelect/appSelect";
 
 import ConsoleCard from "./consoleCard";
 enum TestEnum {
@@ -41,15 +40,8 @@ export default function ControlComponentsView() {
   return (
     <Box>
       <Heading>Custom Controls</Heading>
-      <Box marginTop={"20px"}>
-        <ChackraTagInput
-          handleInputChange={(name: string, value: unknown) => {
-            handleInputChange(name, value);
-          }}
-          title={"Tag Input"}
-          propName={"tgagInput"}
-        />
-        <ChackraSelectWithClear
+      <Box mt={"2"}>
+        <AppSelect
           handleInputChange={(name: string, value: unknown) => {
             handleInputChange(name, value);
           }}
@@ -58,8 +50,8 @@ export default function ControlComponentsView() {
           propName={"selectFromEnum"}
         />
 
-        <ChackraDateRange range={dateRange} setRange={setDateRangeValue} />
-        <ChackraInputFilterWithClear
+        <AppDateRange range={dateRange} setRange={setDateRangeValue} label={"Date range"} />
+        <AppInputFilter
           value={textFilterValue}
           handleInputChange={(name: string, value: unknown) => {
             handleInputChange(name, value);
