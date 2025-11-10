@@ -13,6 +13,8 @@
   "firstname": "First Name",
   "form_error": "Form Errors",
   "form_values": "Form Values",
+  "common_close": "Close",
+  "common_apply": "Apply",
   "games_add_video_game": "Add video game",
   "games_developer": "Developer",
   "games_developer_placeholder": "Developer",

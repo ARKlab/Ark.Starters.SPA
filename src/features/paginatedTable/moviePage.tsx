@@ -1,10 +1,13 @@
-import { Box, Flex, Heading, Input, Button } from "@chakra-ui/react";
-import type { ColumnDef, ColumnFiltersState } from "@tanstack/react-table";
+import { Box, Button, Flex, Heading } from "@chakra-ui/react";
+import type { ColumnDef } from "@tanstack/react-table";
 import { createColumnHelper } from "@tanstack/react-table";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { PaginatedSortableTable } from "../../components/AppArkApiTable/AppArkApiTable";
+import { AppFilters } from "../../components/AppFilters/AppFilters";
+import type { FilterDefinition } from "../../components/AppFilters/Filters";
+import { toColumnFiltersState } from "../../lib/ex";
 
 import type { Movie } from "./fakeMoviesData";
 import { useGetMoviesQuery } from "./paginatedTableApi";
@@ -60,38 +63,55 @@ const MovieTableView = () => {
       meta: { type: "date" },
     }),
   ] as ColumnDef<Movie>[];
-  const [filters, setFilters] = useState<ColumnFiltersState>([]);
-  const [title, setTitle] = useState<string>("");
-  const applyExtraFilter = () => {
-    setFilters([
+  const [filters, setFilters] = useState<Partial<Movie>>([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+  const filterDefinitions: FilterDefinition<Movie>[] = useMemo(
+    () => [
       {
         id: "title",
-        value: title,
+        propName: "title",
+        label: "Title",
+        type: "text",
+        placeholder: "Search by Title...",
       },
-    ]);
-  };
+    ],
+    [],
+  );
 
   return (
     <Box>
       <Heading>{t("movies_movies")}</Heading>
       {/* 
-          The next lines are an example of one external filter (the column title)
-          This exemple is only dimostrative if you want to use external filters instead of column headers filters
-          in the example when you apply the external filter, the column filter will be replaced completely.
-          If you want to use both external and column filters, you have to merge the filters.
+          External filters rendering is done here by this AppFilters component that is a demo. it uses a drawer to show filters. 
+          Feel free to implement your own mantaining and extending the Typing in the Filters.ts from BaseFilter<T> 
       */}
       <Flex my="2%" alignItems={"flex-start"} justifyItems={"center"}>
-        <Input
-          w="30%"
-          placeholder={t("movies_externalfilterplaceholder")}
-          onChange={e => {
-            setTitle(e.target.value);
-          }}
-        />
+        <Button size="sm" onClick={toggleSidebar}>
+          Filters
+        </Button>
+        <Box mt={4}>
+          <AppFilters<Movie>
+            isOpen={isSidebarOpen}
+            onClose={toggleSidebar}
+            filters={filters}
+            filterDefinitions={filterDefinitions}
+            onFiltersChange={setFilters}
+          />
+        </Box>
+        <Box mt={4}>
+          <AppFilters<Movie>
+            isOpen={isSidebarOpen}
+            onClose={toggleSidebar}
+            filters={filters}
+            filterDefinitions={filterDefinitions}
+            onFiltersChange={setFilters}
+          />
+        </Box>
       </Flex>
-      <Button marginBottom={"70px"} onClick={applyExtraFilter}>
-        {t("movies_applyexternalfilter")}
-      </Button>
+
       {/*External filters example end*/}
 
       <PaginatedSortableTable<Movie>
@@ -99,7 +119,7 @@ const MovieTableView = () => {
         useQueryHook={useGetMoviesQuery}
         isDraggable
         externalFilters
-        externalFiltersState={filters}
+        externalFiltersState={toColumnFiltersState(filters)}
       />
     </Box>
   );

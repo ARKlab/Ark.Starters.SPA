@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { AppDateRange } from "../../lib/components/AppDateRange/appDateRange";
 import { AppInputFilter } from "../../lib/components/AppInputFilter/appInputFilter";
-import type { Item } from "../../lib/components/AppSelect/appSelect";
+import type { AppSelectOptionItem } from "../../lib/components/AppSelect/appSelect";
 import AppSelect from "../../lib/components/AppSelect/appSelect";
 
 import ConsoleCard from "./consoleCard";
@@ -15,6 +15,7 @@ enum TestEnum {
 }
 export default function ControlComponentsView() {
   const [textFilterValue, setTextFilterValue] = useState<string>("");
+  const [selectValue, setSelectValue] = useState<string | undefined>(undefined);
   const [logs, setLogs] = useState<{ name: string; value: unknown }[]>([]);
   const [dateRange, setDateRange] = useState<Date[]>([]);
   const handleInputChange = (name: string, value: unknown): void => {
@@ -27,14 +28,22 @@ export default function ControlComponentsView() {
     handleInputChange("dateRange end", format(value[1], "yyyy-MM-dd"));
   }
 
+  function onChangeSelect(value: string | undefined) {
+    handleInputChange("selectFromEnum", value);
+    setSelectValue(value);
+  }
+
   function getOptionsFromEnumValues(
     enumObject: Record<string, string>,
     parser?: (value: string) => string,
     excludeValues?: string[],
-  ): Item[] {
+  ): AppSelectOptionItem[] {
     return Object.values(enumObject)
       .filter(value => !excludeValues?.includes(value)) // Step 2: Filter out excluded values
-      .map(value => ({ label: value, value: parser ? parser(value) : value !== "NotSet" ? value : "" }) as Item);
+      .map(
+        value =>
+          ({ label: value, value: parser ? parser(value) : value !== "NotSet" ? value : "" }) as AppSelectOptionItem,
+      );
   }
 
   return (
@@ -42,12 +51,10 @@ export default function ControlComponentsView() {
       <Heading>Custom Controls</Heading>
       <Box mt={"2"}>
         <AppSelect
-          handleInputChange={(name: string, value: unknown) => {
-            handleInputChange(name, value);
-          }}
+          onChange={onChangeSelect}
           options={getOptionsFromEnumValues(TestEnum)}
           title={"Select From Enum"}
-          propName={"selectFromEnum"}
+          value={selectValue}
         />
 
         <AppDateRange range={dateRange} setRange={setDateRangeValue} label={"Date range"} />

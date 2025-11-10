@@ -2,14 +2,14 @@ import { createListCollection, Field, Spinner, Stack, Text } from "@chakra-ui/re
 
 import { SelectContent, SelectItem, SelectRoot, SelectTrigger, SelectValueText } from "./baseSelectSnippets";
 
-export interface Item {
+export interface AppSelectOptionItem {
   label: string | React.JSX.Element;
   value: string;
   disabled?: boolean;
 }
 
 interface AppSelectProps {
-  options: Item[];
+  options: AppSelectOptionItem[];
   title?: string;
   isLoading?: boolean;
   onChange: (value: string | undefined) => void;

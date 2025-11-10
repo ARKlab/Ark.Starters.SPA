@@ -1,6 +1,8 @@
 import type { SelectRootProps } from "@chakra-ui/react";
 import type { InputProps } from "@chakra-ui/react/input";
 
+import type { AppSelectOptionItem } from "../../lib/components/AppSelect/appSelect";
+
 type BaseFilter<T> = {
   id: string;
   propName: keyof T;
@@ -26,20 +28,11 @@ type InputFilter<T> = BaseFilter<T> & {
 
 type SelectFilter<T> = BaseFilter<T> & {
   type: "select";
-  collection: SelectRootProps["collection"];
+  collection: AppSelectOptionItem[];
   selectProps?: SelectRootProps;
 };
 
-type CustomerFilter<T> = BaseFilter<T> & {
-  type: "select-customer";
-};
-
-export type FilterDefinition<T> =
-  | CheckboxFilter<T>
-  | TextFilter<T>
-  | InputFilter<T>
-  | SelectFilter<T>
-  | CustomerFilter<T>;
+export type FilterDefinition<T> = CheckboxFilter<T> | TextFilter<T> | InputFilter<T> | SelectFilter<T>;
 
 export type FilterType = FilterDefinition<unknown>["type"];
 

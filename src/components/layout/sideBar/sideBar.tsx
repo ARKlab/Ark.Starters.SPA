@@ -5,6 +5,7 @@ import { useLocation } from "react-router";
 
 import useRouteChanged from "../../../lib/useRouteChanged";
 import { siteMap } from "../../../siteMap/siteMap";
+import type { ArkSubRoute } from "../../../siteMap/types";
 import { AccordionItem, AccordionItemContent, AccordionItemTrigger, AccordionRoot } from "../../ui/accordion";
 import {
   DrawerBackdrop,
@@ -17,7 +18,6 @@ import {
 import { useLayoutContext } from "../useLayoutContext";
 
 import MenuItem from "./menuItem/menuItem";
-import type { ArkSubRoute } from "../../../siteMap/types";
 
 export default function SimpleSidebar() {
   const { isDesktop, isMobileSiderOpen, setMobileSiderOpen } = useLayoutContext();

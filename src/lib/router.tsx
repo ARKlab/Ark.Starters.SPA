@@ -4,11 +4,11 @@ import type { RouteObject } from "react-router";
 import { Outlet, createBrowserRouter } from "react-router";
 
 import Layout from "../components/layout/layout";
-import type { ArkRoute, ArkSubRoute } from "../siteMap/types";
 import LazyLoad from "../components/lazyLoad";
 import PageNotFound from "../components/pageNotFound";
 import SEO from "../components/seo";
 import { siteMap } from "../siteMap/siteMap";
+import type { ArkRoute, ArkSubRoute } from "../siteMap/types";
 
 import { reactPlugin } from "./applicationInsights";
 import { AuthenticatedOnly } from "./authentication/components/authenticatedOnly";

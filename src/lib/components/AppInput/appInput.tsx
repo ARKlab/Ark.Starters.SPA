@@ -12,6 +12,7 @@ interface InputWithClearProps {
   isRequired?: boolean;
   fieldErrorText?: string;
   invalid?: boolean;
+  placeholder?: string;
 }
 export interface InputHeaderWithClearProps extends InputProps {
   value: string | number;
@@ -26,6 +27,7 @@ export const AppInput: React.FC<InputWithClearProps> = ({
   isRequired,
   fieldErrorText,
   invalid = false,
+  placeholder,
 }) => {
   const handleClear = () => {
     onChange("");
@@ -51,6 +53,7 @@ export const AppInput: React.FC<InputWithClearProps> = ({
             }}
             disabled={disabled ?? false}
             required={isRequired ?? false}
+            placeholder={placeholder ?? ""}
           />
         </InputGroup>
       </Stack>

@@ -12,7 +12,7 @@ import type { Item as MultiItem } from "../../lib/components/AppMultiSelect/appM
 import AppMultiSelect from "../../lib/components/AppMultiSelect/appMultiSelect";
 import { AppNumberInput } from "../../lib/components/AppNumberInput/AppNumberInput";
 import AppPagination from "../../lib/components/AppPagination/AppPagination";
-import type { Item } from "../../lib/components/AppSelect/appSelect";
+import type { AppSelectOptionItem } from "../../lib/components/AppSelect/appSelect";
 import AppSelect from "../../lib/components/AppSelect/appSelect";
 import AppTagInput from "../../lib/components/AppTagInput/AppTagInput";
 
@@ -36,7 +36,7 @@ export default function ComponentsTestPage() {
   const [selectValue, setSelectValue] = useState<string | undefined>();
   const [disabledSelectValue, setDisabledSelectValue] = useState<string | undefined>("b");
   const [loadingSelect] = useState(false);
-  const selectOptions: Item[] = [
+  const selectOptions: AppSelectOptionItem[] = [
     { label: "Alpha", value: "a" },
     { label: "Bravo", value: "b" },
     { label: "Charlie", value: "c", disabled: true },
