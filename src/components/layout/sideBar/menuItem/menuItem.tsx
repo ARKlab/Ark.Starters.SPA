@@ -1,7 +1,7 @@
 import { Box, Link as ChakraLink, Grid, Icon, Text, WrapItem } from "@chakra-ui/react";
 import { Link as ReactRouterLink } from "react-router";
 
-import type { ArkSubRoute } from "../../../../siteMap/types";
+import type { ArkSubRoute } from "../../../../siteMap/siteMapTypes";
 
 type MenuItemProps = Omit<ArkSubRoute, "isInMenu" | "component" | "authenticatedOnly">;
 

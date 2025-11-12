@@ -5,40 +5,50 @@ describe("AppCheckBox", () => {
   });
 
   it("shows checkbox elements", () => {
-    cy.get("[data-test='checkbox-basic'] [data-test='checkbox-control']").should("exist");
-    cy.get("[data-test='checkbox-basic'] [data-test='checkbox-label']").should("contain.text", "Basic Checkbox");
+    cy.get("[data-test='checkbox-basic']").within(() => {
+      cy.get("[data-test='checkbox-control']").should("exist");
+      cy.get("[data-test='checkbox-hidden-input']").should("exist");
+      cy.get("[data-test='checkbox-label']").should("contain.text", "Basic Checkbox");
+    });
   });
 
   it("toggles checked state", () => {
-    // Initially unchecked
-    cy.get("[data-test='checkbox-basic'] [data-test='checkbox-control']").should("not.be.checked");
+    cy.get("[data-test='checkbox-basic']").within(() => {
+      cy.get("[data-test='checkbox-control']").as("control");
 
-    // Click to check
-    cy.get("[data-test='checkbox-basic'] [data-test='checkbox-control']").click();
-    cy.get("[data-test='checkbox-basic'] [data-test='checkbox-control']").should("be.checked");
-
-    // Click to uncheck
-    cy.get("[data-test='checkbox-basic'] [data-test='checkbox-control']").click();
-    cy.get("[data-test='checkbox-basic'] [data-test='checkbox-control']").should("not.be.checked");
+      cy.get("@control").should("have.attr", "data-state", "unchecked");
+      cy.get("@control").click();
+      cy.get("@control").should("have.attr", "data-state", "checked");
+      cy.get("@control").click();
+      cy.get("@control").should("have.attr", "data-state", "unchecked");
+    });
   });
 
   it("shows title when provided", () => {
-    cy.get("[data-test='checkbox-with-title'] [data-test='checkbox-title']")
-      .should("exist")
-      .and("contain.text", "Checkbox Title");
+    cy.get("[data-test='checkbox-with-title']").within(() => {
+      cy.get("[data-test='checkbox-title']").should("contain.text", "Checkbox Title");
+    });
   });
 
   it("disabled checkbox cannot be clicked", () => {
-    cy.get("[data-test='checkbox-disabled'] [data-test='checkbox-control']").should("be.disabled");
+    cy.get("[data-test='checkbox-disabled']").within(() => {
+      cy.get("[data-test='checkbox-control']").as("control");
+
+      cy.get("@control").should("have.attr", "data-disabled");
+      cy.get("@control").click({ force: true });
+      cy.get("@control").should("have.attr", "data-state", "unchecked");
+    });
   });
 
   it("shows error message when invalid", () => {
-    cy.get("[data-test='checkbox-invalid'] [data-test='checkbox-error']")
-      .should("exist")
-      .and("contain.text", "This field is required");
+    cy.get("[data-test='checkbox-invalid']").within(() => {
+      cy.get("[data-test='checkbox-error']").should("contain.text", "This field is required");
+    });
   });
 
   it("preset checkbox starts checked", () => {
-    cy.get("[data-test='checkbox-with-title'] [data-test='checkbox-control']").should("be.checked");
+    cy.get("[data-test='checkbox-with-title']").within(() => {
+      cy.get("[data-test='checkbox-control']").should("have.attr", "data-state", "checked");
+    });
   });
 });

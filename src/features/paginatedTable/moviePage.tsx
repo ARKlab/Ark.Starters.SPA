@@ -4,9 +4,9 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { PaginatedSortableTable } from "../../components/AppArkApiTable/AppArkApiTable";
 import { AppFilters } from "../../components/AppFilters/AppFilters";
 import type { FilterDefinition } from "../../components/AppFilters/Filters";
+import { AppArkApiTable } from "../../lib/components/AppArkApiTable/AppArkApiTable";
 import { toColumnFiltersState } from "../../lib/ex";
 
 import type { Movie } from "./fakeMoviesData";
@@ -105,12 +105,13 @@ const MovieTableView = () => {
 
       {/*External filters example end*/}
 
-      <PaginatedSortableTable<Movie>
+      <AppArkApiTable<Movie>
         columns={columns}
         useQueryHook={useGetMoviesQuery}
         isDraggable
         externalFilters
         externalFiltersState={toColumnFiltersState(filters)}
+        tableKey="Movies"
       />
     </Box>
   );

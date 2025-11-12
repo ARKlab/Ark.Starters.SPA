@@ -3,7 +3,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { createColumnHelper } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
-import { PaginatedSortableTable } from "../../components/AppArkApiTable/AppArkApiTable";
+import { AppArkApiTable } from "../../lib/components/AppArkApiTable/AppArkApiTable";
 
 import { useGetVideoGamesGenresQuery, useGetVideoGamesQuery } from "./videoGamesApiSlice";
 import VideoGamesForm from "./videoGamesForm";
@@ -75,7 +75,7 @@ const VideoGamesTableView = () => {
     <Box>
       <Heading>{t("games_video_games")}</Heading>
       <VideoGamesForm />
-      <PaginatedSortableTable<VideoGame>
+      <AppArkApiTable<VideoGame>
         columns={columns}
         useQueryHook={useGetVideoGamesQuery}
         isDraggable={false}

@@ -2,8 +2,7 @@ import type { Action, ThunkAction } from "@reduxjs/toolkit";
 import { configureStore, combineSlices } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
-import { tableStateSlice } from "../components/AppArkApiTable/tableStateSlice";
-import { configTableApiSlice } from "../features/configTable/configTableApi";
+import * as configTableApi from "../features/configTable/configTableApi";
 import { jsonPlaceholderApi } from "../features/fetchApiExample/jsonPlaceholderApi";
 import { videoGameApiSlice } from "../features/formExample/videoGamesApiSlice";
 import { globalLoadingSlice } from "../features/globalLoadingBar/globalLoadingSlice";
@@ -12,6 +11,7 @@ import { rtkqErrorHandlingApi } from "../features/rtkqErrorHandling/rtkqErrorHan
 import { authSlice } from "../lib/authentication/authenticationSlice";
 import { envSlice } from "../lib/authentication/envSlice";
 import type { AuthProvider } from "../lib/authentication/providers/authProviderInterface";
+import { tableStateSlice } from "../lib/components/AppArkApiTable/tableStateSlice";
 import errorReducer from "../lib/errorHandler/errorHandler";
 
 // `combineSlices` automatically combines the reducers using
@@ -20,8 +20,7 @@ const sliceReducers = combineSlices(
   authSlice,
   envSlice,
   tableStateSlice,
-
-  configTableApiSlice,
+  configTableApi.configTableApiSlice,
   videoGameApiSlice,
   jsonPlaceholderApi,
   moviesApiSlice,
@@ -48,7 +47,7 @@ export function initStore(extra: ExtraType) {
         },
       }).concat(
         jsonPlaceholderApi.middleware,
-        configTableApiSlice.middleware,
+        configTableApi.configTableApiSlice.middleware,
         moviesApiSlice.middleware,
         videoGameApiSlice.middleware,
         globalLoadingSlice.middleware,
@@ -62,7 +61,7 @@ export function initStore(extra: ExtraType) {
 
 export const resetApiActions = [
   jsonPlaceholderApi.util.resetApiState(),
-  configTableApiSlice.util.resetApiState(),
+  configTableApi.configTableApiSlice.util.resetApiState(),
   moviesApiSlice.util.resetApiState(),
   videoGameApiSlice.util.resetApiState(),
   globalLoadingSlice.util.resetApiState(),

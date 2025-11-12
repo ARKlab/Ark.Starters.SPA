@@ -25,17 +25,17 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useTranslation } from "react-i18next";
 
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import type { ListResponse } from "../../lib/apiTypes";
-import { ChackraDateRangeInHeader } from "../../lib/components/AppDateRange/chackraDateRangeInHeader";
-import AppPagination from "../../lib/components/AppPagination/AppPagination";
-import { DebouncedInputColumnHeader } from "../debouncedInputColumnHeader";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { DebouncedInputColumnHeader } from "../../../components/debouncedInputColumnHeader";
+import type { ListResponse } from "../../apiTypes";
+import { ChackraDateRangeInHeader } from "../AppDateRange/chackraDateRangeInHeader";
+import AppPagination from "../AppPagination/AppPagination";
 
 import { ColumnSorter } from "./columnSorter";
 import { DraggableColumnHeader } from "./draggableColumnHeader";
 import { getTableState, setTableState } from "./tableStateSlice";
 
-type PaginatedSortableTableProps<T> = {
+type ArkApiTableProps<T> = {
   columns: ColumnDef<T>[];
   useQueryHook: (
     args: { pageIndex: number; pageSize: number; sorting: SortingState; filters: ColumnFiltersState },
@@ -55,12 +55,13 @@ type PaginatedSortableTableProps<T> = {
   pageSize?: number;
   getRowId?: (row: T) => string;
   defaultSorting?: SortingState;
-  skip?: boolean;
+  skipQuery?: boolean; //set this to true if you want the useQueryHook to be skipped
   extractPagination?: (pagination: PaginationState) => void;
-  tableKey?: string;
+  tableKey: string;
+  overWriteStore?: boolean; //if true, when setting the table state in the store, it will overwrite all other table states. Deafault is true. Could be usueful when you have multiple tables in the same page and you want to retain filters for all of them
 };
 
-export function PaginatedSortableTable<T>(props: PaginatedSortableTableProps<T>) {
+export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
   const {
     columns,
     useQueryHook,
@@ -74,7 +75,7 @@ export function PaginatedSortableTable<T>(props: PaginatedSortableTableProps<T>)
     pageSize: pageSizeProp,
     getRowId,
     defaultSorting,
-    skip = false,
+    skipQuery: skip = false,
     extractPagination,
     tableKey,
   } = props;
@@ -82,7 +83,7 @@ export function PaginatedSortableTable<T>(props: PaginatedSortableTableProps<T>)
     pageIndex: 1,
     pageSize: pageSizeProp ?? 10,
   });
-  const reduxTableState = useAppSelector(state => getTableState(state, tableKey ?? ""));
+  const reduxTableState = useAppSelector(state => getTableState(state, tableKey));
   const filtersAreEquals = JSON.stringify(reduxTableState?.filters) === JSON.stringify(externalFiltersState);
   const dispatch = useAppDispatch();
   const [sortingState, setSorting] = useState<SortingState>(defaultSorting ?? [{ id: "", desc: false }]);
@@ -109,8 +110,7 @@ export function PaginatedSortableTable<T>(props: PaginatedSortableTableProps<T>)
     };
 
     if (!filtersAreEquals && tableKey) {
-      console.log("Setting table state for", tableKey, storeFilters);
-      dispatch(setTableState({ key: tableKey, tableState: storeFilters }));
+      dispatch(setTableState({ key: tableKey, tableState: storeFilters, overWrite: props.overWriteStore ?? true }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columnFilters, pageIndex, pageSize, sortingState, tableKey]);

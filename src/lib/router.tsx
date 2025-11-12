@@ -8,7 +8,6 @@ import LazyLoad from "../components/lazyLoad";
 import PageNotFound from "../components/pageNotFound";
 import SEO from "../components/seo";
 import { siteMap } from "../siteMap/siteMap";
-import type { ArkRoute, ArkSubRoute } from "../siteMap/types";
 
 import { reactPlugin } from "./applicationInsights";
 import { AuthenticatedOnly } from "./authentication/components/authenticatedOnly";
@@ -16,6 +15,7 @@ import { AuthenticationCallback } from "./authentication/components/authenticati
 import ProtectedRoute from "./authentication/components/protectedRoute";
 import Unauthorized from "./authentication/unauthorized";
 import { ErrorFallback } from "./errorFallback";
+import type { ArkRoute, ArkSubRoute } from "./siteMapTypes";
 
 const wrapLazy = (x: ArkRoute) => {
   const checkPermissions = x.permissions && x.permissions.length > 0;
@@ -63,7 +63,7 @@ const renderSections = (s?: ArkSubRoute[]) => {
 const routes = siteMap
   .filter(x => x.path !== undefined)
   .map(
-    (x): RouteObject =>
+    (x: ArkRoute): RouteObject =>
       x.path === "" && !x.subsections // index route, shall not have children
         ? { index: true, element: wrapLazy(x) }
         : { path: x.path, element: wrapLazy(x), children: renderSections(x.subsections) },

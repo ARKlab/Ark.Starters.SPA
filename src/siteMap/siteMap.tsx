@@ -19,7 +19,7 @@ import DetailsPageExampleMainView from "../features/detailsPage/detailsPageExamp
 import NoEntryPoint from "../features/staticPageExample/staticPage";
 import ComponentsTestPage from "../features/tests/ComponentsPage";
 
-import type { ArkRoute } from "./types";
+import type { ArkRoute } from "./siteMapTypes";
 
 /*This is the Main Section ARRAY populate this to populate the main nav menu
 It is also used to create all the Routes for the router*/

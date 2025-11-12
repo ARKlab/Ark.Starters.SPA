@@ -373,7 +373,12 @@ export default function ComponentsTestPage() {
         </Text>
 
         <Box mb={"4"} data-test="checkbox-basic">
-          <AppCheckBox checked={checkboxBasic} setChecked={setCheckboxBasic} label="Basic Checkbox" />
+          <AppCheckBox
+            checked={checkboxBasic}
+            setChecked={setCheckboxBasic}
+            label="Basic Checkbox"
+            data-test="checkbox-basic"
+          />
         </Box>
 
         <Box mb={"4"} data-test="checkbox-with-title">

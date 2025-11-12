@@ -3,9 +3,9 @@ import { Box, type BoxProps } from "@chakra-ui/react";
 import { useCallback, useEffect, useMemo } from "react";
 import { useLocation } from "react-router";
 
+import type { ArkSubRoute } from "../../../lib/siteMapTypes";
 import useRouteChanged from "../../../lib/useRouteChanged";
 import { siteMap } from "../../../siteMap/siteMap";
-import type { ArkSubRoute } from "../../../siteMap/types";
 import { AccordionItem, AccordionItemContent, AccordionItemTrigger, AccordionRoot } from "../../ui/accordion";
 import {
   DrawerBackdrop,
@@ -62,7 +62,7 @@ const SidebarContent = ({ ...rest }: BoxProps) => {
 
   return (
     <Box as={"nav"} {...rest}>
-      <AccordionRoot borderStyle={"none"} borderWidth={0} collapsible multiple defaultValue={[defaultValue]}>
+      <AccordionRoot borderStyle="[none]" borderWidth={0} collapsible multiple defaultValue={[defaultValue]}>
         {siteMap.map((section, index) => (
           <AccordionItem
             value={section.label + "accordionItem" + index}
@@ -86,7 +86,8 @@ const SidebarContent = ({ ...rest }: BoxProps) => {
             </h2>
 
             <AccordionItemContent key={section.label + "accordionPanel" + index}>
-              {section.subsections?.map((x, indexSub) => (
+              {// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+              section.subsections?.map((x: ArkSubRoute, indexSub: number) => (
                 <InnerMenuItems
                   key={x.path + "innerMenuItems" + indexSub}
                   section={x}
@@ -147,7 +148,7 @@ const InnerAccordionSections = (props: { section: ArkSubRoute; parentPath: strin
               x.isInMenu ? (
                 <Box key={section.path + "menuItemBox" + index} p={"0 1em"}>
                   <MenuItem
-                    key={x.path + "AccordionMenuItemInner" + index}
+                    key={x.path + "AccordionMenuItemInner"}
                     path={[props.parentPath, x.path].join("/")}
                     externalUrl={x.externalUrl}
                     label={x.label}
