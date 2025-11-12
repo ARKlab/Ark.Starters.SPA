@@ -14,8 +14,8 @@ export const i18nSetup = async () => {
   if (i18next.isInitialized) return;
   if (import.meta.env.MODE === "e2e") {
     await i18next.use(initReactI18next).init({
-      lng: "cimode",
-      fallbackLng: "cimode",
+      lng: "en",
+      fallbackLng: "en",
       resources: {},
       interpolation: { escapeValue: false },
     });
