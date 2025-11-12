@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
-import { i18nAlly } from "vite-plugin-i18n-ally";
+import { I18nAllyClient } from "vite-plugin-i18n-ally/client";
 import * as z from "zod";
 import { makeZodI18nMap } from "zod-i18n-map";
 
@@ -23,7 +23,8 @@ export const i18nSetup = async () => {
   );
 
   await new Promise<void>(resolve => {
-    const { asyncLoadResource } = i18nAlly({
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    const { asyncLoadResource } = new I18nAllyClient({
       async onInit({ language }) {
         await i18next
           .use(initReactI18next)
