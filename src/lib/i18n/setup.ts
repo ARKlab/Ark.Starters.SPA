@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
-import { i18nAlly } from "vite-plugin-i18n-ally/client";
+import { i18nAlly } from "vite-plugin-i18n-ally";
 import * as z from "zod";
 import { makeZodI18nMap } from "zod-i18n-map";
 
@@ -82,7 +82,8 @@ export const i18nSetup = async () => {
         resolve();
       },
       onResourceLoaded: (resources, { language, namespace }) => {
-        i18next.addResourceBundle(language, namespace ?? "translation", resources);
+        const ns = namespace as string | undefined;
+        i18next.addResourceBundle(language as string, ns ?? "translation", resources);
       },
       fallbackLng,
       detection: [
@@ -110,7 +111,7 @@ export const i18nSetup = async () => {
     i18next.changeLanguage = async (lang: string, ...args) => {
       // Load resources before language change
 
-      await asyncLoadResource(lang);
+      await (asyncLoadResource as (lang: string) => Promise<void>)(lang);
       return _changeLanguage(lang, ...args);
     };
   });
