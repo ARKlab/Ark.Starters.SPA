@@ -12,7 +12,15 @@ const lookupTarget = "lang";
 
 export const i18nSetup = async () => {
   if (i18next.isInitialized) return;
-
+  if (import.meta.env.MODE === "e2e") {
+    await i18next.use(initReactI18next).init({
+      lng: "cimode",
+      fallbackLng: "cimode",
+      resources: {},
+      interpolation: { escapeValue: false },
+    });
+    return;
+  }
   z.setErrorMap(
     makeZodI18nMap({
       ns: ["zodCustom", "zod"],
