@@ -23,7 +23,7 @@ export const i18nSetup = async () => {
   );
 
   await new Promise<void>(resolve => {
-    const i18Ally = new I18nAllyClient({
+    const i18nAlly = new I18nAllyClient({
       async onBeforeInit({ lng }) {
         await i18next
           .use(initReactI18next)
@@ -106,12 +106,11 @@ export const i18nSetup = async () => {
     });
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    const _changeLanguage = i18next.changeLanguage;
-    i18next.changeLanguage = async (lang: string, ...args) => {
-      // Load resources before language change
-
-      await (i18Ally.asyncLoadResource as (lang: string) => Promise<void>)(lang);
-      return _changeLanguage(lang, ...args);
+    const i18nextChangeLanguage = i18next.changeLanguage;
+    i18next.changeLanguage = async (lng: string, ...args) => {
+      // Load resources before switching languages
+      await i18nAlly.asyncLoadResource(lng);
+      return i18nextChangeLanguage(lng, ...args);
     };
   });
 };
