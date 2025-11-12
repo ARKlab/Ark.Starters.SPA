@@ -25,7 +25,7 @@ export const i18nSetup = async () => {
   await new Promise<void>(resolve => {
     // eslint-disable-next-line @typescript-eslint/unbound-method
     const { asyncLoadResource } = new I18nAllyClient({
-      async onInit({ language }) {
+      async onBeforeInit({ lng }) {
         await i18next
           .use(initReactI18next)
           // Initialize the i18next instance.
@@ -38,7 +38,7 @@ export const i18nSetup = async () => {
             // We use English here, but feel free to use
             // whichever locale you want.
             // disabled: conflict with LanguageDetector
-            lng: language,
+            lng: lng,
 
             // Fallback locale used when a translation is
             // missing in the active locale. Again, use your
@@ -82,9 +82,8 @@ export const i18nSetup = async () => {
       onInited() {
         resolve();
       },
-      onResourceLoaded: (resources, { language, namespace }) => {
-        const ns = namespace as string | undefined;
-        i18next.addResourceBundle(language as string, ns ?? "translation", resources);
+      onResourceLoaded: (resources, { lng, ns }) => {
+        i18next.addResourceBundle(lng, ns ?? "translation", resources);
       },
       fallbackLng,
       detection: [
