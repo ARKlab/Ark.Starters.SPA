@@ -6,21 +6,13 @@ import { makeZodI18nMap } from "zod-i18n-map";
 
 import { supportedLngs } from "../../config/lang";
 
-const langs = import.meta.env.MODE == "e2e" ? { cimode: "cimode" } : supportedLngs;
+const langs = import.meta.env.MODE == "e2e" ? { en: "en" } : supportedLngs;
 const fallbackLng = Object.keys(langs)[0];
 const lookupTarget = "lang";
 
 export const i18nSetup = async () => {
   if (i18next.isInitialized) return;
-  if (import.meta.env.MODE === "e2e") {
-    await i18next.use(initReactI18next).init({
-      lng: "en",
-      fallbackLng: "en",
-      resources: {},
-      interpolation: { escapeValue: false },
-    });
-    return;
-  }
+
   z.setErrorMap(
     makeZodI18nMap({
       ns: ["zodCustom", "zod"],
@@ -31,8 +23,9 @@ export const i18nSetup = async () => {
   );
 
   await new Promise<void>(resolve => {
-    const i18nAlly = new I18nAllyClient({
+    const i18 = new I18nAllyClient({
       async onBeforeInit({ lng }) {
+        console.log("[i18n] Initializing i18next...", lng);
         await i18next
           .use(initReactI18next)
           // Initialize the i18next instance.
@@ -114,11 +107,12 @@ export const i18nSetup = async () => {
     });
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    const i18nextChangeLanguage = i18next.changeLanguage;
-    i18next.changeLanguage = async (lng: string, ...args) => {
-      // Load resources before switching languages
-      await i18nAlly.asyncLoadResource(lng);
-      return i18nextChangeLanguage(lng, ...args);
+    const _changeLanguage = i18next.changeLanguage;
+    i18next.changeLanguage = async (lang: string, ...args) => {
+      // Load resources before language change
+
+      await (i18.asyncLoadResource as (lang: string) => Promise<void>)(lang);
+      return _changeLanguage(lang, ...args);
     };
   });
 };
