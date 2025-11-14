@@ -2,7 +2,7 @@ import { Grid, GridItem } from "@chakra-ui/react";
 import { Suspense } from "react";
 import { Outlet } from "react-router";
 
-import { AppErrorModal } from "../AppErrorModal/appErrorModal";
+import { AppErrorModal } from "../../lib/components/AppErrorModal/appErrorModal";
 import CenterSpinner from "../centerSpinner";
 import { ErrorBoundary } from "../errorBoundary";
 import { GdprConsentDialog } from "../gdprConsentDialog";

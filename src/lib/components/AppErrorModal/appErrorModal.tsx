@@ -2,13 +2,18 @@ import { Box, Flex, Button, Stack } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
-import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import { AppModal } from "../../lib/components/AppModal/appModal";
-import type { ErrorDetailsType } from "../../lib/errorHandler/errorHandler";
-import { clearError, selectError } from "../../lib/errorHandler/errorHandler";
-import CodeBlock from "../codeBlock";
-import { ParsedStackTrace } from "../errorDisplay";
-import { AccordionItem, AccordionItemContent, AccordionItemTrigger, AccordionRoot } from "../ui/accordion";
+import { useAppSelector, useAppDispatch } from "../../../app/hooks";
+import CodeBlock from "../../../components/codeBlock";
+import { ParsedStackTrace } from "../../../components/errorDisplay";
+import {
+  AccordionItem,
+  AccordionItemContent,
+  AccordionItemTrigger,
+  AccordionRoot,
+} from "../../../components/ui/accordion";
+import { clearError, selectError } from "../../errorHandler/errorHandler";
+import type { ErrorDetailsType } from "../../errorHandler/errorHandler";
+import { AppModal } from "../AppModal/appModal";
 
 export const AppErrorModal = () => {
   const problem = useAppSelector(selectError);
@@ -38,7 +43,6 @@ const ModalBody = (props: { problem: ErrorDetailsType | null }) => {
     <>
       <Stack>
         <CodeBlock variant={"plain"}>{problem?.message}</CodeBlock>
-
         <AccordionRoot w="full" multiple>
           {problem?.details ? (
             <AccordionItem value={"details"}>

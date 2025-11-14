@@ -109,7 +109,7 @@ export default function AppFileUpload({
             p={4}
             borderRadius="full"
             bg={isDragging ? "primary" : "brand.muted"}
-            color={isDragging ? "white" : "primary"}
+            color={isDragging ? "text" : "primary"}
             transition="all 0.2s"
             data-test="fileupload-icon-wrapper"
           >

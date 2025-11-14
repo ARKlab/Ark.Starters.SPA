@@ -1,8 +1,9 @@
-import { Box, Button, Heading, Text } from "@chakra-ui/react";
+import { Box, Button, Heading, Text, useDisclosure } from "@chakra-ui/react";
 import { formatDate } from "date-fns";
 import { useState } from "react";
 
 import { AppCheckBox } from "../../lib/components/AppCheckBox/appCheckBox";
+import { AppConfirmationDialog } from "../../lib/components/AppConfirmationDialog/appConfirmationDialog";
 import { AppCopyToClipBoard } from "../../lib/components/AppCopyToClipBoard/appCopyToClipBoard";
 import { AppDatePicker } from "../../lib/components/AppDatePicker/appDatePicker";
 import AppFileUpload from "../../lib/components/AppFileUpload/appFileUpload";
@@ -67,6 +68,10 @@ export default function ComponentsTestPage() {
   const [checkboxWithTitle, setCheckboxWithTitle] = useState(true);
   const [checkboxDisabled] = useState(false);
   const [checkboxInvalid, setCheckboxInvalid] = useState(false);
+  // AppConfirmationDialog state
+  const { open: isConfirmationOpen, onOpen: openConfirmation, onClose: closeConfirmation } = useDisclosure();
+  const [confirmationCount, setConfirmationCount] = useState(0);
+
   return (
     <Box as="main" p="4">
       <Heading size="md" mb="4">
@@ -411,6 +416,26 @@ export default function ComponentsTestPage() {
             fieldErrorText="This field is required"
           />
         </Box>
+      </Box>
+      <Box mt={"10"} data-test="appconfirmationdialog-section">
+        <Button data-test="open-appconfirmationdialog-btn" onClick={openConfirmation}>
+          Open Confirmation Dialog
+        </Button>
+        <Text mt={"2"} fontSize="sm" data-test="appconfirmationdialog-confirm-count">
+          Confirms: {confirmationCount}
+        </Text>
+        <AppConfirmationDialog
+          open={isConfirmationOpen}
+          onOpenChange={open => {
+            if (!open) closeConfirmation();
+          }}
+          onConfirm={() => {
+            setConfirmationCount(c => c + 1);
+            closeConfirmation();
+          }}
+          title="Delete record?"
+          body={<Box>Are you sure you want to proceed?</Box>}
+        />
       </Box>
     </Box>
   );

@@ -91,7 +91,7 @@ export function FilterSidebar<T extends object>(props: FilterSidebarProps<T>) {
                             options={filter.collection}
                           />
                           {filter.hint?.length && (
-                            <Field.HelperText fontSize="xs" color="gray" fontWeight="medium">
+                            <Field.HelperText fontSize="xs" fontWeight="medium">
                               {filter.hint}
                             </Field.HelperText>
                           )}
@@ -114,8 +114,6 @@ export function FilterSidebar<T extends object>(props: FilterSidebarProps<T>) {
                 type="submit"
                 form={formId}
                 size="sm"
-                bg="gray"
-                color="gray.900"
                 fontWeight="semibold"
                 _hover={{
                   bg: "green.400",
