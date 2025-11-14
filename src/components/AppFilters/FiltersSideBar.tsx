@@ -116,7 +116,7 @@ export function FilterSidebar<T extends object>(props: FilterSidebarProps<T>) {
                 size="sm"
                 fontWeight="semibold"
                 _hover={{
-                  bg: "green.400",
+                  bg: "brand.hoverButton",
                 }}
               >
                 <Icon as={FaCheck} />

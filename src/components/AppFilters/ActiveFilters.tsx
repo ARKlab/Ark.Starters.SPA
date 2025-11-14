@@ -37,7 +37,6 @@ export function ActiveFiltersBar(props: ActiveFiltersBarProps) {
             px="3"
             py="1.5"
             bg="primary"
-            color="white"
             borderRadius="full"
             fontSize="sm"
             transition="all 0.2s"
@@ -53,7 +52,7 @@ export function ActiveFiltersBar(props: ActiveFiltersBarProps) {
               onClick={() => {
                 onRemoveFilter(filter.filterId);
               }}
-              color="white"
+              color="text"
               minW="auto"
               h="auto"
               p="0"

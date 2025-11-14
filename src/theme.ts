@@ -37,6 +37,7 @@ const theme = createSystem(defaultConfig, {
           subtle: { value: { base: "rgb(165, 197, 216)", _dark: "#1a3478" } },
           emphasized: { value: "#173da6" },
           focusRing: { value: "#2563eb" },
+          hoverButton: { value: { base: "{colors.green.400}", _dark: "{colors.cyan.800}" }
         },
         primary: {
           //PaletteExample
