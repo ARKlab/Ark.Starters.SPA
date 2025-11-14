@@ -1,11 +1,11 @@
 import { Box, Heading } from "@chakra-ui/react";
-import { format } from "date-fns";
 import { useState } from "react";
 
 import { AppDateRange } from "../../lib/components/AppDateRange/appDateRange";
 import { AppInputFilter } from "../../lib/components/AppInputFilter/appInputFilter";
 import type { AppSelectOptionItem } from "../../lib/components/AppSelect/appSelect";
 import AppSelect from "../../lib/components/AppSelect/appSelect";
+import { format } from "../../lib/i18n/i18nDate";
 
 import ConsoleCard from "./consoleCard";
 enum TestEnum {
