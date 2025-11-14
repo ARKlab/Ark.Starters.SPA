@@ -3,7 +3,14 @@ import type { ReactNode } from "react";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 
-import { DialogBody, DialogCloseTrigger, DialogContent, DialogFooter, DialogHeader, DialogRoot } from "../ui/dialog";
+import {
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+} from "../../../components/ui/dialog";
 
 export const AppConfirmationDialog = (props: {
   title: ReactNode;

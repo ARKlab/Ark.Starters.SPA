@@ -3,6 +3,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { createColumnHelper } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
+import { useAppDispatch } from "../../app/hooks";
 import { AppArkApiTable } from "../../lib/components/AppArkApiTable/AppArkApiTable";
 
 import { useGetVideoGamesGenresQuery, useGetVideoGamesQuery } from "./videoGamesApiSlice";
@@ -80,6 +81,8 @@ const VideoGamesTableView = () => {
         useQueryHook={useGetVideoGamesQuery}
         isDraggable={false}
         isSortable={false}
+        tableKey="videoGamesTable"
+        reduxDispatchHook={useAppDispatch()}
       />
     </Box>
   );

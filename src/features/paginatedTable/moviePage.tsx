@@ -4,6 +4,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useAppDispatch } from "../../app/hooks";
 import { AppFilters } from "../../components/AppFilters/AppFilters";
 import type { FilterDefinition } from "../../components/AppFilters/Filters";
 import { AppArkApiTable } from "../../lib/components/AppArkApiTable/AppArkApiTable";
@@ -112,6 +113,7 @@ const MovieTableView = () => {
         externalFilters
         externalFiltersState={toColumnFiltersState(filters)}
         tableKey="Movies"
+        reduxDispatchHook={useAppDispatch()}
       />
     </Box>
   );

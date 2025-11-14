@@ -25,9 +25,11 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useTranslation } from "react-i18next";
 
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import type { AppDispatch } from "../../../app/configureStore";
+import { useAppSelector } from "../../../app/hooks";
 import { DebouncedInputColumnHeader } from "../../../components/debouncedInputColumnHeader";
 import type { ListResponse } from "../../apiTypes";
+import { useFiltersEqual } from "../../useFiltersEqual";
 import { ChackraDateRangeInHeader } from "../AppDateRange/chackraDateRangeInHeader";
 import AppPagination from "../AppPagination/AppPagination";
 
@@ -45,6 +47,7 @@ type ArkApiTableProps<T> = {
     isLoading: boolean;
     isFetching: boolean;
   };
+  reduxDispatchHook: AppDispatch;
   isDraggable?: boolean;
   isSortable?: boolean;
   disableHeaderFilters?: boolean;
@@ -65,6 +68,7 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
   const {
     columns,
     useQueryHook,
+    reduxDispatchHook,
     isDraggable,
     disableHeaderFilters,
     externalFilters,
@@ -84,8 +88,7 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
     pageSize: pageSizeProp ?? 10,
   });
   const reduxTableState = useAppSelector(state => getTableState(state, tableKey));
-  const filtersAreEquals = JSON.stringify(reduxTableState?.filters) === JSON.stringify(externalFiltersState);
-  const dispatch = useAppDispatch();
+  const filtersAreEquals = useFiltersEqual(reduxTableState?.filters, externalFiltersState);
   const [sortingState, setSorting] = useState<SortingState>(defaultSorting ?? [{ id: "", desc: false }]);
   const [rowIndexSelection, setRowIndexSelection] = useState<RowSelectionState>(selectedRows ?? {}); //this is the state of the selected rows
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -110,7 +113,9 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
     };
 
     if (!filtersAreEquals && tableKey) {
-      dispatch(setTableState({ key: tableKey, tableState: storeFilters, overWrite: props.overWriteStore ?? true }));
+      reduxDispatchHook(
+        setTableState({ key: tableKey, tableState: storeFilters, overWrite: props.overWriteStore ?? true }),
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columnFilters, pageIndex, pageSize, sortingState, tableKey]);
