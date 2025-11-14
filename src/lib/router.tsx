@@ -24,7 +24,7 @@ const wrapLazy = (x: MainSectionType) => {
   if (x.component) {
     const X = withAITracking(reactPlugin, () => <>{x.component}</>, x.label);
     element = <X />;
-  };
+  }
   // key={x.label} is needed to force a rerender when the route changes due to https://github.com/remix-run/react-router/issues/12474
   // assumption: x.label is unique across all routes
   // TODO: introduce x.id/x.slug to be used as key and tracking instead of x.label
@@ -33,7 +33,7 @@ const wrapLazy = (x: MainSectionType) => {
     const y = async () => {
       const res = await lazy();
       return { default: withAITracking(reactPlugin, res.default, x.label) };
-    }
+    };
     element = <LazyLoad loader={y} key={x.label} />;
   }
 
