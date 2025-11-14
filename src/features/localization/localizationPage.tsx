@@ -41,15 +41,11 @@ export default function LocalizationPage() {
   const {
     handleSubmit,
     register,
-    watch,
     formState: { isSubmitting, errors },
   } = useForm({
     resolver: zodResolver(FormSchema),
     mode: "onChange",
   });
-
-  console.log(watch("labelName"));
-  console.log("errors: ", errors);
 
   return (
     <Box>
