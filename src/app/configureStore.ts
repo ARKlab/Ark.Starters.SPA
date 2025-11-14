@@ -2,7 +2,7 @@ import type { Action, ThunkAction } from "@reduxjs/toolkit";
 import { configureStore, combineSlices } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
-import * as configTableApi from "../features/configTable/configTableApi";
+import { configTableApiSlice } from "../features/configTable/configTableApi";
 import { jsonPlaceholderApi } from "../features/fetchApiExample/jsonPlaceholderApi";
 import { videoGameApiSlice } from "../features/formExample/videoGamesApiSlice";
 import { globalLoadingSlice } from "../features/globalLoadingBar/globalLoadingSlice";
@@ -20,7 +20,7 @@ const sliceReducers = combineSlices(
   authSlice,
   envSlice,
   tableStateSlice,
-  configTableApi.configTableApiSlice,
+  configTableApiSlice,
   videoGameApiSlice,
   jsonPlaceholderApi,
   moviesApiSlice,
@@ -47,7 +47,7 @@ export function initStore(extra: ExtraType) {
         },
       }).concat(
         jsonPlaceholderApi.middleware,
-        configTableApi.configTableApiSlice.middleware,
+        configTableApiSlice.middleware,
         moviesApiSlice.middleware,
         videoGameApiSlice.middleware,
         globalLoadingSlice.middleware,
@@ -61,7 +61,7 @@ export function initStore(extra: ExtraType) {
 
 export const resetApiActions = [
   jsonPlaceholderApi.util.resetApiState(),
-  configTableApi.configTableApiSlice.util.resetApiState(),
+  configTableApiSlice.util.resetApiState(),
   moviesApiSlice.util.resetApiState(),
   videoGameApiSlice.util.resetApiState(),
   globalLoadingSlice.util.resetApiState(),
