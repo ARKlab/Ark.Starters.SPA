@@ -1,5 +1,5 @@
 import type { BaseQueryArg, QueryReturnValue } from "@reduxjs/toolkit/query";
-import { z } from "zod";
+import type { z } from "zod";
 
 import type {
   ArkBaseQueryError,
@@ -53,12 +53,12 @@ export const withZodResultValidation: withZodResultValidationType =
 
     const res = zodSchema.safeParse(data);
     if (res.success) return returnValue;
-
+    const error = res.error.toString();
     return {
       ...returnValue,
       error: {
         payload: data,
-        error: z.prettifyError(res.error),
+        error,
         status: "ZOD_SCHEMA_ERROR",
       },
     };
