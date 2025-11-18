@@ -12,19 +12,18 @@ const lookupTarget = "lang";
 
 export const i18nSetup = async () => {
   if (i18next.isInitialized) return;
-
+  const namespaces = ["template", "gdpr", "translation", "zodCustom", "zod"];
   i18nUse(initReactI18next);
   await new Promise<void>(resolve => {
     const i18 = new I18nAllyClient({
       async onBeforeInit({ lng }) {
-        console.log("[i18n] Initializing i18next...", lng);
         await i18next
           .use(initReactI18next)
           // Initialize the i18next instance.
           .init({
             // Config options
             load: "languageOnly",
-            ns: ["zodCustom", "zod"],
+            ns: namespaces,
             // Specifies the default language (locale) used
             // when a user visits our site for the first time.
             // We use English here, but feel free to use
@@ -71,10 +70,10 @@ export const i18nSetup = async () => {
             lowerCaseLng: true,
           })
           .then(() => {
-            const t = getFixedT(null, ["zodCustom", "zod"]);
+            const t = getFixedT(null, namespaces);
 
             z.config({
-              customError: makeZodI18nMap({ t, ns: ["zodCustom", "zod"] }),
+              customError: makeZodI18nMap({ t, ns: namespaces }),
             });
           });
       },
