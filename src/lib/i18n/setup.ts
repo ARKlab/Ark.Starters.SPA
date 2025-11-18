@@ -1,8 +1,8 @@
-import i18next from "i18next";
+import { makeZodI18nMap } from "@semihbou/zod-i18n-map";
+import i18next, { getFixedT, use as i18nUse } from "i18next";
 import { initReactI18next } from "react-i18next";
 import { I18nAllyClient } from "vite-plugin-i18n-ally/client";
 import * as z from "zod";
-import { makeZodI18nMap } from "zod-i18n-map";
 
 import { supportedLngs } from "../../config/lang";
 
@@ -13,15 +13,7 @@ const lookupTarget = "lang";
 export const i18nSetup = async () => {
   if (i18next.isInitialized) return;
 
-  z.setErrorMap(
-    makeZodI18nMap({
-      ns: ["zodCustom", "zod"],
-      handlePath: {
-        keyPrefix: "paths",
-      },
-    }),
-  );
-
+  i18nUse(initReactI18next);
   await new Promise<void>(resolve => {
     const i18 = new I18nAllyClient({
       async onBeforeInit({ lng }) {
@@ -32,7 +24,7 @@ export const i18nSetup = async () => {
           .init({
             // Config options
             load: "languageOnly",
-
+            ns: ["zodCustom", "zod"],
             // Specifies the default language (locale) used
             // when a user visits our site for the first time.
             // We use English here, but feel free to use
@@ -77,6 +69,13 @@ export const i18nSetup = async () => {
             nonExplicitSupportedLngs: true,
             cleanCode: true,
             lowerCaseLng: true,
+          })
+          .then(() => {
+            const t = getFixedT(null, ["zodCustom", "zod"]);
+
+            z.config({
+              customError: makeZodI18nMap({ t, ns: ["zodCustom", "zod"] }),
+            });
           });
       },
       onInited() {
