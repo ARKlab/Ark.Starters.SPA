@@ -106,6 +106,7 @@ const GroupsManagementView = () => {
   const [showCreateUserTypeModal, setShowCreateUserTypeModal] = useState(false);
   const [newUserTypeName, setNewUserTypeName] = useState("");
   const [isCreatingUserType, setIsCreatingUserType] = useState(false);
+  const [showSaveConfirmModal, setShowSaveConfirmModal] = useState(false);
 
   const handleLogin = () => {
     void dispatch(Login());
@@ -465,6 +466,200 @@ const GroupsManagementView = () => {
     }
   };
 
+  // Helper functions for payload size management
+  const calculateCurrentPayloadSize = (): { sizeInBytes: number; sizeFormatted: string; selectedCount: number } => {
+    if (!aggregatedReportSettings) {
+      return { sizeInBytes: 0, sizeFormatted: "0 KB", selectedCount: 0 };
+    }
+
+    const menuItems: SimpleMenuItem[] = [];
+    let selectedCount = 0;
+
+    aggregatedReportSettings.menuItem.forEach((aggregatedMenuItem: MenuItem) => {
+      const isLeafNode = !aggregatedMenuItem.childItem;
+
+      if (isLeafNode) {
+        const itemId = aggregatedMenuItem.menuSection;
+        if (checkedItems[itemId]) {
+          selectedCount++;
+          menuItems.push({
+            class: aggregatedMenuItem.class,
+          });
+        }
+      } else {
+        const childLinks: SimpleChildLink[] = [];
+
+        aggregatedMenuItem.childItem?.childLinks.forEach((aggregatedChildLink: ChildLink) => {
+          const selectedComponents: SimpleComponent[] = [];
+
+          aggregatedChildLink.components.forEach((aggregatedComponent: Component) => {
+            const componentId = `${aggregatedMenuItem.class}-${aggregatedChildLink.reportId}-${aggregatedComponent.widId}`;
+            if (checkedItems[componentId]) {
+              selectedCount++;
+              selectedComponents.push({
+                componentType: aggregatedComponent.componentType,
+              });
+            }
+          });
+
+          if (selectedComponents.length > 0) {
+            childLinks.push({
+              reportId: aggregatedChildLink.reportId,
+              components: selectedComponents,
+            });
+          }
+        });
+
+        if (childLinks.length > 0) {
+          menuItems.push({
+            class: aggregatedMenuItem.class,
+            childItem: {
+              childLinks: childLinks,
+            },
+          });
+        }
+      }
+    });
+
+    const configObject = { menuItem: menuItems };
+    const configString = JSON.stringify(configObject);
+    const sizeInBytes = new Blob([configString]).size;
+
+    let sizeFormatted: string;
+    if (sizeInBytes < 1024) {
+      sizeFormatted = `${sizeInBytes} B`;
+    } else if (sizeInBytes < 1024 * 1024) {
+      sizeFormatted = `${(sizeInBytes / 1024).toFixed(1)} KB`;
+    } else {
+      sizeFormatted = `${(sizeInBytes / (1024 * 1024)).toFixed(1)} MB`;
+    }
+
+    return { sizeInBytes, sizeFormatted, selectedCount };
+  };
+
+  const calculateSelectionBreakdown = (): {
+    totalItems: number;
+    selectedItems: number;
+    breakdown: { sectionName: string; selected: number; total: number }[];
+    sizeInBytes: number;
+  } => {
+    if (!aggregatedReportSettings) {
+      return { totalItems: 0, selectedItems: 0, breakdown: [], sizeInBytes: 0 };
+    }
+
+    let totalItems = 0;
+    let selectedItems = 0;
+    const breakdown: { sectionName: string; selected: number; total: number }[] = [];
+
+    aggregatedReportSettings.menuItem.forEach((menuItem: MenuItem) => {
+      const isLeafNode = !menuItem.childItem;
+
+      if (isLeafNode) {
+        totalItems++;
+        const itemId = menuItem.menuSection;
+        const isSelected = checkedItems[itemId] || false;
+        if (isSelected) selectedItems++;
+
+        breakdown.push({
+          sectionName: menuItem.label,
+          selected: isSelected ? 1 : 0,
+          total: 1,
+        });
+      } else {
+        let sectionTotal = 0;
+        let sectionSelected = 0;
+
+        menuItem.childItem?.childLinks.forEach((childLink: ChildLink) => {
+          childLink.components.forEach((component: Component) => {
+            totalItems++;
+            sectionTotal++;
+            const componentId = `${menuItem.class}-${childLink.reportId}-${component.widId}`;
+            const isSelected = checkedItems[componentId] || false;
+            if (isSelected) {
+              selectedItems++;
+              sectionSelected++;
+            }
+          });
+        });
+
+        if (sectionTotal > 0) {
+          breakdown.push({
+            sectionName: menuItem.label,
+            selected: sectionSelected,
+            total: sectionTotal,
+          });
+        }
+      }
+    });
+
+    const { sizeInBytes } = calculateCurrentPayloadSize();
+
+    return { totalItems, selectedItems, breakdown, sizeInBytes };
+  };
+
+  // Helper function to verify if data was actually saved despite errors
+  const verifyDataSaved = async (
+    originalPayload: { ID: number; Name: string; Config: string },
+    token: string,
+    errorResponse: Response,
+  ): Promise<Response> => {
+    try {
+      console.log("Verifying if data was actually saved despite error...");
+
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      const verifyResponse = await fetch("/userTypes", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (verifyResponse.ok) {
+        const currentUserTypes = (await verifyResponse.json()) as UserType[];
+        const currentUserType = currentUserTypes.find(ut => ut.ID === originalPayload.ID);
+
+        // Compare if our changes were actually saved
+        if (currentUserType && currentUserType.Config === originalPayload.Config) {
+          console.log("Data was actually saved despite error response, treating as success");
+          return { ok: true, status: 200, statusText: "Success despite error" } as Response;
+        } else {
+          console.log("Data was not saved, proceeding with error response");
+
+          console.log("Final verification attempt");
+          await new Promise(resolve => setTimeout(resolve, 3000));
+
+          const secondVerifyResponse = await fetch("/userTypes", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (secondVerifyResponse.ok) {
+            const secondUserTypes = (await secondVerifyResponse.json()) as UserType[];
+            const secondUserType = secondUserTypes.find(ut => ut.ID === originalPayload.ID);
+
+            if (secondUserType && secondUserType.Config === originalPayload.Config) {
+              console.log("Data was saved after delay - success");
+              return { ok: true, status: 200, statusText: "Success after delay" } as Response;
+            }
+          }
+
+          return errorResponse;
+        }
+      } else {
+        console.warn("Could not verify save status - verification request failed");
+        return errorResponse;
+      }
+    } catch (verifyError) {
+      console.warn("Could not verify save status:", verifyError);
+      return errorResponse;
+    }
+  };
+
   const handleSaveConfiguration = async () => {
     if (!selectedUserType || !aggregatedReportSettings) return;
 
@@ -533,19 +728,94 @@ const GroupsManagementView = () => {
         Config: JSON.stringify(configObject),
       };
 
-      const response = await fetch("https://k4view-admin-test-k2e.azurewebsites.net/userTypes/update", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
+      let lastError: string | null = null;
+      let response: Response | null = null;
+      const maxRetries = 3;
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          console.log(`Attempting to save user type configuration (attempt ${attempt}/${maxRetries})...`);
+
+          response = await fetch("https://k4view-admin-test-k2e.azurewebsites.net/userTypes/update", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+          });
+
+          if (response.ok) {
+            console.log(`User type configuration saved successfully on attempt ${attempt}`);
+            break;
+          } else if (response.status === 500) {
+            lastError = `HTTP ${response.status}: ${response.statusText}`;
+            console.log(`Attempt ${attempt} failed with 500 error, will retry...`);
+
+            if (attempt < maxRetries) {
+              await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+              continue;
+            }
+          } else {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+        } catch (fetchError) {
+          lastError = String(fetchError);
+          console.error(`Attempt ${attempt} failed:`, fetchError);
+
+          if (attempt < maxRetries) {
+            await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+            continue;
+          }
+        }
       }
 
+      if (!response?.ok) {
+        // Special handling: Check if the data was actually saved despite 500 error
+        if (response?.status === 500) {
+          console.warn("500 error received, checking if data was actually saved...");
+
+          try {
+            // Verify if the save actually worked by fetching current state
+            const verifyResponse = await fetch("/userTypes", {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            });
+
+            if (verifyResponse.ok) {
+              const currentUserTypes = (await verifyResponse.json()) as UserType[];
+              const currentUserType = currentUserTypes.find(ut => ut.ID === selectedUserType);
+
+              if (currentUserType && currentUserType.Config === JSON.stringify(configObject)) {
+                console.log("Data was actually saved despite 500 error - treating as success");
+                setUserTypes(currentUserTypes);
+                response = { ok: true } as Response; 
+              } else {
+                console.warn("Data was not saved - the 500 error was real");
+              }
+            }
+          } catch (verifyError) {
+            console.warn("Could not verify save status:", verifyError);
+          }
+        }
+
+        if (!response?.ok) {
+          if (response?.status === 500) {
+            console.log("Final verification attempt before giving up...");
+            const finalVerification = await verifyDataSaved(payload, token, response);
+            if (finalVerification.ok) {
+              response = finalVerification;
+            } else {
+              throw new Error(lastError ?? "Failed to save user type configuration after all attempts");
+            }
+          } else {
+            throw new Error(lastError ?? "Failed to save user type configuration");
+          }
+        }
+      }
       const userTypesResponse = await fetch("/userTypes", {
         method: "GET",
         headers: {
@@ -701,11 +971,37 @@ const GroupsManagementView = () => {
     }
   };
 
+  const isAllChildComponentsSelected = (menuItemClass: string, childLink: ChildLink): boolean => {
+    return childLink.components.every(component => {
+      const componentId = `${menuItemClass}-${childLink.reportId}-${component.widId}`;
+      return checkedItems[componentId] || false;
+    });
+  };
+
+  const isSomeChildComponentsSelected = (menuItemClass: string, childLink: ChildLink): boolean => {
+    return childLink.components.some(component => {
+      const componentId = `${menuItemClass}-${childLink.reportId}-${component.widId}`;
+      return checkedItems[componentId] || false;
+    });
+  };
+
+  const toggleAllChildComponents = (menuItemClass: string, childLink: ChildLink) => {
+    const isCurrentlyAllSelected = isAllChildComponentsSelected(menuItemClass, childLink);
+    const newCheckedItems = { ...checkedItems };
+
+    childLink.components.forEach(component => {
+      const componentId = `${menuItemClass}-${childLink.reportId}-${component.widId}`;
+      newCheckedItems[componentId] = !isCurrentlyAllSelected;
+    });
+
+    setCheckedItems(newCheckedItems);
+  };
+
   // Show unauthenticated message if user is not logged in
   if (!isLogged) {
     return (
       <Flex direction="column" align="center" justifyContent="center" minH="96" gap="4">
-        <Text fontSize="lg" color="gray.700" textAlign="center">
+        <Text fontSize="lg" color="fg.muted" textAlign="center">
           Unauthenticated user, please log in
         </Text>
         <Button onClick={handleLogin} colorPalette="blue">
@@ -722,7 +1018,7 @@ const GroupsManagementView = () => {
   if (error) {
     return (
       <Flex direction="column" align="center" justifyContent="center" minH="96" gap="4">
-        <Text fontSize="lg" color="red.500" textAlign="center">
+        <Text fontSize="lg" color="fg.error" textAlign="center">
           Error initialising, please refresh
         </Text>
         <Button
@@ -832,20 +1128,40 @@ const GroupsManagementView = () => {
                             <Box pl="4" pt="1">
                               {menuItem.childItem.childLinks.map((childLink, _childIndex) => (
                                 <Box key={childLink.reportId}>
-                                  <Button
-                                    variant="plain"
-                                    colorPalette="brand"
-                                    justifyContent="flex-start"
-                                    p="1"
-                                    onClick={() => {
-                                      toggleSection(childLink.reportId);
-                                    }}
-                                  >
-                                    <HStack gap="1">
+                                  <HStack gap="1" alignItems="center" p="1">
+                                    <Button
+                                      variant="plain"
+                                      colorPalette="brand"
+                                      p="1"
+                                      minW="auto"
+                                      onClick={() => {
+                                        toggleSection(childLink.reportId);
+                                      }}
+                                    >
                                       {expandedSections[childLink.reportId] ? <HiOutlineMinus /> : <HiOutlinePlus />}
-                                      <Text fontSize="xs">{childLink.label}</Text>
-                                    </HStack>
-                                  </Button>
+                                    </Button>
+                                    <Checkbox
+                                      checked={isAllChildComponentsSelected(menuItem.class, childLink)}
+                                      inputProps={{
+                                        ...(
+                                          !isAllChildComponentsSelected(menuItem.class, childLink) &&
+                                          isSomeChildComponentsSelected(menuItem.class, childLink)
+                                            ? { 
+                                                ref: (input: HTMLInputElement | null) => {
+                                                  if (input) input.indeterminate = true;
+                                                }
+                                              }
+                                            : {}
+                                        )
+                                      }}
+                                      onCheckedChange={() => {
+                                        toggleAllChildComponents(menuItem.class, childLink);
+                                      }}
+                                    />
+                                    <Text fontSize="xs" flex="1">
+                                      {childLink.label}
+                                    </Text>
+                                  </HStack>
 
                                   {expandedSections[childLink.reportId] && (
                                     <Box pl="4" pt="1">
@@ -878,13 +1194,70 @@ const GroupsManagementView = () => {
                 </Box>
               ) : (
                 <Box>
-                  <Text fontSize="sm" color="gray.500" textAlign="center" py="8">
+                  <Text fontSize="sm" color="fg.muted" textAlign="center" py="8">
                     {!aggregatedReportSettings
                       ? "Loading menu structure..."
                       : "Select a user type from the left panel to configure its settings."}
                   </Text>
                 </Box>
               )}
+
+              {/* Quick Selection Management */}
+              {selectedUserType &&
+                aggregatedReportSettings &&
+                (() => {
+                  const { selectedCount } = calculateCurrentPayloadSize();
+
+                  return (
+                    <Box p="3" borderRadius="md" bg="bg.subtle" borderColor="border.subtle">
+                      <VStack align="stretch" gap="2">
+                        <HStack justify="space-between" align="center">
+                          <Text fontSize="sm" fontWeight="medium">
+                            Selected: {selectedCount} items
+                          </Text>
+                          <HStack gap="2">
+                            <Button
+                              size="xs"
+                              variant="outline"
+                              onClick={() => {
+                                setCheckedItems({});
+                              }}
+                              disabled={selectedCount === 0}
+                            >
+                              Clear All
+                            </Button>
+                            <Button
+                              size="xs"
+                              variant="outline"
+                              onClick={() => {
+                                
+                                const newCheckedItems: Record<string, boolean> = {};
+
+                                aggregatedReportSettings.menuItem.forEach((menuItem: MenuItem) => {
+                                  const isLeafNode = !menuItem.childItem;
+                                  if (isLeafNode) {
+                                    newCheckedItems[menuItem.menuSection] = true;
+                                  } else {
+                                    menuItem.childItem?.childLinks.forEach((childLink: ChildLink) => {
+                                      childLink.components.forEach((component: Component) => {
+                                        const componentId = `${menuItem.class}-${childLink.reportId}-${component.widId}`;
+                                        newCheckedItems[componentId] = true;
+                                      });
+                                    });
+                                  }
+                                });
+
+                                setCheckedItems(newCheckedItems);
+                              }}
+                            >
+                              Select All
+                            </Button>
+                          </HStack>
+                        </HStack>
+                      </VStack>
+                    </Box>
+                  );
+                })()}
 
               <Box>
                 <Button
@@ -893,8 +1266,10 @@ const GroupsManagementView = () => {
                   p="1"
                   size="sm"
                   alignSelf="flex-start"
-                  onClick={handleSaveConfiguration}
-                  disabled={!selectedUserType || isLoading}
+                  onClick={() => {
+                    setShowSaveConfirmModal(true);
+                  }}
+                  disabled={!selectedUserType || calculateCurrentPayloadSize().selectedCount === 0}
                 >
                   <Text fontSize="sm">{isSaving ? "Saving..." : "Save Configuration"}</Text>
                 </Button>
@@ -952,7 +1327,7 @@ const GroupsManagementView = () => {
                         <HStack key={`existing-${index}`} justify="space-between" minH="6">
                           <Text
                             fontSize="sm"
-                            color={usersToRemove.has(user.Name) ? "red.500" : "gray.600"}
+                            color={usersToRemove.has(user.Name) ? "fg.error" : "fg.muted"}
                             textDecoration={usersToRemove.has(user.Name) ? "line-through" : "none"}
                           >
                             {user.Name}
@@ -972,11 +1347,11 @@ const GroupsManagementView = () => {
                         </HStack>
                       ))
                   ) : selectedUserType && users.length === 0 ? (
-                    <Text fontSize="sm" color="gray.400" fontStyle="italic">
+                    <Text fontSize="sm" color="fg.muted" fontStyle="italic">
                       No users in this group
                     </Text>
                   ) : !selectedUserType ? (
-                    <Text fontSize="sm" color="gray.400" fontStyle="italic">
+                    <Text fontSize="sm" color="fg.muted" fontStyle="italic">
                       Select a user type to view users
                     </Text>
                   ) : null}
@@ -984,7 +1359,7 @@ const GroupsManagementView = () => {
                   {/* Newly added users */}
                   {usersToAdd.map((userName, index) => (
                     <HStack key={`new-${index}`} justify="space-between" minH="8">
-                      <Text fontSize="sm" color="green.600" fontWeight="medium">
+                      <Text fontSize="sm" color="fg.success" fontWeight="medium">
                         + {userName}
                       </Text>
                       <Button
@@ -1059,7 +1434,7 @@ const GroupsManagementView = () => {
         footerCloseButton={true}
         title="User Already Exists"
         body={
-          <Text fontSize="sm" color="gray.600">
+          <Text fontSize="sm" color="fg.muted">
             {alertMessage}
           </Text>
         }
@@ -1077,7 +1452,7 @@ const GroupsManagementView = () => {
         title="Create User Type"
         body={
           <VStack align="stretch" gap="4">
-            <Text fontSize="sm" color="gray.600">
+            <Text fontSize="sm" color="fg.muted">
               Enter a name for the new user type:
             </Text>
             <Input
@@ -1095,6 +1470,71 @@ const GroupsManagementView = () => {
           </VStack>
         }
         size="md"
+      />
+
+      {/* Save Confirmation Modal */}
+      <ChackraUIBaseModal
+        open={showSaveConfirmModal}
+        onClose={() => {
+          setShowSaveConfirmModal(false);
+        }}
+        onSubmit={handleSaveConfiguration}
+        submitButton={true}
+        submitButtonText={isSaving ? "Saving..." : "Save Configuration"}
+        footerCloseButton={true}
+        title="Confirm Configuration Save"
+        body={(() => {
+          const { totalItems, selectedItems, breakdown, sizeInBytes } = calculateSelectionBreakdown();
+          const isLargePayload = selectedItems > 258;
+
+          return (
+            <VStack align="stretch" gap="4">
+              <Box
+                p="3"
+                borderRadius="md"
+                bg={isLargePayload ? "bg.warning.subtle" : "bg.info.subtle"}
+                border="1px solid"
+                borderColor={isLargePayload ? "border.warning" : "border.info"}
+              >
+                <HStack justify="space-between" mb="2">
+                  <Text fontSize="md" fontWeight="semibold">
+                    Selection Summary
+                  </Text>
+                  <Text fontSize="md" color={isLargePayload ? "fg.warning" : "fg.info"} fontWeight="semibold">
+                    {selectedItems} / {totalItems} items
+                  </Text>
+                </HStack>
+                {isLargePayload && (
+                  <Text fontSize="sm" color="fg.warning" fontWeight="medium" mb="2">
+                    Large configuration detected - may fail to save
+                  </Text>
+                )}
+                <Text fontSize="sm" color="fg.muted">
+                  Configuration size: {(sizeInBytes / 1024).toFixed(1)} KB
+                </Text>
+              </Box>
+
+              <Box>
+                <Text fontSize="sm" fontWeight="medium" mb="2">
+                  Breakdown by Section:
+                </Text>
+                <VStack align="stretch" gap="1" maxH="200px" overflowY="auto">
+                  {breakdown.map((section, index) => (
+                    <HStack key={index} justify="space-between" p="2" bg="bg.subtle" borderRadius="md">
+                      <Text fontSize="xs" flex="1">
+                        {section.sectionName}
+                      </Text>
+                      <Text fontSize="xs" fontWeight="medium" color={section.selected > 0 ? "fg.success" : "fg.muted"}>
+                        {section.selected} / {section.total}
+                      </Text>
+                    </HStack>
+                  ))}
+                </VStack>
+              </Box>
+            </VStack>
+          );
+        })()}
+        size="lg"
       />
     </Box>
   );
