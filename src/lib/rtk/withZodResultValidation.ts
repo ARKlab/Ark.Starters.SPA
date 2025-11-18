@@ -53,7 +53,7 @@ export const withZodResultValidation: withZodResultValidationType =
 
     const res = zodSchema.safeParse(data);
     if (res.success) return returnValue;
-    const error = res.error.toString();
+    const error = res.error.message;
     return {
       ...returnValue,
       error: {
