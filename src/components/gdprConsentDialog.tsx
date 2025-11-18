@@ -42,7 +42,7 @@ function Option(props: OptionProps) {
 
   return (
     <Field.Root id={name}>
-      <Flex minWidth="max-content" alignItems="center" gap="2">
+      <Flex minWidth="max" alignItems="center" gap="2">
         <Box p="2">
           <FieldLabel htmlFor={name}>{title}</FieldLabel>
         </Box>
@@ -55,7 +55,7 @@ function Option(props: OptionProps) {
           )}
         />
       </Flex>
-      <FieldHelperText mt={4}>{desc}</FieldHelperText>
+      <FieldHelperText mt={"4"}>{desc}</FieldHelperText>
     </Field.Root>
   );
 }
@@ -91,7 +91,7 @@ export const GdprConsentDialog = () => {
         <DialogContent ref={contentRef}>
           <DialogHeader fontSize="lg" fontWeight="bold">
             <Text>
-              <Icon mr={1} as={FaCookieBite} />
+              <Icon mr={"1"} as={FaCookieBite} />
               <Trans t={t} i18nKey="title">
                 We've Cookies!
               </Trans>
@@ -105,13 +105,13 @@ export const GdprConsentDialog = () => {
               </Trans>
             </Text>
           </DialogBody>
-          <DialogFooter gap={2}>
-            <ButtonGroup gap={1}>
+          <DialogFooter gap={"2"}>
+            <ButtonGroup gap={"1"}>
               <Button onClick={onOpen}>Customize</Button>
               <LocaleSwitcher portalRef={contentRef}></LocaleSwitcher>
             </ButtonGroup>
             <Spacer />
-            <ButtonGroup gap={1}>
+            <ButtonGroup gap={"1"}>
               <Button
                 ref={ref}
                 onClick={() => {
@@ -128,7 +128,7 @@ export const GdprConsentDialog = () => {
                   actions.acceptAll();
                   onClose();
                 }}
-                ml={3}
+                ml={"3"}
                 data-test="gdpr-acceptAll"
               >
                 {t("acceptAll")}
@@ -155,7 +155,7 @@ export const GdprConsentDialog = () => {
           </DialogHeader>
 
           <DialogBody>
-            <VStack separator={<StackSeparator borderColor="border.muted" />} gap={4} align="stretch">
+            <VStack separator={<StackSeparator borderColor="brand.muted" />} gap={"4"} align="stretch">
               <Text>
                 <Trans t={t} i18nKey="customize">
                   The options provided in this section allow you to customize your consent preferences for any tracking
@@ -199,7 +199,7 @@ export const GdprConsentDialog = () => {
             </VStack>
           </DialogBody>
 
-          <DialogFooter gap={2}>
+          <DialogFooter gap={"2"}>
             <Box>
               <Button
                 onClick={() => {
@@ -211,7 +211,7 @@ export const GdprConsentDialog = () => {
               </Button>
             </Box>
             <Spacer />
-            <ButtonGroup gap={1}>
+            <ButtonGroup gap={"1"}>
               <Button colorPalette="error" type="submit">
                 {t("accept")}
               </Button>
