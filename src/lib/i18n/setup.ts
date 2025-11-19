@@ -68,16 +68,14 @@ export const i18nSetup = async () => {
             nonExplicitSupportedLngs: true,
             cleanCode: true,
             lowerCaseLng: true,
-          })
-          .then(() => {
-            const t = getFixedT(null, zodNs);
-
-            z.config({
-              customError: makeZodI18nMap({ t, ns: zodNs }),
-            });
           });
       },
       onInited() {
+        const t = getFixedT(null, zodNs);
+
+        z.config({
+          customError: makeZodI18nMap({ t, ns: zodNs }),
+        });
         resolve();
       },
       onResourceLoaded: (resources, { lng, ns }) => {
