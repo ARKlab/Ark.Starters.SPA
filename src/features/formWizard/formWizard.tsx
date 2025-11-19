@@ -10,7 +10,7 @@ import { delay } from "../../lib/helper";
 const _wizardSchema = z.object({
   firstName: z.string().min(6),
   lastname: z.string().min(6),
-   
+
   email: z.email(),
   password: z.string().refine(v => v.length > 6, {
     params: {
@@ -35,12 +35,12 @@ export default function WizardFormView() {
   };
 
   return (
-    <Box css={{ "--margin-top": "20px", "--gap": "20px" }}>
+    <Box>
       <Heading>{t("wizard_form_title")}</Heading>
-      <Box mt="var(--margin-top)">
+      <Box mt="4">
         <Wizard<Schema> onSubmit={onSubmit} formProps={{ mode: "onChange", resolver: zodResolver(_wizardSchema) }}>
           <WizardPage>
-            <Stack gap="var(--gap)">
+            <Stack gap="4">
               <InputControl name="firstName" label={t("firstname")} placeholder={t("wizard_first_name_placeholder")} />
               <InputControl name="lastName" label={t("lastname")} placeholder={t("wizard_last_name_placeholder")} />
               <InputControl name="email" label={t("email")} placeholder={t("wizard_email_placeholder")} />
@@ -54,7 +54,7 @@ export default function WizardFormView() {
           </WizardPage>
 
           <WizardPage>
-            <Stack gap={"var(--gap)"}>
+            <Stack gap={"4"}>
               <InputControl name="phone" label={t("Phone")} placeholder={t("wizard_phone_placeholder")} />
               <InputControl
                 name="billingAddress"
@@ -70,7 +70,7 @@ export default function WizardFormView() {
           </WizardPage>
 
           <WizardPage>
-            <Stack gap={"var(--gap)"}>
+            <Stack gap={"4"}>
               <CheckboxControl name="newsletter" label={t("wizard_newsletter_label")} />
               <CheckboxControl name="specialOffers" label={t("wizard_special_offers_label")} />
               <CheckboxControl name="smsNotifications" label={t("wizard_sms_notifications_label")} />
