@@ -74,7 +74,7 @@ export const i18nSetup = async () => {
         const t = getFixedT(null, zodNs);
 
         z.config({
-          customError: makeZodI18nMap({ t, ns: zodNs }),
+          customError: makeZodI18nMap({ t, ns: zodNs, handlePath: { keyPrefix: "paths" } }),
         });
         resolve();
       },
