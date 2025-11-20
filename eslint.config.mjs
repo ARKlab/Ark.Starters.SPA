@@ -19,36 +19,23 @@ export default tseslint.config(
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
   importPlugin.flatConfigs.recommended,
-  pluginMocha.configs.recommended,
-  pluginCypress.configs.recommended,
-  pluginChaiFriendly.configs.recommendedFlat,
   jsxA11y.flatConfigs.strict,
-  {
-    rules: {
-      "mocha/no-exclusive-tests": "error",
-      "mocha/no-pending-tests": "error",
-      "mocha/no-mocha-arrows": "off",
-      "cypress/no-unnecessary-waiting": "off",
-      "mocha/no-top-level-hooks": "off",
-    },
-  },
   {
     linterOptions: {
       reportUnusedDisableDirectives: "warn",
     },
   },
   {
-    files: ["**/*.{ts,tsx,mtsx}"],
-    ...importPlugin.flatConfigs.typescript,
+    files: ["src/**/*.{ts,tsx,mtsx}", "pwa-assets.config.{ts,tsx,mtsx}", "vite.config.{ts,tsx,mtsx}"],
     languageOptions: {
       parserOptions: {
         tsconfigRootDir: import.meta.dirname,
-        project: ["./tsconfig.json", "./cypress/tsconfig.json"],
+        project: ["./tsconfig.json"],
       },
     },
     settings: {
       "import/parsers": {
-        "@typescript-eslint/parser": [".ts", ".tsx"],
+        "@typescript-eslint/parser": [".ts", ".tsx", ".mtsx"],
       },
       "import/resolver": {
         typescript: {
@@ -56,6 +43,38 @@ export default tseslint.config(
           project: ["tsconfig.json"],
         },
       },
+    },
+  },
+  {
+    files: ["cypress/**/*.{ts,tsx,mtsx}", "cypress.config.{ts,tsx,mtsx}"],
+    extends: [
+      pluginMocha.configs.recommended,
+      pluginCypress.configs.recommended,
+      pluginChaiFriendly.configs.recommendedFlat,
+    ],
+    languageOptions: {
+      parserOptions: {
+        tsconfigRootDir: import.meta.dirname,
+        project: ["./cypress/tsconfig.json"],
+      },
+    },
+    settings: {
+      "import/parsers": {
+        "@typescript-eslint/parser": [".ts", ".tsx", ".mtsx"],
+      },
+      "import/resolver": {
+        typescript: {
+          alwaysTryTypes: true,
+          project: ["./cypress/tsconfig.json"],
+        },
+      },
+    },
+    rules: {
+      "mocha/no-exclusive-tests": "error",
+      "mocha/no-pending-tests": "error",
+      "mocha/no-mocha-arrows": "off",
+      "cypress/no-unnecessary-waiting": "off",
+      "mocha/no-top-level-hooks": "off",
     },
   },
   {
@@ -187,7 +206,7 @@ export default tseslint.config(
       "react-refresh": reactRefresh,
     },
     rules: {
-      ...hooks.configs.recommended.rules,
+      ...hooks.configs["recommended-latest"].rules,
       "react-refresh/only-export-components": ["error", { allowConstantExport: true }],
       "react-hooks/exhaustive-deps": ["error"],
       "react-hooks/rules-of-hooks": "error",
@@ -197,7 +216,6 @@ export default tseslint.config(
     files: ["**/*.{js,mjs,cjs}"],
     ...tseslint.configs.disableTypeChecked,
   },
-  //prettier,
   {
     ignores: [
       ".vscode/**",
