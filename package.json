@@ -13,6 +13,7 @@
     "@microsoft/applicationinsights-react-js": "19.3.8",
     "@microsoft/applicationinsights-web": "3.3.10",
     "@reduxjs/toolkit": "2.9.1",
+    "@semihbou/zod-i18n-map": "^0.0.3",
     "@tanstack/react-table": "8.21.3",
     "@tinyhttp/content-disposition": "2.2.2",
     "date-fns": "4.1.0",
@@ -34,8 +35,7 @@
     "react-router": "7.9.6",
     "stacktrace-js": "2.0.2",
     "usehooks-ts": "3.1.1",
-    "zod": "3.25.76",
-    "zod-i18n-map": "2.27.0"
+    "zod": "4.1.12"
   },
   "scripts": {
     "start": "concurrently --kill-others --success first \"npm:start:*\"",
