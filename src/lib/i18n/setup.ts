@@ -1,43 +1,35 @@
-import i18next from "i18next";
+import { makeZodI18nMap } from "@semihbou/zod-i18n-map";
+import i18next, { getFixedT, use as i18nUse } from "i18next";
 import { initReactI18next } from "react-i18next";
-import { i18nAlly } from "vite-plugin-i18n-ally/client";
+import { I18nAllyClient } from "vite-plugin-i18n-ally/client";
 import * as z from "zod";
-import { makeZodI18nMap } from "zod-i18n-map";
 
 import { supportedLngs } from "../../config/lang";
 
-const langs = import.meta.env.MODE == "e2e" ? { cimode: "cimode" } : supportedLngs;
+const langs = import.meta.env.MODE == "e2e" ? { en: "en" } : supportedLngs;
 const fallbackLng = Object.keys(langs)[0];
 const lookupTarget = "lang";
 
 export const i18nSetup = async () => {
   if (i18next.isInitialized) return;
-
-  z.setErrorMap(
-    makeZodI18nMap({
-      ns: ["zodCustom", "zod"],
-      handlePath: {
-        keyPrefix: "paths",
-      },
-    }),
-  );
-
+  const zodNs = ["zodCustom", "zod"];
+  i18nUse(initReactI18next);
   await new Promise<void>(resolve => {
-    const { asyncLoadResource } = i18nAlly({
-      async onInit({ language }) {
+    const i18 = new I18nAllyClient({
+      async onBeforeInit({ lng, ns }) {
         await i18next
           .use(initReactI18next)
           // Initialize the i18next instance.
           .init({
             // Config options
             load: "languageOnly",
-
+            ns: ns,
             // Specifies the default language (locale) used
             // when a user visits our site for the first time.
             // We use English here, but feel free to use
             // whichever locale you want.
             // disabled: conflict with LanguageDetector
-            lng: language,
+            lng: lng,
 
             // Fallback locale used when a translation is
             // missing in the active locale. Again, use your
@@ -79,10 +71,15 @@ export const i18nSetup = async () => {
           });
       },
       onInited() {
+        const t = getFixedT(null, zodNs);
+
+        z.config({
+          customError: makeZodI18nMap({ t, ns: zodNs, handlePath: { keyPrefix: "paths" } }),
+        });
         resolve();
       },
-      onResourceLoaded: (resources, { language, namespace }) => {
-        i18next.addResourceBundle(language, namespace ?? "translation", resources);
+      onResourceLoaded: (resources, { lng, ns }) => {
+        i18next.addResourceBundle(lng, ns ?? "translation", resources);
       },
       fallbackLng,
       detection: [
@@ -110,7 +107,7 @@ export const i18nSetup = async () => {
     i18next.changeLanguage = async (lang: string, ...args) => {
       // Load resources before language change
 
-      await asyncLoadResource(lang);
+      await (i18.asyncLoadResource as (lang: string) => Promise<void>)(lang);
       return _changeLanguage(lang, ...args);
     };
   });

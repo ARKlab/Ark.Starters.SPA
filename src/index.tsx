@@ -3,7 +3,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
 
-import LazyLoad from "./components/lazyLoad";
+import { createLazyComponent } from "./components/createLazyComponent";
 import { ColorModeProvider } from "./components/ui/color-mode";
 import reportWebVitals from "./reportWebVitals";
 import theme from "./theme";
@@ -29,13 +29,13 @@ function fallbackRender({ error }: { error: Error }) {
 window.addEventListener("vite:preloadError", () => {
   // reload the App if a dynamic import fails after App has been initialized
   // see https://www.vidbeo.com/blog/reload-nuxt-spa-on-missing-chunk-error/
-  if (window.appReady)
-    window.location.reload();
+  if (window.appReady) window.location.reload();
 });
 
 const rootElement = document.getElementById("root");
 if (rootElement === null) throw new Error("#root not found");
 const root = createRoot(rootElement);
+const InitGlobals = createLazyComponent(async () => import("./initGlobals"));
 
 // Initialize as little as possible so that we can Render the ErrorBoundary if initStatic throws any error
 // Thus defer 'importing' initStatic via Lazy to avoid any throw in the 'global' scope
@@ -44,7 +44,7 @@ root.render(
     <ReactErrorBoundary fallbackRender={fallbackRender}>
       <ChakraProvider value={theme}>
         <ColorModeProvider>
-          <LazyLoad loader={async () => import("./initGlobals")} />
+          <InitGlobals />
         </ColorModeProvider>
       </ChakraProvider>
     </ReactErrorBoundary>

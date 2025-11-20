@@ -1,18 +1,18 @@
+ 
+
 import type { QueryReturnValue } from "@reduxjs/toolkit/query";
 import { z } from "zod";
 
 import type { ArkFetchBaseQueryFn } from "./appFetchBaseQuery";
 import type { ArkBaseQueryEnhancer, ArkBaseQueryError, ArkBaseQueryMeta, ArkBaseQueryResult } from "./arkBaseQuery";
 
-export const ProblemDetailsSchema = z
-  .object({
-    status: z.number().nullish(),
-    title: z.string(),
-    detail: z.string().nullish(),
-    type: z.string(), // zod url() validates absolute urls only while RFC states type and instance can be relative uri
-    instance: z.string().nullish(),
-  })
-  .passthrough();
+export const ProblemDetailsSchema = z.looseObject({
+  status: z.number().nullish(),
+  title: z.string(),
+  detail: z.string().nullish(),
+  type: z.string(), // zod url() validates absolute urls only while RFC states type and instance can be relative uri
+  instance: z.string().nullish(),
+});
 
 export type ProblemDetails = z.infer<typeof ProblemDetailsSchema>;
 

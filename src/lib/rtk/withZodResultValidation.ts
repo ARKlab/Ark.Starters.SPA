@@ -53,12 +53,12 @@ export const withZodResultValidation: withZodResultValidationType =
 
     const res = zodSchema.safeParse(data);
     if (res.success) return returnValue;
-
+    const error = res.error.message;
     return {
       ...returnValue,
       error: {
         payload: data,
-        error: res.error.toString(),
+        error,
         status: "ZOD_SCHEMA_ERROR",
       },
     };

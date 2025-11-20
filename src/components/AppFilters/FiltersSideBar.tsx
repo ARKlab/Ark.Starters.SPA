@@ -26,6 +26,7 @@ export function FilterSidebar<T extends object>(props: FilterSidebarProps<T>) {
   const [localValues, setLocalValues] = useState<Partial<T>>(filters ?? {});
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLocalValues(filters ?? {});
   }, [filters]);
 
