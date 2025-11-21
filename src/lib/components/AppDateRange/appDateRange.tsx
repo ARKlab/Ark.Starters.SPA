@@ -53,7 +53,6 @@ export const AppDateRange = (props: AppDateRangeProps) => {
 
   const handleToChange = (d: Date | undefined) => {
     if (!d) {
-      // tolgo solo il TO
       setRange(from ? [from] : []);
       return;
     }
@@ -79,7 +78,6 @@ export const AppDateRange = (props: AppDateRangeProps) => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (datePickerRef.current && !datePickerRef.current.contains(event.target as Node)) {
-        // nessuna gestione necessaria
       }
     };
     document.addEventListener("mousedown", handleClickOutside);

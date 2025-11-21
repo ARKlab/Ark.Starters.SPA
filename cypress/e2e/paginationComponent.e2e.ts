@@ -22,8 +22,6 @@ describe("Components Test Page - AppPagination", () => {
 
   it("Cambio pageSize (scenario grande)", () => {
     cy.get("[data-test='pagination-large'] select").select("20");
-    // Se la UI riflette il pageSize puoi aggiungere un assert dedicato;
-    // qui verifichiamo che continui ad avere il pulsante Next
     cy.get("[data-test='pagination-large'] [title='Next']").should("exist");
   });
 });

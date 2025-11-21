@@ -51,7 +51,7 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
     locale = "en-GB",
     showClearButton = true,
   } = props;
-  // ATTENZIONE: parseDate accetta stringa (YYYY-MM-DD), non Date.
+
   const [value, setValue] = useState<DateValue | undefined>(date ? parseDate(format(date, dateFormat)) : undefined);
   const [open, setOpen] = useState(false);
   const datePickerRef = useRef<HTMLDivElement>(null);

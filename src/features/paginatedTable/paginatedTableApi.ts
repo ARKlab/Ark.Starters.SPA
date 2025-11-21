@@ -55,13 +55,13 @@ export const simulatedArkQueryWithParams = (params: ArkPagedQueryParameters) => 
           const filterEndDate = columnFilter.value[1] ? new Date(columnFilter.value[1]).toISOString() : null;
 
           if (filterStartDate && filterEndDate) {
-            // Se entrambe le date del filtro sono specificate, controlla se la data di rilascio è compresa tra di esse
+            // Both dates are specified, check if release date is within the range
             return releaseDate.toISOString() >= filterStartDate && releaseDate.toISOString() <= filterEndDate;
           } else if (filterStartDate) {
-            // Se solo la data di inizio del filtro è specificata, controlla se la data di rilascio è successiva o uguale a essa
+            // If only the filter start date is specified, check if the release date is greater than or equal to it
             return releaseDate.toISOString() >= filterStartDate;
           } else if (filterEndDate) {
-            // Se solo la data di fine del filtro è specificata, controlla se la data di rilascio è precedente o uguale a essa
+            // If only the filter end date is specified, check if the release date is less than or equal to it
             return releaseDate.toISOString() <= filterEndDate;
           } else return true;
         } else if (typeof movieValue === "string" && typeof columnFilter.value === "string") {
