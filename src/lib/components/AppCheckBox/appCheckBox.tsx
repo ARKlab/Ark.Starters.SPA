@@ -1,5 +1,3 @@
-"use client";
-
 import type { InputProps } from "@chakra-ui/react";
 import { Checkbox, Field, FieldLabel, Text } from "@chakra-ui/react";
 
