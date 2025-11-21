@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import { format } from "date-fns";
 import * as R from "ramda";
+
+import { format } from "./i18n/i18nDate";
 
 export const formatDateToString = (date: Date | null, dateFormat?: string) => {
   dateFormat ??= "yyyy-MM-dd";

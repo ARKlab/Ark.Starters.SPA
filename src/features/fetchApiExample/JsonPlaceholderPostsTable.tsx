@@ -2,7 +2,7 @@ import { Heading } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
-import { ChackraPlainTable } from "../../components/tables/plainTable/chackraPlainTable";
+import { AppSimpleNonPaginatedTable } from "../../components/AppSimpleTable/AppSimpleNonPaginatedTable";
 
 import { useFetchPostsQuery } from "./jsonPlaceholderApi";
 
@@ -26,7 +26,7 @@ const JsonPlaceholderPostsTable = () => {
   return (
     <>
       <Heading>{t("fetch_example_Page")}</Heading>
-      <ChackraPlainTable
+      <AppSimpleNonPaginatedTable
         colorPalette="primary"
         data={data}
         //isFetching here would show the spinner each poll. If you want to show spinner only on initial load, use isLoading

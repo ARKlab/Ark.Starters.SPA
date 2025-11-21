@@ -2,10 +2,10 @@ import { Grid, GridItem } from "@chakra-ui/react";
 import { Suspense } from "react";
 import { Outlet } from "react-router";
 
+import { AppErrorModal } from "../../lib/components/AppErrorModal/appErrorModal";
 import CenterSpinner from "../centerSpinner";
 import { ErrorBoundary } from "../errorBoundary";
 import { GdprConsentDialog } from "../gdprConsentDialog";
-import { ProblemDetailsModal } from "../problemDetailsModal/problemDetailsModal";
 import { Toaster } from "../ui/toaster";
 
 import Header from "./header/view";
@@ -49,7 +49,7 @@ const Layout = () => {
         </GridItem>
       </Grid>
 
-      <ProblemDetailsModal />
+      <AppErrorModal />
       <GdprConsentDialog />
       <Toaster />
     </LayoutContextProvider>
