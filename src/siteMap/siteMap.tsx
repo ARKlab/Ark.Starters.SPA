@@ -9,7 +9,7 @@ import {
   FaPlay,
   FaTable,
 } from "react-icons/fa";
-import { RiMovie2Line } from "react-icons/ri";
+import { RiMovie2Line, RiTestTubeLine } from "react-icons/ri";
 import { TbListDetails } from "react-icons/tb";
 import { Navigate } from "react-router";
 
@@ -18,8 +18,7 @@ import DetailsPage from "../features/detailsPage/detailsPage";
 import DetailsPageExampleMainView from "../features/detailsPage/detailsPageExampleMainView";
 import NoEntryPoint from "../features/staticPageExample/staticPage";
 import ComponentsTestPage from "../features/tests/ComponentsPage";
-
-import type { ArkRoute } from "./siteMapTypes";
+import type { ArkRoute } from "../lib/siteMapTypes";
 
 /*This is the Main Section ARRAY populate this to populate the main nav menu
 It is also used to create all the Routes for the router*/
@@ -142,8 +141,8 @@ export const siteMap: ArkRoute[] = [
       {
         path: "componentsTestPage",
         label: "Components Test Page",
-        icon: FaBomb,
-        isInMenu: false,
+        icon: RiTestTubeLine,
+        isInMenu: true,
         component: <ComponentsTestPage />,
       },
       //This is the way we must define the routes for pages that have details pages

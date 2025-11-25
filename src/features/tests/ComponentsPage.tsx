@@ -57,8 +57,7 @@ export default function ComponentsTestPage() {
   const [invalidNumberValue, setInvalidNumberValue] = useState<number | undefined>(5);
   // App Tag Input states
   const [tagsBasic, setTagsBasic] = useState<string[]>([]);
-  const [tagsNoDup, setTagsNoDup] = useState<string[]>([]);
-  const [tagsWithDup, setTagsWithDup] = useState<string[]>([]);
+
   const [tagsDisabled] = useState<string[]>(["fixed"]);
   // FileUpload states
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -313,18 +312,7 @@ export default function ComponentsTestPage() {
             Values: {tagsBasic.join(",") || "(none)"}
           </Text>
         </Box>
-        <Box mb={"6"} data-test="taginput-nodup">
-          <AppTagInput title="Tag Input No Dup" onChange={setTagsNoDup} value={tagsNoDup} allowDuplicates={false} />
-          <Text fontSize="sm" data-test="taginput-nodup-value">
-            Values: {tagsNoDup.join(",") || "(none)"}
-          </Text>
-        </Box>
-        <Box mb={"6"} data-test="taginput-dup">
-          <AppTagInput title="Tag Input Dup" onChange={setTagsWithDup} value={tagsWithDup} allowDuplicates />
-          <Text fontSize="sm" data-test="taginput-dup-value">
-            Values: {tagsWithDup.join(",") || "(none)"}
-          </Text>
-        </Box>
+
         <Box mb={"6"} data-test="taginput-disabled">
           <AppTagInput
             title="Tag Input Disabled"
