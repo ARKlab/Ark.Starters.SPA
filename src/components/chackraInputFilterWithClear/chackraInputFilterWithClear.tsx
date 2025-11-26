@@ -41,7 +41,7 @@ export const ChackraInputFilterWithClear: React.FC<InputWithClearProps> = ({
         <Input required={true} value={inputValue} onChange={handleChange} />
         {inputValue && (
           <InputAddon>
-            <Button rounded={"full"} h="1rem" size="xs" onClick={handleClear}>
+            <Button rounded={"full"} h="4" size="xs" onClick={handleClear}>
               <TiTimes />
             </Button>
           </InputAddon>

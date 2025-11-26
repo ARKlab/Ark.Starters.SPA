@@ -9,7 +9,6 @@
     ],
     "types": [
       "vite/client",
-      "vitest/globals",
       "vite-plugin-pwa/pwa-assets",
       "vite-plugin-pwa/client",
       "vite-plugin-i18n-ally/client",
@@ -34,7 +33,6 @@
     "./src"
   ],
   "files": [
-    "./vitest.setup.ts",
     "./vite.config.ts",
     "./pwa-assets.config.ts"
   ]
