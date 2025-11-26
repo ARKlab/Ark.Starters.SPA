@@ -51,10 +51,13 @@ export function initStore(extra: ExtraType) {
         globalLoadingSlice.middleware,
         rtkqErrorHandlingApi.middleware,
       ),
-    enhancers: getDefaultEnhancers =>
-      getDefaultEnhancers({
-        autoBatch: { type: "tick" },
-      }),
+    // Configure autoBatch for E2E testing to ensure state transitions are visible to Cypress
+    ...(import.meta.env.MODE === "e2e" && {
+      enhancers: getDefaultEnhancers =>
+        getDefaultEnhancers({
+          autoBatch: { type: "tick" },
+        }),
+    }),
   });
 
   setupListeners(store.dispatch);
