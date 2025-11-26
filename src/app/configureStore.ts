@@ -51,6 +51,10 @@ export function initStore(extra: ExtraType) {
         globalLoadingSlice.middleware,
         rtkqErrorHandlingApi.middleware,
       ),
+    enhancers: getDefaultEnhancers =>
+      getDefaultEnhancers({
+        autoBatch: { type: "tick" },
+      }),
   });
 
   setupListeners(store.dispatch);
