@@ -16,3 +16,5 @@ allow_licenses:
   - Zlib
   - LGPL-2.1-or-later
   - LicenseRef-scancode-generic-cla
+allow-dependencies-licenses:
+  - pkg:npm/react-icons@5.5.0
