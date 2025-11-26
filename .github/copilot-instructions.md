@@ -70,6 +70,30 @@ const zIndices = {
 };
 ```
 
+#### Semantic Tokens
+- **DO NOT** use hardcoded colors directly in components
+- **ALWAYS** use semantic tokens defined in `theme.ts`
+- Customize `theme.ts` to add new semantic tokens as needed
+- Semantic tokens support light/dark mode automatically
+
+Example of using semantic tokens:
+```typescript
+// ❌ Bad - hardcoded colors
+<Box bg="blue.500" color="#ffffff">
+
+// ✅ Good - semantic tokens
+<Box bg="brand.solid" color="brand.contrast">
+```
+
+Available semantic token categories in theme.ts:
+- `bg.*` - Background colors (e.g., `bg.info`)
+- `border.*` - Border colors
+- `brand.*` - Brand colors (solid, contrast, fg, muted, subtle, emphasized, focusRing)
+- `primary.*` - Primary palette
+- `error.*` - Error states
+- `code.*` - Code highlighting
+
+
 ### File Organization
 ```
 src/
@@ -180,10 +204,10 @@ Use helpers for form validation:
 
 ### API Integration
 ```typescript
-// Define API with RTK Query
+// Define API with RTK Query using arkFetchBaseQuery
 export const moviesApi = createApi({
   reducerPath: 'moviesApi',
-  baseQuery: fetchBaseQuery({ baseUrl: '/api' }),
+  baseQuery: arkFetchBaseQuery({ baseUrl: '/api' }),
   endpoints: (builder) => ({
     getMovies: builder.query({
       query: ({ pageIndex, pageSize, sorting, filters }) => ({
@@ -300,7 +324,6 @@ npm test               # Alias for e2e:ci
 ```bash
 npm start              # Development server
 npm run build          # Production build
-npm run preview        # Preview production build
 npm run lint           # Run ESLint
 npm test               # Run E2E tests
 ```
