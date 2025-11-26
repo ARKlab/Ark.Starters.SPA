@@ -1,0 +1,16 @@
+name: Copilot Agent Setup
+
+on:
+  workflow_call:
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24.11.1"
+      - run: npm ci
