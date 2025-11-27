@@ -86,7 +86,7 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
     startOfWeek: 1,
     numOfMonths: 1,
     onValueChange,
-    value: parsedValue ? [parsedValue] : undefined,
+    value: parsedValue ? [parsedValue] : [],
     open,
     min,
     max,
