@@ -1,7 +1,7 @@
 import type { DateValue } from "@ark-ui/react/date-picker";
 import { DatePicker, parseDate, useDatePicker } from "@ark-ui/react/date-picker";
 import { Box, Button, Field, FieldLabel, HStack, IconButton, Input, Stack, Text } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { LuCalendar, LuCalendarOff } from "react-icons/lu";
 import { MdOutlineChevronLeft, MdOutlineChevronRight } from "react-icons/md";
@@ -29,7 +29,6 @@ interface AppDatePickerProps extends DatePicker.RootProps {
   locale?: string;
   showClearButton?: boolean;
 }
-
 export const AppDatePicker = (props: AppDatePickerProps) => {
   const {
     date,
@@ -52,32 +51,26 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
     showClearButton = true,
   } = props;
 
-  const [value, setValue] = useState<DateValue | undefined>(date ? parseDate(format(date, dateFormat)) : undefined);
-  const [open, setOpen] = useState(false);
-  const datePickerRef = useRef<HTMLDivElement>(null);
-  const [clearButtonVisible, setClearButtonVisible] = useState(false);
-  useEffect(() => {
-    if (!date) {
-      setValue(undefined);
-      setClearButtonVisible(false);
-      return;
-    }
-    setClearButtonVisible(true);
+  // Sostituiamo lo stato locale con un valore derivato memoizzato
+  const parsedValue = useMemo(() => {
+    if (!date) return undefined;
     try {
-      setValue(parseDate(format(date, dateFormat)));
+      return parseDate(format(date, dateFormat));
     } catch {
-      setValue(undefined);
+      return undefined;
     }
   }, [date, dateFormat]);
+
+  const [open, setOpen] = useState(false);
+  const datePickerRef = useRef<HTMLDivElement>(null);
 
   function onValueChange(details: DatePicker.ValueChangeDetails) {
     if (details.value.length > 0) {
       const picked = details.value[0];
-      setValue(picked);
+      // Non serve più setValue locale, aggiorniamo solo il padre
       setDate(picked.toDate(timeZone ?? "UTC"));
       setOpen(false);
     } else {
-      setValue(undefined);
       setDate(undefined);
     }
   }
@@ -95,7 +88,7 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
     startOfWeek: 1,
     numOfMonths: 1,
     onValueChange,
-    value: date && value ? [value] : undefined,
+    value: parsedValue ? [parsedValue] : undefined,
     open,
     min,
     max,
@@ -109,6 +102,7 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
   useEffect(() => {
     if (!date && defaultFocusedValue) datePicker.setFocusedValue(defaultFocusedValue);
   }, [date, defaultFocusedValue, datePicker]);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (datePickerRef.current && !datePickerRef.current.contains(event.target as Node)) {
@@ -146,10 +140,10 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
                   onClick={() => {
                     setOpen(true);
                   }}
-                  placeholder={date && value ? format(value.toDate(timeZone ?? "UTC"), dateDisplayFormat) : ""}
+                  placeholder={parsedValue ? format(parsedValue.toDate(timeZone ?? "UTC"), dateDisplayFormat) : ""}
                   borderWidth={border}
                   size={inputSize ?? "md"}
-                  value={date && value ? getFormat(value, { locale: locale }) : ""}
+                  value={parsedValue ? getFormat(parsedValue, { locale: locale }) : ""}
                   readOnly
                 />
               </DatePicker.Input>
@@ -167,14 +161,13 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
                   </IconButton>
                 </DatePicker.Trigger>
               ) : null}
-              {showClearButton && clearButtonVisible ? (
+              {showClearButton && date ? (
                 <IconButton
                   data-test="datepicker-clear"
                   size={inputSize ?? "md"}
                   aria-label="Clear date picker"
                   onClick={() => {
                     setDate(undefined);
-                    setValue(undefined);
                   }}
                 >
                   <FaTimes />

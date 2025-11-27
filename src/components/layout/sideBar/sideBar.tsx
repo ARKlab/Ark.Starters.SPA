@@ -86,8 +86,7 @@ const SidebarContent = ({ ...rest }: BoxProps) => {
             </h2>
 
             <AccordionItemContent key={section.label + "accordionPanel" + index}>
-              {// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-              section.subsections?.map((x: ArkSubRoute, indexSub: number) => (
+              {section.subsections?.map((x: ArkSubRoute, indexSub: number) => (
                 <InnerMenuItems
                   key={x.path + "innerMenuItems" + indexSub}
                   section={x}
