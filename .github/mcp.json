@@ -2,17 +2,8 @@
   "mcpServers": {
     "chakra-ui": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-chakra-ui"
-      ]
-    },
-    "cypress": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-cypress"
-      ]
+      "args": ["-y", "@chakra-ui/react-mcp"],
+      "tools": ["*"]
     }
   }
 }

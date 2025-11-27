@@ -38,17 +38,13 @@ This is a React Single Page Application (SPA) starter template designed to demon
 ### Styling Guidelines
 
 #### Units
-- Use `em` units for font sizes and text-related measurements
-- Use `px` units for margins and padding
+- Use Chakra [Style](https://chakra-ui.com/docs/styling/style-props/sizing) properties units 
+- Avoid use `px` units 
 - Test designs at different browser font sizes for accessibility
 
 #### Color Modes
 - Support both light and dark modes natively
 - Use Chakra UI's color mode system
-- Set custom localStorage key for color mode to avoid conflicts:
-  ```typescript
-  const colorModeManager = createLocalStorageManager("appName-ColorMode");
-  ```
 
 #### Z-Index
 Only use Chakra UI's predefined z-index values:
@@ -72,7 +68,7 @@ const zIndices = {
 
 #### Semantic Tokens
 - **DO NOT** use hardcoded colors directly in components
-- **ALWAYS** use semantic tokens defined in `theme.ts`
+- **ALWAYS** use [semantic tokens](https://chakra-ui.com/docs/theming/semantic-tokens) defined in `theme.ts`
 - Customize `theme.ts` to add new semantic tokens as needed
 - Semantic tokens support light/dark mode automatically
 
@@ -205,7 +201,7 @@ Use helpers for form validation:
 ### API Integration
 ```typescript
 // Define API with RTK Query using arkFetchBaseQuery
-export const moviesApi = createApi({
+export const moviesApi = createAppApi({
   reducerPath: 'moviesApi',
   baseQuery: arkFetchBaseQuery({ baseUrl: '/api' }),
   endpoints: (builder) => ({
