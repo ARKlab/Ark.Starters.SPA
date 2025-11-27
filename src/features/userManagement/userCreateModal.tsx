@@ -1,13 +1,14 @@
 import { Input, VStack, Button, Flex, Text, Box } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import * as z from "zod";
 
 import { ChackraUIBaseModal } from "../../components/chackraModal/chackraBaseModal";
 import { Field } from "../../components/ui/field";
 import { toaster } from "../../components/ui/toaster";
-import { useAuthContext } from "../../lib/authentication/components/useAuthContext";
+
+import type { CreateUserRequest, UserCreationResponse } from "./userManagementApi";
+import { useCreateUserMutation } from "./userManagementApi";
 
 // Validation schema for Step 1 of user creation
 const createUserStep1Schema = z.object({
@@ -22,12 +23,6 @@ const createUserStep1Schema = z.object({
 
 type CreateUserStep1Data = z.infer<typeof createUserStep1Schema>;
 
-// API response types
-interface UserCreationResponse {
-  generatedEmail: string;
-  displayName: string;
-}
-
 interface UserCreateModalProps {
   open: boolean;
   onClose: () => void;
@@ -35,9 +30,7 @@ interface UserCreateModalProps {
 }
 
 export const UserCreateModal = ({ open, onClose, onStep1Success }: UserCreateModalProps) => {
-  const { context } = useAuthContext();
-  const [isLoading, setIsLoading] = useState(false);
-  const [apiError, setApiError] = useState<string | null>(null);
+  const [createUser, { isLoading, error: apiError }] = useCreateUserMutation();
 
   const {
     handleSubmit,
@@ -58,65 +51,61 @@ export const UserCreateModal = ({ open, onClose, onStep1Success }: UserCreateMod
   });
 
   const handleFormSubmit = async (data: CreateUserStep1Data) => {
-    setIsLoading(true);
-    setApiError(null);
-
     try {
-      const token = await context.getToken();
-      if (!token) {
-        setApiError("No authentication token available");
-        return;
-      }
+      const requestData: CreateUserRequest = {
+        userName: data.name,
+        userSurname: data.surname,
+        userCompany: data.company,
+        userEmail: data.email,
+        userPhone: data.phone,
+        userExpiryDate: data.expiryDate,
+        userPassword: data.temporaryPassword,
+      };
 
-      // Prepare form data in URL-encoded format
-      const formData = new URLSearchParams();
-      formData.append("userName", data.name);
-      formData.append("userSurname", data.surname);
-      formData.append("userCompany", data.company);
-      formData.append("userEmail", data.email);
-      formData.append("userPhone", data.phone ?? "");
-      formData.append("userExpiryDate", data.expiryDate);
-      formData.append("userPassword", data.temporaryPassword);
-
-      const response = await fetch("https://k4view-admin-test-k2e.azurewebsites.net/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData.toString(),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        setApiError(errorText || `Request failed with status ${response.status}`);
-        return;
-      }
-
-      const responseData = (await response.json()) as UserCreationResponse;
+      const response = await createUser(requestData).unwrap();
 
       // Success - proceed to step 2
-      onStep1Success(data, responseData);
+      onStep1Success(data, response);
       reset(); // Clear form
-      setApiError(null);
 
       toaster.create({
         title: "User created successfully",
-        description: `Generated email: ${responseData.generatedEmail}`,
+        description: `Generated email: ${response.generatedEmail}`,
         type: "success",
       });
     } catch (error) {
-      setApiError(`Network error: ${String(error)}`);
-    } finally {
-      setIsLoading(false);
+      // Error is handled by RTK Query and available in apiError
+      console.error("Failed to create user:", error);
     }
   };
 
   const handleClose = () => {
     reset(); // Clear form when closing
-    setApiError(null);
     onClose();
   };
+
+  // Extract error message from RTK Query error
+  const errorMessage = (() => {
+    if (!apiError) return null;
+
+    if ("status" in apiError) {
+      if (apiError.status === "PROBLEM_DETAILS_ERROR") {
+        return apiError.problemDetails.detail ?? apiError.problemDetails.title;
+      }
+      if (apiError.status === "ZOD_SCHEMA_ERROR") {
+        return "Invalid response from server";
+      }
+      if (typeof apiError.status === "number") {
+        return `Request failed with status ${apiError.status}`;
+      }
+    }
+
+    if ("error" in apiError) {
+      return apiError.error;
+    }
+
+    return "An unexpected error occurred";
+  })();
 
   return (
     <ChackraUIBaseModal
@@ -128,10 +117,10 @@ export const UserCreateModal = ({ open, onClose, onStep1Success }: UserCreateMod
         <form onSubmit={handleSubmit(handleFormSubmit)}>
           <VStack align="stretch" gap="4">
             {/* API Error Display */}
-            {apiError && (
+            {errorMessage && (
               <Box p="3" bg="error.subtle" borderRadius="md" borderColor="error.muted">
                 <Text color="error.fg" fontSize="sm">
-                  {apiError}
+                  {errorMessage}
                 </Text>
               </Box>
             )}

@@ -8,6 +8,7 @@ import { videoGameApiSlice } from "../features/formExample/videoGamesApiSlice";
 import { globalLoadingSlice } from "../features/globalLoadingBar/globalLoadingSlice";
 import { moviesApiSlice } from "../features/paginatedTable/paginatedTableApi";
 import { rtkqErrorHandlingApi } from "../features/rtkqErrorHandling/rtkqErrorHandlingApi";
+import { userManagementApi } from "../features/userManagement/userManagementApi";
 import { authSlice } from "../lib/authentication/authenticationSlice";
 import { envSlice } from "../lib/authentication/envSlice";
 import type { AuthProvider } from "../lib/authentication/providers/authProviderInterface";
@@ -24,6 +25,7 @@ const sliceReducers = combineSlices(
   jsonPlaceholderApi,
   moviesApiSlice,
   rtkqErrorHandlingApi,
+  userManagementApi,
 
   globalLoadingSlice,
   {
@@ -50,6 +52,7 @@ export function initStore(extra: ExtraType) {
         videoGameApiSlice.middleware,
         globalLoadingSlice.middleware,
         rtkqErrorHandlingApi.middleware,
+        userManagementApi.middleware,
       ),
   });
 
@@ -64,6 +67,7 @@ export const resetApiActions = [
   videoGameApiSlice.util.resetApiState(),
   globalLoadingSlice.util.resetApiState(),
   rtkqErrorHandlingApi.util.resetApiState(),
+  userManagementApi.util.resetApiState(),
 ];
 
 export type ExtraType = {

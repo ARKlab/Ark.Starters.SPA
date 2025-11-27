@@ -22,13 +22,13 @@ export const UserTransferModal = ({
   const modalBody = (
     <VStack align="stretch" gap="4">
       <Box>
-        <Text fontSize="sm" color="gray.600" mb="4">
+        <Text fontSize="sm" color="fg.muted" mb="4">
           The user <strong>{userName}</strong> is already assigned to another group.
         </Text>
 
-        <VStack align="stretch" gap="3" p="4" bg="yellow.50" borderRadius="md">
+        <VStack align="stretch" gap="3" p="4" bg="bg.warning.subtle" borderRadius="md">
           <HStack justify="space-between">
-            <Text fontSize="sm" fontWeight="medium" color="gray.700">
+            <Text fontSize="sm" fontWeight="medium" color="fg">
               Current assignment:
             </Text>
             <Badge colorPalette="orange" variant="solid">
@@ -37,7 +37,7 @@ export const UserTransferModal = ({
           </HStack>
 
           <HStack justify="space-between">
-            <Text fontSize="sm" fontWeight="medium" color="gray.700">
+            <Text fontSize="sm" fontWeight="medium" color="fg">
               Requested assignment:
             </Text>
             <Badge colorPalette="blue" variant="solid">
@@ -46,7 +46,7 @@ export const UserTransferModal = ({
           </HStack>
         </VStack>
 
-        <Text fontSize="sm" color="gray.600" mt="4">
+        <Text fontSize="sm" color="fg.muted" mt="4">
           Would you like to remove <strong>{userName}</strong> from <strong>{existingGroupName}</strong> and add them to{" "}
           <strong>{currentGroupName}</strong>?
         </Text>

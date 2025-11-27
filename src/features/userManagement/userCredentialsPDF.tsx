@@ -2,14 +2,13 @@ import { Document, Page, Text, View, StyleSheet, Font, Image } from "@react-pdf/
 
 import { K4ViewLogoBase64 } from "../../assets/k4viewLogo";
 
-
 const PDFColors = {
   Background: "#2c5f7c",
   TextTitle: "#ffffff",
   TextNormal: "#ffffff",
   Lines: "#4a8db8",
-  Primary: "#ffffff", 
-  LabelBackground: "rgba(255, 255, 255, 0.1)", 
+  Primary: "#ffffff",
+  LabelBackground: "rgba(255, 255, 255, 0.1)",
 };
 
 Font.register({

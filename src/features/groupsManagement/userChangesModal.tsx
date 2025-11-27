@@ -35,7 +35,7 @@ export const UserChangesModal = ({
   const modalBody = (
     <VStack align="stretch" gap="4">
       <Box>
-        <Text fontSize="sm" color="gray.600" mb="2">
+        <Text fontSize="sm" color="fg.muted" mb="2">
           You are about to make the following changes to <strong>{userTypeName}</strong>:
         </Text>
       </Box>
@@ -46,13 +46,13 @@ export const UserChangesModal = ({
             <Badge colorPalette="green" variant="solid">
               {usersToAdd.length}
             </Badge>
-            <Text fontSize="sm" fontWeight="medium" color="green.600">
+            <Text fontSize="sm" fontWeight="medium" color="fg.success">
               Users to Add
             </Text>
           </HStack>
           <VStack align="stretch" gap="1" pl="4">
             {usersToAdd.map((userName, index) => (
-              <Text key={index} fontSize="sm" color="green.700">
+              <Text key={index} fontSize="sm" color="fg.success">
                 + {userName}
               </Text>
             ))}
@@ -66,13 +66,13 @@ export const UserChangesModal = ({
             <Badge colorPalette="red" variant="solid">
               {usersToRemove.length}
             </Badge>
-            <Text fontSize="sm" fontWeight="medium" color="red.600">
+            <Text fontSize="sm" fontWeight="medium" color="fg.error">
               Users to Remove
             </Text>
           </HStack>
           <VStack align="stretch" gap="1" pl="4">
             {usersToRemove.map((userName, index) => (
-              <Text key={index} fontSize="sm" color="red.700">
+              <Text key={index} fontSize="sm" color="fg.error">
                 - {userName}
               </Text>
             ))}
@@ -82,15 +82,15 @@ export const UserChangesModal = ({
 
       {!hasChanges && (
         <Box p="4" textAlign="center">
-          <Text fontSize="sm" color="gray.500" fontStyle="italic">
+          <Text fontSize="sm" color="fg.muted" fontStyle="italic">
             No changes to apply
           </Text>
         </Box>
       )}
 
       {hasChanges && (
-        <Box mt="2" p="3" bg="blue.50" borderRadius="md">
-          <Text fontSize="xs" color="blue.700">
+        <Box mt="2" p="3" bg="bg.info.subtle" borderRadius="md">
+          <Text fontSize="xs" color="fg.info">
             <strong>Current group size:</strong> {filteredCurrentUsers.length} users
             <br />
             <strong>After changes:</strong>{" "}

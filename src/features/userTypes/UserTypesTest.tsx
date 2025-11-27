@@ -82,7 +82,7 @@ const UserTypesTest: React.FC = () => {
           <Text fontWeight="bold" mb="2">
             Response:
           </Text>
-          <Box as="pre" fontSize="sm" bg="gray.50" p="2" borderRadius="md" maxH="96" overflow="auto">
+          <Box as="pre" fontSize="sm" bg="bg.subtle" p="2" borderRadius="md" maxH="96" overflow="auto">
             {typeof response === "string" ? response : JSON.stringify(response, null, 2)}
           </Box>
         </Box>

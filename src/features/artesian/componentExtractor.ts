@@ -2,7 +2,6 @@ import * as R from "ramda";
 
 import type { Component, UserTypeConfig, MenuItem, ChildLink } from "./artesianTypes";
 
-
 export const flatComponentList = (config: UserTypeConfig | string): string[] => {
   const parsedConfig = typeof config === "string" ? JSON.parse(config) : config;
 
@@ -14,7 +13,6 @@ export const flatComponentList = (config: UserTypeConfig | string): string[] => 
 
   return sortedTypes.filter((type): type is string => typeof type === "string");
 };
-
 
 export const extractComponentTypes = (config: UserTypeConfig | string): string[] => {
   try {
@@ -62,7 +60,6 @@ export const extractComponents = (config: UserTypeConfig | string): Component[] 
     return [];
   }
 };
-
 
 export const flattenComponentTypes = (obj: unknown): string[] => {
   const types: string[] = [];

@@ -76,42 +76,45 @@ const UserManagementView = () => {
   };
 
   // Fetch users data
-  const fetchUsers = useCallback(async (searchQuery?: string) => {
-    setIsLoading(true);
-    setError(null);
+  const fetchUsers = useCallback(
+    async (searchQuery?: string) => {
+      setIsLoading(true);
+      setError(null);
 
-    try {
-      const token = await context.getToken();
+      try {
+        const token = await context.getToken();
 
-      if (!token) {
-        setError("No authentication token available");
-        return;
+        if (!token) {
+          setError("No authentication token available");
+          return;
+        }
+
+        const baseUrl = "https://k4view-admin-test-k2e.azurewebsites.net/usersInfo";
+        const url = searchQuery ? `${baseUrl}?user=${encodeURIComponent(searchQuery)}` : baseUrl;
+
+        const usersResponse = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!usersResponse.ok) {
+          setError(`HTTP ${usersResponse.status}: ${usersResponse.statusText}`);
+          return;
+        }
+
+        const usersData = (await usersResponse.json()) as Auth0UserData[];
+        setUsers(usersData);
+      } catch (err) {
+        setError(`Request failed: ${String(err)}`);
+      } finally {
+        setIsLoading(false);
       }
-
-      const baseUrl = "https://k4view-admin-test-k2e.azurewebsites.net/usersInfo";
-      const url = searchQuery ? `${baseUrl}?user=${encodeURIComponent(searchQuery)}` : baseUrl;
-
-      const usersResponse = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!usersResponse.ok) {
-        setError(`HTTP ${usersResponse.status}: ${usersResponse.statusText}`);
-        return;
-      }
-
-      const usersData = (await usersResponse.json()) as Auth0UserData[];
-      setUsers(usersData);
-    } catch (err) {
-      setError(`Request failed: ${String(err)}`);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [context]);
+    },
+    [context],
+  );
 
   const handleSearch = () => {
     const trimmedSearch = searchTerm.trim();
@@ -120,7 +123,7 @@ const UserManagementView = () => {
 
   const handleClearSearch = () => {
     setSearchTerm("");
-    void fetchUsers(); 
+    void fetchUsers();
   };
 
   const handleEditUser = (userId: string) => {
@@ -316,16 +319,16 @@ const UserManagementView = () => {
                   const expiryStatus = getUserExpiryStatus(user.app_metadata?.expiry_date);
 
                   return (
-                    <Table.Row 
+                    <Table.Row
                       key={user.user_id ?? index}
                       bg={
-                        expiryStatus.status === "expired" 
+                        expiryStatus.status === "expired"
                           ? "red.subtle"
                           : expiryStatus.status === "expiring-soon"
-                          ? "yellow.subtle"
-                          : index % 2 === 0 
-                          ? "bg.subtle" 
-                          : undefined
+                            ? "yellow.subtle"
+                            : index % 2 === 0
+                              ? "bg.subtle"
+                              : undefined
                       }
                     >
                       <Table.Cell>{user.user_metadata?.phone_number ?? ""}</Table.Cell>

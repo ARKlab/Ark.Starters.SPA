@@ -2,7 +2,8 @@ import { Box, Input, VStack, Text } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 
 import { ChackraUIBaseModal } from "../../components/chackraModal/chackraBaseModal";
-import { useAuthContext } from "../../lib/authentication/components/useAuthContext";
+
+import { useGetUserInfoQuery } from "./userManagementApi";
 
 interface UserEditData {
   azure_id?: string;
@@ -56,10 +57,7 @@ interface UserEditModalProps {
 }
 
 export const UserEditModal = ({ open, onClose, onConfirm, userId }: UserEditModalProps) => {
-  const { context } = useAuthContext();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [userData, setUserData] = useState<UserEditData>({});
+  const { data: userData, isLoading, error: apiError } = useGetUserInfoQuery(userId ?? "", { skip: !userId || !open });
 
   // Form fields
   const [name, setName] = useState("");
@@ -68,71 +66,37 @@ export const UserEditModal = ({ open, onClose, onConfirm, userId }: UserEditModa
   const [company, setCompany] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
 
-  // Fetch user details when modal opens
+  // Populate form fields when user data is loaded
   useEffect(() => {
-    const fetchUserDetails = async () => {
-      if (!userId || !open) return;
+    if (!userData) return;
 
-      setIsLoading(true);
-      setError(null);
+    // Populate form fields
+    setName((userData as UserEditData).user_metadata?.given_name ?? (userData as UserEditData).given_name ?? "");
+    setSurname((userData as UserEditData).user_metadata?.family_name ?? (userData as UserEditData).family_name ?? "");
+    setPhone((userData as UserEditData).user_metadata?.phone_number ?? "");
+    setCompany((userData as UserEditData).app_metadata?.company ?? "");
 
-      try {
-        const token = await context.getToken();
-        if (!token) {
-          setError("No authentication token available");
-          return;
-        }
-
-        const response = await fetch(
-          `https://k4view-admin-test-k2e.azurewebsites.net/usersInfo/${encodeURIComponent(userId)}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
-
-        if (!response.ok) {
-          setError(`Failed to fetch user details: ${response.status}`);
-          return;
-        }
-
-        const userDetails = (await response.json()) as UserEditData;
-        setUserData(userDetails);
-
-        // Populate form fields
-        setName(userDetails.user_metadata?.given_name ?? userDetails.given_name ?? "");
-        setSurname(userDetails.user_metadata?.family_name ?? userDetails.family_name ?? "");
-        setPhone(userDetails.user_metadata?.phone_number ?? "");
-        setCompany(userDetails.app_metadata?.company ?? "");
-
-        // Format expiry date for input field
-        const expiryDateValue = userDetails.app_metadata?.expiry_date;
-        if (expiryDateValue) {
-          // Convert to YYYY-MM-DD format for date input
-          const date = new Date(expiryDateValue);
-          if (!isNaN(date.getTime())) {
-            setExpiryDate(date.toISOString().split("T")[0]);
-          }
-        } else {
-          setExpiryDate("");
-        }
-      } catch (err) {
-        setError(`Request failed: ${String(err)}`);
-      } finally {
-        setIsLoading(false);
+    // Format expiry date for input field
+    const expiryDateValue = (userData as UserEditData).app_metadata?.expiry_date;
+    if (expiryDateValue) {
+      // Convert to YYYY-MM-DD format for date input
+      const date = new Date(expiryDateValue);
+      if (!isNaN(date.getTime())) {
+        setExpiryDate(date.toISOString().split("T")[0]);
       }
-    };
-
-    void fetchUserDetails();
-  }, [userId, open, context]);
+    } else {
+      setExpiryDate("");
+    }
+  }, [userData]);
 
   const handleConfirm = () => {
+    if (!userData) return;
+
+    const typedData = userData as UserEditData;
+
     // Create full name from given_name and family_name
     const fullName = `${name} ${surname}`.trim();
-    const formattedExpiryDate = expiryDate ? `${expiryDate}T00:00:00` : userData.app_metadata?.expiry_date;
+    const formattedExpiryDate = expiryDate ? `${expiryDate}T00:00:00` : typedData.app_metadata?.expiry_date;
 
     // Calculate artesian_expiry_date as Unix timestamp in milliseconds
     const artesianExpiryDate = formattedExpiryDate ? new Date(formattedExpiryDate).getTime() : undefined;
@@ -162,14 +126,38 @@ export const UserEditModal = ({ open, onClose, onConfirm, userId }: UserEditModa
     setPhone("");
     setCompany("");
     setExpiryDate("");
-    setError(null);
     onClose();
   };
+
+  // Extract error message from RTK Query error
+  const errorMessage = (() => {
+    if (!apiError) return null;
+
+    if ("status" in apiError) {
+      if (apiError.status === "PROBLEM_DETAILS_ERROR") {
+        return apiError.problemDetails.detail ?? apiError.problemDetails.title;
+      }
+      if (apiError.status === "ZOD_SCHEMA_ERROR") {
+        return "Invalid response from server";
+      }
+      if (typeof apiError.status === "number") {
+        return `Failed to fetch user details: ${apiError.status}`;
+      }
+    }
+
+    if ("error" in apiError) {
+      return apiError.error;
+    }
+
+    return "Failed to load user details";
+  })();
+
+  const typedUserData = userData as UserEditData | undefined;
 
   return (
     <ChackraUIBaseModal
       open={open}
-      title={`Edit User - ${userData.email ?? "Loading..."}`}
+      title={`Edit User - ${typedUserData?.email ?? "Loading..."}`}
       onClose={handleClose}
       onSubmit={handleConfirm}
       submitButton={true}
@@ -177,10 +165,10 @@ export const UserEditModal = ({ open, onClose, onConfirm, userId }: UserEditModa
       size="md"
       body={
         <VStack align="stretch" gap="4">
-          {error && (
+          {errorMessage && (
             <Box p="3" bg="error.subtle" borderRadius="md">
               <Text color="error.fg" fontSize="sm">
-                {error}
+                {errorMessage}
               </Text>
             </Box>
           )}
@@ -196,7 +184,7 @@ export const UserEditModal = ({ open, onClose, onConfirm, userId }: UserEditModa
                 <Text fontSize="sm" fontWeight="medium" mb="1">
                   Email:
                 </Text>
-                <Input value={userData.email ?? ""} readOnly bg="bg.subtle" color="status.muted" />
+                <Input value={typedUserData?.email ?? ""} readOnly bg="bg.subtle" color="status.muted" />
               </Box>
 
               {/* Name */}

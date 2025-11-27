@@ -9,12 +9,8 @@ import GroupsManagementView from "../groupsManagement/groupsManagementView";
 
 import { UserCreateModal } from "./userCreateModal";
 import type { CreateUserStep1Data, UserCreationResponse } from "./userCreateModal";
-import type {
-  UserCredentialsData} from "./userCredentialsGenerator";
-import {
-  openPrintableCredentials,
-  generateUserCredentialsHTML
-} from "./userCredentialsGenerator";
+import type { UserCredentialsData } from "./userCredentialsGenerator";
+import { openPrintableCredentials, generateUserCredentialsHTML } from "./userCredentialsGenerator";
 import { UserCredentialsPDF } from "./userCredentialsPDF";
 
 // Multi-step user creation flow
@@ -158,7 +154,7 @@ export const MultiStepUserCreateModal = ({ open, onClose, onComplete }: MultiSte
   const credentialsData = {
     displayName: createdUserResponse?.displayName ?? "",
     generatedEmail: createdUserResponse?.generatedEmail ?? "", // Use generatedEmail from API response
-  tempPassword: temporaryPassword,
+    tempPassword: temporaryPassword,
   };
 
   const generateServerSidePdf = async (credentialsData: UserCredentialsData): Promise<Blob> => {
@@ -168,7 +164,7 @@ export const MultiStepUserCreateModal = ({ open, onClose, onComplete }: MultiSte
     }
 
     const htmlContent = generateUserCredentialsHTML(credentialsData);
-    
+
     const response = await fetch("https://k4view-admin-test-k2e.azurewebsites.net/users/generatePdf", {
       method: "POST",
       headers: {
@@ -180,8 +176,8 @@ export const MultiStepUserCreateModal = ({ open, onClose, onComplete }: MultiSte
         options: {
           format: "A4",
           margin: "1cm",
-          printBackground: true
-        }
+          printBackground: true,
+        },
       }),
     });
 
@@ -203,18 +199,18 @@ export const MultiStepUserCreateModal = ({ open, onClose, onComplete }: MultiSte
       const pdfBlob = await pdfDocument.toBlob();
       const url = URL.createObjectURL(pdfBlob);
       window.open(url, "_blank");
-      
+
       setTimeout(() => {
         URL.revokeObjectURL(url);
       }, 2000);
     } catch (error) {
       console.warn("React PDF failed (likely due to CSP), trying server-side PDF generation:", error);
-      
+
       try {
         const serverPdfBlob = await generateServerSidePdf(credentialsData);
         const url = URL.createObjectURL(serverPdfBlob);
         window.open(url, "_blank");
-        
+
         setTimeout(() => {
           URL.revokeObjectURL(url);
         }, 2000);
@@ -222,18 +218,18 @@ export const MultiStepUserCreateModal = ({ open, onClose, onComplete }: MultiSte
       } catch (serverError) {
         console.warn("Server-side PDF generation also failed, falling back to HTML:", serverError);
       }
-      
+
       // Fallback, HTML preview if both PDF methods fail
       try {
         const htmlContent = generateUserCredentialsHTML(credentialsData);
         const htmlBlob = new Blob([htmlContent], { type: "text/html" });
         const url = URL.createObjectURL(htmlBlob);
-        
+
         const previewWindow = window.open(url, "_blank");
         if (previewWindow) {
           previewWindow.document.title = "User Credentials Preview";
         }
-        
+
         setTimeout(() => {
           URL.revokeObjectURL(url);
         }, 2000);
@@ -280,11 +276,7 @@ export const MultiStepUserCreateModal = ({ open, onClose, onComplete }: MultiSte
             </Box>
 
             <Flex gap="3" flexWrap="wrap">
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={handlePreviewCredentials}
-              >
+              <Button size="sm" variant="outline" onClick={handlePreviewCredentials}>
                 Preview
               </Button>
 

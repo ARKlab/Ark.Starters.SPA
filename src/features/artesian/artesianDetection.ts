@@ -1,33 +1,47 @@
 import type { UserTypeConfig } from "./artesianTypes";
 
+type ConfigItem = {
+  reportId?: string;
+  childItem?: {
+    childLinks?: {
+      reportId?: string;
+      components?: {
+        reportId?: string;
+      }[];
+    }[];
+  };
+};
+
+type ParsedConfig = {
+  reportId?: string;
+  menuItem?: ConfigItem[];
+};
+
 export const hasArtesianAccess = (config: UserTypeConfig | string | null | undefined): boolean => {
   if (!config) return false;
 
   try {
-    const parsedConfig = typeof config === "string" ? JSON.parse(config) : config;
+    const parsedConfig: ParsedConfig = typeof config === "string" ? JSON.parse(config) : config;
 
     // Check if the config has reportId set to "artesian"
-    if (parsedConfig?.reportId === "artesian") {
+    if (parsedConfig.reportId === "artesian") {
       return true;
     }
 
     // Also check nested structures for reportId
-    if (parsedConfig?.menuItem && Array.isArray(parsedConfig.menuItem)) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
-      return parsedConfig.menuItem.some((item: any) => {
+    if (parsedConfig.menuItem && Array.isArray(parsedConfig.menuItem)) {
+      return parsedConfig.menuItem.some((item: ConfigItem) => {
         // Check at menu item level
-        if (item?.reportId === "artesian") return true;
+        if (item.reportId === "artesian") return true;
 
         // Check in childItem/childLinks
-        if (item?.childItem?.childLinks && Array.isArray(item.childItem.childLinks)) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
-          return item.childItem.childLinks.some((link: any) => {
-            if (link?.reportId === "artesian") return true;
+        if (item.childItem?.childLinks && Array.isArray(item.childItem.childLinks)) {
+          return item.childItem.childLinks.some(link => {
+            if (link.reportId === "artesian") return true;
 
             // Check in components
-            if (link?.components && Array.isArray(link.components)) {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
-              return link.components.some((comp: any) => comp?.reportId === "artesian");
+            if (link.components && Array.isArray(link.components)) {
+              return link.components.some(comp => comp.reportId === "artesian");
             }
 
             return false;

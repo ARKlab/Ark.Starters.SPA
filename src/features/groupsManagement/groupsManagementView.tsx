@@ -792,7 +792,7 @@ const GroupsManagementView = () => {
               if (currentUserType && currentUserType.Config === JSON.stringify(configObject)) {
                 console.log("Data was actually saved despite 500 error - treating as success");
                 setUserTypes(currentUserTypes);
-                response = { ok: true } as Response; 
+                response = { ok: true } as Response;
               } else {
                 console.warn("Data was not saved - the 500 error was real");
               }
@@ -1143,16 +1143,14 @@ const GroupsManagementView = () => {
                                     <Checkbox
                                       checked={isAllChildComponentsSelected(menuItem.class, childLink)}
                                       inputProps={{
-                                        ...(
-                                          !isAllChildComponentsSelected(menuItem.class, childLink) &&
-                                          isSomeChildComponentsSelected(menuItem.class, childLink)
-                                            ? { 
-                                                ref: (input: HTMLInputElement | null) => {
-                                                  if (input) input.indeterminate = true;
-                                                }
-                                              }
-                                            : {}
-                                        )
+                                        ...(!isAllChildComponentsSelected(menuItem.class, childLink) &&
+                                        isSomeChildComponentsSelected(menuItem.class, childLink)
+                                          ? {
+                                              ref: (input: HTMLInputElement | null) => {
+                                                if (input) input.indeterminate = true;
+                                              },
+                                            }
+                                          : {}),
                                       }}
                                       onCheckedChange={() => {
                                         toggleAllChildComponents(menuItem.class, childLink);
@@ -1230,7 +1228,6 @@ const GroupsManagementView = () => {
                               size="xs"
                               variant="outline"
                               onClick={() => {
-                                
                                 const newCheckedItems: Record<string, boolean> = {};
 
                                 aggregatedReportSettings.menuItem.forEach((menuItem: MenuItem) => {

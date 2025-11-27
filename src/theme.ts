@@ -64,6 +64,24 @@ const theme = createSystem(defaultConfig, {
           emphasized: { value: "#ff745f" },
           focusRing: { value: "#ff5630" },
         },
+        warning: {
+          solid: { value: { _light: "{colors.yellow.500}", _dark: "{colors.yellow.600}" } },
+          contrast: { value: "#000000" },
+          fg: { value: { _light: "{colors.yellow.700}", _dark: "{colors.yellow.400}" } },
+          muted: { value: { _light: "{colors.yellow.600}", _dark: "{colors.yellow.500}" } },
+          subtle: { value: { _light: "{colors.yellow.50}", _dark: "{colors.yellow.900}" } },
+          emphasized: { value: { _light: "{colors.yellow.600}", _dark: "{colors.yellow.300}" } },
+          focusRing: { value: "{colors.yellow.500}" },
+        },
+        success: {
+          solid: { value: { _light: "{colors.green.500}", _dark: "{colors.green.600}" } },
+          contrast: { value: "#ffffff" },
+          fg: { value: { _light: "{colors.green.700}", _dark: "{colors.green.400}" } },
+          muted: { value: { _light: "{colors.green.600}", _dark: "{colors.green.500}" } },
+          subtle: { value: { _light: "{colors.green.50}", _dark: "{colors.green.900}" } },
+          emphasized: { value: { _light: "{colors.green.600}", _dark: "{colors.green.300}" } },
+          focusRing: { value: "{colors.green.500}" },
+        },
         table: {
           expired: {
             value: { _light: "{colors.red.200}", _dark: "{colors.red.800}" },
