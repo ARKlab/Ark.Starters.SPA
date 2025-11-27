@@ -108,8 +108,7 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
 
   useEffect(() => {
     if (!date && defaultFocusedValue) datePicker.setFocusedValue(defaultFocusedValue);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [date, defaultFocusedValue]);
+  }, [date, defaultFocusedValue, datePicker]);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (datePickerRef.current && !datePickerRef.current.contains(event.target as Node)) {
