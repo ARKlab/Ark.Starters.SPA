@@ -51,7 +51,6 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
     showClearButton = true,
   } = props;
 
-  // Sostituiamo lo stato locale con un valore derivato memoizzato
   const parsedValue = useMemo(() => {
     if (!date) return undefined;
     try {
@@ -67,7 +66,6 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
   function onValueChange(details: DatePicker.ValueChangeDetails) {
     if (details.value.length > 0) {
       const picked = details.value[0];
-      // Non serve più setValue locale, aggiorniamo solo il padre
       setDate(picked.toDate(timeZone ?? "UTC"));
       setOpen(false);
     } else {
