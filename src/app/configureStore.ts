@@ -57,7 +57,7 @@ export function initStore(extra: ExtraType) {
   return store;
 }
 
-export const resetApiActions = [
+export const getResetApiActions = () => [
   jsonPlaceholderApi.util.resetApiState(),
   configTableApiSlice.util.resetApiState(),
   moviesApiSlice.util.resetApiState(),
