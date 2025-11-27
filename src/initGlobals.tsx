@@ -1,6 +1,6 @@
 import { Provider } from "react-redux";
 
-import { initStore, resetApiActions } from "./app/configureStore";
+import { initStore, getResetApiActions } from "./app/configureStore";
 import { authProvider } from "./config/authProvider"; // this could fail if 'env' is malconfigured as is env-dependent
 import { InitApp } from "./initApp";
 import AuthenticationProviderContext from "./lib/authentication/components/AuthenticationProviderContext";
@@ -11,7 +11,7 @@ const store = initStore({ authProvider })
 if (import.meta.env.DEV || import.meta.env.MODE === "e2e") {
   window.rtkq = {
     resetCache: () => {
-      for (const x of resetApiActions)
+      for (const x of getResetApiActions())
         store.dispatch(x);
     }
   }
