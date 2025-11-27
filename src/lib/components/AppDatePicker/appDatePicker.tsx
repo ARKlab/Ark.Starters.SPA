@@ -224,8 +224,8 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
                                       display="flex"
                                       alignItems="center"
                                       justifyContent="center"
-                                      width="2em"
-                                      height="2em"
+                                      width="8"
+                                      height="8"
                                       borderRadius="md"
                                       _hover={{ bg: "brand.subtle" }}
                                     >

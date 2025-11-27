@@ -1,5 +1,4 @@
 import { Box, Spinner, Table } from "@chakra-ui/react";
-import { pathOr } from "ramda";
 import React, { useMemo, useState } from "react";
 
 import AppPagination from "../../lib/components/AppPagination/AppPagination";
@@ -19,7 +18,18 @@ type AppSimpleTableProps<T> = {
 
 //eslint-disable-next-line
 const getNestedValue = <T,>(obj: T, path: string, defaultValue: any = null): any => {
-  return pathOr(defaultValue, path.split("."), obj);
+  const keys = path.split(".");
+  //eslint-disable-next-line
+  let result: any = obj;
+
+  for (const key of keys) {
+    if (result === null || result === undefined) {
+      return defaultValue;
+    }
+    result = result[key];
+  }
+
+  return result === undefined ? defaultValue : result;
 };
 
 const AppSimpleTable = <T,>({ data, columns, pageSize = 20, isLoading = false }: AppSimpleTableProps<T>) => {

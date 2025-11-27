@@ -134,7 +134,7 @@ export default defineConfig(({ mode }) => {
             chakra: ["@chakra-ui/react", "@emotion/react"],
             i18n: ["i18next", "react-i18next", "@semihbou/zod-i18n-map"],
             hookForm: ["react-hook-form", "@hookform/resolvers"],
-            common: ["@tanstack/react-table", "ramda", "date-fns", "react-dnd", "react-dnd-html5-backend"],
+            common: ["@tanstack/react-table", "date-fns", "react-dnd", "react-dnd-html5-backend"],
           },
         },
       },

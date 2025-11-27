@@ -1,5 +1,4 @@
 import { Button, Stack } from "@chakra-ui/react";
-import * as R from "ramda";
 import type { JSX, MouseEventHandler } from "react";
 import { MdChevronLeft, MdChevronRight, MdFirstPage, MdLastPage } from "react-icons/md";
 
@@ -15,24 +14,29 @@ type AppPaginationProps = {
 };
 
 const AppPagination = ({ count, pageSize, page, onPageChange, onPageSizeChange, isLoading }: AppPaginationProps) => {
-  const totalPages = Math.ceil(R.divide(count, pageSize));
+  const totalPages = Math.ceil(count / pageSize);
   const pageMinRange = 3;
-  const pageMinRangeVal = R.gt(page, pageMinRange)
-    ? R.min(R.subtract(page, pageMinRange), R.subtract(totalPages, pageMinRange))
-    : 0;
+  const pageMinRangeVal = page > pageMinRange ? Math.min(page - pageMinRange, totalPages - pageMinRange) : 0;
 
   const pageMaxRange = 2;
-  const pageMaxSub = R.subtract(totalPages, pageMaxRange);
-  const pageMaxRangeVal = page < pageMaxSub ? R.add(page, pageMaxRange) : totalPages;
+  const pageMaxSub = totalPages - pageMaxRange;
+  const pageMaxRangeVal = page < pageMaxSub ? page + pageMaxRange : totalPages;
 
-  const pageRange = R.range(pageMinRangeVal, page < 3 ? 5 : pageMaxRangeVal);
+  // R.range replacement (exclusive end)
+  const rangeStart = pageMinRangeVal;
+  const rangeEnd = page < 3 ? 5 : pageMaxRangeVal;
+  const pageRange = [];
+  for (let i = rangeStart; i < rangeEnd; i++) {
+    pageRange.push(i);
+  }
+
   if (isLoading) return <></>;
   return (
     <div>
       {count > pageSize ? (
         <>
-          <Stack gap={4} direction="row" align="center" justifyContent="center" my="20px">
-            <NativeSelectRoot w="8em">
+          <Stack gap={"4"} direction="row" align="center" justifyContent="center" my="5">
+            <NativeSelectRoot w="32">
               <NativeSelectField value={pageSize} onChange={e => onPageSizeChange(Number(e.target.value))}>
                 {[10, 20, 30, 40, 50].map(pageSize => (
                   <option key={pageSize} value={pageSize}>
@@ -50,19 +54,19 @@ const AppPagination = ({ count, pageSize, page, onPageChange, onPageSizeChange, 
             />
             <PageItem
               display={page > 1}
-              onChange={() => onPageChange(R.subtract(page, 1))}
+              onChange={() => onPageChange(page - 1)}
               title="Previous"
               value={<MdChevronLeft />}
               data-test="pagination-prev"
             />
             {pageRange.map((p: number, i: number) => {
-              const pVal = R.add(1, p);
+              const pVal = p + 1;
               return (
                 <PageItem
                   display={(pVal - 1) * pageSize < count}
                   key={i}
                   onChange={() => onPageChange(pVal)}
-                  title={R.toString(pVal)}
+                  title={String(pVal)}
                   value={pVal}
                   currentPage={page === pVal}
                   data-test={`pagination-page-${pVal}`}
@@ -71,7 +75,7 @@ const AppPagination = ({ count, pageSize, page, onPageChange, onPageSizeChange, 
             })}
             <PageItem
               display={page < totalPages}
-              onChange={() => onPageChange(R.add(1, page))}
+              onChange={() => onPageChange(page + 1)}
               title="Next"
               value={<MdChevronRight />}
               data-test="pagination-next"
@@ -80,8 +84,8 @@ const AppPagination = ({ count, pageSize, page, onPageChange, onPageSizeChange, 
           </Stack>
         </>
       ) : (
-        <Stack gap={4} direction="row" align="center" justifyContent="center" my="20px">
-          <NativeSelectRoot w="8em">
+        <Stack gap={"4"} direction="row" align="center" justifyContent="center" my="5">
+          <NativeSelectRoot w="32">
             <NativeSelectField value={pageSize} onChange={e => onPageSizeChange(Number(e.target.value))}>
               {[10, 20, 30, 40, 50].map(pageSize => (
                 <option key={pageSize} value={pageSize}>
@@ -107,13 +111,13 @@ type PageItemsTypes = {
   value: string | number | JSX.Element;
 };
 
-const PageItem = ({ display, onChange, title, disable, currentPage, value }: PageItemsTypes) =>
-  R.ifElse(
-    (x: unknown) => x === true,
-    () => (
+const PageItem = ({ display, onChange, title, disable, currentPage, value }: PageItemsTypes) => {
+  if (display) {
+    return (
       <Button disabled={disable} onClick={onChange} title={title} variant={currentPage ? "outline" : "solid"}>
         {value}
       </Button>
-    ),
-    () => <></>,
-  )(display);
+    );
+  }
+  return <></>;
+};

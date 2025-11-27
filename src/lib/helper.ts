@@ -1,10 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import * as R from "ramda";
 
 import { format } from "./i18n/i18nDate";
 
+const getType = (val: any): string => {
+  return Object.prototype.toString.call(val).slice(8, -1);
+};
+const isEmpty = (val: any): boolean => {
+  if (val === null || val === undefined) return true;
+  if (typeof val === "string" || Array.isArray(val)) return val.length === 0;
+  if (typeof val === "object") return Object.keys(val).length === 0;
+  return false;
+};
 export const formatDateToString = (date: Date | null, dateFormat?: string) => {
   dateFormat ??= "yyyy-MM-dd";
 
@@ -15,24 +22,29 @@ export async function delay(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export const queryStringBuilder = ({ filters }: { filters: object }) =>
-  R.pipe(
-    R.keys,
-    R.map(key => builder({ key, data: filters, equator: "eq", join: "or" })),
-    R.filter(x => !!x),
-    R.join(" and "),
-    encodeURIComponent,
-    R.unless(R.isEmpty, x => `&$filter=${x}`),
-  )(filters);
+export const queryStringBuilder = ({ filters }: { filters: any }) => {
+  const parts = Object.keys(filters)
+    .map(key => builder({ key, data: filters, equator: "eq", join: "or" }))
+    .filter(x => !!x);
 
-export const searchBuilder = ({ filters }: { filters: any }) =>
-  R.pipe(
-    R.keys,
-    R.map(key => builder({ key, data: filters, equator: "=", join: "&" })),
-    R.join("&"),
-    R.unless(R.isEmpty, x => `&${x}`),
-    R.unless(R.isEmpty, x => R.replace(/\B\s+|\s+\B/g, "", x)),
-  )(filters);
+  if (parts.length === 0) return "";
+
+  const joined = parts.join(" and ");
+  const encoded = encodeURIComponent(joined);
+  return `&$filter=${encoded}`;
+};
+
+export const searchBuilder = ({ filters }: { filters: any }) => {
+  const parts = Object.keys(filters).map(key => builder({ key, data: filters, equator: "=", join: "&" }));
+
+  const joined = parts.join("&");
+
+  if (!joined) return "";
+
+  const result = `&${joined}`;
+
+  return result.replace(/\B\s+|\s+\B/g, "");
+};
 
 const builder = ({
   key,
@@ -45,31 +57,29 @@ const builder = ({
   equator: string;
   join: string;
 }) => {
-  switch (keyType({ key, data })) {
+  const val = data[key];
+  const type = getType(val);
+
+  switch (type) {
     case "Array":
-      return arrDataBuilder({ key, data: R.prop(key, data), equator, join });
+      return arrDataBuilder({ key, data: val, equator, join });
     case "Object":
-      return objDataBuilder({ data: R.prop(key, data), equator, join });
+      return objDataBuilder({ data: val, equator, join });
     case "Number":
     case "String": {
-      const val = R.prop(key, data);
-      const res = R.equals(equator, "eq") ? `'${val}'` : encodeURIComponent(val);
-      return R.isEmpty(val) ? "" : `${String(key)} ${equator} ${res}`;
+      const res = equator === "eq" ? `'${val}'` : encodeURIComponent(val);
+      return isEmpty(val) ? "" : `${String(key)} ${equator} ${res}`;
     }
     default:
       return "";
   }
 };
 
-const keyType = ({ key, data }: { key: string | number | symbol; data: any }) =>
-  R.pipe(R.prop(key, data), R.type)(data);
-
-const objDataBuilder = ({ data, equator, join }: { data: any; equator: string; join: string }) =>
-  R.pipe(
-    R.keys,
-    R.map(key => `${String(key)} ${equator} '${R.prop(key, data)}'`),
-    R.join(` ${join} `),
-  )(data);
+const objDataBuilder = ({ data, equator, join }: { data: any; equator: string; join: string }) => {
+  return Object.keys(data)
+    .map(key => `${key} ${equator} '${data[key]}'`)
+    .join(` ${join} `);
+};
 
 const arrDataBuilder = ({
   key,
@@ -82,25 +92,26 @@ const arrDataBuilder = ({
   equator: string;
   join: string;
 }) => {
-  switch (R.type(data[0])) {
+  if (data.length === 0) return "";
+  const firstItemType = getType(data[0]);
+
+  switch (firstItemType) {
     case "Object":
-      return R.pipe(
-        R.map(({ value }) => {
-          const val = R.equals(equator, "eq") ? `'${value}'` : value;
+      return data
+        .map((item: any) => {
+          const { value } = item;
+          const val = equator === "eq" ? `'${value}'` : value;
           return `${String(key)} ${equator} ${val}`;
-        }),
-        R.values,
-        R.join(` ${join} `),
-      )(data);
+        })
+        .join(` ${join} `);
     case "Number":
     case "String":
-      return R.pipe(
-        R.map((value: number | string) => {
-          const val = R.equals(equator, "eq") ? `'${value}'` : value;
+      return data
+        .map((value: number | string) => {
+          const val = equator === "eq" ? `'${value}'` : value;
           return `${String(key)} ${equator} ${val}`;
-        }),
-        R.join(` ${join} `),
-      )(data);
+        })
+        .join(` ${join} `);
     default:
       return "";
   }
