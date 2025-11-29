@@ -62,6 +62,10 @@ export type ArkBaseQueryExtraOptions<BaseQuery extends ArkBaseQueryFn> = NonNull
 
 export type ArkBaseQueryApi<BaseQuery extends ArkBaseQueryFn> = Parameters<BaseQuery>[1];
 
+// Helper types to avoid redundant type constituents
+type IntersectIfNotUnknown<Base, Additional> = [Additional] extends [unknown] ? Base : Base & Additional;
+type UnionIfObject<Base, Additional> = [Additional] extends [object] ? Base | Additional : Base;
+
 export type ArkBaseQueryEnhancer<
   AdditionalArgs = unknown,
   AdditionalDefinitionExtraOptions = unknown,
@@ -72,9 +76,9 @@ export type ArkBaseQueryEnhancer<
   baseQuery: BaseQuery,
   config?: Config,
 ) => ArkBaseQueryFn<
-  BaseQueryArg<BaseQuery> & AdditionalArgs,
+  IntersectIfNotUnknown<BaseQueryArg<BaseQuery>, AdditionalArgs>,
   ArkBaseQueryResult<BaseQuery>,
-  AdditionalError extends object ? ArkBaseQueryError<BaseQuery> | AdditionalError : ArkBaseQueryError<BaseQuery>,
+  UnionIfObject<ArkBaseQueryError<BaseQuery>, AdditionalError>,
   ArkBaseQueryExtraOptions<BaseQuery> & AdditionalDefinitionExtraOptions,
   NonNullable<ArkBaseQueryMeta<BaseQuery>>,
   ArkBaseQueryApi<BaseQuery>
