@@ -60,7 +60,12 @@
     "pree2e:ci:app": "cross-env NODE_ENV=production CYPRESS_COVERAGE=true vite build --mode e2e",
     "e2e:ci:app": "cross-env NODE_ENV=production BROWSER=none vite preview --mode e2e",
     "pree2e:ci:run": "wait-on --log --timeout 120000 http-get://localhost:4000 http-get://localhost:3000",
-    "e2e:ci:run": "cross-env NODE_ENV=production npm run cypress:run"
+    "e2e:ci:run": "cross-env NODE_ENV=production npm run cypress:run",
+    "e2e:run": "concurrently --kill-others --success first \"npm:e2e:run:*\"",
+    "e2e:run:connectionStrings": "cross-env PORT=4000 node -- public/connectionStrings.cjs",
+    "e2e:run:app": "cross-env BROWSER=none vite --mode e2e",
+    "pree2e:run:run": "wait-on --log --timeout 120000 http-get://localhost:4000 http-get://localhost:3000",
+    "e2e:run:run": "cross-env CYPRESS_COVERAGE=false cypress run"
   },
   "devDependencies": {
     "@chakra-ui/cli": "3.30.0",

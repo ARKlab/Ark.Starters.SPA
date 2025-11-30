@@ -28,5 +28,10 @@
     ],
     "i18n-ally.defaultNamespace": "translation",
     "i18n-ally.extract.autoDetect": true,
-    "typescript.tsdk": "node_modules\\typescript\\lib"
+    "typescript.tsdk": "node_modules\\typescript\\lib",
+    "chat.allowAnonymousAccess": true,
+    "chat.customAgentInSubagent.enabled": true,
+    "chat.mcp.assisted.nuget.enabled": true,
+    "chat.mcp.gallery.enabled": true,
+    "inlineChat.enableV2": true
 }

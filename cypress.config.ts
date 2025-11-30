@@ -19,6 +19,8 @@ export default defineConfig({
     experimentalRunAllSpecs: true,
     experimentalMemoryManagement: true,
 
+    numTestsKeptInMemory: 3,
+
     defaultCommandTimeout: 15000,
 
     supportFile: "cypress/support/e2e.ts",

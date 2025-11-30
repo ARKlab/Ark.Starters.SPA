@@ -6,8 +6,7 @@ import * as z from "zod";
 
 import { supportedLngs } from "../../config/lang";
 
-const langs = import.meta.env.MODE == "e2e" ? { en: "en" } : supportedLngs;
-const fallbackLng = Object.keys(langs)[0];
+const fallbackLng = Object.keys(supportedLngs)[0];
 const lookupTarget = "lang";
 
 export const i18nSetup = async () => {
