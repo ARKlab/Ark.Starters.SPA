@@ -53,6 +53,8 @@ Expected output: Process crashes with `TypeError: Cannot read private member #si
 - ✅ Works: `@reduxjs/toolkit` 2.9.1
 - ❌ Broken: `@reduxjs/toolkit` 2.9.2+, including 2.10.1
 
+**Verified**: Downgrading to v2.9.1 resolves the issue completely, confirming the bug was introduced in v2.9.2.
+
 ## Workaround
 
 Instead of pre-creating actions, use factory functions:

@@ -15,6 +15,11 @@ This repository contains a minimal reproduction of a bug in `@reduxjs/toolkit` v
 
 **Introduced In**: `@reduxjs/toolkit` version 2.9.2 (upgrade from 2.9.1 to 2.10.1 exposed this issue)
 
+**Verified Behavior**:
+- ✅ **v2.9.1**: Works without error
+- ❌ **v2.9.2+**: Throws "Illegal invocation" error  
+- ❌ **v2.10.1**: Throws "Illegal invocation" error
+
 ## Files
 
 - **`redux-toolkit-resetApiState-issue.mjs`** - Standalone reproduction script
@@ -36,15 +41,25 @@ node redux-toolkit-resetApiState-issue.mjs
 
 ### Expected vs Actual Behavior
 
-**Expected**: Script completes without errors
-
-**Actual**: Process crashes with:
+**With @reduxjs/toolkit v2.10.1** (current version):
+- Expected: Script completes without errors
+- Actual: Process crashes with:
 ```
 TypeError: Cannot read private member #signal from an object whose class did not declare it
     at AbortSignal.abort (node:internal/abort_controller:507:21)
     ...
     at Promise.abort (.../redux-toolkit.modern.mjs:893:27)
     at abortAllPromises (.../rtk-query.modern.mjs:2188:23)
+```
+
+**With @reduxjs/toolkit v2.9.1** (previous working version):
+- Script completes successfully without error ✅
+- This confirms the issue was introduced in v2.9.2+
+
+To verify with v2.9.1:
+```bash
+npm install @reduxjs/toolkit@2.9.1
+node redux-toolkit-resetApiState-issue.mjs
 ```
 
 ## Context in Ark.Starters.SPA
@@ -120,8 +135,9 @@ for (const fn of resetApiFunctions) {
 
 ## Package Versions
 
-- `@reduxjs/toolkit`: 2.10.1 (issue present)
-- `@reduxjs/toolkit`: 2.9.1 (issue NOT present)
+- `@reduxjs/toolkit`: 2.10.1 (issue present) ❌
+- `@reduxjs/toolkit`: 2.9.2+ (issue present) ❌
+- `@reduxjs/toolkit`: 2.9.1 (issue NOT present) ✅
 - Node.js: 24.x
 
 ## Related Issues

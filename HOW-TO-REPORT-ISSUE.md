@@ -95,9 +95,11 @@ resetApiFunctions.forEach(fn => store.dispatch(fn()));
 
 ### Environment
 
-- **@reduxjs/toolkit**: 2.10.1 (broken), 2.9.1 (works)
+- **@reduxjs/toolkit**: 2.10.1 (broken) ❌, 2.9.2+ (broken) ❌, 2.9.1 (works) ✅
 - **Node.js**: 24.11.1
 - **Browser**: Chrome 131, Firefox 132
+
+**Verified**: Downgrading to v2.9.1 resolves the issue, confirming the regression was introduced in v2.9.2.
 
 ### Additional Context
 

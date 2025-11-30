@@ -12,6 +12,11 @@
  * 
  * This issue was introduced in @reduxjs/toolkit version 2.9.2+ (upgrade from 2.9.1 to 2.10.1)
  * 
+ * VERIFIED BEHAVIOR:
+ * - v2.9.1: ✅ Works without error
+ * - v2.9.2+: ❌ Throws "Illegal invocation" error
+ * - v2.10.1: ❌ Throws "Illegal invocation" error
+ * 
  * CONTEXT:
  * In the Ark.Starters.SPA codebase, resetApiState actions are created at module initialization
  * time in configureStore.ts and stored in an array for later use (see src/app/configureStore.ts
@@ -24,11 +29,15 @@
  * 3. The AbortController's abort method loses its 'this' context, causing illegal invocation
  * 
  * HOW TO RUN:
- * npm install @reduxjs/toolkit
+ * npm install @reduxjs/toolkit@2.10.1
  * node redux-toolkit-resetApiState-issue.mjs
  * 
- * EXPECTED: The script should complete without errors
- * ACTUAL: Throws "TypeError: Cannot read private member #signal"
+ * TO VERIFY FIX (should complete without error):
+ * npm install @reduxjs/toolkit@2.9.1
+ * node redux-toolkit-resetApiState-issue.mjs
+ * 
+ * EXPECTED (v2.10.1): Throws "TypeError: Cannot read private member #signal"
+ * EXPECTED (v2.9.1): Completes successfully without error
  */
 
 import { configureStore } from '@reduxjs/toolkit';
