@@ -4,30 +4,54 @@ This package contains everything needed to report the "Illegal invocation" bug t
 
 ## What Was Created
 
-### 1. `reproduction.js`
-A standalone Node.js script that demonstrates the code pattern causing the issue:
-- Uses the retry wrapper with custom baseQuery (similar to your application)
-- Creates resetApiState actions in an array at module level
-- Dispatches them in a loop (the pattern that fails in browsers)
-- Includes comprehensive comments explaining each step
+### 1. `cypress/e2e/reproduction-illegal-invocation.cy.ts` ⭐ **ACTUAL REPRODUCTION**
+A standalone Cypress test that ACTUALLY reproduces the error in a browser environment:
+- Visits the application
+- Triggers API calls
+- Calls `window.rtkq.resetCache()` which dispatches resetApiState actions
+- **Result**: Test fails with "Illegal invocation" error
+
+**To run:**
+```bash
+npx cypress run --spec cypress/e2e/reproduction-illegal-invocation.cy.ts
+```
+
+### 2. `test-reproduction.html` ⭐ **ACTUAL REPRODUCTION**
+A standalone HTML file that can be opened in any browser to reproduce the error:
+- Uses RTK from CDN
+- Creates API slices with retry wrapper
+- Dispatches resetApiState actions in a loop
+- **Result**: Shows red error message if the issue occurs
+
+**To run:**
+Open the file in Chrome, Firefox, Safari, or Edge.
+
+### 3. `reproduction.js` ⚠️ **PATTERN DEMO ONLY**
+A Node.js script that demonstrates the CODE PATTERN but does NOT reproduce the error:
+- Shows the exact code structure that causes the issue
+- Runs successfully in Node.js (AbortController is more lenient)
+- Includes comprehensive comments explaining the pattern
+- **Result**: Completes successfully (no error in Node.js)
 
 **To run:**
 ```bash
 node reproduction.js
 ```
 
-**Note:** The script may not show the error in Node.js because Node's AbortController implementation is more lenient. The actual error occurs in browser environments (Cypress, Chrome, Firefox).
+**Important**: This is for understanding the code pattern only. To see the actual error, use the Cypress test or HTML file.
 
-### 2. `REPRODUCTION_README.md`
+### 4. `REPRODUCTION_README.md`
 Comprehensive documentation including:
-- Issue summary and error details
+- Clear explanation that Node.js script doesn't reproduce the error
+- Multiple methods to see the actual error (Cypress, browser HTML)
+- Error details and stack traces from real test runs
 - Affected versions (working: 2.9.1, broken: 2.9.2+)
 - Code patterns that trigger the issue
 - Application context with file references
 - Possible causes and workarounds
 - Environment details
 
-### 3. `ISSUE_TEMPLATE.md`
+### 5. `ISSUE_TEMPLATE.md`
 Ready-to-use template for opening a GitHub issue at https://github.com/reduxjs/redux-toolkit/issues
 - Formatted with proper sections
 - Includes all necessary context
@@ -36,23 +60,53 @@ Ready-to-use template for opening a GitHub issue at https://github.com/reduxjs/r
 
 ## How to Use
 
-### Option A: Quick Issue Report
+### ⭐ Recommended: Use the Cypress Reproduction
+
+**This is the easiest way to see the actual error:**
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/ARKlab/Ark.Starters.SPA
+   cd Ark.Starters.SPA
+   npm install
+   ```
+
+2. Run the standalone reproduction test:
+   ```bash
+   npx cypress run --spec cypress/e2e/reproduction-illegal-invocation.cy.ts
+   ```
+
+3. Or run all tests to see it fail in `configTable.e2e.ts`:
+   ```bash
+   npm run test
+   ```
+
+### Alternative: Browser HTML File
+
+If you can't run Cypress, open `test-reproduction.html` in a web browser:
+- The page will load RTK from CDN
+- It will attempt to dispatch resetApiState actions
+- If the error occurs, you'll see a red error message
+- If it works, you'll see a green success message
+
+### For Issue Report: Reference the Repository
+
+When opening an issue with the RTK team:
+### For Issue Report: Reference the Repository
+
 1. Copy the content of `ISSUE_TEMPLATE.md`
 2. Go to https://github.com/reduxjs/redux-toolkit/issues/new
-3. Paste the content and submit
+3. Paste the content
+4. Add a link to this repository: `https://github.com/ARKlab/Ark.Starters.SPA`
+5. Mention the Cypress test: `cypress/e2e/reproduction-illegal-invocation.cy.ts`
 
-### Option B: Provide Reproduction Package
-1. Create a new GitHub repository or gist
-2. Add `reproduction.js` and `REPRODUCTION_README.md`
-3. Reference it in your issue report
+### Don't Use the Node.js Script Alone
 
-### Option C: Attach to Your Issue
-1. Attach `reproduction.js` to your issue as a file
-2. Copy key sections from `REPRODUCTION_README.md` into the issue description
+The `reproduction.js` file is useful for understanding the code pattern, but it does NOT reproduce the actual error. Always use it together with the Cypress test or HTML file when reporting the issue.
 
 ## Verification
 
-The error is confirmed in your Cypress tests:
+### ✅ Confirmed Error in Cypress Tests
 ```bash
 npm run test
 ```

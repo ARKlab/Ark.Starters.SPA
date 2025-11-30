@@ -1,31 +1,33 @@
 /**
- * Minimal reproduction for "Illegal invocation" error in @reduxjs/toolkit 2.10.1
+ * CODE PATTERN DEMONSTRATION for "Illegal invocation" error in @reduxjs/toolkit 2.10.1
  * 
- * This reproduction demonstrates an issue with resetApiState() when dispatched
- * in an array loop, introduced in @reduxjs/toolkit >= 2.9.2
+ * ⚠️  IMPORTANT: This Node.js script demonstrates the CODE PATTERN that causes the issue,
+ * but does NOT reproduce the actual error because Node.js's AbortController is more lenient
+ * than browser implementations.
  * 
- * The issue appears when using the retry wrapper with custom baseQuery functions.
- * The abort() method on AbortController loses its 'this' context when called.
+ * TO SEE THE ACTUAL ERROR: Run the Cypress tests in this repository with `npm run test`
+ * 
+ * This demonstrates the pattern used in the application where resetApiState() causes
+ * "Illegal invocation" when dispatched in a loop, introduced in @reduxjs/toolkit >= 2.9.2
+ * 
+ * The issue appears when:
+ * 1. API slices are created with custom baseQuery using retry() wrapper
+ * 2. resetApiState() actions are collected in an array at module level
+ * 3. In browser/Cypress tests, these actions are dispatched in a loop to reset state
+ * 4. The abort() method on AbortController loses its 'this' context when called
  * 
  * APPLICATION CONTEXT:
- * - API slices are created with custom baseQuery using retry() wrapper
- * - resetApiState() actions are collected in an array at module level
- * - In Cypress tests, these actions are dispatched in a loop to reset state
- * 
- * FILE REFERENCES:
  * - src/lib/rtk/arkBaseQuery.ts:83-87 - arkRetry wrapper function
  * - src/lib/rtk/appFetchBaseQuery.ts:194 - arkFetchBaseQuery uses arkRetry
  * - src/app/configureStore.ts:60-67 - resetApiActions array
  * - src/initGlobals.tsx:12-17 - window.rtkq.resetCache() loops and dispatches
  * - cypress/support/e2e.ts:10-11 - afterEach calls window.rtkq.resetCache()
  * 
- * To run: node reproduction.js
+ * To run this pattern demo: node reproduction.js
+ * To see actual error: npm run test (runs Cypress tests)
  * 
- * Expected: No errors
- * Actual: TypeError: Illegal invocation at AbortController.abort (in browser)
- * 
- * Note: This issue may only manifest in browser environments (e.g., Cypress tests)
- * where the AbortController implementation is stricter about 'this' binding.
+ * Expected in browser: TypeError: Illegal invocation at AbortController.abort
+ * Actual in Node.js: No error (Node.js AbortController is more lenient)
  */
 
 import { configureStore } from '@reduxjs/toolkit';
@@ -130,16 +132,17 @@ promise1.unsubscribe();
 promise2.unsubscribe();
 promise3.unsubscribe();
 
-console.log('\\n✓ Reproduction completed successfully');
-console.log('\\n⚠️  NOTE: This issue may only manifest in browser environments');
-console.log('   (e.g., Cypress tests) where AbortController is stricter about');
-console.log('   the "this" binding when calling abort().');
-console.log('\\n   To see the actual error, run the Cypress tests:');
-console.log('   npm run test');
-console.log('\\n   The error occurs in: cypress/support/e2e.ts');
+console.log('\\n✓ Pattern demonstration completed successfully');
+console.log('\\n⚠️  IMPORTANT: This script demonstrates the CODE PATTERN but does NOT');
+console.log('   reproduce the actual error in Node.js because Node\'s AbortController');
+console.log('   implementation is more lenient than browser implementations.');
+console.log('\\n   TO SEE THE ACTUAL ERROR:');
+console.log('   Run the Cypress tests with: npm run test');
+console.log('\\n   The error occurs in: cypress/support/e2e.ts (line 11)');
 console.log('   When calling: window.rtkq.resetCache()');
-console.log('   Which dispatches the resetApiActions array from src/app/configureStore.ts');
-console.log('\\n   Example error from Cypress:');
+console.log('   Which dispatches the resetApiActions array from: src/app/configureStore.ts');
+console.log('\\n   Actual error from Cypress (browser environment):');
 console.log('   TypeError: Illegal invocation');
 console.log('   at Promise.S [as abort] (rtk.js:1:26029)');
 console.log('   at resetApiState handler');
+console.log('\\n   For a browser-based reproduction, open: test-reproduction.html in a browser');

@@ -2,7 +2,16 @@
 
 ## Issue Summary
 
-When dispatching `resetApiState()` actions in a loop, an "Illegal invocation" error occurs when calling `AbortController.abort()`. This issue was introduced in `@reduxjs/toolkit` version 2.9.2 and persists in 2.10.1.
+When dispatching `resetApiState()` actions in a loop, an "Illegal invocation" error occurs when calling `AbortController.abort()` **in browser environments**. This issue was introduced in `@reduxjs/toolkit` version 2.9.2 and persists in 2.10.1.
+
+## ⚠️ Important Note About Reproductions
+
+**The Node.js script (`reproduction.js`) demonstrates the CODE PATTERN but does NOT reproduce the actual error** because Node.js's `AbortController` implementation is more lenient than browser implementations.
+
+**To see the ACTUAL error, you must run in a browser environment:**
+1. Run the Cypress tests: `npm run test`
+2. Run the standalone Cypress reproduction: `npx cypress run --spec cypress/e2e/reproduction-illegal-invocation.cy.ts`
+3. Open `test-reproduction.html` in a web browser (Chrome, Firefox, etc.)
 
 ## Error Details
 
@@ -21,21 +30,35 @@ TypeError: Failed to execute 'abort' on 'AbortController': Illegal invocation
 
 ## Reproduction Steps
 
-### Quick Test (Node.js - may not show the error)
-
-```bash
-node reproduction.js
-```
-
-**Note**: The error may only manifest in browser environments where `AbortController` is stricter about `this` binding.
-
-### Full Test (Cypress - shows the actual error)
+### Method 1: Run Existing Cypress Tests (ACTUAL ERROR)
 
 ```bash
 npm run test
 ```
 
-The error will occur in the `configTable.e2e.ts` test during the `afterEach` hook.
+The error will occur in the `configTable.e2e.ts` test during the `afterEach` hook when `window.rtkq.resetCache()` is called.
+
+### Method 2: Run Standalone Cypress Reproduction (ACTUAL ERROR)
+
+```bash
+npx cypress run --spec cypress/e2e/reproduction-illegal-invocation.cy.ts
+```
+
+This is a minimal test that demonstrates the exact issue.
+
+### Method 3: Browser HTML Test (ACTUAL ERROR - if issue is present)
+
+Open `test-reproduction.html` in a web browser (Chrome, Firefox, Safari, Edge). The page will show either:
+- ✅ Green success message (if issue is fixed)
+- ❌ Red error message with "Illegal invocation" (if issue is present)
+
+### Method 4: Node.js Pattern Demo (NO ERROR - for reference only)
+
+```bash
+node reproduction.js
+```
+
+**Note**: This script will NOT show the error. It only demonstrates the code pattern. The error only occurs in browser environments.
 
 ## Code Pattern That Triggers the Issue
 

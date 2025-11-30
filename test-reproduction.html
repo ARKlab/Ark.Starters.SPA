@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RTK resetApiState Illegal Invocation Reproduction</title>
+    <script type="module">
+        // Import RTK from CDN
+        import { configureStore } from 'https://cdn.jsdelivr.net/npm/@reduxjs/toolkit@2.10.1/+esm';
+        import { createApi, fetchBaseQuery, retry } from 'https://cdn.jsdelivr.net/npm/@reduxjs/toolkit@2.10.1/dist/query/+esm';
+        
+        console.log('Starting reproduction test...');
+        
+        // Create custom base query with retry wrapper
+        const customBaseQuery = (baseUrl) => {
+          const baseQuery = fetchBaseQuery({ baseUrl });
+          const retryFn = retry(baseQuery, { maxRetries: 2 });
+          return (args, api, extraOptions) => 
+            retryFn(args, api, extraOptions ?? {});
+        };
+        
+        // Create API slices
+        const api1 = createApi({
+          reducerPath: 'api1',
+          baseQuery: customBaseQuery('https://example.com/'),
+          endpoints: (builder) => ({
+            getData: builder.query({
+              query: () => 'data',
+            }),
+          }),
+        });
+        
+        const api2 = createApi({
+          reducerPath: 'api2',
+          baseQuery: customBaseQuery('https://example.com/'),
+          endpoints: (builder) => ({
+            getData: builder.query({
+              query: () => 'data',
+            }),
+          }),
+        });
+        
+        const api3 = createApi({
+          reducerPath: 'api3',
+          baseQuery: customBaseQuery('https://example.com/'),
+          endpoints: (builder) => ({
+            getData: builder.query({
+              query: () => 'data',
+            }),
+          }),
+        });
+        
+        // Create actions array BEFORE store
+        const resetApiActions = [
+          api1.util.resetApiState(),
+          api2.util.resetApiState(),
+          api3.util.resetApiState(),
+        ];
+        
+        // Configure store
+        const store = configureStore({
+          reducer: {
+            [api1.reducerPath]: api1.reducer,
+            [api2.reducerPath]: api2.reducer,
+            [api3.reducerPath]: api3.reducer,
+          },
+          middleware: (getDefaultMiddleware) =>
+            getDefaultMiddleware().concat(api1.middleware, api2.middleware, api3.middleware),
+        });
+        
+        console.log('Store configured');
+        
+        // Initiate some queries
+        const promise1 = store.dispatch(api1.endpoints.getData.initiate());
+        const promise2 = store.dispatch(api2.endpoints.getData.initiate());
+        const promise3 = store.dispatch(api3.endpoints.getData.initiate());
+        
+        console.log('Queries initiated');
+        
+        // Wait a bit
+        await new Promise(resolve => setTimeout(resolve, 10));
+        
+        // Try to dispatch resetApiState actions
+        console.log('Attempting to dispatch resetApiState actions...');
+        try {
+          for (const action of resetApiActions) {
+            console.log('Dispatching:', action.type);
+            store.dispatch(action);
+          }
+          console.log('✅ SUCCESS: All actions dispatched');
+          document.body.innerHTML = '<h1 style="color: green;">✅ SUCCESS: All resetApiState actions dispatched without error</h1><p>The issue did NOT reproduce.</p>';
+        } catch (error) {
+          console.error('❌ ERROR:', error);
+          document.body.innerHTML = `<h1 style="color: red;">❌ ERROR: ${error.name}</h1><p>${error.message}</p><pre>${error.stack}</pre>`;
+        }
+        
+        // Cleanup
+        promise1.unsubscribe();
+        promise2.unsubscribe();
+        promise3.unsubscribe();
+    </script>
+</head>
+<body>
+    <h1>Loading...</h1>
+</body>
+</html>

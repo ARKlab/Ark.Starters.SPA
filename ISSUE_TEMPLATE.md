@@ -19,17 +19,34 @@ When dispatching multiple `resetApiState()` actions in a loop, a `TypeError: Ill
 
 ### Reproduction
 
-I've created a minimal reproduction that demonstrates the pattern causing this issue:
+I've created multiple ways to reproduce this issue:
 
-**Files:**
-- `reproduction.js` - Standalone Node.js script showing the pattern
-- `REPRODUCTION_README.md` - Detailed documentation
+**IMPORTANT**: This issue only occurs in browser environments. Node.js's `AbortController` is more lenient and won't show the error.
 
-**To see the actual error:**
+**Method 1 - Run the Cypress test in this repository (SHOWS ACTUAL ERROR):**
 ```bash
-npm install @reduxjs/toolkit@2.10.1
-npm run test  # Runs Cypress tests where the error occurs
+git clone https://github.com/ARKlab/Ark.Starters.SPA
+cd Ark.Starters.SPA
+npm install
+npm run test
 ```
+
+The error occurs in `configTable.e2e.ts` during the `afterEach` hook.
+
+**Method 2 - Standalone Cypress reproduction (SHOWS ACTUAL ERROR):**
+```bash
+# In the cloned repository
+npx cypress run --spec cypress/e2e/reproduction-illegal-invocation.cy.ts
+```
+
+**Method 3 - Browser HTML test:**
+Open the `test-reproduction.html` file in a web browser to see if the error occurs.
+
+**Files included:**
+- `cypress/e2e/reproduction-illegal-invocation.cy.ts` - Standalone Cypress test
+- `test-reproduction.html` - Browser-based reproduction
+- `reproduction.js` - Code pattern demonstration (doesn't trigger error in Node.js)
+- `REPRODUCTION_README.md` - Detailed documentation
 
 **Pattern that triggers the error:**
 
