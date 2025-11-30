@@ -11,6 +11,7 @@ import { rtkqErrorHandlingApi } from "../features/rtkqErrorHandling/rtkqErrorHan
 import { authSlice } from "../lib/authentication/authenticationSlice";
 import { envSlice } from "../lib/authentication/envSlice";
 import type { AuthProvider } from "../lib/authentication/providers/authProviderInterface";
+import { tableStateSlice } from "../lib/components/AppArkApiTable/tableStateSlice";
 import errorReducer from "../lib/errorHandler/errorHandler";
 
 // `combineSlices` automatically combines the reducers using
@@ -18,7 +19,7 @@ import errorReducer from "../lib/errorHandler/errorHandler";
 const sliceReducers = combineSlices(
   authSlice,
   envSlice,
-
+  tableStateSlice,
   configTableApiSlice,
   videoGameApiSlice,
   jsonPlaceholderApi,
@@ -28,6 +29,7 @@ const sliceReducers = combineSlices(
   globalLoadingSlice,
   {
     errorHandler: errorReducer,
+    table: tableStateSlice.reducer,
   },
 );
 

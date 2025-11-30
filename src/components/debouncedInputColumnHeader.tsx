@@ -1,10 +1,7 @@
-
-
 import { useEffect } from "react";
 
+import { AppInputFilterHeader } from "../lib/components/AppInputFilter/appInputFilterHeader";
 import { useDebouncedState } from "../lib/useDebounce";
-
-import { ChackraInputHeaderFilterWithClear } from "./chackraInputFilterWithClear/chackraInputHeaderFilterWithClear";
 
 type DebouncedInputColumnHeaderProps = {
   value: string | number;
@@ -18,7 +15,6 @@ export function DebouncedInputColumnHeader({
   debounce = 500,
   ...props
 }: DebouncedInputColumnHeaderProps) {
-
   const [value, setValue] = useDebouncedState(initialValue, debounce);
 
   useEffect(() => {
@@ -27,12 +23,12 @@ export function DebouncedInputColumnHeader({
   }, [value]);
 
   return (
-    <ChackraInputHeaderFilterWithClear
+    <AppInputFilterHeader
       value={value}
-      onChange={(e) => {
+      onChange={e => {
         setValue(e.target.value);
       }}
       {...props}
     />
-  )
+  );
 }

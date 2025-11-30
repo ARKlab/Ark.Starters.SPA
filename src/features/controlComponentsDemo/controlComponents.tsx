@@ -1,12 +1,11 @@
 import { Box, Heading } from "@chakra-ui/react";
-import { format } from "date-fns";
 import { useState } from "react";
 
-import { ChackraDateRange } from "../../components/chackraDateRange/chackraDateRange";
-import { ChackraInputFilterWithClear } from "../../components/chackraInputFilterWithClear/chackraInputFilterWithClear";
-import type { Item } from "../../components/chackraSelectWithClear/chackraSelectWithClear";
-import ChackraSelectWithClear from "../../components/chackraSelectWithClear/chackraSelectWithClear";
-import ChackraTagInput from "../../components/chackraTagInput";
+import { AppDateRange } from "../../lib/components/AppDateRange/appDateRange";
+import { AppInputFilter } from "../../lib/components/AppInputFilter/appInputFilter";
+import type { AppSelectOptionItem } from "../../lib/components/AppSelect/appSelect";
+import AppSelect from "../../lib/components/AppSelect/appSelect";
+import { format } from "../../lib/i18n/i18nDate";
 
 import ConsoleCard from "./consoleCard";
 enum TestEnum {
@@ -16,6 +15,7 @@ enum TestEnum {
 }
 export default function ControlComponentsView() {
   const [textFilterValue, setTextFilterValue] = useState<string>("");
+  const [selectValue, setSelectValue] = useState<string | undefined>(undefined);
   const [logs, setLogs] = useState<{ name: string; value: unknown }[]>([]);
   const [dateRange, setDateRange] = useState<Date[]>([]);
   const handleInputChange = (name: string, value: unknown): void => {
@@ -28,38 +28,37 @@ export default function ControlComponentsView() {
     handleInputChange("dateRange end", format(value[1], "yyyy-MM-dd"));
   }
 
+  function onChangeSelect(value: string | undefined) {
+    handleInputChange("selectFromEnum", value);
+    setSelectValue(value);
+  }
+
   function getOptionsFromEnumValues(
     enumObject: Record<string, string>,
     parser?: (value: string) => string,
     excludeValues?: string[],
-  ): Item[] {
+  ): AppSelectOptionItem[] {
     return Object.values(enumObject)
       .filter(value => !excludeValues?.includes(value)) // Step 2: Filter out excluded values
-      .map(value => ({ label: value, value: parser ? parser(value) : value !== "NotSet" ? value : "" }) as Item);
+      .map(
+        value =>
+          ({ label: value, value: parser ? parser(value) : value !== "NotSet" ? value : "" }) as AppSelectOptionItem,
+      );
   }
 
   return (
     <Box>
       <Heading>Custom Controls</Heading>
-      <Box marginTop={"20px"}>
-        <ChackraTagInput
-          handleInputChange={(name: string, value: unknown) => {
-            handleInputChange(name, value);
-          }}
-          title={"Tag Input"}
-          propName={"tgagInput"}
-        />
-        <ChackraSelectWithClear
-          handleInputChange={(name: string, value: unknown) => {
-            handleInputChange(name, value);
-          }}
+      <Box mt={"2"}>
+        <AppSelect
+          onChange={onChangeSelect}
           options={getOptionsFromEnumValues(TestEnum)}
           title={"Select From Enum"}
-          propName={"selectFromEnum"}
+          value={selectValue}
         />
 
-        <ChackraDateRange range={dateRange} setRange={setDateRangeValue} />
-        <ChackraInputFilterWithClear
+        <AppDateRange range={dateRange} setRange={setDateRangeValue} label={"Date range"} />
+        <AppInputFilter
           value={textFilterValue}
           handleInputChange={(name: string, value: unknown) => {
             handleInputChange(name, value);

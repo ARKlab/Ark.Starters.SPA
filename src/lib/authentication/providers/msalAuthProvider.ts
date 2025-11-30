@@ -1,7 +1,6 @@
 import type { AuthenticationResult, EventMessage } from "@azure/msal-browser";
 import * as msal from "@azure/msal-browser";
-import { NavigationClient, EventType } from "@azure/msal-browser";
-import * as R from "ramda";
+import { EventType, NavigationClient } from "@azure/msal-browser";
 
 import { router } from "../../router";
 import type { UserAccountInfo } from "../authTypes";
@@ -141,14 +140,16 @@ export class MsalAuthProvider implements AuthProvider {
   private getUserPermissions(): string[] {
     const permissions = [] as string[];
     if (this.idTokenClaims) {
+      const claims = this.idTokenClaims as unknown as Record<string, unknown>;
       for (const claim of this.config.permissionsClaims) {
-        const p = R.pathOr("", [claim], this.idTokenClaims).split(" ");
+        const val = claims[claim];
+        const valStr = typeof val === "string" ? val : "";
+        const p = valStr.split(" ");
         permissions.push(...p);
       }
     }
     return permissions;
   }
-
   public async init(): Promise<void> {
     await this.myMSALObj.initialize();
 
