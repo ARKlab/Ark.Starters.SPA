@@ -115,11 +115,6 @@ export default tseslint.config(
               importNames: ["retry"],
               message: "Please use retry from `@reduxjs/toolkit/query` instead.",
             },
-            {
-              name: "date-fns",
-              importNames: ["format", "formatDate"],
-              message: "Please use `formatDate` from '../lib/i18n/i18nDate' instead.",
-            },
           ],
         },
       ],

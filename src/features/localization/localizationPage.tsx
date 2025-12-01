@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import * as z from "zod";
 
+import { AppDateFormatter } from "../../components/AppDateFormatter/AppDateFormatter";
 import { toaster } from "../../components/ui/toaster";
 import { LocaleSwitcher } from "../../lib/i18n/localeSwitcher";
 /**
@@ -110,6 +111,54 @@ export default function LocalizationPage() {
             />
           </Field.Root>
           <Text my="3">{t("localization_example_1", { number: apples })}</Text>
+        </Box>
+
+        <Box my="5px" borderRadius={"md"} p={"20px"} bg={"header"}>
+          <Heading lineClamp={1} size="md">
+            <strong>{t("localization_date")}</strong>
+          </Heading>
+          <Text my="5px" fontSize={"sm"}>
+            {t("localization_date_explanation")}
+          </Text>
+
+          <Text my="3">
+            {t("localization_date_raw")}
+          </Text>
+          <Text my="3">{new Date().toString()}</Text>
+
+          <Text my="3">
+            {t("localization_date_using_i18n")}
+          </Text>
+          <Text my="3">{t("date", { val: new Date() })}</Text>
+
+          <Text my="3">
+            {t("localization_date_using_i18n_component")}
+          </Text>
+          <Text my="3">
+            <AppDateFormatter
+              dateTime={new Date()}
+              formatOptions={{ weekday: 'long' }}
+            />
+          </Text>
+        </Box>
+
+        <Box my="5px" borderRadius={"md"} p={"20px"} bg={"header"}>
+          <Heading lineClamp={1} size="md">
+            <strong>{t("localization_currencies")}</strong>
+          </Heading>
+          <Text my="5px" fontSize={"sm"}>
+            {t("localization_currencies_explanation")}
+          </Text>
+
+          <Text my="3">
+            {t("localization_currency_raw")}
+          </Text>
+          <Text my="3">{(123456.78).toString()}</Text>
+
+          <Text my="3">
+            {t("localization_currency_using_i18n")}
+          </Text>
+          <Text my="3">{t("currency", { val: 123456.78 })}</Text>
         </Box>
       </VStack>
     </Box>
