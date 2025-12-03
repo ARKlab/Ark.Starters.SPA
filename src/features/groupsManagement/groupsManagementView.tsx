@@ -6,6 +6,7 @@ import { useAppDispatch } from "../../app/hooks";
 import CenterSpinner from "../../components/centerSpinner";
 import { ChackraUIBaseModal } from "../../components/chackraModal/chackraBaseModal";
 import { Checkbox } from "../../components/ui/checkbox";
+import { API_URLS } from "../../config/apiUrls";
 import { Login } from "../../lib/authentication/authenticationSlice";
 import { useAuthContext } from "../../lib/authentication/components/useAuthContext";
 import { hasArtesianAccess, isArtesianConfigured, logArtesianStatus } from "../artesian/artesianDetection";
@@ -126,7 +127,7 @@ const GroupsManagementView = () => {
         }
 
         // Fetch user types
-        const userTypesResponse = await fetch("/userTypes", {
+        const userTypesResponse = await fetch(`${API_URLS.admin}/userTypes`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -143,15 +144,12 @@ const GroupsManagementView = () => {
         setUserTypes(userTypesData);
 
         // Fetch aggregated report settings
-        const aggregatedResponse = await fetch(
-          "https://k4view-portal-test-k2e.azurewebsites.net/pl/config/aggregatedReportSettings.json",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
+        const aggregatedResponse = await fetch(`${API_URLS.portal}/pl/config/aggregatedReportSettings.json`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
           },
-        );
+        });
 
         if (!aggregatedResponse.ok) {
           setError(`Failed to fetch aggregated report settings: ${aggregatedResponse.status}`);
@@ -162,7 +160,7 @@ const GroupsManagementView = () => {
         setAggregatedReportSettings(aggregatedData);
 
         // Fetch users
-        const usersResponse = await fetch("https://k4view-admin-test-k2e.azurewebsites.net/users", {
+        const usersResponse = await fetch(`${API_URLS.admin}/users`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -361,7 +359,7 @@ const GroupsManagementView = () => {
         users: finalUserList,
       };
 
-      const response = await fetch("https://k4view-admin-test-k2e.azurewebsites.net/users/update", {
+      const response = await fetch(`${API_URLS.admin}/users/update`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -374,7 +372,7 @@ const GroupsManagementView = () => {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
-      const usersResponse = await fetch("https://k4view-admin-test-k2e.azurewebsites.net/users", {
+      const usersResponse = await fetch(`${API_URLS.admin}/users`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -430,7 +428,7 @@ const GroupsManagementView = () => {
         users: existingGroupUsers.map(user => user.Name),
       };
 
-      const removeResponse = await fetch("/users/update", {
+      const removeResponse = await fetch(`${API_URLS.admin}/users/update`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -443,7 +441,7 @@ const GroupsManagementView = () => {
         throw new Error("Failed to remove user from existing group");
       }
 
-      const usersResponse = await fetch("/users", {
+      const usersResponse = await fetch(`${API_URLS.admin}/users`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -608,7 +606,7 @@ const GroupsManagementView = () => {
 
       await new Promise(resolve => setTimeout(resolve, 1500));
 
-      const verifyResponse = await fetch("/userTypes", {
+      const verifyResponse = await fetch(`${API_URLS.admin}/userTypes`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -620,7 +618,6 @@ const GroupsManagementView = () => {
         const currentUserTypes = (await verifyResponse.json()) as UserType[];
         const currentUserType = currentUserTypes.find(ut => ut.ID === originalPayload.ID);
 
-        // Compare if our changes were actually saved
         if (currentUserType && currentUserType.Config === originalPayload.Config) {
           console.log("Data was actually saved despite error response, treating as success");
           return { ok: true, status: 200, statusText: "Success despite error" } as Response;
@@ -630,7 +627,7 @@ const GroupsManagementView = () => {
           console.log("Final verification attempt");
           await new Promise(resolve => setTimeout(resolve, 3000));
 
-          const secondVerifyResponse = await fetch("/userTypes", {
+          const secondVerifyResponse = await fetch(`${API_URLS.admin}/userTypes`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -736,7 +733,7 @@ const GroupsManagementView = () => {
         try {
           console.log(`Attempting to save user type configuration (attempt ${attempt}/${maxRetries})...`);
 
-          response = await fetch("https://k4view-admin-test-k2e.azurewebsites.net/userTypes/update", {
+          response = await fetch(`${API_URLS.admin}/userTypes/update`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -777,7 +774,7 @@ const GroupsManagementView = () => {
 
           try {
             // Verify if the save actually worked by fetching current state
-            const verifyResponse = await fetch("/userTypes", {
+            const verifyResponse = await fetch(`${API_URLS.admin}/userTypes`, {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",
@@ -816,7 +813,7 @@ const GroupsManagementView = () => {
           }
         }
       }
-      const userTypesResponse = await fetch("/userTypes", {
+      const userTypesResponse = await fetch(`${API_URLS.admin}/userTypes`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -828,7 +825,6 @@ const GroupsManagementView = () => {
         const updatedUserTypes = (await userTypesResponse.json()) as UserType[];
         setUserTypes(updatedUserTypes);
 
-        // Artesian Integration: Trigger full workflow on user type configuration update
         try {
           if (isArtesianConfigured()) {
             const updatedUserType = updatedUserTypes.find(ut => ut.ID === selectedUserType);
@@ -886,16 +882,13 @@ const GroupsManagementView = () => {
       const userTypeName = newUserTypeName.trim();
 
       // Step 1: Check if user type name already exists
-      const checkResponse = await fetch(
-        `https://k4view-admin-test-k2e.azurewebsites.net/userTypes/getName/${userTypeName}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+      const checkResponse = await fetch(`${API_URLS.admin}/userTypes/getName/${userTypeName}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
       if (!checkResponse.ok) {
         setError(`Failed to check user type name: HTTP ${checkResponse.status}: ${checkResponse.statusText}`);
@@ -911,16 +904,13 @@ const GroupsManagementView = () => {
       }
 
       // Step 2: Create the user type if name doesn't exist
-      const createResponse = await fetch(
-        `https://k4view-admin-test-k2e.azurewebsites.net/userTypes/create/${userTypeName}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+      const createResponse = await fetch(`${API_URLS.admin}/userTypes/create/${userTypeName}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
       if (!createResponse.ok) {
         setError(`Failed to create user type: HTTP ${createResponse.status}: ${createResponse.statusText}`);
@@ -928,7 +918,7 @@ const GroupsManagementView = () => {
       }
 
       // Step 3: Refresh the user types list to show the new user type
-      const userTypesResponse = await fetch("/userTypes", {
+      const userTypesResponse = await fetch(`${API_URLS.admin}/userTypes`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -944,7 +934,6 @@ const GroupsManagementView = () => {
         if (newUserType) {
           setSelectedUserType(newUserType.ID);
 
-          // Artesian Integration: Trigger createGroup if user type has Artesian access
           try {
             if (isArtesianConfigured()) {
               logArtesianStatus(userTypeName, newUserType.Config);
@@ -1133,7 +1122,7 @@ const GroupsManagementView = () => {
                                       variant="plain"
                                       colorPalette="brand"
                                       p="1"
-                                      minW="auto"
+                                      css={{ minWidth: "auto" }}
                                       onClick={() => {
                                         toggleSection(childLink.reportId);
                                       }}
@@ -1142,15 +1131,11 @@ const GroupsManagementView = () => {
                                     </Button>
                                     <Checkbox
                                       checked={isAllChildComponentsSelected(menuItem.class, childLink)}
-                                      inputProps={{
-                                        ...(!isAllChildComponentsSelected(menuItem.class, childLink) &&
-                                        isSomeChildComponentsSelected(menuItem.class, childLink)
-                                          ? {
-                                              ref: (input: HTMLInputElement | null) => {
-                                                if (input) input.indeterminate = true;
-                                              },
-                                            }
-                                          : {}),
+                                      ref={(input: HTMLInputElement | null) => {
+                                        if (input && !isAllChildComponentsSelected(menuItem.class, childLink) &&
+                                          isSomeChildComponentsSelected(menuItem.class, childLink)) {
+                                          input.indeterminate = true;
+                                        }
                                       }}
                                       onCheckedChange={() => {
                                         toggleAllChildComponents(menuItem.class, childLink);
@@ -1207,7 +1192,7 @@ const GroupsManagementView = () => {
                   const { selectedCount } = calculateCurrentPayloadSize();
 
                   return (
-                    <Box p="3" borderRadius="md" bg="bg.subtle" borderColor="border.subtle">
+                    <Box p="3" borderRadius="md" bg="bg.subtle">
                       <VStack align="stretch" gap="2">
                         <HStack justify="space-between" align="center">
                           <Text fontSize="sm" fontWeight="medium">
@@ -1489,9 +1474,9 @@ const GroupsManagementView = () => {
               <Box
                 p="3"
                 borderRadius="md"
-                bg={isLargePayload ? "bg.warning.subtle" : "bg.info.subtle"}
-                border="1px solid"
-                borderColor={isLargePayload ? "border.warning" : "border.info"}
+                bg={isLargePayload ? "orange.subtle" : "blue.subtle"}
+                css={{ borderWidth: "1px" }}
+                borderColor={isLargePayload ? "orange.solid" : "blue.solid"}
               >
                 <HStack justify="space-between" mb="2">
                   <Text fontSize="md" fontWeight="semibold">
@@ -1515,7 +1500,7 @@ const GroupsManagementView = () => {
                 <Text fontSize="sm" fontWeight="medium" mb="2">
                   Breakdown by Section:
                 </Text>
-                <VStack align="stretch" gap="1" maxH="200px" overflowY="auto">
+                <VStack align="stretch" gap="1" css={{ maxHeight: "200px" }} overflowY="auto">
                   {breakdown.map((section, index) => (
                     <HStack key={index} justify="space-between" p="2" bg="bg.subtle" borderRadius="md">
                       <Text fontSize="xs" flex="1">

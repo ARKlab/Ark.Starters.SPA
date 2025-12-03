@@ -147,5 +147,10 @@
       "lcov",
       "cobertura"
     ]
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }

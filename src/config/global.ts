@@ -14,4 +14,9 @@ export type AppSettingsType = {
   msal?: MsalAuthProviderConfig;
   applicationInsights?: ApplicationInsightsConfig;
   serviceUrl?: string;
+  apiUrls?: {
+    admin: string;
+    portal: string;
+    artesian: string;
+  };
 };

@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { ChackraUIBaseModal } from "../../components/chackraModal/chackraBaseModal";
 import { toaster } from "../../components/ui/toaster";
+import { API_URLS } from "../../config/apiUrls";
 import { useAuthContext } from "../../lib/authentication/components/useAuthContext";
 import GroupsManagementView from "../groupsManagement/groupsManagementView";
 
@@ -75,7 +76,7 @@ export const MultiStepUserCreateModal = ({ open, onClose, onComplete }: MultiSte
       const htmlContent = generateUserCredentialsHTML(credentialsData);
       const pdfBase64 = convertHtmlToBase64Pdf(htmlContent);
 
-      const response = await fetch("https://k4view-admin-test-k2e.azurewebsites.net/users/email", {
+      const response = await fetch(`${API_URLS.admin}/users/email`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -165,7 +166,7 @@ export const MultiStepUserCreateModal = ({ open, onClose, onComplete }: MultiSte
 
     const htmlContent = generateUserCredentialsHTML(credentialsData);
 
-    const response = await fetch("https://k4view-admin-test-k2e.azurewebsites.net/users/generatePdf", {
+    const response = await fetch(`${API_URLS.admin}/users/generatePdf`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

@@ -5,6 +5,7 @@ import { z } from "zod";
 
 import { useAppDispatch } from "../../app/hooks";
 import CenterSpinner from "../../components/centerSpinner";
+import { API_URLS } from "../../config/apiUrls";
 import { Login } from "../../lib/authentication/authenticationSlice";
 import { useAuthContext } from "../../lib/authentication/components/useAuthContext";
 
@@ -89,7 +90,7 @@ const UserManagementView = () => {
           return;
         }
 
-        const baseUrl = "https://k4view-admin-test-k2e.azurewebsites.net/usersInfo";
+        const baseUrl = `${API_URLS.admin}/usersInfo`;
         const url = searchQuery ? `${baseUrl}?user=${encodeURIComponent(searchQuery)}` : baseUrl;
 
         const usersResponse = await fetch(url, {
@@ -149,17 +150,14 @@ const UserManagementView = () => {
         return;
       }
 
-      const updateResponse = await fetch(
-        `https://k4view-admin-test-k2e.azurewebsites.net/usersInfo/${encodeURIComponent(selectedUserId)}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(userData),
+      const updateResponse = await fetch(`${API_URLS.admin}/usersInfo/${encodeURIComponent(selectedUserId)}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-      );
+        body: JSON.stringify(userData),
+      });
 
       if (!updateResponse.ok) {
         setError(`Failed to update user: ${updateResponse.status} ${updateResponse.statusText}`);

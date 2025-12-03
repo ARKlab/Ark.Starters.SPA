@@ -1,6 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 import { appFetchQuery } from "../../app/appFetchQuery";
+import { API_URLS } from "../../config/apiUrls";
 
 // Types
 export interface CreateUserRequest {
@@ -51,7 +52,7 @@ export interface UpdateUserRequest {
 export const userManagementApi = createApi({
   reducerPath: "userManagementApi",
   baseQuery: appFetchQuery({
-    baseUrl: "https://k4view-admin-test-k2e.azurewebsites.net",
+    baseUrl: API_URLS.admin,
     prepareHeaders: async (headers, { extra }) => {
       const token = await extra.authProvider.getToken("");
       if (token) {

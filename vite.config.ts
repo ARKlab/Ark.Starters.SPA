@@ -150,23 +150,18 @@ export default defineConfig(({ mode }) => {
       proxy: {
         "/connectionStrings.cjs": "http://localhost:4000",
         "/api": {
-          target: "https://k4view-admin-test-k2e.azurewebsites.net",
+          target: env.VITE_ADMIN_API_BASE_URL || "https://k4view-admin-test-k2e.azurewebsites.net",
           changeOrigin: true,
           secure: true,
           configure: (proxy, _options) => {
             proxy.on("proxyReq", (proxyReq, req, _res) => {
-              console.log(
-                "Proxying request:",
-                req.method,
-                req.url,
-                "-> https://k4view-admin-test-k2e.azurewebsites.net" + req.url,
-              );
+              console.log("Proxying request:", req.method, req.url, `-> ${env.VITE_ADMIN_API_BASE_URL}${req.url}`);
             });
           },
         },
         // Backend API endpoints (userTypes, users, usersInfo, etc.)
         "/userTypes": {
-          target: "https://k4view-admin-test-k2e.azurewebsites.net",
+          target: env.VITE_ADMIN_API_BASE_URL || "https://k4view-admin-test-k2e.azurewebsites.net",
           changeOrigin: true,
           secure: true,
           configure: (proxy, _options) => {
@@ -175,23 +170,23 @@ export default defineConfig(({ mode }) => {
                 "Proxying userTypes request:",
                 req.method,
                 req.url,
-                "-> https://k4view-admin-test-k2e.azurewebsites.net" + req.url,
+                `-> ${env.VITE_ADMIN_API_BASE_URL}${req.url}`,
               );
             });
           },
         },
         "/users": {
-          target: "https://k4view-admin-test-k2e.azurewebsites.net",
+          target: env.VITE_ADMIN_API_BASE_URL || "https://k4view-admin-test-k2e.azurewebsites.net",
           changeOrigin: true,
           secure: true,
         },
         "/usersInfo": {
-          target: "https://k4view-admin-test-k2e.azurewebsites.net",
+          target: env.VITE_ADMIN_API_BASE_URL || "https://k4view-admin-test-k2e.azurewebsites.net",
           changeOrigin: true,
           secure: true,
         },
         "/artesianAdmin": {
-          target: "https://k4view-admin-test-k2e.azurewebsites.net",
+          target: env.VITE_ADMIN_API_BASE_URL || "https://k4view-admin-test-k2e.azurewebsites.net",
           changeOrigin: true,
           secure: true,
         },

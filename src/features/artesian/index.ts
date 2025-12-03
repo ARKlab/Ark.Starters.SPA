@@ -15,6 +15,3 @@ export type {
   Task,
   Result,
 } from "./artesianTypes";
-
-// Example integration patterns
-export { default as integrationExamples } from "./integrationExamples";
