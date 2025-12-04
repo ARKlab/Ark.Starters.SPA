@@ -16,13 +16,16 @@ export type ZodSchemaError = {
   error: string;
 };
 
+// Helper type to create union without redundancy
+type UnionWithZodError<BaseError> = BaseError | ZodSchemaError;
+
 export type withZodResultValidationType = <BaseQuery extends ArkBaseQueryFn>(
   baseQuery: BaseQuery,
   config?: void,
 ) => ArkBaseQueryFn<
   BaseQueryArg<BaseQuery>,
   ArkBaseQueryResult<BaseQuery>,
-  ArkBaseQueryError<BaseQuery> | ZodSchemaError,
+  UnionWithZodError<ArkBaseQueryError<BaseQuery>>,
   ArkBaseQueryExtraOptions<BaseQuery> & { dataSchema?: z.ZodType<ArkBaseQueryResult<BaseQuery>> },
   NonNullable<ArkBaseQueryMeta<BaseQuery>>,
   ArkBaseQueryApi<BaseQuery>
