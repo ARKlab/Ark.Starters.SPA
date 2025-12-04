@@ -29,7 +29,7 @@ interface AppDatePickerProps extends DatePicker.RootProps {
   showClearButton?: boolean;
 }
 export const AppDatePicker = (props: AppDatePickerProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   
   const {
     date,
@@ -103,6 +103,7 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
     min,
     max,
     format: getFormat,
+    locale: i18n.language,
     onOpenChange: details => {
       setOpen(details.open);
     },
