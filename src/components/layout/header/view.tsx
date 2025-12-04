@@ -79,6 +79,7 @@ const UserMenu = () => {
 };
 
 const Header = () => {
+  const { t } = useTranslation();
   const { isDesktop, isMobileSiderOpen, setMobileSiderOpen } = useLayoutContext();
   return (
     <Box as="header" shadow={"sm"} bg={"header"}>
@@ -106,7 +107,7 @@ const Header = () => {
             <Center>
               <IconButton
                 variant="outline"
-                aria-label="open menu"
+                aria-label={t("header_openMenu")}
                 onClick={() => {
                   setMobileSiderOpen(true);
                 }}

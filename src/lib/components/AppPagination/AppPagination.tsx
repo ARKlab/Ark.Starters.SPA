@@ -1,5 +1,6 @@
 import { Button, Stack } from "@chakra-ui/react";
 import type { JSX, MouseEventHandler } from "react";
+import { useTranslation } from "react-i18next";
 import { MdChevronLeft, MdChevronRight, MdFirstPage, MdLastPage } from "react-icons/md";
 
 import { NativeSelectField, NativeSelectRoot } from "../../../components/ui/native-select";
@@ -14,6 +15,7 @@ type AppPaginationProps = {
 };
 
 const AppPagination = ({ count, pageSize, page, onPageChange, onPageSizeChange, isLoading }: AppPaginationProps) => {
+  const { t } = useTranslation();
   const totalPages = Math.ceil(count / pageSize);
   const pageMinRange = 3;
   const pageMinRangeVal = page > pageMinRange ? Math.min(page - pageMinRange, totalPages - pageMinRange) : 0;
@@ -49,13 +51,13 @@ const AppPagination = ({ count, pageSize, page, onPageChange, onPageSizeChange, 
             <PageItem
               display={page > pageMinRange}
               onChange={() => onPageChange(1)}
-              title="First Page"
+              title={t("libComponents:appPagination_firstPage")}
               value={<MdFirstPage />}
             />
             <PageItem
               display={page > 1}
               onChange={() => onPageChange(page - 1)}
-              title="Previous"
+              title={t("libComponents:appPagination_previous")}
               value={<MdChevronLeft />}
               data-test="pagination-prev"
             />
@@ -76,11 +78,16 @@ const AppPagination = ({ count, pageSize, page, onPageChange, onPageSizeChange, 
             <PageItem
               display={page < totalPages}
               onChange={() => onPageChange(page + 1)}
-              title="Next"
+              title={t("libComponents:appPagination_next")}
               value={<MdChevronRight />}
               data-test="pagination-next"
             />
-            <PageItem display={page < pageMaxSub} onChange={() => onPageChange(totalPages)} value={<MdLastPage />} />
+            <PageItem 
+              display={page < pageMaxSub} 
+              onChange={() => onPageChange(totalPages)} 
+              title={t("libComponents:appPagination_lastPage")}
+              value={<MdLastPage />} 
+            />
           </Stack>
         </>
       ) : (
