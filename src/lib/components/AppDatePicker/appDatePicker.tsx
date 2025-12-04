@@ -6,7 +6,7 @@ import { FaTimes } from "react-icons/fa";
 import { LuCalendar, LuCalendarOff } from "react-icons/lu";
 import { MdOutlineChevronLeft, MdOutlineChevronRight } from "react-icons/md";
 
-import { formatDateString, toISODateString } from "../../i18n/formatDate";
+import { formatDateString, formatISODate } from "../../i18n/formatDate";
 
 import "./appDatePicker.css";
 
@@ -57,7 +57,7 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
     try {
       // dateFormat is typically "yyyy-MM-dd" for parseDate
       const formatted = dateFormat === "yyyy-MM-dd" 
-        ? toISODateString(date) 
+        ? formatISODate(date) 
         : formatDateString(date, dateFormat);
       return parseDate(formatted);
     } catch {
@@ -85,12 +85,12 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
 
   const min = minDate ? parseDate(
     dateFormat === "yyyy-MM-dd" 
-      ? toISODateString(minDate) 
+      ? formatISODate(minDate) 
       : formatDateString(minDate, dateFormat)
   ) : undefined;
   const max = maxDate ? parseDate(
     dateFormat === "yyyy-MM-dd" 
-      ? toISODateString(maxDate) 
+      ? formatISODate(maxDate) 
       : formatDateString(maxDate, dateFormat)
   ) : undefined;
 

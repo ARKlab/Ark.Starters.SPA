@@ -5,7 +5,7 @@ import { AppDateRange } from "../../lib/components/AppDateRange/appDateRange";
 import { AppInputFilter } from "../../lib/components/AppInputFilter/appInputFilter";
 import type { AppSelectOptionItem } from "../../lib/components/AppSelect/appSelect";
 import AppSelect from "../../lib/components/AppSelect/appSelect";
-import { toISODateString } from "../../lib/i18n/formatDate";
+import { formatISODate } from "../../lib/i18n/formatDate";
 
 import ConsoleCard from "./consoleCard";
 enum TestEnum {
@@ -24,8 +24,8 @@ export default function ControlComponentsView() {
 
   function setDateRangeValue(value: Date[]) {
     setDateRange(value);
-    handleInputChange("dateRange start", toISODateString(value[0]));
-    handleInputChange("dateRange end", toISODateString(value[1]));
+    handleInputChange("dateRange start", formatISODate(value[0]));
+    handleInputChange("dateRange end", formatISODate(value[1]));
   }
 
   function onChangeSelect(value: string | undefined) {

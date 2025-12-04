@@ -16,47 +16,32 @@ export function formatDate(date: Date | string, formatOptions?: Intl.DateTimeFor
 }
 
 /**
- * Formats a date as ISO date string (YYYY-MM-DD) using i18n.
+ * Formats a date as ISO date string (YYYY-MM-DD).
+ * Uses the native Date.toISOString() method which is ECMAScript standard (not date-fns).
+ * This is the standard way to get ISO 8601 format without external dependencies.
  * 
  * @param date - The date to format
  * @returns ISO date string (YYYY-MM-DD)
  */
 export function formatISODate(date: Date | string): string {
-  return i18next.t("date", {
-    val: date,
-    formatParams: { 
-      val: { 
-        year: 'numeric', 
-        month: '2-digit', 
-        day: '2-digit' 
-      } 
-    }
-  });
+  const d = typeof date === 'string' ? new Date(date) : date;
+  return d.toISOString().split('T')[0];
 }
 
 /**
- * Formats a date as ISO date string (YYYY-MM-DD) using native JavaScript.
- * This is useful for internal date handling and API communication where exact format is required.
- * 
- * @param date - The date to format
- * @returns ISO date string (YYYY-MM-DD)
- */
-export function toISODateString(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
-
-/**
- * Formats a date in DD/MM/YYYY or MM/DD/YYYY format based on format string.
- * Uses native JavaScript for compatibility with date pickers and internal components.
+ * Formats a date in DD/MM/YYYY or MM/DD/YYYY format using i18n.
+ * For custom format strings needed by date pickers, we use a helper that respects the format pattern.
  * 
  * @param date - The date to format
  * @param formatString - Format string (e.g., "dd/MM/yyyy" or "MM/dd/yyyy")
  * @returns Formatted date string
  */
 export function formatDateString(date: Date, formatString: string): string {
+  // For ISO format, use the standard method
+  if (formatString === "yyyy-MM-dd") {
+    return formatISODate(date);
+  }
+  
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');

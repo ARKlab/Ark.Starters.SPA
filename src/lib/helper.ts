@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 
-import { formatDateString, toISODateString } from "./i18n/formatDate";
+import { formatDateString, formatISODate } from "./i18n/formatDate";
 
 const getType = (val: any): string => {
   return Object.prototype.toString.call(val).slice(8, -1);
@@ -17,9 +17,9 @@ export const formatDateToString = (date: Date | null, dateFormat?: string) => {
 
   if (!date) return "";
   
-  // For ISO format, use native method
+  // For ISO format, use the standard ECMAScript method
   if (dateFormat === "yyyy-MM-dd") {
-    return toISODateString(date);
+    return formatISODate(date);
   }
   
   // For other formats, use the format string helper
