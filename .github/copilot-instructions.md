@@ -368,6 +368,63 @@ npm test               # Run E2E tests
 - Keep dependencies up to date with renovate
 - Check compatibility with engines requirement (Node 24.x)
 
+### Commit Messages
+Follow [Conventional Commits](https://www.conventionalcommits.org/) specification for all commit messages.
+
+#### Format
+```
+<type>(<scope>): <subject>
+
+[optional body]
+
+[optional footer]
+```
+
+#### Types
+- **feat**: A new feature
+- **fix**: A bug fix
+- **docs**: Documentation only changes
+- **style**: Changes that do not affect the meaning of the code (formatting, missing semi-colons, etc)
+- **refactor**: A code change that neither fixes a bug nor adds a feature
+- **perf**: A code change that improves performance
+- **test**: Adding missing tests or correcting existing tests
+- **build**: Changes that affect the build system or external dependencies
+- **ci**: Changes to CI configuration files and scripts
+- **chore**: Other changes that don't modify src or test files
+
+#### Suggested Scopes
+Use these scopes to indicate the area of change:
+
+- **auth**: Authentication related changes (Auth0, MSAL)
+- **i18n**: Localization and internationalization
+- **ui**: UI components and styling (Chakra UI, theme)
+- **routing**: React Router configuration and navigation
+- **state**: Redux Toolkit and state management
+- **forms**: React Hook Form and form validation
+- **tables**: TanStack Table implementations
+- **pwa**: PWA configuration and service workers
+- **gdpr**: Cookie consent and GDPR compliance
+- **api**: API integration and RTK Query
+- **config**: Configuration files
+- **deps**: Dependency updates
+- **dx**: Developer experience (tooling, scripts)
+- **a11y**: Accessibility improvements
+- **e2e**: End-to-end tests with Cypress
+
+#### Examples
+```bash
+feat(auth): add support for custom MSAL scopes
+fix(i18n): resolve translation key not found error
+docs(readme): update authentication setup instructions
+style(ui): apply consistent spacing to form components
+refactor(tables): extract pagination logic to custom hook
+perf(api): add caching to movie list queries
+test(e2e): add tests for login flow
+build(deps): upgrade React to 19.2.0
+ci(workflow): add CodeQL security scanning
+chore(config): update ESLint rules
+```
+
 ## Common Patterns
 
 ### Async Operations
