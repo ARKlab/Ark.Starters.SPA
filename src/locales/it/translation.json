@@ -1,6 +1,5 @@
 {
   "currency": "{{val, currency(currency)}}",
-  "date": "{{val, datetime, long}}",
   "Phone": "Telefono",
   "actions": "Azioni",
   "billing_address": "Indirizzo fatturazione",

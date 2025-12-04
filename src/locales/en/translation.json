@@ -1,6 +1,5 @@
 {
   "currency": "{{val, currency(currency)}}",
-  "date": "{{val, datetime}}",
   "Phone": "Phone",
   "actions": "Actions",
   "billing_address": "Billing address",
