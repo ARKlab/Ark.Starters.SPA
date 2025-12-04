@@ -26,8 +26,12 @@ export default function ControlComponentsView() {
 
   function setDateRangeValue(value: Date[]) {
     setDateRange(value);
-    handleInputChange("dateRange start", t('{{val, isoDate}}', { val: value[0] }));
-    handleInputChange("dateRange end", t('{{val, isoDate}}', { val: value[1] }));
+    if (value.length >= 1) {
+      handleInputChange("dateRange start", t('{{val, isoDate}}', { val: value[0] }));
+    }
+    if (value.length >= 2) {
+      handleInputChange("dateRange end", t('{{val, isoDate}}', { val: value[1] }));
+    }
   }
 
   function onChangeSelect(value: string | undefined) {
