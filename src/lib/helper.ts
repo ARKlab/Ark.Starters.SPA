@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 
-import { format } from "./i18n/i18nDate";
+import { format } from "date-fns";
 
 const getType = (val: any): string => {
   return Object.prototype.toString.call(val).slice(8, -1);

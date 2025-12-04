@@ -1,13 +1,13 @@
 import type { DateValue } from "@ark-ui/react/date-picker";
 import { DatePicker, parseDate, useDatePicker } from "@ark-ui/react/date-picker";
 import { Box, Button, Field, FieldLabel, HStack, IconButton, Input, Stack, Text } from "@chakra-ui/react";
+import { format } from "date-fns";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { LuCalendar, LuCalendarOff } from "react-icons/lu";
 import { MdOutlineChevronLeft, MdOutlineChevronRight } from "react-icons/md";
 
 import "./appDatePicker.css";
-import { format } from "../../i18n/i18nDate";
 
 interface AppDatePickerProps extends DatePicker.RootProps {
   date: Date | null;
