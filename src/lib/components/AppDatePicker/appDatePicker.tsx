@@ -162,7 +162,7 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
                   <IconButton
                     data-test="datepicker-trigger"
                     size={inputSize ?? "md"}
-                    aria-label="Open date picker"
+                    aria-label={t("libComponents:appDatePicker_openDatePicker")}
                     onClick={() => {
                       setOpen(o => !o);
                     }}
@@ -175,7 +175,7 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
                 <IconButton
                   data-test="datepicker-clear"
                   size={inputSize ?? "md"}
-                  aria-label="Clear date picker"
+                  aria-label={t("libComponents:appDatePicker_clearDatePicker")}
                   onClick={() => {
                     setDate(undefined);
                   }}

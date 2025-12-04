@@ -119,5 +119,10 @@
   "wizard_phone_placeholder": "Phone",
   "wizard_shipping_address_placeholder": "Shipping Address",
   "wizard_sms_notifications_label": "Receive SMS Notifications",
-  "wizard_special_offers_label": "Receive Special Offers via Email"
+  "wizard_special_offers_label": "Receive Special Offers via Email",
+  "controlComponents_selectFromEnum": "Select From Enum",
+  "controlComponents_dateRange": "Date range",
+  "controlComponents_inputFilterWithClear": "Chakra Input Filter With Clear",
+  "backButton_goBack": "Go back",
+  "header_openMenu": "Open menu"
 }

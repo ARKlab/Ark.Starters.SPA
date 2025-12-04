@@ -326,6 +326,7 @@ function Filter<T>({ column }: { column: Column<T>; table: ReactTable<T>; isLoad
               <option value={value} key={value} />
             ))}
           </datalist>
+          {/* className is used here for datalist functionality - it's passed to the underlying HTML input element */}
           <DebouncedInputColumnHeader
             type="text"
             value={(columnFilterValue ?? "") as string}

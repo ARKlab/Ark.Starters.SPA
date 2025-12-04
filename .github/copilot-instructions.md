@@ -21,6 +21,34 @@ This is a React Single Page Application (SPA) starter template designed to demon
 
 ## Code Style & Standards
 
+### Code Language Standards
+
+**CRITICAL RULE**: All codebase must be in English, except for translation files.
+
+This includes:
+- **Variable names**: Use English names (e.g., `userName` not `nomeUtente`)
+- **Function names**: Use English names (e.g., `getUserData` not `ottieniDatiUtente`)
+- **Class and interface names**: Use English names
+- **File names**: Use English names (e.g., `userProfile.tsx` not `profiloUtente.tsx`)
+- **Code comments**: Write all comments in English
+- **Test descriptions**: Write all test names and descriptions in English
+- **Console logs and debug messages**: Use English
+
+**Exceptions**:
+- Translation files (`src/locales/*/`) can contain any language
+- User-facing content that goes through translation system
+
+**Example**:
+```typescript
+// ✅ Correct - English code
+const userName = "John";
+function fetchUserData() { /* ... */ }
+
+// ❌ Wrong - Non-English code
+const nomeUtente = "John";
+function ottieniDatiUtente() { /* ... */ }
+```
+
 ### TypeScript
 - Use strict TypeScript configuration
 - Prefer type inference over explicit types when obvious
@@ -167,6 +195,52 @@ import { ProtectedRoute } from "@/lib/authentication/components/protectedRoute";
 - Translation files in `src/locales/{lang}/translation.json`
 - Auto-detect based on browser settings
 - Use vscode i18n-ally extension for development
+
+### Translation Namespace Organization
+
+**CRITICAL RULES** for organizing translations:
+
+1. **All UI text must be translated**:
+   - All labels, placeholders, aria-labels, titles, and button text must use translation keys
+   - Never use hardcoded English (or any other language) strings in UI components
+
+2. **Namespace separation by component location**:
+   - Components in `src/lib/components/` **MUST** use the `libComponents` namespace
+   - Components in `src/components/` or `src/features/` **MUST** use the default `translation` namespace
+   - This separation ensures reusable lib components don't pollute the application namespace
+
+3. **Translation file structure**:
+   ```
+   src/locales/
+   ├── en/
+   │   ├── translation.json      # For src/components and src/features
+   │   ├── libComponents.json    # For src/lib/components
+   │   ├── gdpr.json
+   │   ├── zodCustom.json
+   │   └── template.json
+   └── it/
+       └── (same structure)
+   ```
+
+4. **Using the libComponents namespace**:
+   ```typescript
+   // In src/lib/components/AppDatePicker/appDatePicker.tsx
+   import { useTranslation } from "react-i18next";
+   
+   const { t } = useTranslation();
+   // Use libComponents namespace prefix
+   const label = t("libComponents:appDatePicker_openDatePicker");
+   ```
+
+5. **Using the default namespace**:
+   ```typescript
+   // In src/features/movies/moviePage.tsx
+   import { useTranslation } from "react-i18next";
+   
+   const { t } = useTranslation();
+   // No namespace prefix needed for default namespace
+   const title = t("movies_movies");
+   ```
 
 ### Usage
 ```typescript

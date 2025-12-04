@@ -59,18 +59,18 @@ export default function ControlComponentsView() {
         <AppSelect
           onChange={onChangeSelect}
           options={getOptionsFromEnumValues(TestEnum)}
-          title={"Select From Enum"}
+          title={t("controlComponents_selectFromEnum")}
           value={selectValue}
         />
 
-        <AppDateRange range={dateRange} setRange={setDateRangeValue} label={"Date range"} />
+        <AppDateRange range={dateRange} setRange={setDateRangeValue} label={t("controlComponents_dateRange")} />
         <AppInputFilter
           value={textFilterValue}
           handleInputChange={(name: string, value: unknown) => {
             handleInputChange(name, value);
             setTextFilterValue(value as string);
           }}
-          title={"Chackra Input Filter With Clear"}
+          title={t("controlComponents_inputFilterWithClear")}
           propName={"textFilter"}
         />
       </Box>

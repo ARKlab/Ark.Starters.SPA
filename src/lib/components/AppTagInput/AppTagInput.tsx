@@ -1,4 +1,5 @@
 import { Field, FieldLabel, TagsInput, Text } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 
 interface TagInputProps {
   title?: string;
@@ -11,6 +12,8 @@ interface TagInputProps {
 }
 
 const AppTagInput: React.FC<TagInputProps> = ({ title, disabled = false, onChange, value }) => {
+  const { t } = useTranslation();
+  
   return (
     <Field.Root disabled={disabled} data-test="taginput-root">
       {title && (
@@ -24,10 +27,10 @@ const AppTagInput: React.FC<TagInputProps> = ({ title, disabled = false, onChang
           onChange(details.value);
         }}
       >
-        <TagsInput.Label>Tags</TagsInput.Label>
+        <TagsInput.Label>{t("libComponents:appTagInput_tags")}</TagsInput.Label>
         <TagsInput.Control>
           <TagsInput.Items />
-          <TagsInput.Input data-test="taginput-input" placeholder="Add tag..." />
+          <TagsInput.Input data-test="taginput-input" placeholder={t("libComponents:appTagInput_addTag")} />
         </TagsInput.Control>
       </TagsInput.Root>
     </Field.Root>

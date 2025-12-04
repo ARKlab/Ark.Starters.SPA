@@ -95,7 +95,7 @@ export const AppDateRange = (props: AppDateRangeProps) => {
         <HStack gap={"2"} alignItems="flex-end" data-test="daterange-inputs">
           <Box flex="1" data-test="daterange-from">
             <AppDatePicker
-              label="From"
+              label={t("libComponents:appDateRange_from")}
               date={from}
               maxDate={effectiveMaxForFrom}
               setDate={handleFromChange}
@@ -109,7 +109,7 @@ export const AppDateRange = (props: AppDateRangeProps) => {
           </Box>
           <Box flex="1" data-test="daterange-to">
             <AppDatePicker
-              label="To"
+              label={t("libComponents:appDateRange_to")}
               date={toVisible}
               minDate={minForTo}
               setDate={handleToChange}
