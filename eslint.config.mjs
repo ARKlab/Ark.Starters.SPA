@@ -115,6 +115,11 @@ export default tseslint.config(
               importNames: ["retry"],
               message: "Please use retry from `@reduxjs/toolkit/query` instead.",
             },
+            {
+              name: "date-fns",
+              importNames: ["format", "formatDate"],
+              message: "Please use i18n 't' function for date formatting. Examples: t('date', { val: new Date() }) or use AppDateFormatter component. See src/features/localization/localizationPage.tsx for examples.",
+            },
           ],
         },
       ],
@@ -198,7 +203,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ["**/lib/i18n/i18nDate.ts"],
+    files: ["**/lib/i18n/formatters.ts"],
     rules: {
       "@typescript-eslint/no-restricted-imports": "off",
     },

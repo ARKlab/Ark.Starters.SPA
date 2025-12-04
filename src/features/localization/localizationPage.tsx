@@ -158,7 +158,7 @@ export default function LocalizationPage() {
           <Text my="3">
             {t("localization_currency_using_i18n")}
           </Text>
-          <Text my="3">{t("currency", { val: 123456.78 })}</Text>
+          <Text my="3">{t("currency", { val: 123456.78, currency: "EUR" })}</Text>
         </Box>
       </VStack>
     </Box>

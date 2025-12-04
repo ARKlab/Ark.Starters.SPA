@@ -1,5 +1,6 @@
 import { Box, Button, Heading, Text, useDisclosure } from "@chakra-ui/react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { AppCheckBox } from "../../lib/components/AppCheckBox/appCheckBox";
 import { AppConfirmationDialog } from "../../lib/components/AppConfirmationDialog/appConfirmationDialog";
@@ -15,9 +16,10 @@ import AppPagination from "../../lib/components/AppPagination/AppPagination";
 import type { AppSelectOptionItem } from "../../lib/components/AppSelect/appSelect";
 import AppSelect from "../../lib/components/AppSelect/appSelect";
 import AppTagInput from "../../lib/components/AppTagInput/AppTagInput";
-import { format } from "../../lib/i18n/i18nDate";
 
 export default function ComponentsTestPage() {
+  const { t } = useTranslation();
+  
   // Pagination states
   const [largePage, setLargePage] = useState(1);
   const [largePageSize, setLargePageSize] = useState(10);
@@ -169,7 +171,7 @@ export default function ComponentsTestPage() {
             setSingleDate(d);
           }}
         />
-        <Text data-test="datepicker-basic-value">{singleDate ? format(singleDate, "dd/MM/yyyy") : ""}</Text>
+        <Text data-test="datepicker-basic-value">{singleDate ? t('{{val, shortDate}}', { val: singleDate }) : ""}</Text>
       </Box>
 
       <Box data-test="datepicker-bounded">
@@ -183,7 +185,7 @@ export default function ComponentsTestPage() {
           minDate={minBound}
           maxDate={maxBound}
         />
-        <Text data-test="datepicker-bounded-value">{boundedDate ? format(boundedDate, "dd/MM/yyyy") : ""}</Text>
+        <Text data-test="datepicker-bounded-value">{boundedDate ? t('{{val, shortDate}}', { val: boundedDate }) : ""}</Text>
       </Box>
 
       <Box data-test="appinput-section">
