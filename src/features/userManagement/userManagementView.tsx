@@ -203,7 +203,6 @@ const UserManagementView = () => {
     setIsLoading(true);
     setError(null);
 
-    console.log("User creation completed");
     setShowCreateModal(false);
     void fetchUsers(searchTerm || undefined);
 

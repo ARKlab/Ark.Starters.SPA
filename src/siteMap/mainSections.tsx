@@ -14,15 +14,7 @@ export const mainSections: MainSectionType[] = [
         path: "",
         label: "index",
         isInMenu: false,
-        component: <Navigate to="blankPageAuthTest" />,
-      },
-
-      {
-        path: "blankPageAuthTest",
-        label: "Blank Page Auth Test",
-        icon: FaUsers,
-        isInMenu: true,
-        lazy: async () => import("../features/blankPageAuthTest/blankPageAuthTest"),
+        component: <Navigate to="groupsManagement" />,
       },
 
       {

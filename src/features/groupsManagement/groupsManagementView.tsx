@@ -602,7 +602,6 @@ const GroupsManagementView = () => {
     errorResponse: Response,
   ): Promise<Response> => {
     try {
-      console.log("Verifying if data was actually saved despite error...");
 
       await new Promise(resolve => setTimeout(resolve, 1500));
 
@@ -619,12 +618,8 @@ const GroupsManagementView = () => {
         const currentUserType = currentUserTypes.find(ut => ut.ID === originalPayload.ID);
 
         if (currentUserType && currentUserType.Config === originalPayload.Config) {
-          console.log("Data was actually saved despite error response, treating as success");
           return { ok: true, status: 200, statusText: "Success despite error" } as Response;
         } else {
-          console.log("Data was not saved, proceeding with error response");
-
-          console.log("Final verification attempt");
           await new Promise(resolve => setTimeout(resolve, 3000));
 
           const secondVerifyResponse = await fetch(`${API_URLS.admin}/userTypes`, {
@@ -640,7 +635,6 @@ const GroupsManagementView = () => {
             const secondUserType = secondUserTypes.find(ut => ut.ID === originalPayload.ID);
 
             if (secondUserType && secondUserType.Config === originalPayload.Config) {
-              console.log("Data was saved after delay - success");
               return { ok: true, status: 200, statusText: "Success after delay" } as Response;
             }
           }
@@ -731,7 +725,6 @@ const GroupsManagementView = () => {
 
       for (let attempt = 1; attempt <= maxRetries; attempt++) {
         try {
-          console.log(`Attempting to save user type configuration (attempt ${attempt}/${maxRetries})...`);
 
           response = await fetch(`${API_URLS.admin}/userTypes/update`, {
             method: "POST",
@@ -743,11 +736,9 @@ const GroupsManagementView = () => {
           });
 
           if (response.ok) {
-            console.log(`User type configuration saved successfully on attempt ${attempt}`);
             break;
           } else if (response.status === 500) {
             lastError = `HTTP ${response.status}: ${response.statusText}`;
-            console.log(`Attempt ${attempt} failed with 500 error, will retry...`);
 
             if (attempt < maxRetries) {
               await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
@@ -787,11 +778,10 @@ const GroupsManagementView = () => {
               const currentUserType = currentUserTypes.find(ut => ut.ID === selectedUserType);
 
               if (currentUserType && currentUserType.Config === JSON.stringify(configObject)) {
-                console.log("Data was actually saved despite 500 error - treating as success");
                 setUserTypes(currentUserTypes);
                 response = { ok: true } as Response;
               } else {
-                console.warn("Data was not saved - the 500 error was real");
+                console.warn("Data was not saved - 500 error");
               }
             }
           } catch (verifyError) {
@@ -801,7 +791,6 @@ const GroupsManagementView = () => {
 
         if (!response?.ok) {
           if (response?.status === 500) {
-            console.log("Final verification attempt before giving up...");
             const finalVerification = await verifyDataSaved(payload, token, response);
             if (finalVerification.ok) {
               response = finalVerification;
@@ -834,12 +823,10 @@ const GroupsManagementView = () => {
               logArtesianStatus(userTypeName, updatedUserType.Config);
 
               if (hasArtesianAccess(updatedUserType.Config)) {
-                console.log(`[Artesian] Triggering full workflow for user type: ${userTypeName}`);
 
-                // Execute complete workflow: createGroup → updateGroup → updateACLPaths
+                // Execute complete workflow: createGroup > updateGroup > updateACLPaths
                 await artesianHooks.onUpdateUserType(userTypeName, updatedUserType.ID, updatedUserType.Config);
 
-                console.log(`[Artesian] Successfully completed workflow for: ${userTypeName}`);
               }
             }
           }
@@ -939,9 +926,7 @@ const GroupsManagementView = () => {
               logArtesianStatus(userTypeName, newUserType.Config);
 
               if (hasArtesianAccess(newUserType.Config)) {
-                console.log(`[Artesian] Triggering createGroup for user type: ${userTypeName}`);
                 await artesianHooks.onCreateUserType(userTypeName);
-                console.log(`[Artesian] Successfully created group: ${userTypeName}`);
               }
             }
           } catch (artesianError) {
