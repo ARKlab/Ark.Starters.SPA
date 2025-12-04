@@ -15,7 +15,7 @@ import AppPagination from "../../lib/components/AppPagination/AppPagination";
 import type { AppSelectOptionItem } from "../../lib/components/AppSelect/appSelect";
 import AppSelect from "../../lib/components/AppSelect/appSelect";
 import AppTagInput from "../../lib/components/AppTagInput/AppTagInput";
-import { format } from "../../lib/i18n/i18nDate";
+import { formatShortDate } from "../../lib/i18n/formatDate";
 
 export default function ComponentsTestPage() {
   // Pagination states
@@ -169,7 +169,7 @@ export default function ComponentsTestPage() {
             setSingleDate(d);
           }}
         />
-        <Text data-test="datepicker-basic-value">{singleDate ? format(singleDate, "dd/MM/yyyy") : ""}</Text>
+        <Text data-test="datepicker-basic-value">{singleDate ? formatShortDate(singleDate) : ""}</Text>
       </Box>
 
       <Box data-test="datepicker-bounded">
@@ -183,7 +183,7 @@ export default function ComponentsTestPage() {
           minDate={minBound}
           maxDate={maxBound}
         />
-        <Text data-test="datepicker-bounded-value">{boundedDate ? format(boundedDate, "dd/MM/yyyy") : ""}</Text>
+        <Text data-test="datepicker-bounded-value">{boundedDate ? formatShortDate(boundedDate) : ""}</Text>
       </Box>
 
       <Box data-test="appinput-section">
