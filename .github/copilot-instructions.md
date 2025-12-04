@@ -191,6 +191,82 @@ Use helpers for form validation:
 - `zod2FormValidator` - Validate entire form
 - `zod2FieldValidator` - Validate individual fields
 
+### Date Formatting
+
+**IMPORTANT**: Date formatting uses i18next custom formatters for proper localization and reactivity.
+
+#### React Components
+**ALWAYS** use the `t` function from `useTranslation()` hook in React components:
+
+```typescript
+import { useTranslation } from "react-i18next";
+
+const MyComponent = () => {
+  const { t } = useTranslation();
+  
+  // ISO date (YYYY-MM-DD)
+  const isoDate = t('{{val, isoDate}}', { val: new Date() });
+  
+  // Short date (localized)
+  const shortDate = t('{{val, shortDate}}', { val: new Date() });
+  
+  // Long date with weekday (localized)
+  const longDate = t('{{val, longDate}}', { val: new Date() });
+  
+  // Date with custom format (uses date-fns format strings)
+  const customDate = t('{{val, dateFormat}}', { 
+    val: new Date(), 
+    format: 'dd/MM/yyyy' 
+  });
+  
+  // Date and time (localized)
+  const dateTime = t('{{val, dateTime}}', { val: new Date() });
+};
+```
+
+**Why use the hook?** The `useTranslation()` hook ensures components re-render when the language changes, maintaining proper React reactivity.
+
+#### Non-React Contexts
+For utility functions, helper files, or server-side code, use the formatDate.ts helpers:
+
+```typescript
+import { formatISODate, formatShortDate } from "@/lib/i18n/formatDate";
+
+// In a utility function
+function processDate(date: Date): string {
+  return formatISODate(date); // Returns YYYY-MM-DD
+}
+```
+
+#### Available Formatters
+The project provides these i18next custom formatters (defined in `src/lib/i18n/formatters.ts`):
+- **`isoDate`**: ISO 8601 format (YYYY-MM-DD)
+- **`shortDate`**: Localized short date (e.g., "12/31/2024" or "31/12/2024")
+- **`longDate`**: Localized long date with weekday (e.g., "Wednesday, December 31, 2024")
+- **`dateTime`**: Localized date and time
+- **`dateFormat`**: Custom format using date-fns format strings (e.g., "dd/MM/yyyy", "PPP")
+
+#### Currency Formatting
+Currency formatting also uses i18next and **requires** explicit currency code:
+
+```typescript
+const { t } = useTranslation();
+
+// ✅ Correct - currency code required
+const formatted = t('{{val, currency}}', { 
+  val: 123.45, 
+  currency: 'EUR' 
+});
+
+// ❌ Wrong - no default currency
+const formatted = t('{{val, currency}}', { val: 123.45 });
+```
+
+#### ESLint Rules
+- Direct imports of `format` or `formatDate` from `date-fns` are blocked by ESLint
+- Exception: `src/lib/i18n/formatters.ts` (extends i18n functionality)
+- React components must use `useTranslation()` hook, not global `i18next.t()`
+
 ## State Management
 
 ### Redux Toolkit
