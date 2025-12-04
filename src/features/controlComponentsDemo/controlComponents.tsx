@@ -1,11 +1,11 @@
 import { Box, Heading } from "@chakra-ui/react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { AppDateRange } from "../../lib/components/AppDateRange/appDateRange";
 import { AppInputFilter } from "../../lib/components/AppInputFilter/appInputFilter";
 import type { AppSelectOptionItem } from "../../lib/components/AppSelect/appSelect";
 import AppSelect from "../../lib/components/AppSelect/appSelect";
-import { formatISODate } from "../../lib/i18n/formatDate";
 
 import ConsoleCard from "./consoleCard";
 enum TestEnum {
@@ -14,6 +14,8 @@ enum TestEnum {
   OptionThree = "OptionThree",
 }
 export default function ControlComponentsView() {
+  const { t } = useTranslation();
+  
   const [textFilterValue, setTextFilterValue] = useState<string>("");
   const [selectValue, setSelectValue] = useState<string | undefined>(undefined);
   const [logs, setLogs] = useState<{ name: string; value: unknown }[]>([]);
@@ -24,8 +26,8 @@ export default function ControlComponentsView() {
 
   function setDateRangeValue(value: Date[]) {
     setDateRange(value);
-    handleInputChange("dateRange start", formatISODate(value[0]));
-    handleInputChange("dateRange end", formatISODate(value[1]));
+    handleInputChange("dateRange start", t('{{val, isoDate}}', { val: value[0] }));
+    handleInputChange("dateRange end", t('{{val, isoDate}}', { val: value[1] }));
   }
 
   function onChangeSelect(value: string | undefined) {

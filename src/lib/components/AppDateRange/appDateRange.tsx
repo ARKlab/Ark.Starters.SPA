@@ -1,12 +1,12 @@
 /* eslint-disable  */
+import { parseDate } from "@ark-ui/react/date-picker";
 import { Box, Field, FieldLabel, HStack, IconButton, Stack, Text } from "@chakra-ui/react";
+import { addDays } from "date-fns";
+import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { TiTimes } from "react-icons/ti";
 
-import { useEffect, useRef } from "react";
-
 import { AppDatePicker } from "../AppDatePicker/appDatePicker";
-import { parseDate } from "@ark-ui/react/date-picker";
-import { format as formatDate, addDays } from "date-fns";
 
 interface AppDateRangeProps {
   label: string;
@@ -21,6 +21,8 @@ interface AppDateRangeProps {
 }
 
 export const AppDateRange = (props: AppDateRangeProps) => {
+  const { t } = useTranslation();
+  
   const {
     label,
     range,
@@ -116,7 +118,7 @@ export const AppDateRange = (props: AppDateRangeProps) => {
               setDate={handleToChange}
               timeZone={timeZone}
               showCalendarButton={false}
-              defaultFocusedValue={minForTo ? parseDate(formatDate(minForTo, dateFormat)) : undefined}
+              defaultFocusedValue={minForTo ? parseDate(t('{{val, dateFormat}}', { val: minForTo, format: dateFormat })) : undefined}
               disabled={disabled}
               dateFormat={dateFormat}
               dateDisplayFormat={dateDisplayFormat}
@@ -132,9 +134,9 @@ export const AppDateRange = (props: AppDateRangeProps) => {
         </HStack>
         <HStack mt={"1"} fontSize="xs" color="gray.500" data-test="daterange-display">
           <Text>
-            {from ? formatDate(from, dateDisplayFormat) : ""}
+            {from ? t('{{val, dateFormat}}', { val: from, format: dateDisplayFormat }) : ""}
             {from || toStored ? " - " : ""}
-            {toVisible ? formatDate(toVisible, dateDisplayFormat) : ""}
+            {toVisible ? t('{{val, dateFormat}}', { val: toVisible, format: dateDisplayFormat }) : ""}
           </Text>
         </HStack>
       </Field.Root>
