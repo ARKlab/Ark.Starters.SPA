@@ -6,6 +6,8 @@ import * as z from "zod";
 
 import { supportedLngs } from "../../config/lang";
 
+import { addCustomFormatters } from "./formatters";
+
 const langs = import.meta.env.MODE == "e2e" ? { en: "en" } : supportedLngs;
 const fallbackLng = Object.keys(langs)[0];
 const lookupTarget = "lang";
@@ -76,6 +78,10 @@ export const i18nSetup = async () => {
         z.config({
           customError: makeZodI18nMap({ t, ns: zodNs, handlePath: { keyPrefix: "paths" } }),
         });
+        
+        // Add custom formatters for date formatting
+        addCustomFormatters(i18next);
+        
         resolve();
       },
       onResourceLoaded: (resources, { lng, ns }) => {

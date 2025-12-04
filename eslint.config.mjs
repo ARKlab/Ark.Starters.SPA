@@ -203,6 +203,12 @@ export default tseslint.config(
     },
   },
   {
+    files: ["**/lib/i18n/formatters.ts"],
+    rules: {
+      "@typescript-eslint/no-restricted-imports": "off",
+    },
+  },
+  {
     files: ["**/*.{jsx,mjsx,tsx,mtsx,ts}"],
     ...react.configs.flat.recommended,
     plugins: {
