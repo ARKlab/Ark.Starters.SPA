@@ -2,11 +2,10 @@ import type { DateValue } from "@ark-ui/react/date-picker";
 import { DatePicker, parseDate, useDatePicker } from "@ark-ui/react/date-picker";
 import { Box, Button, Field, FieldLabel, HStack, IconButton, Input, Stack, Text } from "@chakra-ui/react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FaTimes } from "react-icons/fa";
 import { LuCalendar, LuCalendarOff } from "react-icons/lu";
 import { MdOutlineChevronLeft, MdOutlineChevronRight } from "react-icons/md";
-
-import { formatDateString, formatISODate } from "../../i18n/formatDate";
 
 import "./appDatePicker.css";
 
@@ -31,6 +30,8 @@ interface AppDatePickerProps extends DatePicker.RootProps {
   showClearButton?: boolean;
 }
 export const AppDatePicker = (props: AppDatePickerProps) => {
+  const { t } = useTranslation();
+  
   const {
     date,
     minDate,
@@ -57,13 +58,13 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
     try {
       // dateFormat is typically "yyyy-MM-dd" for parseDate
       const formatted = dateFormat === "yyyy-MM-dd" 
-        ? formatISODate(date) 
-        : formatDateString(date, dateFormat);
+        ? t('{{val, isoDate}}', { val: date })
+        : t('{{val, dateFormat}}', { val: date, format: dateFormat });
       return parseDate(formatted);
     } catch {
       return undefined;
     }
-  }, [date, dateFormat]);
+  }, [date, dateFormat, t]);
 
   const [open, setOpen] = useState(false);
   const datePickerRef = useRef<HTMLDivElement>(null);
@@ -80,18 +81,18 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
 
   function getFormat(dv: DateValue, _details: { locale: string }) {
     const d = dv.toDate(timeZone ?? "UTC");
-    return formatDateString(d, dateDisplayFormat);
+    return t('{{val, dateFormat}}', { val: d, format: dateDisplayFormat });
   }
 
   const min = minDate ? parseDate(
     dateFormat === "yyyy-MM-dd" 
-      ? formatISODate(minDate) 
-      : formatDateString(minDate, dateFormat)
+      ? t('{{val, isoDate}}', { val: minDate })
+      : t('{{val, dateFormat}}', { val: minDate, format: dateFormat })
   ) : undefined;
   const max = maxDate ? parseDate(
     dateFormat === "yyyy-MM-dd" 
-      ? formatISODate(maxDate) 
-      : formatDateString(maxDate, dateFormat)
+      ? t('{{val, isoDate}}', { val: maxDate })
+      : t('{{val, dateFormat}}', { val: maxDate, format: dateFormat })
   ) : undefined;
 
   const datePicker = useDatePicker({
@@ -151,7 +152,7 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
                   onClick={() => {
                     setOpen(true);
                   }}
-                  placeholder={parsedValue ? formatDateString(parsedValue.toDate(timeZone ?? "UTC"), dateDisplayFormat) : ""}
+                  placeholder={parsedValue ? t('{{val, dateFormat}}', { val: parsedValue.toDate(timeZone ?? "UTC"), format: dateDisplayFormat }) : ""}
                   borderWidth={border}
                   size={inputSize ?? "md"}
                   value={parsedValue ? getFormat(parsedValue, { locale: locale }) : ""}
