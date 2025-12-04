@@ -19,15 +19,15 @@ import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { Login, Logout, authSelector } from "../../../lib/authentication/authenticationSlice";
 import { useAuthContext } from "../../../lib/authentication/components/useAuthContext";
 import { GlobalLoadingBar } from "../../../lib/GlobalLoadingBar";
-import { LocaleSwitcher } from "../../../lib/i18n/localeSwitcher";
 import { Logo } from "../../../logo";
-import { ColorModeButton } from "../../ui/color-mode";
+import { ColorModeButton, useColorMode } from "../../ui/color-mode";
 import { MenuContent, MenuItem, MenuItemGroup, MenuRoot, MenuSeparator } from "../../ui/menu";
 import { useLayoutContext } from "../useLayoutContext";
 
 const UserMenu = () => {
   const dispatch = useAppDispatch();
   const { isLogged } = useAuthContext();
+  const { toggleColorMode } = useColorMode();
 
   const authStore = useAppSelector(authSelector);
   const user = authStore.data;
@@ -48,7 +48,7 @@ const UserMenu = () => {
       </MenuTrigger>
       <MenuContent>
         <MenuItemGroup title={t("menu.options")}>
-          <MenuItem value={"mode-switch"}>
+          <MenuItem value={"mode-switch"} onClick={toggleColorMode}>
             Theme <ColorModeButton />
           </MenuItem>
         </MenuItemGroup>
@@ -96,9 +96,6 @@ const Header = () => {
         </HStack>
         <Spacer />
         <HStack gap={2} pr={2}>
-          <Center>
-            <LocaleSwitcher />
-          </Center>
           <Center>
             <UserMenu />
           </Center>

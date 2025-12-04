@@ -1015,9 +1015,10 @@ const GroupsManagementView = () => {
 
       <Flex>
         <Box p="4" minW="64">
-          <VStack align="stretch" gap="0.5">
-            {/* User Types List */}
-            {userTypes.length > 0 && (
+          <Box borderWidth="1px" borderColor="border" borderRadius="md" p="4">
+            <VStack align="stretch" gap="0.5">
+              {/* User Types List */}
+              {userTypes.length > 0 && (
               <VStack align="stretch" gap="0.5">
                 {userTypes.map(userType => (
                   <Button
@@ -1048,16 +1049,58 @@ const GroupsManagementView = () => {
             >
               <Text fontSize="sm">Create User Type</Text>
             </Button>
-          </VStack>
+            </VStack>
+          </Box>
         </Box>
 
         <Box flex="1" p="6">
           <Box p="6" borderRadius="md">
-            <Heading size="md" mb="4">
-              {selectedUserType && userTypes.length > 0
-                ? `Config: ${userTypes.find(ut => ut.ID === selectedUserType)?.Name ?? "Unknown"}`
-                : "Config: Select a user type"}
-            </Heading>
+            <HStack justify="space-between" align="center" mb="4">
+              <Heading size="md">
+                {selectedUserType && userTypes.length > 0
+                  ? `Config: ${userTypes.find(ut => ut.ID === selectedUserType)?.Name ?? "Unknown"}`
+                  : "Config: Select a user type"}
+              </Heading>
+              {selectedUserType && aggregatedReportSettings && (
+                <HStack gap="2">
+                  <Button
+                    size="xs"
+                    variant="outline"
+                    onClick={() => {
+                      setCheckedItems({});
+                    }}
+                    disabled={calculateCurrentPayloadSize().selectedCount === 0}
+                  >
+                    Deselect All
+                  </Button>
+                  <Button
+                    size="xs"
+                    variant="outline"
+                    onClick={() => {
+                      const newCheckedItems: Record<string, boolean> = {};
+
+                      aggregatedReportSettings.menuItem.forEach((menuItem: MenuItem) => {
+                        const isLeafNode = !menuItem.childItem;
+                        if (isLeafNode) {
+                          newCheckedItems[menuItem.menuSection] = true;
+                        } else {
+                          menuItem.childItem?.childLinks.forEach((childLink: ChildLink) => {
+                            childLink.components.forEach((component: Component) => {
+                              const componentId = `${menuItem.class}-${childLink.reportId}-${component.widId}`;
+                              newCheckedItems[componentId] = true;
+                            });
+                          });
+                        }
+                      });
+
+                      setCheckedItems(newCheckedItems);
+                    }}
+                  >
+                    Select All
+                  </Button>
+                </HStack>
+              )}
+            </HStack>
             <VStack align="stretch" gap="4">
               {selectedUserType && userTypes.length > 0 && aggregatedReportSettings ? (
                 <Box>
@@ -1116,12 +1159,10 @@ const GroupsManagementView = () => {
                                     </Button>
                                     <Checkbox
                                       checked={isAllChildComponentsSelected(menuItem.class, childLink)}
-                                      ref={(input: HTMLInputElement | null) => {
-                                        if (input && !isAllChildComponentsSelected(menuItem.class, childLink) &&
-                                          isSomeChildComponentsSelected(menuItem.class, childLink)) {
-                                          input.indeterminate = true;
-                                        }
-                                      }}
+                                      indeterminate={
+                                        !isAllChildComponentsSelected(menuItem.class, childLink) &&
+                                        isSomeChildComponentsSelected(menuItem.class, childLink)
+                                      }
                                       onCheckedChange={() => {
                                         toggleAllChildComponents(menuItem.class, childLink);
                                       }}
@@ -1170,62 +1211,6 @@ const GroupsManagementView = () => {
                 </Box>
               )}
 
-              {/* Quick Selection Management */}
-              {selectedUserType &&
-                aggregatedReportSettings &&
-                (() => {
-                  const { selectedCount } = calculateCurrentPayloadSize();
-
-                  return (
-                    <Box p="3" borderRadius="md" bg="bg.subtle">
-                      <VStack align="stretch" gap="2">
-                        <HStack justify="space-between" align="center">
-                          <Text fontSize="sm" fontWeight="medium">
-                            Selected: {selectedCount} items
-                          </Text>
-                          <HStack gap="2">
-                            <Button
-                              size="xs"
-                              variant="outline"
-                              onClick={() => {
-                                setCheckedItems({});
-                              }}
-                              disabled={selectedCount === 0}
-                            >
-                              Clear All
-                            </Button>
-                            <Button
-                              size="xs"
-                              variant="outline"
-                              onClick={() => {
-                                const newCheckedItems: Record<string, boolean> = {};
-
-                                aggregatedReportSettings.menuItem.forEach((menuItem: MenuItem) => {
-                                  const isLeafNode = !menuItem.childItem;
-                                  if (isLeafNode) {
-                                    newCheckedItems[menuItem.menuSection] = true;
-                                  } else {
-                                    menuItem.childItem?.childLinks.forEach((childLink: ChildLink) => {
-                                      childLink.components.forEach((component: Component) => {
-                                        const componentId = `${menuItem.class}-${childLink.reportId}-${component.widId}`;
-                                        newCheckedItems[componentId] = true;
-                                      });
-                                    });
-                                  }
-                                });
-
-                                setCheckedItems(newCheckedItems);
-                              }}
-                            >
-                              Select All
-                            </Button>
-                          </HStack>
-                        </HStack>
-                      </VStack>
-                    </Box>
-                  );
-                })()}
-
               <Box>
                 <Button
                   variant="outline"
@@ -1273,7 +1258,19 @@ const GroupsManagementView = () => {
                       }
                     }}
                   />
-                  <Button variant="outline" size="sm" onClick={handleAddUser}>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={handleAddUser}
+                    disabled={(() => {
+                      const trimmedName = newUserName.trim();
+                      if (!trimmedName) return true;
+                      const existingUsers = selectedUserType
+                        ? users.filter(user => user.UserType === selectedUserType).map(user => user.Name)
+                        : [];
+                      return existingUsers.includes(trimmedName) || usersToAdd.includes(trimmedName);
+                    })()}
+                  >
                     <Text fontSize="sm">Add</Text>
                   </Button>
                 </HStack>
@@ -1282,9 +1279,21 @@ const GroupsManagementView = () => {
               <Separator />
 
               <Box>
-                <Text fontSize="sm" fontWeight="medium" mb="2">
-                  Users:
-                </Text>
+                <HStack justify="space-between" mb="2">
+                  <Text fontSize="sm" fontWeight="medium">
+                    Users:
+                  </Text>
+                  {selectedUserType && users.filter(user => user.UserType === selectedUserType).length > 0 && (
+                    <Button
+                      variant="outline"
+                      size="2xs"
+                      colorScheme="red"
+                      onClick={handleRemoveToggle}
+                    >
+                      {isRemoveMode ? "Cancel" : "Remove From List"}
+                    </Button>
+                  )}
+                </HStack>
                 <VStack align="stretch" gap="1">
                   {/* Existing users */}
                   {selectedUserType && users.length > 0 ? (
@@ -1347,19 +1356,14 @@ const GroupsManagementView = () => {
               <Separator />
 
               <Box>
-                <HStack gap="2">
-                  <Button size="sm" variant="outline" onClick={handleRemoveToggle}>
-                    {isRemoveMode ? "Cancel" : "Remove"}
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={handleShowModal}
-                    disabled={usersToAdd.length === 0 && usersToRemove.size === 0}
-                  >
-                    Save Users
-                  </Button>
-                </HStack>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={handleShowModal}
+                  disabled={usersToAdd.length === 0 && usersToRemove.size === 0}
+                >
+                  Save Users
+                </Button>
               </Box>
             </VStack>
           </Box>
