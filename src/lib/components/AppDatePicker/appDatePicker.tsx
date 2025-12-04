@@ -26,7 +26,6 @@ interface AppDatePickerProps extends DatePicker.RootProps {
   defaultFocusedValue?: DateValue;
   dateFormat?: string;
   dateDisplayFormat?: string;
-  locale?: string;
   showClearButton?: boolean;
 }
 export const AppDatePicker = (props: AppDatePickerProps) => {
@@ -49,7 +48,6 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
     defaultFocusedValue,
     dateFormat = "yyyy-MM-dd",
     dateDisplayFormat = "dd/MM/yyyy",
-    locale = "en-GB",
     showClearButton = true,
   } = props;
 
@@ -79,7 +77,7 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
     }
   }
 
-  function getFormat(dv: DateValue, _details: { locale: string }) {
+  function getFormat(dv: DateValue) {
     const d = dv.toDate(timeZone ?? "UTC");
     return t('{{val, dateFormat}}', { val: d, format: dateDisplayFormat });
   }
@@ -105,7 +103,6 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
     min,
     max,
     format: getFormat,
-    locale: locale,
     onOpenChange: details => {
       setOpen(details.open);
     },
@@ -155,7 +152,7 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
                   placeholder={parsedValue ? t('{{val, dateFormat}}', { val: parsedValue.toDate(timeZone ?? "UTC"), format: dateDisplayFormat }) : ""}
                   borderWidth={border}
                   size={inputSize ?? "md"}
-                  value={parsedValue ? getFormat(parsedValue, { locale: locale }) : ""}
+                  value={parsedValue ? getFormat(parsedValue) : ""}
                   readOnly
                 />
               </DatePicker.Input>

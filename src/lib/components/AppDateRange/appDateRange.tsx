@@ -17,7 +17,6 @@ interface AppDateRangeProps {
   disabled?: boolean;
   dateFormat?: string;
   dateDisplayFormat?: string;
-  locale?: string;
 }
 
 export const AppDateRange = (props: AppDateRangeProps) => {
@@ -32,7 +31,6 @@ export const AppDateRange = (props: AppDateRangeProps) => {
     disabled,
     dateFormat = "yyyy-MM-dd",
     dateDisplayFormat = "dd/MM/yyyy",
-    locale = "en-GB",
   } = props;
 
   let from: Date | null = range[0] ?? null;
@@ -106,7 +104,6 @@ export const AppDateRange = (props: AppDateRangeProps) => {
               disabled={disabled}
               dateFormat={dateFormat}
               dateDisplayFormat={dateDisplayFormat}
-              locale={locale}
               showClearButton={false}
             />
           </Box>
@@ -122,7 +119,6 @@ export const AppDateRange = (props: AppDateRangeProps) => {
               disabled={disabled}
               dateFormat={dateFormat}
               dateDisplayFormat={dateDisplayFormat}
-              locale={locale}
               showClearButton={false}
             />
           </Box>
