@@ -4,13 +4,13 @@ export default function SEO({
   name,
   type,
 }: {
-  title?: string
-  description?: string
-  name?: string
-  type?: string
+  title?: string;
+  description?: string;
+  name?: string;
+  type?: string;
 }) {
   title ??= import.meta.env.VITE_APP_TITLE;
-  if (title !== import.meta.env.VITE_APP_TITLE) title += ' | ' + import.meta.env.VITE_APP_TITLE
+  if (title !== import.meta.env.VITE_APP_TITLE) title += " | " + import.meta.env.VITE_APP_TITLE;
 
   description ??= import.meta.env.VITE_APP_DESCRIPTION;
   name ??= import.meta.env.VITE_APP_COMPANY;
@@ -43,5 +43,5 @@ export default function SEO({
         </>
       ) : null}
     </>
-  )
+  );
 }

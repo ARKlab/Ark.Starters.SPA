@@ -1,4 +1,5 @@
 {
+  "currency": "{{val, currency(currency)}}",
   "Phone": "Phone",
   "actions": "Actions",
   "billing_address": "Billing address",
@@ -13,6 +14,8 @@
   "firstname": "First Name",
   "form_error": "Form Errors",
   "form_values": "Form Values",
+  "common_close": "Close",
+  "common_apply": "Apply",
   "games_add_video_game": "Add video game",
   "games_developer": "Developer",
   "games_developer_placeholder": "Developer",
@@ -50,6 +53,15 @@
   "localization_control_label": "Set apple number",
   "localization_dynamic_text": "Dynamic Text Translation",
   "localization_dynamic_text_explanation": "This is to show the use of parameters in translations where the phrase construction requires to change the position of the dynamic value",
+  "localization_date": "Date Translation",
+  "localization_date_explanation": "This is to show the use to translate dates",
+  "localization_date_raw": "This is without translation",
+  "localization_date_using_i18n": "This is using i18n date translation",
+  "localization_date_using_i18n_component": "This is using i18n date translation with component",
+  "localization_currencies": "Currency Translation",
+  "localization_currencies_explanation": "This is to show the use to translate currencies",
+  "localization_currency_raw": "This is without translation",
+  "localization_currency_using_i18n": "This is using i18n currency translation",
   "localization_example_1": "I have {{number}} apples in the basket.",
   "localization_simple_text": "Simple Text Translation",
   "movies_actors": "Actors",
@@ -107,5 +119,10 @@
   "wizard_phone_placeholder": "Phone",
   "wizard_shipping_address_placeholder": "Shipping Address",
   "wizard_sms_notifications_label": "Receive SMS Notifications",
-  "wizard_special_offers_label": "Receive Special Offers via Email"
+  "wizard_special_offers_label": "Receive Special Offers via Email",
+  "controlComponents_selectFromEnum": "Select From Enum",
+  "controlComponents_dateRange": "Date range",
+  "controlComponents_inputFilterWithClear": "Chakra Input Filter With Clear",
+  "backButton_goBack": "Go back",
+  "header_openMenu": "Open menu"
 }

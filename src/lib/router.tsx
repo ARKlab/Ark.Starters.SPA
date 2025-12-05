@@ -4,11 +4,10 @@ import type { RouteObject } from "react-router";
 import { Outlet, createBrowserRouter } from "react-router";
 
 import Layout from "../components/layout/layout";
-import type { MainSectionType, SubsectionMenuItemType } from "../components/layout/sideBar/menuItem/types";
 import LazyLoad from "../components/lazyLoad";
 import PageNotFound from "../components/pageNotFound";
 import SEO from "../components/seo";
-import { mainSections } from "../siteMap/mainSections";
+import { siteMap } from "../siteMap/siteMap";
 
 import { reactPlugin } from "./applicationInsights";
 import { AuthenticatedOnly } from "./authentication/components/authenticatedOnly";
@@ -16,8 +15,9 @@ import { AuthenticationCallback } from "./authentication/components/authenticati
 import ProtectedRoute from "./authentication/components/protectedRoute";
 import Unauthorized from "./authentication/unauthorized";
 import { ErrorFallback } from "./errorFallback";
+import type { ArkRoute, ArkSubRoute } from "./siteMapTypes";
 
-const wrapLazy = (x: MainSectionType) => {
+const wrapLazy = (x: ArkRoute) => {
   const checkPermissions = x.permissions && x.permissions.length > 0;
 
   let element: ReactNode = <Outlet />;
@@ -49,7 +49,7 @@ const wrapLazy = (x: MainSectionType) => {
   );
 };
 
-const renderSections = (s?: SubsectionMenuItemType[]) => {
+const renderSections = (s?: ArkSubRoute[]) => {
   return s
     ?.filter(x => x.path !== undefined)
     .map(
@@ -60,10 +60,10 @@ const renderSections = (s?: SubsectionMenuItemType[]) => {
     );
 };
 
-const routes = mainSections
+const routes = siteMap
   .filter(x => x.path !== undefined)
   .map(
-    (x): RouteObject =>
+    (x: ArkRoute): RouteObject =>
       x.path === "" && !x.subsections // index route, shall not have children
         ? { index: true, element: wrapLazy(x) }
         : { path: x.path, element: wrapLazy(x), children: renderSections(x.subsections) },

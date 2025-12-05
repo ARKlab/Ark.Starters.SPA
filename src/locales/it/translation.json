@@ -1,4 +1,5 @@
 {
+  "currency": "{{val, currency(currency)}}",
   "Phone": "Telefono",
   "actions": "Azioni",
   "billing_address": "Indirizzo fatturazione",
@@ -13,6 +14,8 @@
   "firstname": "Nome",
   "form_error": "Errori dei Form",
   "form_values": "Valori del Form",
+  "common_close": "Chiudi",
+  "common_apply": "Applica",
   "games_add_video_game": "Aggiungi videogioco",
   "games_developer": "Sviluppatore",
   "games_developer_placeholder": "Sviluppatore",
@@ -50,6 +53,15 @@
   "localization_control_label": "Imposta il numero di mele",
   "localization_dynamic_text": "Traduzione testo dinamico",
   "localization_dynamic_text_explanation": "Questo esempio mostra come i valori dinamici possano cambiare posizione se richiesto dalla lingua selezionata.",
+  "localization_date": "Traduzione delle date",
+  "localization_date_explanation": "Questo esempio mostra l'uso della traduzione delle date.",
+  "localization_date_raw": "Questo è senza traduzione",
+  "localization_date_using_i18n": "Questo è usando la traduzione delle date di i18n",
+  "localization_date_using_i18n_component": "Questo è usando la traduzione delle date di i18n con componente",
+  "localization_currencies": "Traduzione delle valute",
+  "localization_currencies_explanation": "Questo esempio mostra l'uso della traduzione delle valute.",
+  "localization_currency_raw": "Questo è senza traduzione",
+  "localization_currency_using_i18n": "Questo è usando la traduzione delle valute di i18n",
   "localization_example_1": "Nel cesto ci sono {{number}} mele.",
   "localization_simple_text": "Traduzione testo semplice",
   "movies_actors": "Attori",
@@ -107,5 +119,10 @@
   "wizard_phone_placeholder": "Telefono",
   "wizard_shipping_address_placeholder": "Indirizzo di spedizione",
   "wizard_sms_notifications_label": "Ricevi notifiche SMS",
-  "wizard_special_offers_label": "Ricevi offerte speciali via email"
+  "wizard_special_offers_label": "Ricevi offerte speciali via email",
+  "controlComponents_selectFromEnum": "Seleziona da Enum",
+  "controlComponents_dateRange": "Intervallo di date",
+  "controlComponents_inputFilterWithClear": "Filtro Input Chakra Con Cancellazione",
+  "backButton_goBack": "Torna indietro",
+  "header_openMenu": "Apri menu"
 }

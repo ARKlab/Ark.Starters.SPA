@@ -1,0 +1,15 @@
+{
+  "appDatePicker_openDatePicker": "Apri selettore data",
+  "appDatePicker_clearDatePicker": "Cancella selettore data",
+  "appDateRange_from": "Da",
+  "appDateRange_to": "A",
+  "appPagination_firstPage": "Prima Pagina",
+  "appPagination_previous": "Precedente",
+  "appPagination_next": "Successivo",
+  "appPagination_lastPage": "Ultima Pagina",
+  "appTagInput_tags": "Tag",
+  "appTagInput_addTag": "Aggiungi tag...",
+  "columnSorter_sort": "Ordina",
+  "columnSorter_sortedAscending": "Ordinato crescente",
+  "columnSorter_sortedDescending": "Ordinato decrescente"
+}
