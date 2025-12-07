@@ -103,7 +103,7 @@
     "eslint-plugin-react-hooks": "7.0.1",
     "eslint-plugin-react-refresh": "0.4.24",
     "jiti": "2.6.1",
-    "msw": "2.12.3",
+    "msw": "2.12.4",
     "prettier": "3.7.4",
     "rollup-plugin-copy": "3.5.0",
     "sharp": "0.34.5",
