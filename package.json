@@ -12,7 +12,7 @@
     "@microsoft/applicationinsights-clickanalytics-js": "3.3.10",
     "@microsoft/applicationinsights-react-js": "19.3.8",
     "@microsoft/applicationinsights-web": "3.3.10",
-    "@reduxjs/toolkit": "2.11.0",
+    "@reduxjs/toolkit": "2.11.1",
     "@semihbou/zod-i18n-map": "0.0.3",
     "@tanstack/react-table": "8.21.3",
     "@tinyhttp/content-disposition": "2.2.2",
