@@ -86,7 +86,7 @@
     "concurrently": "9.2.1",
     "cross-env": "10.1.0",
     "cross-fetch": "4.1.0",
-    "cypress": "15.8.0",
+    "cypress": "15.8.1",
     "cypress-localstorage-commands": "2.2.8",
     "cypress-wait-until": "3.0.2",
     "dotenv": "17.2.3",
