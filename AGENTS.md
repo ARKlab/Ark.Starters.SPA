@@ -10,7 +10,6 @@
 - [Agent Task Workflows](#agent-task-workflows)
 - [Code Standards and Patterns](#code-standards-and-patterns)
 - [Verification Procedures](#verification-procedures)
-- [Common Scenarios and Solutions](#common-scenarios-and-solutions)
 - [File-Specific Context](#file-specific-context)
 - [Troubleshooting Guide](#troubleshooting-guide)
 
@@ -319,7 +318,12 @@ Is your task about...
    - Keyboard navigation
    - Focus management
 
-6. **Verification**:
+6. **Testing** (MUST):
+   - [ ] Add test case(s) for the new component/feature
+   - [ ] Ensure existing tests still pass
+   - [ ] Update or delete tests if new request overrides previous functionality
+
+7. **Verification**:
    - [ ] All text uses translation keys
    - [ ] Colors use semantic tokens
    - [ ] TypeScript types defined
@@ -416,7 +420,12 @@ export const UserCard = ({ name, email }: UserCardProps) => {
    }
    ```
 
-6. **Verification**:
+6. **Testing** (MUST):
+   - [ ] Add test case(s) for the translation keys in components
+   - [ ] Ensure existing tests still pass
+   - [ ] Update or delete tests if new request overrides previous functionality
+
+7. **Verification**:
    - [ ] Key added to ALL supported language files
    - [ ] Key follows naming convention
    - [ ] Correct namespace used
@@ -471,7 +480,12 @@ export const UserCard = ({ name, email }: UserCardProps) => {
    </ProtectedRoute>
    ```
 
-6. **Verification**:
+6. **Testing** (MUST):
+   - [ ] Add test case(s) for authentication flows (login, logout, token refresh)
+   - [ ] Ensure existing tests still pass
+   - [ ] Update or delete tests if new request overrides previous functionality
+
+7. **Verification**:
    - [ ] AuthProvider interface fully implemented
    - [ ] Login flow works
    - [ ] Logout flow works
@@ -572,7 +586,12 @@ export const UserCard = ({ name, email }: UserCardProps) => {
    });
    ```
 
-6. **Verification**:
+6. **Testing** (MUST):
+   - [ ] Add test case(s) for API endpoints using MSW mocks
+   - [ ] Ensure existing tests still pass
+   - [ ] Update or delete tests if new request overrides previous functionality
+
+7. **Verification**:
    - [ ] API slice created with `createAppApi`
    - [ ] Uses `arkFetchBaseQuery` for auth token injection
    - [ ] Registered in store
@@ -656,7 +675,12 @@ export const UserCard = ({ name, email }: UserCardProps) => {
    />
    ```
 
-6. **Verification**:
+6. **Testing** (MUST):
+   - [ ] Add test case(s) for form validation and submission
+   - [ ] Ensure existing tests still pass
+   - [ ] Update or delete tests if new request overrides previous functionality
+
+7. **Verification**:
    - [ ] Zod schema defined with proper types
    - [ ] Custom errors in `zodCustom.json` for all languages
    - [ ] Form uses `zod2FormValidator`
@@ -748,7 +772,12 @@ export const UserCard = ({ name, email }: UserCardProps) => {
    }
    ```
 
-6. **Verification**:
+6. **Testing** (MUST):
+   - [ ] Add test case(s) for table sorting, filtering, and pagination
+   - [ ] Ensure existing tests still pass
+   - [ ] Update or delete tests if new request overrides previous functionality
+
+7. **Verification**:
    - [ ] API returns correct format (data, count, page, limit)
    - [ ] Columns defined with types
    - [ ] Column headers use translation keys
@@ -813,7 +842,12 @@ export const UserCard = ({ name, email }: UserCardProps) => {
      const colorModeManager = createLocalStorageManager("arkStarters-ColorMode");
      ```
 
-7. **Verification**:
+7. **Testing** (MUST):
+   - [ ] Add test case(s) for theme changes if applicable
+   - [ ] Ensure existing tests still pass
+   - [ ] Update or delete tests if new request overrides previous functionality
+
+8. **Verification**:
    - [ ] Semantic tokens follow naming convention
    - [ ] Both light and dark values defined
    - [ ] No hardcoded colors in components
@@ -1127,129 +1161,6 @@ npm test
 
 ---
 
-## Common Scenarios and Solutions
-
-### Scenario 1: "Translation key not found" error
-
-**Problem**: Component shows key like `movies_title` instead of translated text.
-
-**Solution**:
-1. Check if key exists in `src/locales/en/translation.json` (or correct namespace)
-2. Verify key name matches exactly (case-sensitive)
-3. Ensure key is in ALL supported language files
-4. Check namespace prefix (e.g., `libComponents:` for lib components)
-5. Restart dev server to reload translations
-
----
-
-### Scenario 2: "Colors don't switch in dark mode"
-
-**Problem**: Component colors don't change when switching themes.
-
-**Solution**:
-1. Verify using semantic tokens, not hardcoded colors:
-   ```typescript
-   // ❌ Wrong
-   <Box bg="gray.100">
-   
-   // ✅ Correct
-   <Box bg="bg.panel">
-   ```
-2. Check `src/theme.ts` for token definitions with `_light` and `_dark` values
-3. Clear localStorage if color mode is stuck
-4. Verify `colorModeManager` is configured in `src/index.tsx`
-
----
-
-### Scenario 3: "API request doesn't include auth token"
-
-**Problem**: API calls fail with 401/403 errors.
-
-**Solution**:
-1. Ensure using `arkFetchBaseQuery` in API slice:
-   ```typescript
-   baseQuery: arkFetchBaseQuery({ baseUrl: '/api' })
-   ```
-2. Check auth provider is initialized in `src/index.tsx`
-3. Verify user is logged in (check Redux store state)
-4. Check token hasn't expired (check browser DevTools Network tab)
-
----
-
-### Scenario 4: "Table not paginating correctly"
-
-**Problem**: Table shows all rows or pagination is broken.
-
-**Solution**:
-1. Verify API returns correct format:
-   ```typescript
-   {
-     data: [...],
-     count: 100,  // Total count
-     page: 0,     // Current page
-     limit: 10    // Page size
-   }
-   ```
-2. Check `useQueryHook` accepts pagination params:
-   ```typescript
-   const { data } = useGetMoviesQuery({ pageIndex, pageSize, sorting, filters });
-   ```
-3. Verify API uses `pageIndex` and `pageSize` params
-
----
-
-### Scenario 5: "Form validation not working"
-
-**Problem**: Form submits without validation or errors don't show.
-
-**Solution**:
-1. Check Zod schema is defined correctly
-2. Verify using `zod2FormValidator` resolver:
-   ```typescript
-   useForm({ resolver: zod2FormValidator(schema) })
-   ```
-3. Ensure field is registered:
-   ```typescript
-   <Input {...register("fieldName")} />
-   ```
-4. Display errors:
-   ```typescript
-   {errors.fieldName?.message}
-   ```
-5. Check custom error keys exist in `src/locales/*/zodCustom.json`
-
----
-
-### Scenario 6: "PWA service worker conflicts with dev server"
-
-**Problem**: Dev server behaves strangely, old content cached.
-
-**Solution**:
-1. Open DevTools → Application → Storage → Clear site data
-2. Unregister service worker manually
-3. PWA is disabled in dev mode by default (check `vite.config.ts`)
-4. Only test PWA features with `npm run preview` after build
-
----
-
-### Scenario 7: "ESLint error: cannot import 'format' from 'date-fns'"
-
-**Problem**: ESLint blocks direct import of date-fns formatters.
-
-**Solution**:
-1. In React components, use i18next formatter:
-   ```typescript
-   const { t } = useTranslation();
-   const formatted = t('{{val, shortDate}}', { val: new Date() });
-   ```
-2. In utility functions, use formatDate helpers:
-   ```typescript
-   import { formatISODate } from "@/lib/i18n/formatDate";
-   const formatted = formatISODate(new Date());
-   ```
-
----
-
 ## File-Specific Context
 
 ### `src/index.tsx`
@@ -1497,6 +1408,8 @@ Use these checklists to verify your work before completing:
 - [ ] Responsive design implemented
 - [ ] No ESLint errors
 - [ ] Named export used
+- [ ] **Test case(s) added for the component/feature**
+- [ ] **Existing tests pass or updated appropriately**
 
 ### Translation
 - [ ] Keys added to ALL supported languages
@@ -1504,6 +1417,8 @@ Use these checklists to verify your work before completing:
 - [ ] Correct namespace used
 - [ ] No hardcoded strings in components
 - [ ] Language switching works
+- [ ] **Test case(s) added for translation keys**
+- [ ] **Existing tests pass or updated appropriately**
 
 ### Authentication
 - [ ] AuthProvider interface implemented
@@ -1512,6 +1427,8 @@ Use these checklists to verify your work before completing:
 - [ ] Protected routes enforce permissions
 - [ ] Environment variables documented
 - [ ] No secrets in code
+- [ ] **Test case(s) added for auth flows**
+- [ ] **Existing tests pass or updated appropriately**
 
 ### API Integration
 - [ ] RTK Query API created with `createAppApi`
@@ -1521,6 +1438,8 @@ Use these checklists to verify your work before completing:
 - [ ] Response format matches expectations
 - [ ] MSW mock created (if needed)
 - [ ] Auth token included in requests
+- [ ] **Test case(s) added for API endpoints**
+- [ ] **Existing tests pass or updated appropriately**
 
 ### Form
 - [ ] Zod schema defined
@@ -1530,6 +1449,8 @@ Use these checklists to verify your work before completing:
 - [ ] Validation works on blur and submit
 - [ ] Error messages display correctly
 - [ ] Success/error feedback shown
+- [ ] **Test case(s) added for form validation and submission**
+- [ ] **Existing tests pass or updated appropriately**
 
 ### Table
 - [ ] API returns correct format (data, count, page, limit)
@@ -1539,6 +1460,8 @@ Use these checklists to verify your work before completing:
 - [ ] Filtering works (if enabled)
 - [ ] Pagination works
 - [ ] Custom cells render correctly
+- [ ] **Test case(s) added for table functionality**
+- [ ] **Existing tests pass or updated appropriately**
 
 ### Theme
 - [ ] Semantic tokens properly defined
@@ -1546,6 +1469,8 @@ Use these checklists to verify your work before completing:
 - [ ] No hardcoded colors in components
 - [ ] Tested in both color modes
 - [ ] Color contrast meets accessibility standards
+- [ ] **Test case(s) added if applicable**
+- [ ] **Existing tests pass or updated appropriately**
 
 ### Testing
 - [ ] Tests use Testing Library queries
