@@ -1,5 +1,7 @@
 import type { JSX } from "react"
 
-export const Bomb = (): JSX.Element => {
+const Bomb = (): JSX.Element => {
   throw new Error('💥 CABOOM 💥')
 }
+
+export default Bomb

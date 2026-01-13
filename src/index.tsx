@@ -5,7 +5,7 @@ import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
 
 import { createLazyComponent } from "./components/createLazyComponent";
 import { ColorModeProvider } from "./components/ui/color-mode";
-import reportWebVitals from "./reportWebVitals";
+import reportWebVitals, { sendToAnalytics } from "./reportWebVitals";
 import theme from "./theme";
 
 /**
@@ -51,4 +51,5 @@ root.render(
   </StrictMode>,
 );
 
-reportWebVitals();
+// Report Web Vitals and send to Application Insights
+reportWebVitals(sendToAnalytics);

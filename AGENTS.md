@@ -29,6 +29,7 @@
 npm start              # Start dev server (localhost:3000)
 npm run build          # Production build
 npm run preview        # Preview production build
+npm run analyze        # Build with bundle analysis (generates build/stats.html)
 
 # Quality
 npm run lint           # ESLint check
