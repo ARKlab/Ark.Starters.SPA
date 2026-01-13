@@ -5,5 +5,6 @@ declare namespace Cypress {
     actAsAnonUser(): void;
     navigateViaMenu(title: string | RegExp): void;
     navigateViaRoute(route: string): void;
+    mouseMoveBy(x: number, y: number, options?: { delay?: number }): Chainable<JQuery<HTMLElement>>;
   }
 }

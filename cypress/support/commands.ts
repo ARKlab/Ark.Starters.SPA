@@ -47,3 +47,57 @@ Cypress.Commands.add("navigateViaRoute", (route: string) => {
   cy.url().should("contain", route);
   cy.get("[data-test='spinner']").should("not.exist");
 });
+
+// Custom command for dragging elements with @dnd-kit using PointerSensor
+// Based on: https://github.com/clauderic/dnd-kit/issues/208#issuecomment-1881057616
+Cypress.Commands.add(
+  "dragTo",
+  {
+    prevSubject: "element",
+  },
+  (subject, targetSelector: string, options?: { delay?: number }) => {
+    cy.wrap(subject, { log: false })
+      .then(source => {
+        const sourceRect = source.get(0).getBoundingClientRect();
+        
+        return cy.get(targetSelector).then(target => {
+          const targetRect = target.get(0).getBoundingClientRect();
+          
+          // Calculate center positions
+          const sourceCenterX = sourceRect.left + sourceRect.width / 2;
+          const sourceCenterY = sourceRect.top + sourceRect.height / 2;
+          const targetCenterX = targetRect.left + targetRect.width / 2;
+          const targetCenterY = targetRect.top + targetRect.height / 2;
+          
+          // Perform drag operation using pointer events
+          cy.wrap(source)
+            .trigger("pointerdown", {
+              force: true,
+              isPrimary: true,
+              button: 0,
+              clientX: sourceCenterX,
+              clientY: sourceCenterY,
+            })
+            .wait(options?.delay || 100)
+            .trigger("pointermove", {
+              force: true,
+              isPrimary: true,
+              button: 0,
+              clientX: targetCenterX,
+              clientY: targetCenterY,
+            })
+            .wait(100)
+            .trigger("pointerup", {
+              force: true,
+              isPrimary: true,
+              button: 0,
+              clientX: targetCenterX,
+              clientY: targetCenterY,
+            })
+            .wait(250);
+        });
+      });
+  },
+);
+
+
