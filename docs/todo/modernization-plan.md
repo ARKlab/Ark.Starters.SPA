@@ -263,12 +263,9 @@ Lazy loading utilities are now consolidated and properly organized.
 ### Files Modified/Created
 - Created: `src/lib/components/LazyComponent.tsx` - Component-based lazy loading
 - Created: `src/lib/components/createLazyComponent.tsx` - Factory function approach
-- Created: `src/lib/components/lazy.ts` - Barrel export
-- Modified: `src/components/lazyLoad.tsx` - Marked deprecated, re-exports from new location
-- Modified: `src/components/createLazyComponent.tsx` - Marked deprecated, re-exports from new location
 - Modified: `src/index.tsx` - Updated import path
 - Modified: `src/lib/router.tsx` - Updated import path
-- Modified: `AGENTS.md` - Added lazy loading documentation
+- Modified: `AGENTS.md` - Added compact lazy loading documentation
 
 ### Implementation Details
 
@@ -289,7 +286,6 @@ Lazy loading utilities are now consolidated and properly organized.
 **React Fast Refresh Compliance:**
 - Split into separate files to avoid exporting both components and functions from same file
 - Each file only exports components OR functions, not both
-- Barrel export (`lazy.ts`) provides clean import path
 
 ### Testing & Validation
 - [x] Linter passes without errors
@@ -300,9 +296,8 @@ Lazy loading utilities are now consolidated and properly organized.
 
 ### Actual Impact
 - **Code Organization**: Clear separation between component-based and factory approaches
-- **Developer Experience**: Better documentation, cleaner imports via barrel export
+- **Developer Experience**: Compact documentation, direct imports
 - **Maintainability**: Single source of truth in `lib/components/`
-- **Backwards Compatibility**: Old files re-export from new location
 - **React Fast Refresh**: Fully compliant (separate files for components vs functions)
 
 ---
