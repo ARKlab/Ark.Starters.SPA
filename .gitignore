@@ -31,3 +31,6 @@ cypress/downloads
 
 .nyc_output/
 debug.log
+
+# Bundle analysis
+stats.html
