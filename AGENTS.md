@@ -80,7 +80,7 @@ This is a **React 19.2** Single Page Application starter template with enterpris
 - **Tables**: TanStack Table 8.21.3
 - **Testing**: Cypress 15.8.1 (E2E)
 - **PWA**: vite-plugin-pwa 1.2.0
-- **DnD**: react-dnd 16.0.1
+- **DnD**: @dnd-kit/core 6.3.1 + @dnd-kit/sortable 9.0.1
 
 ### Key Features
 - **Flexible Authentication**: Pluggable auth providers (Auth0, MSAL)

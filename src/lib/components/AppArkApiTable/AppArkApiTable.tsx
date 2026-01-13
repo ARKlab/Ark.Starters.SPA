@@ -1,4 +1,6 @@
 import { Box, Button, Center, HStack, Spinner, Table, VStack } from "@chakra-ui/react";
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, horizontalListSortingStrategy } from "@dnd-kit/sortable";
 import type {
   Column,
   ColumnDef,
@@ -21,8 +23,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useEffect, useMemo, useState } from "react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import { useTranslation } from "react-i18next";
 
 import type { AppDispatch } from "../../../app/configureStore";
@@ -216,8 +216,28 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
     extractPagination?.({ ...pagination, pageSize: pageSize });
   };
 
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+
+  const handleDragEnd = (event: { active: { id: string }; over: { id: string } | null }) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      setColumnOrder(items => {
+        const oldIndex = items.indexOf(active.id);
+        const newIndex = items.indexOf(over.id);
+
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
+  };
+
   return (
-    <DndProvider backend={HTML5Backend}>
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <Box overflowX="auto">
         <Button onClick={resetOrder} hidden={!isDraggable}>
           {/*This should be only demostrative and should be outside of the component*/}
@@ -228,31 +248,33 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
             <Table.Header>
               {table.getHeaderGroups().map(headerGroup => (
                 <Table.Row key={headerGroup.id}>
-                  {headerGroup.headers.map(header => (
-                    <Table.ColumnHeader key={header.id} verticalAlign="top">
-                      {header.isPlaceholder ? null : (
-                        <>
-                          <VStack gap="2" align="start" justify="space-between">
-                            <HStack gap="1">
+                  <SortableContext items={columnOrder} strategy={horizontalListSortingStrategy}>
+                    {headerGroup.headers.map(header => (
+                      <Table.ColumnHeader key={header.id} verticalAlign="top">
+                        {header.isPlaceholder ? null : (
+                          <>
+                            <VStack gap="2" align="start" justify="space-between">
+                              <HStack gap="1">
+                                <Box>
+                                  {isDraggable ? (
+                                    <DraggableColumnHeader key={header.id} header={header} table={table} />
+                                  ) : (
+                                    flexRender(header.column.columnDef.header, header.getContext())
+                                  )}
+                                </Box>
+                                <ColumnSorter column={header.column} />
+                              </HStack>
                               <Box>
-                                {isDraggable ? (
-                                  <DraggableColumnHeader key={header.id} header={header} table={table} />
-                                ) : (
-                                  flexRender(header.column.columnDef.header, header.getContext())
-                                )}
+                                {header.column.getCanFilter() && !disableHeaderFilters ? (
+                                  <Filter<T> column={header.column} table={table} isLoading={isFetching} />
+                                ) : null}
                               </Box>
-                              <ColumnSorter column={header.column} />
-                            </HStack>
-                            <Box>
-                              {header.column.getCanFilter() && !disableHeaderFilters ? (
-                                <Filter<T> column={header.column} table={table} isLoading={isFetching} />
-                              ) : null}
-                            </Box>
                           </VStack>
                         </>
                       )}
                     </Table.ColumnHeader>
                   ))}
+                  </SortableContext>
                 </Table.Row>
               ))}
             </Table.Header>
@@ -294,7 +316,7 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
           isLoading={isFetching}
         />
       </Box>
-    </DndProvider>
+    </DndContext>
   );
 }
 
