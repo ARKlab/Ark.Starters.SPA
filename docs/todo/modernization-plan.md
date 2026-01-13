@@ -1,0 +1,1129 @@
+# ARK Starters SPA - Modernization & Performance Improvement Plan
+
+> **Created**: 2026-01-13  
+> **Status**: Planning Phase  
+> **Version**: 1.0
+
+## Executive Summary
+
+This document outlines a comprehensive modernization and performance improvement plan for the ARK Starters SPA project. The plan addresses 14 key areas identified through codebase analysis, focusing on:
+
+- **Dependency Updates**: Replacing abandoned or outdated libraries
+- **Performance Optimization**: Code splitting, memoization, and lazy loading
+- **Bundle Size Reduction**: Eliminating redundancies and optimizing imports
+- **Developer Experience**: Better tooling and error handling
+- **Runtime Performance**: Virtualization and efficient rendering
+
+**Important Note**: This project uses React Compiler (babel-plugin-react-compiler), which automatically memoizes components and hooks. Before implementing manual memoization (issues #3, #5, #8), measure the actual performance impact to avoid unnecessary complexity.
+
+---
+
+## Issue Tracking
+
+### Priority Levels
+- **🔴 High**: Critical for performance or maintenance
+- **🟡 Medium**: Valuable improvements with moderate impact
+- **🟢 Low**: Nice-to-have enhancements
+
+### Complexity Levels
+- **Simple**: 1-2 hours
+- **Moderate**: 3-6 hours
+- **Complex**: 1-2 days
+
+---
+
+## 1. Replace `react-dnd` with Modern Alternative
+
+**Priority**: 🔴 High  
+**Complexity**: Complex  
+**Impact**: Better maintenance, smaller bundle size, improved accessibility
+
+### Current State
+- Using `react-dnd` v16.0.1 and `react-dnd-html5-backend` v16.0.1
+- Last updated: April 2022 (marked as abandoned in Renovate)
+- No active maintenance or security updates
+
+### Proposed Solution
+Migrate to `@dnd-kit/core` - modern, lightweight, accessible drag-and-drop library
+
+**Advantages of @dnd-kit:**
+- Actively maintained
+- Built with accessibility in mind (WCAG compliant)
+- Smaller bundle size (~30% lighter)
+- Better TypeScript support
+- Performance optimized with React 18+ features
+- Supports touch devices out of the box
+
+### Implementation Checklist
+
+- [ ] **Research & Planning**
+  - [ ] Audit current `react-dnd` usage across codebase
+  - [ ] Identify all components using drag-and-drop functionality
+  - [ ] Document current behavior and features used
+  - [ ] Review @dnd-kit documentation and migration guide
+
+- [ ] **Setup**
+  - [ ] Install @dnd-kit packages:
+    ```bash
+    npm install @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities
+    ```
+  - [ ] Update package.json to remove react-dnd dependencies
+  - [ ] Update TypeScript types if needed
+
+- [ ] **Migration**
+  - [ ] Create migration utilities/wrappers if needed
+  - [ ] Migrate first component as proof of concept
+  - [ ] Test migrated component thoroughly
+  - [ ] Migrate remaining components
+  - [ ] Update component documentation
+
+- [ ] **Testing & Validation**
+  - [ ] Run existing Cypress tests
+  - [ ] Add new tests for drag-and-drop interactions if missing
+  - [ ] Test accessibility with screen readers
+  - [ ] Test touch device compatibility
+  - [ ] Verify bundle size reduction
+
+- [ ] **Documentation**
+  - [ ] Update AGENTS.md to reference @dnd-kit
+  - [ ] Document migration patterns for future reference
+  - [ ] Add examples in component test pages if applicable
+
+### Files to Modify
+- `package.json` - Update dependencies
+- Search for `react-dnd` imports across codebase to identify affected files
+- Update any documentation referencing drag-and-drop
+
+### References
+- [@dnd-kit documentation](https://docs.dndkit.com/)
+- [Migration from react-dnd](https://docs.dndkit.com/introduction/getting-started)
+
+---
+
+## 2. Implement Route-Based Code Splitting for Non-Lazy Components
+
+**Priority**: 🟡 Medium  
+**Complexity**: Simple  
+**Impact**: Improved initial bundle size, faster first paint
+
+### Current State
+In `src/siteMap/siteMap.tsx`, some components are imported directly:
+- `ComponentsTestPage` (line 20)
+- `DetailsPage` (line 17)
+- `DetailsPageExampleMainView` (line 18)
+- `Bomb` (line 16)
+- `NoEntryPoint` (line 19)
+
+These are rendered synchronously instead of using the lazy loading pattern.
+
+### Implementation Checklist
+
+- [ ] **Convert Bomb Component**
+  - [ ] Change from: `component: <Bomb />`
+  - [ ] Change to: `lazy: async () => import("../components/Bomb")`
+  - [ ] Ensure Bomb.tsx has default export
+  - [ ] Test error boundary behavior
+
+- [ ] **Convert ComponentsTestPage**
+  - [ ] Change from: `component: <ComponentsTestPage />`
+  - [ ] Change to: `lazy: async () => import("../features/tests/ComponentsPage")`
+  - [ ] Verify test page loads correctly
+
+- [ ] **Convert DetailsPage Components**
+  - [ ] Convert DetailsPageExampleMainView to lazy
+  - [ ] Convert DetailsPage to lazy
+  - [ ] Test navigation between main view and detail view
+  - [ ] Verify route parameters still work
+
+- [ ] **Convert NoEntryPoint**
+  - [ ] Change to lazy import
+  - [ ] Test in nested subsection context
+
+- [ ] **Validation**
+  - [ ] Build production bundle
+  - [ ] Analyze bundle chunks to verify splitting
+  - [ ] Test all converted routes in browser
+  - [ ] Run Cypress E2E tests
+  - [ ] Measure bundle size improvement
+
+### Files to Modify
+- `src/siteMap/siteMap.tsx` - Update route definitions
+- Component files may need default exports added
+
+### Expected Impact
+- Initial bundle size reduction: ~10-20KB (estimated)
+- Improved time to interactive for initial route
+
+---
+
+## 3. Add `useCallback` Memoization for Event Handlers
+
+**Priority**: 🟢 Low  
+**Complexity**: Simple  
+**Impact**: Prevent unnecessary re-renders (if React Compiler doesn't already handle)
+
+### ⚠️ IMPORTANT: React Compiler Consideration
+This project uses `babel-plugin-react-compiler` which **automatically memoizes components and hooks**. Before implementing manual `useCallback`, you should:
+
+1. **Measure first**: Use React DevTools Profiler to identify actual performance issues
+2. **Check compiler output**: Review compiled code to see if memoization is already applied
+3. **Benchmark**: Compare performance with and without manual `useCallback`
+
+**Only proceed if you find evidence that manual memoization provides measurable benefits.**
+
+### Current State
+Several components define inline functions that may be recreated on every render:
+- `src/features/tests/ComponentsPage.tsx` - pagination handlers
+- `src/features/paginatedTable/moviePage.tsx` - filter handlers
+- `src/features/formWizard/wizard.tsx` - navigation and submit handlers
+
+### Implementation Checklist
+
+- [ ] **Performance Analysis** (REQUIRED FIRST STEP)
+  - [ ] Use React DevTools Profiler on ComponentsPage
+  - [ ] Profile moviePage with filters
+  - [ ] Profile wizard navigation
+  - [ ] Document baseline performance metrics
+  - [ ] Review React Compiler debug output ([see docs](https://react.dev/learn/react-compiler/debugging))
+
+- [ ] **IF Performance Issues Found:**
+  - [ ] Add useCallback to ComponentsPage pagination handlers
+  - [ ] Add useCallback to moviePage filter handlers
+  - [ ] Add useCallback to wizard navigation handlers
+  - [ ] Re-measure performance
+  - [ ] Document improvement (or lack thereof)
+
+- [ ] **Testing**
+  - [ ] Verify functionality unchanged
+  - [ ] Run Cypress tests
+  - [ ] Check for any regression in behavior
+
+### Files to Review
+- `src/features/tests/ComponentsPage.tsx`
+- `src/features/paginatedTable/moviePage.tsx`
+- `src/features/formWizard/wizard.tsx`
+
+### References
+- [React Compiler Debugging](https://react.dev/learn/react-compiler/debugging)
+- [useCallback Hook](https://react.dev/reference/react/useCallback)
+
+---
+
+## 4. Consolidate Duplicate Lazy Loading Components
+
+**Priority**: 🟡 Medium  
+**Complexity**: Moderate  
+**Impact**: Better code maintainability, reduced confusion
+
+### Current State
+Two similar implementations for lazy loading exist:
+1. `src/components/lazyLoad.tsx` - Dynamic lazy loading with props
+2. `src/components/createLazyComponent.tsx` - Factory function for lazy components
+
+Both serve similar purposes but have different APIs.
+
+### Analysis
+
+**lazyLoad.tsx:**
+- Props-based API
+- Memoizes the lazy component based on loader
+- Used for dynamic lazy loading scenarios
+
+**createLazyComponent.tsx:**
+- Factory function API
+- Used in `index.tsx` for InitGlobals
+- Simpler, more direct approach
+
+### Proposed Solution
+Create a unified, well-documented lazy loading utility that handles both use cases.
+
+### Implementation Checklist
+
+- [ ] **Analysis**
+  - [ ] Search for all usages of `lazyLoad.tsx`
+  - [ ] Search for all usages of `createLazyComponent.tsx`
+  - [ ] Document use cases for each
+  - [ ] Determine if both patterns are actually needed
+
+- [ ] **Design Decision**
+  - [ ] Decide on unified API (factory vs props-based)
+  - [ ] Consider backwards compatibility
+  - [ ] Design TypeScript types for unified utility
+
+- [ ] **Implementation**
+  - [ ] Create new unified utility (e.g., `src/lib/components/LazyComponent.tsx`)
+  - [ ] Include comprehensive JSDoc documentation
+  - [ ] Export both factory and component versions if needed
+  - [ ] Add usage examples in comments
+
+- [ ] **Migration**
+  - [ ] Update `index.tsx` to use new utility
+  - [ ] Update any other files using old utilities
+  - [ ] Deprecate old files (add deprecation comments)
+  - [ ] Plan removal in future version
+
+- [ ] **Documentation**
+  - [ ] Add to AGENTS.md under "Code Standards and Patterns"
+  - [ ] Document when to use lazy loading
+  - [ ] Provide code examples
+
+- [ ] **Cleanup**
+  - [ ] Remove old utility files (or mark deprecated)
+  - [ ] Update imports across codebase
+  - [ ] Run tests to ensure nothing broke
+
+### Files to Modify
+- `src/components/lazyLoad.tsx`
+- `src/components/createLazyComponent.tsx`
+- `src/index.tsx`
+- Any files importing these utilities
+- `AGENTS.md` (documentation)
+
+---
+
+## 5. Add React.memo to Frequently Re-rendered Components
+
+**Priority**: 🟢 Low  
+**Complexity**: Simple  
+**Impact**: Prevent unnecessary re-renders (if React Compiler doesn't already handle)
+
+### ⚠️ IMPORTANT: React Compiler Consideration
+Same as Issue #3 - React Compiler may already handle this automatically. **Measure performance first before adding manual memoization.**
+
+### Current State
+Several pure presentation components could potentially benefit from `React.memo()`:
+- Table cell renderers
+- Menu items in `sideBar.tsx`
+- Pagination components
+- Rating components
+
+### Implementation Checklist
+
+- [ ] **Performance Analysis** (REQUIRED FIRST STEP)
+  - [ ] Use React DevTools Profiler on table components
+  - [ ] Profile sidebar menu rendering
+  - [ ] Profile pagination component updates
+  - [ ] Document baseline render counts
+  - [ ] Review React Compiler auto-memoization
+
+- [ ] **IF Performance Issues Found:**
+  - [ ] Identify pure components that re-render unnecessarily
+  - [ ] Wrap with React.memo()
+  - [ ] Add custom comparison function if needed
+  - [ ] Re-measure performance
+  - [ ] Document improvements
+
+- [ ] **Testing**
+  - [ ] Verify UI behavior unchanged
+  - [ ] Test edge cases
+  - [ ] Run full test suite
+
+### Candidate Components
+- Table cell renderers in `AppArkApiTable` and `AppSimpleTable`
+- Sidebar menu items
+- Pagination buttons/controls
+- Rating display component
+
+### References
+- [React.memo documentation](https://react.dev/reference/react/memo)
+- [React Compiler Debugging](https://react.dev/learn/react-compiler/debugging)
+
+---
+
+## 6. Implement Web Vitals Reporting Integration
+
+**Priority**: 🟡 Medium  
+**Complexity**: Simple  
+**Impact**: Better performance monitoring and debugging
+
+### Current State
+- `reportWebVitals.ts` exists but only logs to console implicitly
+- `index.tsx` calls `reportWebVitals()` without callback
+- No metrics are sent to analytics or monitoring services
+
+### Proposed Solution
+Integrate Web Vitals with Application Insights (already configured in project)
+
+### Implementation Checklist
+
+- [ ] **Setup**
+  - [ ] Review Application Insights configuration
+  - [ ] Verify `@microsoft/applicationinsights-web` is properly initialized
+  - [ ] Check if custom events are already being tracked
+
+- [ ] **Implementation**
+  - [ ] Create callback function to send metrics to Application Insights
+  - [ ] Add development mode console logging
+  - [ ] Update `index.tsx` to pass callback to `reportWebVitals()`
+  - [ ] Consider adding environment-based configuration
+
+- [ ] **Metrics to Track**
+  - [ ] CLS (Cumulative Layout Shift)
+  - [ ] FCP (First Contentful Paint)
+  - [ ] LCP (Largest Contentful Paint)
+  - [ ] TTFB (Time to First Byte)
+  - [ ] INP (Interaction to Next Paint) - if available in web-vitals v5
+
+- [ ] **Testing**
+  - [ ] Test in development mode (console logs)
+  - [ ] Test in production build
+  - [ ] Verify metrics appear in Application Insights
+  - [ ] Check for any performance overhead
+
+- [ ] **Documentation**
+  - [ ] Document how to view metrics in Application Insights
+  - [ ] Add performance monitoring guide to docs
+  - [ ] Update AGENTS.md with performance guidelines
+
+### Files to Modify
+- `src/reportWebVitals.ts` - Add Application Insights integration
+- `src/index.tsx` - Pass callback to reportWebVitals
+- Consider creating `src/lib/analytics/webVitals.ts` for better organization
+
+### Example Implementation
+```typescript
+// src/reportWebVitals.ts
+import { type Metric } from "web-vitals";
+import { appInsights } from "./lib/appInsights"; // Adjust path
+
+const reportWebVitals = (onPerfEntry?: (metric: Metric) => void) => {
+  if (onPerfEntry && onPerfEntry instanceof Function) {
+    import("web-vitals")
+      .then(({ onCLS, onFCP, onLCP, onTTFB, onINP }) => {
+        onCLS(onPerfEntry);
+        onFCP(onPerfEntry);
+        onLCP(onPerfEntry);
+        onTTFB(onPerfEntry);
+        onINP(onPerfEntry); // If available
+      })
+      .catch(console.error);
+  }
+};
+
+export const sendToAnalytics = (metric: Metric) => {
+  // Log in development
+  if (process.env.NODE_ENV === "development") {
+    console.log(metric);
+  }
+  
+  // Send to Application Insights in production
+  if (appInsights) {
+    appInsights.trackMetric({
+      name: metric.name,
+      average: metric.value,
+      properties: {
+        id: metric.id,
+        navigationType: metric.navigationType,
+      },
+    });
+  }
+};
+
+export default reportWebVitals;
+```
+
+### References
+- [Web Vitals documentation](https://web.dev/vitals/)
+- [Application Insights Custom Metrics](https://learn.microsoft.com/en-us/azure/azure-monitor/app/api-custom-events-metrics)
+
+---
+
+## 7. [Reserved for Future Use]
+
+*Issue #7 was skipped in the original list*
+
+---
+
+## 8. Optimize TanStack Table Column Definitions with useMemo
+
+**Priority**: 🟢 Low  
+**Complexity**: Simple  
+**Impact**: Prevent unnecessary table re-renders (if React Compiler doesn't already handle)
+
+### ⚠️ IMPORTANT: React Compiler Consideration
+Same as Issues #3 and #5 - React Compiler may automatically optimize this. **Measure first!**
+
+### Current State
+In `src/features/paginatedTable/moviePage.tsx` and similar table views, column definitions are recreated on every render.
+
+### Implementation Checklist
+
+- [ ] **Performance Analysis** (REQUIRED FIRST STEP)
+  - [ ] Profile moviePage table rendering
+  - [ ] Count unnecessary re-renders with React DevTools
+  - [ ] Check React Compiler output for auto-memoization
+  - [ ] Document baseline performance
+
+- [ ] **IF Performance Issues Found:**
+  - [ ] Wrap column definitions in useMemo in moviePage.tsx
+  - [ ] Add proper dependency array (likely empty or [t] for translations)
+  - [ ] Apply to other table components if needed
+  - [ ] Re-measure performance
+
+- [ ] **Testing**
+  - [ ] Verify table filtering still works
+  - [ ] Test sorting functionality
+  - [ ] Test pagination
+  - [ ] Ensure translations update correctly
+  - [ ] Run Cypress tests
+
+### Files to Review
+- `src/features/paginatedTable/moviePage.tsx`
+- `src/features/configTable/configTableExample.tsx` (if applicable)
+- `src/features/formExample/videoGamesPage.tsx` (if applicable)
+
+### Example Implementation
+```typescript
+const columns = useMemo(
+  () => [
+    columnHelper.accessor(row => row.title, {
+      id: "title",
+      cell: info => info.getValue(),
+      header: () => <span>{t("movies_title")}</span>,
+      meta: { type: "string" },
+    }),
+    // ... more columns
+  ] as ColumnDef<Movie>[],
+  [t], // Dependency on translation function
+);
+```
+
+---
+
+## 9. Add Bundle Analysis Tooling
+
+**Priority**: 🟡 Medium  
+**Complexity**: Simple  
+**Impact**: Better visibility into bundle size, identify optimization opportunities
+
+### Current State
+No bundle analysis tools configured in the project.
+
+### Proposed Solution
+Add `rollup-plugin-visualizer` to generate visual bundle analysis reports.
+
+### Implementation Checklist
+
+- [ ] **Installation**
+  - [ ] Install rollup-plugin-visualizer:
+    ```bash
+    npm install --save-dev rollup-plugin-visualizer
+    ```
+
+- [ ] **Configuration**
+  - [ ] Add plugin to `vite.config.ts`
+  - [ ] Configure output format (HTML recommended)
+  - [ ] Set up separate build command for analysis
+  - [ ] Add .gitignore entry for stats files
+
+- [ ] **Scripts**
+  - [ ] Add `analyze` script to package.json:
+    ```json
+    "analyze": "vite build --mode analyze"
+    ```
+  - [ ] Document usage in README.md
+
+- [ ] **Documentation**
+  - [ ] Create guide for interpreting bundle analysis
+  - [ ] Document size budgets and thresholds
+  - [ ] Add to AGENTS.md as recommended practice
+
+- [ ] **CI Integration (Optional)**
+  - [ ] Consider adding bundle size check to CI
+  - [ ] Set up size budget warnings
+  - [ ] Generate report on PR builds
+
+### Files to Modify
+- `vite.config.ts` - Add visualizer plugin
+- `package.json` - Add analyze script
+- `.gitignore` - Ignore stats.html and other generated files
+- `README.md` - Document usage
+- `AGENTS.md` - Add to verification procedures
+
+### Example Configuration
+```typescript
+// vite.config.ts
+import { visualizer } from 'rollup-plugin-visualizer';
+
+export default defineConfig({
+  plugins: [
+    // ... existing plugins
+    visualizer({
+      filename: './dist/stats.html',
+      open: true,
+      gzipSize: true,
+      brotliSize: true,
+    }),
+  ],
+});
+```
+
+### Size Budgets (Suggested)
+- Initial bundle: < 250 KB (gzipped)
+- Lazy-loaded chunks: < 100 KB each (gzipped)
+- Total JS: < 1 MB (gzipped)
+
+---
+
+## 10. Implement Image Lazy Loading with Intersection Observer
+
+**Priority**: 🟡 Medium  
+**Complexity**: Moderate  
+**Impact**: Faster initial page load, reduced bandwidth usage
+
+### Current State
+- `ViteImageOptimizer` is configured for build-time optimization
+- No runtime lazy loading for images in lists/tables
+- All images load eagerly
+
+### Proposed Solution
+Add native lazy loading and/or Intersection Observer for images in dynamic content.
+
+### Implementation Checklist
+
+- [ ] **Audit**
+  - [ ] Identify all image usage across the app
+  - [ ] Find images in lists, tables, or below the fold
+  - [ ] Document current loading behavior
+
+- [ ] **Native Lazy Loading**
+  - [ ] Add `loading="lazy"` to `<img>` tags
+  - [ ] Test browser compatibility (should be good with modern browsers)
+  - [ ] Verify images load when scrolled into view
+
+- [ ] **Create Lazy Image Component (if needed)**
+  - [ ] Create `src/lib/components/LazyImage.tsx`
+  - [ ] Use Intersection Observer for more control
+  - [ ] Add placeholder/blur effect during loading
+  - [ ] Handle error states
+
+- [ ] **Apply to Lists/Tables**
+  - [ ] Update table cell renderers if they display images
+  - [ ] Update list items with images
+  - [ ] Update card components with images
+
+- [ ] **Testing**
+  - [ ] Test on slow 3G network simulation
+  - [ ] Verify images load when scrolled into view
+  - [ ] Check for layout shift (CLS)
+  - [ ] Test accessibility (alt text, etc.)
+  - [ ] Run Lighthouse audit
+
+- [ ] **Documentation**
+  - [ ] Document LazyImage component usage
+  - [ ] Add to AGENTS.md component guidelines
+
+### Files to Create/Modify
+- Create: `src/lib/components/LazyImage.tsx` (if custom component needed)
+- Modify: Any components rendering images in lists/tables
+- Update: Component documentation
+
+### Example Implementation
+```typescript
+// Simple approach - native lazy loading
+<img src={imageSrc} alt={alt} loading="lazy" />
+
+// Advanced approach - custom component with Intersection Observer
+<LazyImage 
+  src={imageSrc} 
+  alt={alt} 
+  placeholder={placeholderSrc}
+  threshold={0.1}
+/>
+```
+
+---
+
+## 11. [Reserved for Future Use]
+
+*Issue #11 was skipped in the original list*
+
+---
+
+## 12. Replace lodash-es Selective Imports
+
+**Priority**: 🟢 Low  
+**Complexity**: Simple  
+**Impact**: Reduced bundle size
+
+### Current State
+The codebase uses `lodash-es` for utilities:
+- `isEqual` - Deep equality comparison
+- `set` - Nested object property setting
+- Possibly others
+
+### Proposed Solution
+Replace with smaller alternatives or native JavaScript where possible.
+
+### Implementation Checklist
+
+- [ ] **Audit**
+  - [ ] Search for all lodash-es imports:
+    ```bash
+    grep -r "from 'lodash-es'" src/
+    ```
+  - [ ] Document each usage and context
+  - [ ] Measure current bundle impact
+
+- [ ] **Replacement Strategy**
+  - [ ] For `isEqual`:
+    - [ ] Consider `fast-deep-equal` (~1KB vs ~17KB)
+    - [ ] Or implement shallow comparison if sufficient
+  - [ ] For `set`:
+    - [ ] Use native spreading for shallow updates
+    - [ ] Use `structuredClone` + manual setting for deep updates
+    - [ ] Or keep lodash.set if heavily used
+  - [ ] For other utilities:
+    - [ ] Evaluate native alternatives
+    - [ ] Consider micro-libraries
+
+- [ ] **Implementation**
+  - [ ] Install alternatives if needed (e.g., fast-deep-equal)
+  - [ ] Create utility functions in `src/lib/utils/` for common patterns
+  - [ ] Replace imports one file at a time
+  - [ ] Test each replacement thoroughly
+
+- [ ] **Testing**
+  - [ ] Run full test suite after each replacement
+  - [ ] Verify behavior is identical
+  - [ ] Check for edge cases (null, undefined, circular references)
+
+- [ ] **Cleanup**
+  - [ ] Remove lodash-es from dependencies if fully replaced
+  - [ ] Update package.json
+  - [ ] Run bundle analysis to verify size reduction
+
+### Files to Review
+- Search results from `grep -r "lodash-es" src/`
+- `package.json` - dependencies
+
+### Example Replacements
+```typescript
+// Before
+import { isEqual } from 'lodash-es';
+const same = isEqual(obj1, obj2);
+
+// After
+import equal from 'fast-deep-equal';
+const same = equal(obj1, obj2);
+
+// Before
+import { set } from 'lodash-es';
+const updated = set(obj, 'a.b.c', value);
+
+// After
+const updated = {
+  ...obj,
+  a: {
+    ...obj.a,
+    b: {
+      ...obj.a.b,
+      c: value,
+    },
+  },
+};
+```
+
+---
+
+## 13. Add Error Boundary Granularity
+
+**Priority**: 🟡 Medium  
+**Complexity**: Moderate  
+**Impact**: Better UX with partial failures, improved error recovery
+
+### Current State
+- Global error boundary in `index.tsx`
+- Route-level error boundaries (likely in router setup)
+- No feature-level error boundaries
+
+### Proposed Solution
+Add feature-level error boundaries around:
+- Table components (network errors shouldn't crash the whole page)
+- Form sections
+- Widget/card components
+
+### Implementation Checklist
+
+- [ ] **Planning**
+  - [ ] Review current error boundary implementation
+  - [ ] Identify components that should be isolated
+  - [ ] Design fallback UI components
+
+- [ ] **Create Feature Error Boundaries**
+  - [ ] Create `src/lib/components/FeatureErrorBoundary.tsx`
+  - [ ] Design appropriate fallback UI
+  - [ ] Include retry mechanism
+  - [ ] Add error reporting to Application Insights
+
+- [ ] **Apply to Tables**
+  - [ ] Wrap AppArkApiTable with error boundary
+  - [ ] Wrap AppSimpleTable with error boundary
+  - [ ] Test network failure scenarios
+  - [ ] Verify rest of page remains functional
+
+- [ ] **Apply to Forms**
+  - [ ] Wrap form sections with error boundaries
+  - [ ] Test validation errors vs runtime errors
+  - [ ] Ensure form state is preserved when possible
+
+- [ ] **Apply to Widgets/Cards**
+  - [ ] Identify card/widget components
+  - [ ] Add error boundaries at appropriate level
+  - [ ] Test isolated failures
+
+- [ ] **Testing**
+  - [ ] Simulate network errors
+  - [ ] Simulate component errors
+  - [ ] Test retry functionality
+  - [ ] Verify errors are logged correctly
+  - [ ] Run Cypress tests
+
+- [ ] **Documentation**
+  - [ ] Document error boundary strategy in AGENTS.md
+  - [ ] Add guidelines for when to use error boundaries
+  - [ ] Document fallback UI patterns
+
+### Files to Create/Modify
+- Create: `src/lib/components/FeatureErrorBoundary.tsx`
+- Modify: Table components, form components, widget components
+- Update: `AGENTS.md` with error handling guidelines
+
+### Example Implementation
+```typescript
+// src/lib/components/FeatureErrorBoundary.tsx
+interface Props {
+  fallback?: React.ReactNode;
+  onError?: (error: Error, errorInfo: ErrorInfo) => void;
+  children: React.ReactNode;
+}
+
+export function FeatureErrorBoundary({ 
+  fallback, 
+  onError, 
+  children 
+}: Props) {
+  return (
+    <ReactErrorBoundary
+      fallbackRender={({ error, resetErrorBoundary }) => (
+        fallback || (
+          <Box p={4} bg="error.subtle" borderRadius="md">
+            <Text color="error.fg">Something went wrong</Text>
+            <Button onClick={resetErrorBoundary} size="sm">
+              Try again
+            </Button>
+          </Box>
+        )
+      )}
+      onError={onError}
+    >
+      {children}
+    </ReactErrorBoundary>
+  );
+}
+
+// Usage in table
+<FeatureErrorBoundary>
+  <AppArkApiTable {...props} />
+</FeatureErrorBoundary>
+```
+
+---
+
+## 14. Implement Virtualization for Large Lists
+
+**Priority**: 🟡 Medium  
+**Complexity**: Moderate  
+**Impact**: Improved rendering performance for large datasets
+
+### Current State
+- `AppSimpleTable` and `AppArkApiTable` render all rows in the current page
+- No virtualization for lists with many items
+- Performance may degrade with large page sizes
+
+### Proposed Solution
+Add virtualization using `@tanstack/react-virtual` (integrates well with TanStack Table)
+
+### Implementation Checklist
+
+- [ ] **Research**
+  - [ ] Test current performance with large datasets (100+ rows)
+  - [ ] Determine if virtualization is actually needed
+  - [ ] Review @tanstack/react-virtual documentation
+  - [ ] Check integration with TanStack Table
+
+- [ ] **Installation**
+  - [ ] Install @tanstack/react-virtual:
+    ```bash
+    npm install @tanstack/react-virtual
+    ```
+
+- [ ] **Create Virtualized Table Component**
+  - [ ] Create `src/lib/components/AppVirtualTable.tsx`
+  - [ ] Integrate with existing AppArkApiTable
+  - [ ] Handle row height calculation
+  - [ ] Preserve existing features (sorting, filtering, pagination)
+
+- [ ] **Testing**
+  - [ ] Test with various dataset sizes (10, 100, 1000+ rows)
+  - [ ] Test scrolling performance
+  - [ ] Test with dynamic row heights if applicable
+  - [ ] Verify sorting and filtering still work
+  - [ ] Test accessibility (keyboard navigation)
+
+- [ ] **Documentation**
+  - [ ] Document when to use virtualized vs regular tables
+  - [ ] Add usage examples
+  - [ ] Update AGENTS.md with performance guidelines
+
+- [ ] **Optional: List Virtualization**
+  - [ ] Identify other lists that could benefit
+  - [ ] Create generic VirtualList component
+  - [ ] Apply to relevant components
+
+### Files to Create/Modify
+- Create: `src/lib/components/AppVirtualTable.tsx`
+- Modify: Existing table components to optionally use virtualization
+- Update: Documentation
+
+### Example Implementation
+```typescript
+import { useVirtualizer } from '@tanstack/react-virtual';
+
+function VirtualizedTable({ data, columns }) {
+  const tableContainerRef = useRef<HTMLDivElement>(null);
+  
+  const rowVirtualizer = useVirtualizer({
+    count: data.length,
+    getScrollElement: () => tableContainerRef.current,
+    estimateSize: () => 50, // Estimated row height
+    overscan: 5,
+  });
+  
+  const virtualRows = rowVirtualizer.getVirtualItems();
+  
+  return (
+    <Box ref={tableContainerRef} h="500px" overflow="auto">
+      <Box h={`${rowVirtualizer.getTotalSize()}px`} position="relative">
+        {virtualRows.map(virtualRow => {
+          const row = data[virtualRow.index];
+          return (
+            <Box
+              key={virtualRow.key}
+              position="absolute"
+              top={0}
+              left={0}
+              w="100%"
+              h={`${virtualRow.size}px`}
+              transform={`translateY(${virtualRow.start}px)`}
+            >
+              {/* Render row */}
+            </Box>
+          );
+        })}
+      </Box>
+    </Box>
+  );
+}
+```
+
+### Performance Targets
+- Support 1000+ rows without significant lag
+- Scroll at 60fps
+- Initial render < 100ms for visible rows
+
+### References
+- [@tanstack/react-virtual documentation](https://tanstack.com/virtual/latest)
+- [TanStack Table + Virtual Integration](https://tanstack.com/virtual/latest/docs/framework/react/examples/table)
+
+---
+
+## Implementation Strategy
+
+### Phase 1: Quick Wins (1-2 weeks)
+Focus on high-impact, low-complexity items:
+1. ✅ Issue #2 - Route-based code splitting (Simple)
+2. ✅ Issue #6 - Web Vitals reporting (Simple)
+3. ✅ Issue #9 - Bundle analysis tooling (Simple)
+
+### Phase 2: Dependency Updates (1 week)
+1. ✅ Issue #1 - Replace react-dnd (Complex, but high priority)
+
+### Phase 3: Code Quality (1-2 weeks)
+1. ✅ Issue #4 - Consolidate lazy loading (Moderate)
+2. ✅ Issue #13 - Error boundary granularity (Moderate)
+
+### Phase 4: Performance Optimization (2-3 weeks)
+**Note**: Measure first, optimize only if needed
+1. ⚠️ Issue #3 - useCallback memoization (Only if React Compiler doesn't handle)
+2. ⚠️ Issue #5 - React.memo (Only if React Compiler doesn't handle)
+3. ⚠️ Issue #8 - useMemo for columns (Only if React Compiler doesn't handle)
+4. ✅ Issue #10 - Image lazy loading (Moderate)
+5. ✅ Issue #14 - Virtualization (Moderate, if large datasets exist)
+
+### Phase 5: Bundle Optimization (1 week)
+1. ✅ Issue #12 - Replace lodash-es (Simple)
+
+---
+
+## Measurement & Success Criteria
+
+### Before Starting
+- [ ] Run Lighthouse audit for baseline scores
+- [ ] Measure initial bundle size
+- [ ] Document current performance metrics
+- [ ] Run React DevTools Profiler on key pages
+
+### After Each Phase
+- [ ] Re-run Lighthouse audit
+- [ ] Compare bundle sizes
+- [ ] Measure performance improvements
+- [ ] Document changes and impact
+
+### Target Metrics
+- **Lighthouse Performance**: > 90
+- **Bundle Size**: Reduce by 15-20%
+- **First Contentful Paint**: < 1.5s
+- **Largest Contentful Paint**: < 2.5s
+- **Cumulative Layout Shift**: < 0.1
+- **Time to Interactive**: < 3.5s
+
+---
+
+## Risk Management
+
+### Potential Risks
+
+1. **React Compiler Conflicts**
+   - **Risk**: Manual memoization may conflict with React Compiler
+   - **Mitigation**: Always test with React Compiler enabled, measure performance impact
+
+2. **Breaking Changes in Migration**
+   - **Risk**: Replacing react-dnd could break existing functionality
+   - **Mitigation**: Comprehensive testing, feature flags, gradual rollout
+
+3. **Bundle Size Increase**
+   - **Risk**: Adding new libraries might increase bundle size
+   - **Mitigation**: Use bundle analyzer, tree-shaking, dynamic imports
+
+4. **Over-optimization**
+   - **Risk**: Premature optimization adding complexity without benefit
+   - **Mitigation**: Always measure first, document performance improvements
+
+### Rollback Plan
+- All changes should be in separate commits
+- Feature flags for major changes
+- Keep old code until new code is verified
+- Document rollback procedures
+
+---
+
+## Notes
+
+### React Compiler Considerations
+This project uses `babel-plugin-react-compiler` which provides automatic memoization. Before implementing manual optimization (useCallback, React.memo, useMemo):
+
+1. **Check compiler output**: `npm run build` and review compiled code
+2. **Use React DevTools Profiler**: Measure actual render performance
+3. **Reference debugging guide**: https://react.dev/learn/react-compiler/debugging
+4. **Document findings**: Keep notes on whether manual optimization helped
+
+### Development Workflow
+1. Create feature branch for each issue
+2. Implement changes with tests
+3. Run full test suite
+4. Update documentation
+5. Create PR with before/after metrics
+6. Code review and approval
+7. Merge to main
+
+### Documentation Updates
+Keep these documents updated:
+- `AGENTS.md` - Add new patterns and guidelines
+- `README.md` - Update features and setup instructions
+- This document - Track progress and learnings
+
+---
+
+## Progress Tracking
+
+### Legend
+- ⬜ Not started
+- 🟦 In progress
+- ✅ Completed
+- ⏸️ Paused/Blocked
+- ❌ Cancelled
+
+### Overall Progress
+
+| Issue | Priority | Status | Assigned To | Target Date | Completed Date |
+|-------|----------|--------|-------------|-------------|----------------|
+| #1 - Replace react-dnd | 🔴 High | ⬜ | - | - | - |
+| #2 - Route code splitting | 🟡 Medium | ⬜ | - | - | - |
+| #3 - useCallback | 🟢 Low | ⬜ | - | - | - |
+| #4 - Consolidate lazy loading | 🟡 Medium | ⬜ | - | - | - |
+| #5 - React.memo | 🟢 Low | ⬜ | - | - | - |
+| #6 - Web Vitals | 🟡 Medium | ⬜ | - | - | - |
+| #8 - useMemo columns | 🟢 Low | ⬜ | - | - | - |
+| #9 - Bundle analysis | 🟡 Medium | ⬜ | - | - | - |
+| #10 - Image lazy loading | 🟡 Medium | ⬜ | - | - | - |
+| #12 - Replace lodash-es | 🟢 Low | ⬜ | - | - | - |
+| #13 - Error boundaries | 🟡 Medium | ⬜ | - | - | - |
+| #14 - Virtualization | 🟡 Medium | ⬜ | - | - | - |
+
+### Phase Completion
+- [ ] Phase 1: Quick Wins (0/3)
+- [ ] Phase 2: Dependency Updates (0/1)
+- [ ] Phase 3: Code Quality (0/2)
+- [ ] Phase 4: Performance Optimization (0/5)
+- [ ] Phase 5: Bundle Optimization (0/1)
+
+---
+
+## Appendix
+
+### Useful Commands
+
+```bash
+# Development
+npm start                    # Start dev server
+npm run build               # Production build
+npm run preview             # Preview production build
+
+# Analysis
+npm run lint                # Run ESLint
+npm test                    # Run Cypress E2E tests
+npm run analyze             # Bundle analysis (after Issue #9)
+
+# Package Management
+npm outdated                # Check for updates
+npm update <package>        # Update specific package
+npx npm-check-updates       # Check all updates
+
+# Performance
+npm run build -- --mode=production  # Production build
+# Then analyze bundle in dist/stats.html (after Issue #9)
+```
+
+### External Resources
+
+- [React 19 Documentation](https://react.dev/)
+- [React Compiler](https://react.dev/learn/react-compiler)
+- [Vite Documentation](https://vite.dev/)
+- [TanStack Table](https://tanstack.com/table/latest)
+- [Chakra UI v3](https://www.chakra-ui.com/)
+- [Web Vitals](https://web.dev/vitals/)
+- [Performance Budgets](https://web.dev/performance-budgets-101/)
+
+### Contact
+
+For questions or suggestions about this modernization plan, please:
+- Open an issue in the repository
+- Contact the development team
+- Review the AGENTS.md for project guidelines
+
+---
+
+**Document Version**: 1.0  
+**Last Updated**: 2026-01-13  
+**Next Review**: After Phase 1 completion
