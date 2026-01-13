@@ -13,11 +13,6 @@ import { RiMovie2Line, RiTestTubeLine } from "react-icons/ri";
 import { TbListDetails } from "react-icons/tb";
 import { Navigate } from "react-router";
 
-import { Bomb } from "../components/Bomb";
-import DetailsPage from "../features/detailsPage/detailsPage";
-import DetailsPageExampleMainView from "../features/detailsPage/detailsPageExampleMainView";
-import NoEntryPoint from "../features/staticPageExample/staticPage";
-import ComponentsTestPage from "../features/tests/ComponentsPage";
 import type { ArkRoute } from "../lib/siteMapTypes";
 
 /*This is the Main Section ARRAY populate this to populate the main nav menu
@@ -136,14 +131,14 @@ export const siteMap: ArkRoute[] = [
         label: "Throw Error",
         icon: FaBomb,
         isInMenu: true,
-        component: <Bomb />,
+        lazy: async () => import("../components/Bomb"),
       },
       {
         path: "componentsTestPage",
         label: "Components Test Page",
         icon: RiTestTubeLine,
         isInMenu: true,
-        component: <ComponentsTestPage />,
+        lazy: async () => import("../features/tests/ComponentsPage"),
       },
       //This is the way we must define the routes for pages that have details pages
       {
@@ -156,13 +151,13 @@ export const siteMap: ArkRoute[] = [
             path: "",
             label: "",
             isInMenu: false,
-            component: <DetailsPageExampleMainView />,
+            lazy: async () => import("../features/detailsPage/detailsPageExampleMainView"),
           },
           {
             path: ":id",
             label: "Details",
             isInMenu: false,
-            component: <DetailsPage />,
+            lazy: async () => import("../features/detailsPage/detailsPage"),
           },
         ],
       },
@@ -201,7 +196,7 @@ export const siteMap: ArkRoute[] = [
           {
             path: "authonly",
             label: "Auth Only",
-            component: <NoEntryPoint />,
+            lazy: async () => import("../features/staticPageExample/staticPage"),
             icon: FaTable,
             isInMenu: true,
             authenticatedOnly: true,

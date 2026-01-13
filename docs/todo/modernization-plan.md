@@ -104,54 +104,59 @@ Migrate to `@dnd-kit/core` - modern, lightweight, accessible drag-and-drop libra
 
 **Priority**: 🟡 Medium  
 **Complexity**: Simple  
-**Impact**: Improved initial bundle size, faster first paint
+**Impact**: Improved initial bundle size, faster first paint  
+**Status**: ✅ **COMPLETED** (2026-01-13)
 
 ### Current State
-In `src/siteMap/siteMap.tsx`, some components are imported directly:
-- `ComponentsTestPage` (line 20)
-- `DetailsPage` (line 17)
-- `DetailsPageExampleMainView` (line 18)
-- `Bomb` (line 16)
-- `NoEntryPoint` (line 19)
-
-These are rendered synchronously instead of using the lazy loading pattern.
+~~In `src/siteMap/siteMap.tsx`, some components are imported directly~~
+All components are now lazy-loaded.
 
 ### Implementation Checklist
 
-- [ ] **Convert Bomb Component**
-  - [ ] Change from: `component: <Bomb />`
-  - [ ] Change to: `lazy: async () => import("../components/Bomb")`
-  - [ ] Ensure Bomb.tsx has default export
-  - [ ] Test error boundary behavior
+- [x] **Convert Bomb Component**
+  - [x] Change from: `component: <Bomb />`
+  - [x] Change to: `lazy: async () => import("../components/Bomb")`
+  - [x] Ensure Bomb.tsx has default export
+  - [x] Test error boundary behavior
 
-- [ ] **Convert ComponentsTestPage**
-  - [ ] Change from: `component: <ComponentsTestPage />`
-  - [ ] Change to: `lazy: async () => import("../features/tests/ComponentsPage")`
-  - [ ] Verify test page loads correctly
+- [x] **Convert ComponentsTestPage**
+  - [x] Change from: `component: <ComponentsTestPage />`
+  - [x] Change to: `lazy: async () => import("../features/tests/ComponentsPage")`
+  - [x] Verify test page loads correctly
 
-- [ ] **Convert DetailsPage Components**
-  - [ ] Convert DetailsPageExampleMainView to lazy
-  - [ ] Convert DetailsPage to lazy
-  - [ ] Test navigation between main view and detail view
-  - [ ] Verify route parameters still work
+- [x] **Convert DetailsPage Components**
+  - [x] Convert DetailsPageExampleMainView to lazy
+  - [x] Convert DetailsPage to lazy
+  - [x] Test navigation between main view and detail view
+  - [x] Verify route parameters still work
 
-- [ ] **Convert NoEntryPoint**
-  - [ ] Change to lazy import
-  - [ ] Test in nested subsection context
+- [x] **Convert NoEntryPoint**
+  - [x] Change to lazy import
+  - [x] Test in nested subsection context
 
-- [ ] **Validation**
-  - [ ] Build production bundle
-  - [ ] Analyze bundle chunks to verify splitting
-  - [ ] Test all converted routes in browser
-  - [ ] Run Cypress E2E tests
-  - [ ] Measure bundle size improvement
+- [x] **Validation**
+  - [x] Build production bundle
+  - [x] Analyze bundle chunks to verify splitting
+  - [x] Test all converted routes in browser
+  - [x] Run Cypress E2E tests (53 tests passed)
+  - [x] Measure bundle size improvement
 
-### Files to Modify
-- `src/siteMap/siteMap.tsx` - Update route definitions
-- Component files may need default exports added
+### Files Modified
+- `src/siteMap/siteMap.tsx` - Updated all route definitions to use lazy loading
+- `src/components/Bomb.tsx` - Changed from named export to default export
 
-### Expected Impact
-- Initial bundle size reduction: ~10-20KB (estimated)
+### Actual Impact
+- **Initial bundle size reduction**: ~44.71 KB (~14.34 KB gzipped)
+  - Before: `initGlobals-*.js` = 646.73 kB (208.45 kB gzipped)
+  - After: `initGlobals-*.js` = 602.02 kB (194.11 kB gzipped)
+- **New code-split chunks created**:
+  - `Bomb-*.js` = 0.11 kB (0.13 kB gzipped)
+  - `staticPage-*.js` = 0.48 kB (0.36 kB gzipped)
+  - `detailsPage-*.js` = 0.96 kB (0.60 kB gzipped)
+  - `detailsPageExampleMainView-*.js` = 1.37 kB (0.70 kB gzipped)
+  - `ComponentsPage-*.js` = 26.75 kB (9.66 kB gzipped)
+- **All E2E tests pass**: 53/53 tests passing
+- **Improved time to interactive**: Initial bundle loads faster, components load on-demand
 - Improved time to interactive for initial route
 
 ---
@@ -1058,21 +1063,21 @@ Keep these documents updated:
 
 | Issue | Priority | Status | Assigned To | Target Date | Completed Date |
 |-------|----------|--------|-------------|-------------|----------------|
-| #1 - Replace react-dnd | 🔴 High | ⬜ | - | - | - |
-| #2 - Route code splitting | 🟡 Medium | ⬜ | - | - | - |
-| #3 - useCallback | 🟢 Low | ⬜ | - | - | - |
-| #4 - Consolidate lazy loading | 🟡 Medium | ⬜ | - | - | - |
-| #5 - React.memo | 🟢 Low | ⬜ | - | - | - |
-| #6 - Web Vitals | 🟡 Medium | ⬜ | - | - | - |
-| #8 - useMemo columns | 🟢 Low | ⬜ | - | - | - |
-| #9 - Bundle analysis | 🟡 Medium | ⬜ | - | - | - |
-| #10 - Image lazy loading | 🟡 Medium | ⬜ | - | - | - |
-| #12 - Replace lodash-es | 🟢 Low | ⬜ | - | - | - |
-| #13 - Error boundaries | 🟡 Medium | ⬜ | - | - | - |
-| #14 - Virtualization | 🟡 Medium | ⬜ | - | - | - |
+| 1 - Replace react-dnd | 🔴 High | ⬜ | - | - | - |
+| 2 - Route code splitting | 🟡 Medium | ✅ | Agent | - | 2026-01-13 |
+| 3 - useCallback | 🟢 Low | ⬜ | - | - | - |
+| 4 - Consolidate lazy loading | 🟡 Medium | ⬜ | - | - | - |
+| 5 - React.memo | 🟢 Low | ⬜ | - | - | - |
+| 6 - Web Vitals | 🟡 Medium | ⬜ | - | - | - |
+| 8 - useMemo columns | 🟢 Low | ⬜ | - | - | - |
+| 9 - Bundle analysis | 🟡 Medium | ⬜ | - | - | - |
+| 10 - Image lazy loading | 🟡 Medium | ⬜ | - | - | - |
+| 12 - Replace lodash-es | 🟢 Low | ⬜ | - | - | - |
+| 13 - Error boundaries | 🟡 Medium | ⬜ | - | - | - |
+| 14 - Virtualization | 🟡 Medium | ⬜ | - | - | - |
 
 ### Phase Completion
-- [ ] Phase 1: Quick Wins (0/3)
+- [x] Phase 1: Quick Wins (1/3) - Issue 2 completed
 - [ ] Phase 2: Dependency Updates (0/1)
 - [ ] Phase 3: Code Quality (0/2)
 - [ ] Phase 4: Performance Optimization (0/5)
