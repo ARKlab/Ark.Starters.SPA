@@ -954,6 +954,25 @@ export const UserCard = ({ name, email }: UserCardProps) => {
 
 ## Code Standards and Patterns
 
+### Lazy Loading Components
+
+Use `LazyComponent` for routes, `createLazyComponent` for entry points.
+
+```typescript
+// Routes (automatic via siteMap.tsx)
+export const siteMap: ArkRoute[] = [{
+  path: "/dashboard",
+  lazy: async () => import("../features/dashboard/dashboardPage"),
+}];
+
+// Entry points
+import { createLazyComponent } from "@/lib/components/createLazyComponent";
+const InitGlobals = createLazyComponent(() => import("./initGlobals"));
+```
+
+---
+
+
 ### React Component Patterns
 
 #### Functional Components with Hooks
