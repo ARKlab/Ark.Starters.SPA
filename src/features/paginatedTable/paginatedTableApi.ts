@@ -1,5 +1,4 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import { every, orderBy, filter } from "lodash-es";
 
 import { appFetchQuery } from "../../app/appFetchQuery";
 import type { ArkPagedQueryParameters, ListResponse } from "../../lib/apiTypes";
@@ -44,8 +43,8 @@ export const simulatedArkQueryWithParams = (params: ArkPagedQueryParameters) => 
   let filteredMovies = moviesData;
 
   if (filters && filters.length > 0) {
-    filteredMovies = filter(filteredMovies, movie => {
-      return every(filters, columnFilter => {
+    filteredMovies = filteredMovies.filter(movie => {
+      return filters.every(columnFilter => {
         const movieValue = movie[columnFilter.id as keyof Movie];
         if (columnFilter.id === "releaseDate" && Array.isArray(columnFilter.value)) {
           const releaseDate = new Date(movieValue as string);
@@ -73,9 +72,18 @@ export const simulatedArkQueryWithParams = (params: ArkPagedQueryParameters) => 
   }
 
   if (sorting && sorting.length > 0) {
-    const sortFields = sorting.map(sort => sort.id);
-    const sortOrders = sorting.map(sort => (sort.desc ? "desc" : "asc"));
-    filteredMovies = orderBy(filteredMovies, sortFields, sortOrders);
+    filteredMovies = [...filteredMovies].sort((a, b) => {
+      for (const sort of sorting) {
+        const aVal = a[sort.id as keyof Movie];
+        const bVal = b[sort.id as keyof Movie];
+        
+        if (aVal === bVal) continue;
+        
+        const comparison = aVal > bVal ? 1 : -1;
+        return sort.desc ? -comparison : comparison;
+      }
+      return 0;
+    });
   }
   const count = filteredMovies.length;
   let data = filteredMovies.slice(skip, skip + limit);
