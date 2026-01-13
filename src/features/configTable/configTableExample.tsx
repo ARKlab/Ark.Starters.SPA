@@ -1,17 +1,13 @@
-import { Box } from "@chakra-ui/react";
+import { Box } from '@chakra-ui/react'
 
-import { FeatureErrorBoundary } from "../../lib/components/FeatureErrorBoundary/FeatureErrorBoundary";
-
-import ConfigTable from "./configTable";
+import ConfigTable from './configTable'
 
 const ConfigTableExampleView = () => {
   return (
     <Box>
-      <FeatureErrorBoundary featureLabel="Config Table">
-        <ConfigTable />
-      </FeatureErrorBoundary>
+      <ConfigTable />
     </Box>
-  );
-};
+  )
+}
 
-export default ConfigTableExampleView;
+export default ConfigTableExampleView

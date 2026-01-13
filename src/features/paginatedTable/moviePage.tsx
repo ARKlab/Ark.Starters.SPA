@@ -9,7 +9,6 @@ import { useAppDispatch } from "../../app/hooks";
 import { AppFilters } from "../../components/AppFilters/AppFilters";
 import type { FilterDefinition } from "../../components/AppFilters/Filters";
 import { AppArkApiTable } from "../../lib/components/AppArkApiTable/AppArkApiTable";
-import { FeatureErrorBoundary } from "../../lib/components/FeatureErrorBoundary/FeatureErrorBoundary";
 import { toColumnFiltersState } from "../../lib/ex";
 
 import type { Movie } from "./fakeMoviesData";
@@ -108,17 +107,15 @@ const MovieTableView = () => {
 
       {/*External filters example end*/}
 
-      <FeatureErrorBoundary featureLabel="Movies Table">
-        <AppArkApiTable<Movie>
-          columns={columns}
-          useQueryHook={useGetMoviesQuery}
-          isDraggable
-          externalFilters
-          externalFiltersState={toColumnFiltersState(filters)}
-          tableKey="Movies"
-          reduxDispatchHook={useAppDispatch()}
-        />
-      </FeatureErrorBoundary>
+      <AppArkApiTable<Movie>
+        columns={columns}
+        useQueryHook={useGetMoviesQuery}
+        isDraggable
+        externalFilters
+        externalFiltersState={toColumnFiltersState(filters)}
+        tableKey="Movies"
+        reduxDispatchHook={useAppDispatch()}
+      />
     </Box>
   );
 };

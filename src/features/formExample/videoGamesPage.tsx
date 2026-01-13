@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 
 import { useAppDispatch } from "../../app/hooks";
 import { AppArkApiTable } from "../../lib/components/AppArkApiTable/AppArkApiTable";
-import { FeatureErrorBoundary } from "../../lib/components/FeatureErrorBoundary/FeatureErrorBoundary";
 
 import { useGetVideoGamesGenresQuery, useGetVideoGamesQuery } from "./videoGamesApiSlice";
 import VideoGamesForm from "./videoGamesForm";
@@ -76,19 +75,15 @@ const VideoGamesTableView = () => {
   return (
     <Box>
       <Heading>{t("games_video_games")}</Heading>
-      <FeatureErrorBoundary featureLabel="Video Games Form">
-        <VideoGamesForm />
-      </FeatureErrorBoundary>
-      <FeatureErrorBoundary featureLabel="Video Games Table">
-        <AppArkApiTable<VideoGame>
-          columns={columns}
-          useQueryHook={useGetVideoGamesQuery}
-          isDraggable={false}
-          isSortable={false}
-          tableKey="videoGamesTable"
-          reduxDispatchHook={useAppDispatch()}
-        />
-      </FeatureErrorBoundary>
+      <VideoGamesForm />
+      <AppArkApiTable<VideoGame>
+        columns={columns}
+        useQueryHook={useGetVideoGamesQuery}
+        isDraggable={false}
+        isSortable={false}
+        tableKey="videoGamesTable"
+        reduxDispatchHook={useAppDispatch()}
+      />
     </Box>
   );
 };
