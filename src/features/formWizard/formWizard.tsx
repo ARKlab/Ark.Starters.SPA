@@ -5,6 +5,7 @@ import * as z from "zod";
 
 import { CheckboxControl, InputControl } from "../../components/formControls";
 import { Wizard, WizardPage } from "../../components/wizard/wizard";
+import { FeatureErrorBoundary } from "../../lib/components/FeatureErrorBoundary/FeatureErrorBoundary";
 import { delay } from "../../lib/helper";
 
 const _wizardSchema = z.object({
@@ -37,47 +38,49 @@ export default function WizardFormView() {
   return (
     <Box>
       <Heading>{t("wizard_form_title")}</Heading>
-      <Box mt="4">
-        <Wizard<Schema> onSubmit={onSubmit} formProps={{ mode: "onChange", resolver: zodResolver(_wizardSchema) }}>
-          <WizardPage>
-            <Stack gap="4">
-              <InputControl name="firstName" label={t("firstname")} placeholder={t("wizard_first_name_placeholder")} />
-              <InputControl name="lastName" label={t("lastname")} placeholder={t("wizard_last_name_placeholder")} />
-              <InputControl name="email" label={t("email")} placeholder={t("wizard_email_placeholder")} />
-              <InputControl
-                name="password"
-                label={t("password")}
-                placeholder={t("wizard_password_placeholder")}
-                inputProps={{ type: "password" }}
-              />
-            </Stack>
-          </WizardPage>
+      <FeatureErrorBoundary featureLabel="Form Wizard">
+        <Box mt="4">
+          <Wizard<Schema> onSubmit={onSubmit} formProps={{ mode: "onChange", resolver: zodResolver(_wizardSchema) }}>
+            <WizardPage>
+              <Stack gap="4">
+                <InputControl name="firstName" label={t("firstname")} placeholder={t("wizard_first_name_placeholder")} />
+                <InputControl name="lastName" label={t("lastname")} placeholder={t("wizard_last_name_placeholder")} />
+                <InputControl name="email" label={t("email")} placeholder={t("wizard_email_placeholder")} />
+                <InputControl
+                  name="password"
+                  label={t("password")}
+                  placeholder={t("wizard_password_placeholder")}
+                  inputProps={{ type: "password" }}
+                />
+              </Stack>
+            </WizardPage>
 
-          <WizardPage>
-            <Stack gap={"4"}>
-              <InputControl name="phone" label={t("Phone")} placeholder={t("wizard_phone_placeholder")} />
-              <InputControl
-                name="billingAddress"
-                label={t("billing_address")}
-                placeholder={t("wizard_billing_address_placeholder")}
-              />
-              <InputControl
-                name="shippingAddress"
-                label={t("shipping_address")}
-                placeholder={t("wizard_shipping_address_placeholder")}
-              />
-            </Stack>
-          </WizardPage>
+            <WizardPage>
+              <Stack gap={"4"}>
+                <InputControl name="phone" label={t("Phone")} placeholder={t("wizard_phone_placeholder")} />
+                <InputControl
+                  name="billingAddress"
+                  label={t("billing_address")}
+                  placeholder={t("wizard_billing_address_placeholder")}
+                />
+                <InputControl
+                  name="shippingAddress"
+                  label={t("shipping_address")}
+                  placeholder={t("wizard_shipping_address_placeholder")}
+                />
+              </Stack>
+            </WizardPage>
 
-          <WizardPage>
-            <Stack gap={"4"}>
-              <CheckboxControl name="newsletter" label={t("wizard_newsletter_label")} />
-              <CheckboxControl name="specialOffers" label={t("wizard_special_offers_label")} />
-              <CheckboxControl name="smsNotifications" label={t("wizard_sms_notifications_label")} />
-            </Stack>
-          </WizardPage>
-        </Wizard>
-      </Box>
+            <WizardPage>
+              <Stack gap={"4"}>
+                <CheckboxControl name="newsletter" label={t("wizard_newsletter_label")} />
+                <CheckboxControl name="specialOffers" label={t("wizard_special_offers_label")} />
+                <CheckboxControl name="smsNotifications" label={t("wizard_sms_notifications_label")} />
+              </Stack>
+            </WizardPage>
+          </Wizard>
+        </Box>
+      </FeatureErrorBoundary>
     </Box>
   );
 }

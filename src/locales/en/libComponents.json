@@ -11,5 +11,9 @@
   "appTagInput_addTag": "Add tag...",
   "columnSorter_sort": "Sort",
   "columnSorter_sortedAscending": "Sorted ascending",
-  "columnSorter_sortedDescending": "Sorted descending"
+  "columnSorter_sortedDescending": "Sorted descending",
+  "featureErrorBoundary_errorInFeature": "Error in {{feature}}",
+  "featureErrorBoundary_errorOccurred": "Something went wrong",
+  "featureErrorBoundary_unexpectedError": "An unexpected error occurred",
+  "featureErrorBoundary_tryAgain": "Try again"
 }
