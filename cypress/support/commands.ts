@@ -1,6 +1,7 @@
 import "@testing-library/cypress/add-commands";
 import "cypress-localstorage-commands";
 import "cypress-wait-until";
+import "cypress-real-events";
 
 Cypress.Commands.add("actAsAnonUser", () => {
   cy.session(
@@ -47,3 +48,6 @@ Cypress.Commands.add("navigateViaRoute", (route: string) => {
   cy.url().should("contain", route);
   cy.get("[data-test='spinner']").should("not.exist");
 });
+
+
+
