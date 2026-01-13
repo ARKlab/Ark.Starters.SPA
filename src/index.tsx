@@ -3,8 +3,8 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
 
-import { createLazyComponent } from "./components/createLazyComponent";
 import { ColorModeProvider } from "./components/ui/color-mode";
+import { createLazyComponent } from "./lib/components/createLazyComponent";
 import reportWebVitals, { sendToAnalytics } from "./reportWebVitals";
 import theme from "./theme";
 

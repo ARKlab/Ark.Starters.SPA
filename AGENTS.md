@@ -954,6 +954,84 @@ export const UserCard = ({ name, email }: UserCardProps) => {
 
 ## Code Standards and Patterns
 
+### Lazy Loading Components
+
+**When**: Loading components asynchronously to improve performance
+
+This project provides two approaches for lazy loading components:
+
+1. **LazyComponent** - Component-based approach for dynamic lazy loading
+   - Use in route definitions where the loader might change
+   - Use when passing props dynamically
+   - File: `src/lib/components/LazyComponent.tsx`
+
+2. **createLazyComponent** - Factory function for static lazy loading
+   - Use when creating a reusable lazy-loaded component
+   - Use for one-time wrapping of components
+   - File: `src/lib/components/createLazyComponent.tsx`
+
+#### Usage Examples
+
+**Route-based lazy loading** (in `siteMap.tsx`):
+```typescript
+import type { ArkRoute } from "@/lib/siteMapTypes";
+
+export const siteMap: ArkRoute[] = [
+  {
+    path: "/dashboard",
+    label: "Dashboard",
+    lazy: async () => import("../features/dashboard/dashboardPage"),
+  },
+  // The LazyComponent wrapper is applied automatically in router.tsx
+];
+```
+
+**Static lazy loading** (for global components):
+```typescript
+// In index.tsx or similar entry points
+import { createLazyComponent } from "@/lib/components/createLazyComponent";
+
+const InitGlobals = createLazyComponent(async () => import("./initGlobals"));
+
+// Use like a regular component
+<InitGlobals />
+```
+
+**Dynamic lazy loading with props**:
+```typescript
+import { LazyComponent } from "@/lib/components/LazyComponent";
+
+// In a parent component
+<LazyComponent 
+  loader={() => import('./HeavyChart')} 
+  userId={123}
+  onLoad={handleLoad}
+/>
+```
+
+**Custom fallback**:
+```typescript
+import { createLazyComponent } from "@/lib/components/createLazyComponent";
+
+const HeavyChart = createLazyComponent(
+  () => import('./HeavyChart'),
+  <div>Loading chart...</div>
+);
+```
+
+#### Guidelines
+- **Always** use lazy loading for route-based components
+- **Consider** lazy loading for:
+  - Large components (>50KB)
+  - Components with heavy dependencies (charts, editors)
+  - Components below the fold
+  - Feature-specific modules
+- **Default fallback**: CenterSpinner component
+- **Import path**: Use `@/lib/components/lazy` for cleaner imports (barrel export)
+
+---
+
+
 ### React Component Patterns
 
 #### Functional Components with Hooks

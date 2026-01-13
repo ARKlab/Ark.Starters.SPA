@@ -1,18 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import type { ComponentType } from "react";
-import { lazy, Suspense } from "react";
-
-import CenterSpinner from "./centerSpinner";
-
-export function createLazyComponent<C extends ComponentType<any>>(loader: () => Promise<{ default: C }>) {
-  const LazyComponent = lazy(loader);
-  const Wrapped = function LazyWrapper(props: React.ComponentProps<C>) {
-    return (
-      <Suspense fallback={<CenterSpinner />}>
-        <LazyComponent {...props} />
-      </Suspense>
-    );
-  };
-
-  return Wrapped;
-}
+/**
+ * @deprecated This file is deprecated. Use the new files instead:
+ * - For LazyComponent: `@/lib/components/LazyComponent`
+ * - For createLazyComponent: `@/lib/components/createLazyComponent`
+ * 
+ * Please update your imports to:
+ * ```ts
+ * import { createLazyComponent } from "@/lib/components/createLazyComponent";
+ * ```
+ * 
+ * This file will be removed in a future version.
+ */
+export { createLazyComponent } from "../lib/components/createLazyComponent";
