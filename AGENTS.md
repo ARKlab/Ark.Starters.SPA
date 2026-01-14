@@ -972,6 +972,61 @@ const InitGlobals = createLazyComponent(() => import("./initGlobals"));
 
 ---
 
+### Image Lazy Loading
+
+All image components support native browser lazy loading for improved performance.
+
+#### Logo Component
+```typescript
+// src/logo.tsx - Always visible (above the fold), eager loading
+<Image 
+  src={imgUrl} 
+  alt="ARK Logo"
+  loading="eager"  // Load immediately
+/>
+```
+
+#### Avatar Component
+```typescript
+// Defaults to lazy loading
+<Avatar 
+  src={userImage}
+  name="John Doe"
+  // loading="lazy" is default, no need to specify
+/>
+
+// Override for above-the-fold avatars
+<Avatar 
+  src={userImage}
+  loading="eager"
+/>
+```
+
+#### Carousel Component
+```typescript
+// CarouselItem defaults to lazy loading
+<CarouselItem 
+  src={imageUrl}
+  alt="Product image"
+  // loading="lazy" is default
+/>
+
+// Override if needed
+<CarouselItem 
+  src={imageUrl}
+  loading="eager"
+/>
+```
+
+#### General Guidelines
+- **Above the fold** (visible on page load): Use `loading="eager"`
+- **Below the fold** (requires scrolling): Use `loading="lazy"` (default)
+- **Images in lists/tables**: Always use `loading="lazy"`
+- **Hero images**: Use `loading="eager"`
+- **Thumbnail galleries**: Use `loading="lazy"`
+
+---
+
 
 ### React Component Patterns
 

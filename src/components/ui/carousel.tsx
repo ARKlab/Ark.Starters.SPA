@@ -58,14 +58,15 @@ export const CarouselIndicators = React.forwardRef<
 
 export const CarouselItem = React.forwardRef<
   HTMLDivElement,
-  Carousel.ItemProps & { src?: string; alt?: string }
->(function CarouselItem({ src, alt, children, ...rest }, ref) {
+  Carousel.ItemProps & { src?: string; alt?: string; loading?: "lazy" | "eager" }
+>(function CarouselItem({ src, alt, loading = "lazy", children, ...rest }, ref) {
   return (
     <Carousel.Item {...rest} ref={ref}>
       {src ? (
         <Image
           src={src}
           alt={alt}
+          loading={loading}
           w="full"
           h="300px"
           objectFit="cover"

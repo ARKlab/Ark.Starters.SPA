@@ -6,6 +6,7 @@ export const Logo = () => {
     return <Image
         height={'50px'}
         src={imgUrl}
-        alt=""
+        alt="ARK Logo"
+        loading="eager"
     />
 }
