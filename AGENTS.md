@@ -1074,9 +1074,43 @@ export default userSlice.reducer;
 
 ### Error Handling
 
-#### Try-Catch with Error Boundary
+#### Error Boundary Strategy
+Multi-level error boundaries protect the application:
+- **Root** (`src/index.tsx`) - Critical errors, last resort
+- **Router** (`src/lib/router.tsx`) - Navigation and routing errors  
+- **Layout** (`src/components/layout/layout.tsx`) - Page-level errors
+- **Feature** - Isolate widget/component failures (optional, use sparingly)
+
+#### FeatureErrorBoundary
+Use `FeatureErrorBoundary` only for reusable widgets/components embedded within pages, not for entire page views (already protected by Layout).
+
+**Example:**
 ```typescript
-// Component handles its own errors
+import { FeatureErrorBoundary } from "@/lib/components/FeatureErrorBoundary/FeatureErrorBoundary";
+
+// Wrap reusable widget within a page
+<FeatureErrorBoundary featureLabel={t("dashboard_sales_widget")}>
+  <SalesWidget />
+</FeatureErrorBoundary>
+
+// Custom fallback
+<FeatureErrorBoundary fallback={<CustomError />}>
+  <ComplexWidget />
+</FeatureErrorBoundary>
+```
+
+**Key points:**
+- Use for embedded widgets/cards that could fail independently
+- Don't wrap entire page views (Layout handles this)
+- `featureLabel` must be translated (appears in UI)
+- Auto-logs to Application Insights
+- Provides retry button in default fallback
+
+**Translation keys** (`libComponents.json`):
+`featureErrorBoundary_errorInFeature`, `featureErrorBoundary_errorOccurred`, `featureErrorBoundary_unexpectedError`, `featureErrorBoundary_tryAgain`
+
+#### Try-Catch for Async Operations
+```typescript
 const handleSubmit = async () => {
   try {
     await submitData(formData);
@@ -1086,12 +1120,6 @@ const handleSubmit = async () => {
     toast.error(t("common_error"));
   }
 };
-
-// Global error boundary catches React errors
-// Defined in src/App.tsx
-<ErrorBoundary fallback={<ErrorFallback />}>
-  <YourApp />
-</ErrorBoundary>
 ```
 
 ### Styling Patterns

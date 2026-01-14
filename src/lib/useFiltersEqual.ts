@@ -1,5 +1,5 @@
 import type { ColumnFiltersState } from "@tanstack/react-table";
-import isEqual from "lodash/isEqual";
+import equal from "fast-deep-equal";
 import { useMemo } from "react";
 
 /**
@@ -12,7 +12,7 @@ export function useFiltersEqual(filtersA?: ColumnFiltersState, filtersB?: Column
     if (filtersA.length !== filtersB.length) return false;
 
     return filtersA.every(filterA =>
-      filtersB.some(filterB => filterA.id === filterB.id && isEqual(filterA.value, filterB.value)),
+      filtersB.some(filterB => filterA.id === filterB.id && equal(filterA.value, filterB.value)),
     );
   }, [filtersA, filtersB]);
 }
