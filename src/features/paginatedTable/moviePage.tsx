@@ -1,7 +1,7 @@
 import { Box, Button, Flex, Heading } from "@chakra-ui/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { createColumnHelper } from "@tanstack/react-table";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaFilter } from "react-icons/fa";
 
@@ -70,18 +70,15 @@ const MovieTableView = () => {
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
-  const filterDefinitions: FilterDefinition<Movie>[] = useMemo(
-    () => [
-      {
-        id: "title",
-        propName: "title",
-        label: "Title",
-        type: "text",
-        placeholder: "Search by Title...",
-      },
-    ],
-    [],
-  );
+  const filterDefinitions: FilterDefinition<Movie>[] = [
+    {
+      id: "title",
+      propName: "title",
+      label: "Title",
+      type: "text",
+      placeholder: "Search by Title...",
+    },
+  ];
 
   return (
     <Box>

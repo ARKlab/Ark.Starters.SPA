@@ -1,5 +1,4 @@
 import { t } from "i18next";
-import { useMemo } from "react";
 
 import { ActiveFiltersBar } from "./ActiveFilters";
 import type { FilterDefinition } from "./Filters";
@@ -21,21 +20,19 @@ export function AppFilters<T extends object>(props: AppFiltersProps<T>) {
     props.onFiltersChange?.(newFilters);
   }
 
-  const activeFilters = useMemo(() => {
-    return Object.entries(filters as Record<string, unknown>)
-      .filter(([_, value]) => !!value)
-      .map(([key, value]) => {
-        const filterDef = filterDefinitions.find(f => f.id === key);
-        const displayValue = filterDef?.getDisplayValue ? filterDef.getDisplayValue(value) : (value?.toString() ?? "");
+  const activeFilters = Object.entries(filters as Record<string, unknown>)
+    .filter(([_, value]) => !!value)
+    .map(([key, value]) => {
+      const filterDef = filterDefinitions.find(f => f.id === key);
+      const displayValue = filterDef?.getDisplayValue ? filterDef.getDisplayValue(value) : (value?.toString() ?? "");
 
-        return {
-          filterId: key,
-          label: props.i18nPrefix ? t(`${props.i18nPrefix}.filters.by_${key}_label`) : key,
-          value: value?.toString() ?? "",
-          displayValue,
-        };
-      });
-  }, [filters, filterDefinitions, props.i18nPrefix]);
+      return {
+        filterId: key,
+        label: props.i18nPrefix ? t(`${props.i18nPrefix}.filters.by_${key}_label`) : key,
+        value: value?.toString() ?? "",
+        displayValue,
+      };
+    });
 
   function onRemoveFilter(filterId: string) {
     const newFilters = { ...filters, [filterId]: undefined };

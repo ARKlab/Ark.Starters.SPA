@@ -1,6 +1,6 @@
 //#region Imports
 import { Box, type BoxProps } from "@chakra-ui/react";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect } from "react";
 import { useLocation } from "react-router";
 
 import type { ArkSubRoute } from "../../../lib/siteMapTypes";
@@ -167,7 +167,7 @@ const InnerMenuItems = (props: { section: ArkSubRoute; path: string; index: numb
   const { section, path, index } = props;
   const parentPath = [path, section.path].join("/");
   const location = useLocation();
-  const isActive = useMemo(() => location.pathname.startsWith(parentPath), [location, parentPath]);
+  const isActive = location.pathname.startsWith(parentPath);
 
   const key = section.path + "innerAccordionSections" + index;
   if (!section.isInMenu) return null;

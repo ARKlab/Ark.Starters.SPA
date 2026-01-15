@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 
 export default function useCookie<T>(
   name: string,
@@ -18,20 +18,15 @@ export default function useCookie<T>(
     return defaultValue;
   });
 
-  const updateCookie = useCallback(
-    (newValue: T, options: Cookies.CookieAttributes) => {
-      cookies.set(name, newValue, options);
-      setValue(newValue);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [name, setValue],
-  );
+  const updateCookie = (newValue: T, options: Cookies.CookieAttributes) => {
+    cookies.set(name, newValue, options);
+    setValue(newValue);
+  };
 
-  const deleteCookie = useCallback(() => {
+  const deleteCookie = () => {
     cookies.remove(name);
     setValue(undefined);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [name, setValue]);
+  };
 
   return [value, { updateCookie, deleteCookie }];
 }

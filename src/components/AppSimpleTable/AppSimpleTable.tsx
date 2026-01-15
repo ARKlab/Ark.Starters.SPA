@@ -1,5 +1,5 @@
 import { Box, Spinner, Table } from "@chakra-ui/react";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 
 import AppPagination from "../../lib/components/AppPagination/AppPagination";
 
@@ -36,10 +36,7 @@ const AppSimpleTable = <T,>({ data, columns, pageSize = 20, isLoading = false }:
   const [pageIndex, setPageIndex] = useState(1);
   const [itemPerPage, setPageSize] = useState(pageSize);
 
-  const paginatedData = useMemo(
-    () => data.slice((pageIndex - 1) * itemPerPage, pageIndex * itemPerPage),
-    [data, pageIndex, itemPerPage],
-  );
+  const paginatedData = data.slice((pageIndex - 1) * itemPerPage, pageIndex * itemPerPage);
   const onPageChange = (page: number) => {
     setPageIndex(page);
   };
