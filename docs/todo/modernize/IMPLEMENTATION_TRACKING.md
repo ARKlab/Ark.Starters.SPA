@@ -12,8 +12,8 @@
 |-------|--------|----------------|------------------|------------|
 | Phase 1 | ✅ Complete | 3/3 | 30.57 KB | 2h |
 | Phase 2 | 🔴 Blocked | 0/4 | 0 KB | 2h |
-| Phase 3 | 🔴 Not Started | 0/3 | 0 KB | 0h |
-| **TOTAL** | **30%** | **3/10** | **30.57 KB / 263KB** | **4h / 45h** |
+| Phase 3 | 🔴 Not Started | 0/4 | 0 KB | 0h |
+| **TOTAL** | **30%** | **3/11** | **30.57 KB / 263KB** | **4h / 48h** |
 
 **Current Bundle:** 482.47KB gzipped (down from 513KB)  
 **Target Bundle:** 250KB gzipped  
@@ -38,6 +38,7 @@ Replace `defaultConfig` with `defaultBaseConfig` and import only needed componen
 - [x] All used component recipes explicitly imported (pruned from 55 to 22)
 - [x] Build completes without errors
 - [ ] All E2E tests pass
+- [ ] Visual regression testing with Playwright completed
 - [x] Bundle analyzer shows Chakra chunk reduced
 - [x] Unused UI components deleted (41 files removed)
 
@@ -477,7 +478,59 @@ Improve chunk splitting for better browser caching.
 
 ---
 
-### Task 3.3: Consider Legacy Support Removal ⚠️ P2
+### Task 3.3: Revisit Dynamic Auth Provider Loading ⚠️ P2
+**Status:** 🔴 Not Started  
+**Owner:** _Unassigned_  
+**Estimated Time:** 6 hours  
+**Expected Savings:** 70KB gzipped
+
+**Description:**  
+Revisit dynamic authentication provider loading with a build-time approach instead of runtime dynamic imports to avoid breaking E2E tests.
+
+**Context:**
+This was attempted in Phase 2 (Task 2.1) but reverted due to E2E test failures. The async auth provider loading delayed store initialization and broke the test infrastructure (tests timeout waiting for `window.appReady`).
+
+**Alternative Approaches:**
+1. **Build-time conditional imports**: Use Vite's conditional compilation or environment variables to exclude unused auth providers at build time
+2. **Vite code-splitting configuration**: Configure manual chunks for auth providers in `vite.config.ts`
+3. **Separate build configurations**: Create different builds for Auth0 vs MSAL deployments
+4. **Static analysis**: Use build tools to tree-shake unused auth providers without runtime async
+
+**Success Criteria:**
+- [ ] Auth provider loading doesn't break E2E test infrastructure
+- [ ] `window.appReady` and `window.rtkq` set up synchronously
+- [ ] Only configured auth provider included in bundle
+- [ ] All E2E tests pass
+- [ ] Bundle reduction of ~70KB achieved
+- [ ] No increase in build complexity
+
+**Implementation Steps:**
+1. Research Vite build-time conditional compilation options
+2. Design approach that maintains synchronous initialization
+3. Implement build-time auth provider selection
+4. Test with both Auth0 and MSAL configurations
+5. Run full E2E test suite
+6. Verify bundle analyzer shows single provider
+7. Document approach for future maintainers
+
+**Verification Command:**
+```bash
+# Build and verify single auth provider in bundle
+npm run build
+npm run analyze
+# E2E tests must pass
+npm test
+```
+
+**Lessons from Previous Attempt:**
+- Runtime async loading breaks test infrastructure
+- Store initialization must remain synchronous
+- `window.rtkq` must be available immediately in e2e mode
+- Consider test requirements early in design phase
+
+---
+
+### Task 3.4: Consider Legacy Support Removal ⚠️ P2
 **Status:** 🔴 Not Started  
 **Owner:** _Unassigned_  
 **Estimated Time:** 2 hours  
