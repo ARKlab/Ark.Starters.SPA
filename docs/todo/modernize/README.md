@@ -2,7 +2,8 @@
 
 **Created:** 2026-01-15  
 **Status:** Analysis Complete - Ready for Implementation  
-**Priority:** High
+**Priority:** High  
+**Tracking:** See [IMPLEMENTATION_TRACKING.md](./IMPLEMENTATION_TRACKING.md) for detailed task tracking
 
 ---
 
@@ -32,7 +33,17 @@ This directory contains a comprehensive analysis and implementation plan for red
 
 ## 📁 Documents
 
-### 1. [BUNDLE_ANALYSIS.md](./BUNDLE_ANALYSIS.md)
+### 1. [IMPLEMENTATION_TRACKING.md](./IMPLEMENTATION_TRACKING.md) ⭐ NEW
+**Real-time implementation progress tracker:**
+- Task-by-task checklist with status
+- Verifiable success criteria for each task
+- Actual vs expected results tracking
+- Time tracking and blocker documentation
+- Overall progress dashboard
+
+**Use this** to track implementation progress and record results.
+
+### 2. [BUNDLE_ANALYSIS.md](./BUNDLE_ANALYSIS.md)
 **Comprehensive bundle analysis including:**
 - Detailed breakdown of all bundle components
 - Identification of size culprits (Chakra UI, Redux, Auth, App Insights)
@@ -43,7 +54,7 @@ This directory contains a comprehensive analysis and implementation plan for red
 
 **Read this first** to understand the current state and issues.
 
-### 2. [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)
+### 3. [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)
 **Step-by-step implementation guide with:**
 - 4 phases of optimization (Quick Wins → Core → Advanced → Future)
 - Detailed code examples for each optimization
@@ -66,6 +77,35 @@ If you only have time for the highest-impact changes:
 **Risk:** Low
 
 Switch from `defaultConfig` to `defaultBaseConfig` and import only needed component recipes.
+
+**How to add more components:**
+```typescript
+// src/theme.ts - Add import at top
+import { 
+  buttonRecipe, 
+  inputRecipe,
+  // Add new recipe imports here as you use components:
+  selectRecipe,
+  modalRecipe,
+  // etc.
+} from "@chakra-ui/react/theme";
+
+const theme = createSystem(defaultBaseConfig, {
+  theme: {
+    recipes: {
+      button: buttonRecipe,
+      input: inputRecipe,
+      // Add corresponding recipe here:
+      select: selectRecipe,
+      modal: modalRecipe,
+      // etc.
+    },
+  },
+  // your customizations
+});
+```
+
+**Recipe naming pattern:** Component name + "Recipe" (e.g., `Button` → `buttonRecipe`, `Select` → `selectRecipe`)
 
 → See [Implementation Plan §1.1](./IMPLEMENTATION_PLAN.md#11-optimize-chakra-ui-configuration)
 
@@ -212,17 +252,6 @@ gzip -c build/assets/initGlobals-*.js | wc -c
 ---
 
 ## ⚠️ Important Notes
-
-### Do NOT Commit Code Changes
-
-**Per the requirements:** Only commit analysis results and implementation plans, NOT code changes.
-
-If you experiment with code changes for analysis:
-1. Create temporary branch
-2. Test the approach
-3. Document findings
-4. Revert changes
-5. Only commit documentation updates
 
 ### Tree-Shaking Status
 

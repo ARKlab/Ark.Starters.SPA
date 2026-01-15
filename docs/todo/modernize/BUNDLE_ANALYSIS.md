@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-The production build generates a total bundle size of approximately **28MB** (before compression) with the largest assets being:
+The production build generates a total bundle size of approximately **2.8MB** (before compression) with the largest assets being:
 
 1. **chakra-DsxGPrcm.js** - 628KB (175.6KB gzipped) ⚠️
 2. **initGlobals-BAzI5CbD.js** - 576KB (188.5KB gzipped) ⚠️
@@ -78,7 +78,7 @@ The `initGlobals.tsx` file is deceptively simple but pulls in massive dependenci
    - `@microsoft/applicationinsights-react-js`
    - `@microsoft/applicationinsights-clickanalytics-js`
 
-4. **MSW (Mock Service Worker)** included in production:
+4. **MSW (Mock Service Worker)** conditionally loaded (NOT in production):
    ```typescript
    // src/initApp.tsx lines 25-28
    if (import.meta.env.DEV || import.meta.env.MODE === "e2e") {
@@ -86,6 +86,8 @@ The `initGlobals.tsx` file is deceptively simple but pulls in massive dependenci
        await worker.start({ onUnhandledRequest: "warn" });
    }
    ```
+   
+   **Note:** MSW is correctly excluded from production builds via the conditional check above. The dynamic import ensures tree-shaking removes it from production bundles.
 
 **Issues:**
 - All Redux API slices are imported synchronously in `configureStore.ts`
@@ -268,9 +270,16 @@ Based on bundle sizes and typical 3G network (750Kbps):
    - Switch from `defaultConfig` to `defaultBaseConfig`
    - Expected gain: ~80-100KB
 
-3. **Theme Ejection** 🎯 Advanced option
+3. **Theme Ejection** 🎯 Advanced option (⚠️ NOT RECOMMENDED)
    - Full control over included styles
    - Expected gain: ~150-200KB
+   - **Impact for Template Users:**
+     - ❌ **Loses ability to receive Chakra UI theme updates** - Must manually merge theme changes from new Chakra versions
+     - ❌ **Increases maintenance burden** - Team becomes responsible for maintaining entire theme codebase
+     - ❌ **Breaks upgrade path** - Cannot simply `npm update @chakra-ui/react` without reviewing ejected theme files
+     - ❌ **Knowledge requirement** - Requires deep understanding of Chakra internals to maintain
+     - ✅ **When appropriate** - Only for projects that have stabilized their design system and don't need Chakra updates
+   - **Recommendation:** Use `defaultBaseConfig` + selective recipe imports instead (achieves 80% of the savings without the maintenance cost)
 
 ---
 
