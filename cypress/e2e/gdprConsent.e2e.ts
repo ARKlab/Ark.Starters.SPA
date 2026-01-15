@@ -29,12 +29,18 @@ describe("GDPR Consent", () => {
     // Check that consent is stored in localStorage
     cy.window().then((win) => {
       const consent = win.localStorage.getItem("GDPR_CONSENT_STATE");
-      expect(consent).to.exist;
+      if (!consent) {
+        throw new Error("GDPR consent not found in localStorage");
+      }
       const consentState = JSON.parse(consent);
-      expect(consentState.necessary).to.be.true;
-      expect(consentState.preferences).to.be.true;
-      expect(consentState.statistics).to.be.true;
-      expect(consentState.marketing).to.be.true;
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      expect(consentState.necessary, "necessary cookies").to.be.true;
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      expect(consentState.preferences, "preferences cookies").to.be.true;
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      expect(consentState.statistics, "statistics cookies").to.be.true;
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      expect(consentState.marketing, "marketing cookies").to.be.true;
     });
   });
 
@@ -51,12 +57,18 @@ describe("GDPR Consent", () => {
     // Check that only necessary cookies are accepted
     cy.window().then((win) => {
       const consent = win.localStorage.getItem("GDPR_CONSENT_STATE");
-      expect(consent).to.exist;
+      if (!consent) {
+        throw new Error("GDPR consent not found in localStorage");
+      }
       const consentState = JSON.parse(consent);
-      expect(consentState.necessary).to.be.true;
-      expect(consentState.preferences).to.be.false;
-      expect(consentState.statistics).to.be.false;
-      expect(consentState.marketing).to.be.false;
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      expect(consentState.necessary, "necessary cookies").to.be.true;
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      expect(consentState.preferences, "preferences cookies").to.be.false;
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      expect(consentState.statistics, "statistics cookies").to.be.false;
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      expect(consentState.marketing, "marketing cookies").to.be.false;
     });
   });
 
@@ -67,7 +79,7 @@ describe("GDPR Consent", () => {
     // Click customize/settings button if it exists
     cy.contains("button", /customize|settings/i).then(($btn) => {
       if ($btn.length > 0) {
-        $btn.click();
+        cy.wrap($btn).click();
         
         // Toggle switches for different cookie types
         cy.get("[data-test='consent-switch-statistics']").click();
@@ -78,7 +90,9 @@ describe("GDPR Consent", () => {
         // Check that preferences are saved
         cy.window().then((win) => {
           const consent = win.localStorage.getItem("GDPR_CONSENT_STATE");
-          expect(consent).to.exist;
+          if (!consent) {
+            throw new Error("GDPR consent not found in localStorage");
+          }
         });
       }
     });

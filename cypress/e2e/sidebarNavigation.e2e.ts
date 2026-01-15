@@ -94,7 +94,7 @@ describe("Sidebar Navigation", () => {
       cy.get("[data-test='accordion-trigger']").first().then(($trigger) => {
         if ($trigger.length > 0) {
           // Click to expand
-          $trigger.click();
+          cy.wrap($trigger).click();
           
           // Check that content is visible
           cy.get("[data-test='accordion-content']").should("be.visible");

@@ -82,7 +82,7 @@ describe("Locale Switcher", () => {
     cy.visit("/componentsTestPage");
     
     // Get some text content in English
-    cy.get("h1, h2").first().invoke("text").then((englishText) => {
+    cy.get("h1, h2").first().invoke("text").then(() => {
       // Switch to Italian
       cy.get("[data-test='locale-switcher']").click();
       cy.get("[role='menu']").contains(/italiano/i).click();
