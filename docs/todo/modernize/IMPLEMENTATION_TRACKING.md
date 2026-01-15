@@ -11,14 +11,14 @@
 | Phase | Status | Tasks Complete | Bundle Reduction | Time Spent |
 |-------|--------|----------------|------------------|------------|
 | Phase 1 | ✅ Complete | 3/3 | 30.57 KB | 2h |
-| Phase 2 | 🟡 In Progress | 1/4 | 0 KB (69KB split) | 1h |
+| Phase 2 | 🔴 Blocked | 0/4 | 0 KB | 2h |
 | Phase 3 | 🔴 Not Started | 0/3 | 0 KB | 0h |
-| **TOTAL** | **40%** | **4/10** | **30.57 KB / 263KB** | **3h / 45h** |
+| **TOTAL** | **30%** | **3/10** | **30.57 KB / 263KB** | **4h / 45h** |
 
-**Current Bundle:** 480.43KB gzipped (down from 513KB)  
+**Current Bundle:** 482.47KB gzipped (down from 513KB)  
 **Target Bundle:** 250KB gzipped  
-**Reduction Needed:** 230.43KB (46%)  
-**Code Split:** 69KB auth provider chunk (conditional load)
+**Reduction Needed:** 232.47KB (47%)  
+**Code Split:** None (dynamic auth provider loading reverted due to E2E test failures)
 
 ---
 
@@ -196,58 +196,53 @@ All 8 files modified during memoization removal are exercised by existing E2E te
 
 ## Phase 2: Core Optimizations (Target: 200-300KB, 2 weeks)
 
-### Task 2.1: Dynamic Authentication Provider Loading ✅ P1
-**Status:** ✅ Complete  
+### Task 2.1: Dynamic Authentication Provider Loading ❌ REVERTED
+**Status:** ❌ Reverted (caused E2E test failures)  
 **Owner:** AI Agent  
 **Estimated Time:** 6 hours  
-**Expected Savings:** 70KB gzipped
+**Expected Savings:** 70KB gzipped (not achieved)
 
 **Description:**  
 Load only the authentication provider that's actually used (Auth0 OR MSAL, not both).
 
-**Success Criteria:**
-- [x] `src/config/authProvider.ts` uses dynamic imports
-- [x] Only one auth provider in production bundle  
-- [ ] Auth0 flow tested and working
-- [x] MSAL flow tested and working (builds successfully)
-- [x] Bundle analyzer confirms single provider per build
-- [ ] All authentication E2E tests pass
+**Why Reverted:**
+The async auth provider loading broke E2E tests. The implementation made auth provider loading asynchronous, which delayed the initialization of the Redux store and `window.rtkq`. Cypress tests wait for `window.appReady` to be set (which happens in `initApp.tsx`), but with async loading, the store wasn't initialized in time, causing all E2E tests to timeout.
 
-**Implementation Steps:**
-1. Convert `authProvider` export to async function:
-   ```typescript
-   export async function getAuthProvider(settings: AppSettings): Promise<AuthProvider> {
-     if (settings.authType === 'auth0') {
-       const { Auth0Provider } = await import('./lib/authentication/providers/auth0Provider');
-       return new Auth0Provider(settings);
-     } else {
-       const { MsalProvider } = await import('./lib/authentication/providers/msalProvider');
-       return new MsalProvider(settings);
-     }
-   }
-   ```
-2. Update `src/initGlobals.tsx` to await provider
-3. Update `src/app/configureStore.ts` if needed
-4. Test Auth0 authentication flow
-5. Test MSAL authentication flow
-6. Run bundle analyzer
-7. Verify only one provider in bundle
+**Issues Encountered:**
+- E2E tests timeout waiting for `window.appReady`
+- Async loading of auth provider delays store initialization
+- `window.rtkq.resetCache()` not available when tests need it
+- Breaking change to application initialization flow
 
-**Verification Command:**
-```bash
-# Should see only one auth provider in bundle
-npm run analyze
-# Check bundle stats for @auth0 OR @azure/msal, not both
+**Attempted Implementation:**
+```typescript
+// authProvider.ts - async version (REVERTED)
+export async function getAuthProvider(): Promise<AuthProvider> {
+  if (appSettings.msal) {
+    const { MsalAuthProvider } = await import("../lib/authentication/providers/msalAuthProvider");
+    return new MsalAuthProvider({...});
+  }
+  return new NoopAuthProvider();
+}
+
+// initGlobals.tsx - with async loading (REVERTED)
+const [authProvider, setAuthProvider] = useState<AuthProvider | null>(null);
+useEffect(() => {
+  void getAuthProvider().then(provider => {
+    setAuthProvider(provider);
+    const newStore = initStore({ authProvider: provider });
+    setStore(newStore);
+  });
+}, []);
 ```
 
-**Actual Results:**
-- Bundle Size Before: initGlobals 585.53 KB (188.33 KB gzipped) 
-- Bundle Size After: initGlobals 312.02 KB (117.30 KB gzipped) + msalAuthProvider 273.38 KB (69.07 KB gzipped)
-- Reduction Achieved: 71KB in initGlobals, but +1.96KB net due to chunk overhead
-- Auth0 Tested: ☐ Pass ☐ Fail (not configured in this build)
-- MSAL Tested: ☑ Pass ☐ Fail (builds and loads successfully)
-- Time Taken: 1 hour
-- Issues Encountered: None. Successfully implemented async loading pattern with useState/useEffect.
+**Lessons Learned:**
+- Async initialization of core dependencies breaks test infrastructure
+- Bundle size optimization must not break existing functionality
+- Alternative approach needed: use build-time tree-shaking instead of runtime dynamic imports
+- Consider Vite's code-splitting configuration for auth providers
+
+**Status:** SKIPPED - Will revisit in Phase 3 with better approach
 - Key Benefit: MSAL provider (69KB gzipped) is now in separate chunk, won't be downloaded for Auth0 or NoopAuth configurations
 
 ---
