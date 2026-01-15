@@ -135,6 +135,7 @@ Remove unnecessary `useMemo` and `useCallback` hooks (React Compiler handles thi
 - [ ] Performance profiling shows no regression
 - [x] All tests pass
 - [x] Code is cleaner and more maintainable
+- [ ] **Test coverage verified for all 8 modified files**
 
 **Implementation Steps:**
 1. Find all instances:
@@ -167,6 +168,27 @@ grep -r "useMemo\|useCallback" src --include="*.tsx" --include="*.ts" | wc -l
 - Web Research: Confirmed React Compiler (babel-plugin-react-compiler) in React 19 automatically handles most memoization. Manual memoization still needed for: third-party libraries expecting stable references, non-pure calculations, specific performance hotspots. Our removed cases (simple callbacks, basic computations) are safe.
 - Removed from: AppSimpleTable, AppFilters, GDPR consent hooks, useCookie, localeSwitcher, moviePage, useFiltersEqual, sidebar navigation
 - Kept: LazyComponent (prevents lazy recreation), AppArkApiTable (documented need), UI library components (Chakra patterns), closeDrawer (useEffect dependency)
+
+**Test Coverage Status**:
+- ✅ **moviePage.tsx**: Covered by `cypress/e2e/tableColumnDragDrop.e2e.ts` (visits /moviesTable)
+- ✅ **AppSimpleTable.tsx**: Covered by `cypress/e2e/configTable.e2e.ts`
+- ⚠️ **AppFilters.tsx**: Partially covered by table tests
+- ✅ **sideBar.tsx**: NEW TEST ADDED - `cypress/e2e/sidebarNavigation.e2e.ts`
+- ✅ **localeSwitcher.tsx**: NEW TEST ADDED - `cypress/e2e/localeSwitcher.e2e.ts`
+- ✅ **useCookie.ts**: Covered indirectly via GDPR tests
+- ⚠️ **useFiltersEqual.ts**: Covered indirectly by filter functionality
+- ✅ **useGDPRConsent.ts**: NEW TEST ADDED - `cypress/e2e/gdprConsent.e2e.ts`
+
+**New E2E Tests Created**:
+1. **gdprConsent.e2e.ts**: Tests GDPR consent dialog, accept all, reject, customize, persistence
+2. **localeSwitcher.e2e.ts**: Tests language switching, persistence, content translation
+3. **sidebarNavigation.e2e.ts**: Tests drawer open/close, mobile/desktop behavior, navigation
+
+**Action Items**:
+1. ✅ Created comprehensive E2E tests for previously untested areas
+2. Run full test suite with coverage: `npm test`
+3. Review coverage report in `coverage/` directory
+4. Target: 80%+ coverage on all modified files
 
 ---
 
