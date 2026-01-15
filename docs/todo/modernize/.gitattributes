@@ -1,0 +1,3 @@
+# Bundle stats is large HTML file - don't show diff
+bundle-stats.html linguist-generated=true
+bundle-stats.html -diff
