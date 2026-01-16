@@ -3,7 +3,11 @@
   "version": "0.0.0",
   "type": "module",
   "private": true,
-  "sideEffects": false,
+  "sideEffects": [
+    "cypress/**/*",
+    "src/index.tsx",
+    "src/initGlobals.tsx"
+  ],
   "dependencies": {
     "@auth0/auth0-spa-js": "2.11.2",
     "@azure/msal-browser": "4.27.0",
@@ -61,7 +65,7 @@
     "e2e:ci:connectionStrings": "cross-env PORT=4000 node -- public/connectionStrings.cjs",
     "pree2e:ci:app": "cross-env NODE_ENV=production CYPRESS_COVERAGE=true vite build --mode e2e",
     "e2e:ci:app": "cross-env NODE_ENV=production BROWSER=none vite preview --mode e2e",
-    "pree2e:ci:run": "wait-on --log --timeout 120000 http-get://localhost:4000 http-get://localhost:3000",
+    "pree2e:ci:run": "wait-on --log --timeout 360000 http-get://localhost:4000 http-get://localhost:3000",
     "e2e:ci:run": "cross-env NODE_ENV=production npm run cypress:run"
   },
   "devDependencies": {

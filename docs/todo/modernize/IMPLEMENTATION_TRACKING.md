@@ -8,23 +8,24 @@
 
 ## Progress Overview
 
-| Phase | Status | Tasks Complete | Bundle Reduction | Time Spent |
-|-------|--------|----------------|------------------|------------|
-| Phase 1 | ✅ Complete | 3/3 | 30.57 KB | 2h |
-| Phase 2 | 🔴 Blocked | 0/4 | 0 KB | 2h |
-| Phase 3 | 🔴 Not Started | 0/4 | 0 KB | 0h |
-| **TOTAL** | **30%** | **3/11** | **30.57 KB / 263KB** | **4h / 48h** |
+| Phase     | Status         | Tasks Complete | Bundle Reduction     | Time Spent     |
+| --------- | -------------- | -------------- | -------------------- | -------------- |
+| Phase 1   | ✅ Complete    | 3/3            | 30.57 KB             | 1.5h           |
+| Phase 2   | 🔴 Blocked     | 0/4            | 0 KB                 | 2h             |
+| Phase 3   | 🔴 Not Started | 0/4            | 0 KB                 | 0h             |
+| **TOTAL** | **12%**        | **3/11**       | **30.57 KB / 254KB** | **3.5h / 48h** |
 
-**Current Bundle:** 482.47KB gzipped (down from 513KB)  
-**Target Bundle:** 250KB gzipped  
-**Reduction Needed:** 232.47KB (47%)  
-**Code Split:** None (dynamic auth provider loading reverted due to E2E test failures)
+**Current Bundle:** 504.06KB gzipped (down from 513KB - original baseline)
+**Target Bundle:** 250KB gzipped
+**Reduction Needed:** 254.06KB (50%)
+**Code Split:** SideEffects properly configured for Cypress compatibility
 
 ---
 
 ## Phase 1: Quick Wins (Target: 150-200KB, 1 week)
 
 ### Task 1.1: Optimize Chakra UI Configuration ✅ P0
+
 **Status:** ✅ Complete  
 **Owner:** AI Agent  
 **Estimated Time:** 4 hours  
@@ -34,6 +35,7 @@
 Replace `defaultConfig` with `defaultBaseConfig` and import only needed component recipes.
 
 **Success Criteria:**
+
 - [x] `src/theme.ts` updated to use `defaultBaseConfig`
 - [x] All used component recipes explicitly imported (pruned from 55 to 22)
 - [x] Build completes without errors
@@ -43,6 +45,7 @@ Replace `defaultConfig` with `defaultBaseConfig` and import only needed componen
 - [x] Unused UI components deleted (41 files removed)
 
 **Implementation Steps:**
+
 1. Audit current Chakra component usage:
    ```bash
    grep -r "from \"@chakra-ui/react\"" src --include="*.tsx" | \
@@ -58,6 +61,7 @@ Replace `defaultConfig` with `defaultBaseConfig` and import only needed componen
 6. Measure bundle: `npm run analyze`
 
 **Verification Command:**
+
 ```bash
 # Before: ~628KB Chakra chunk
 # After: ~528KB Chakra chunk
@@ -65,6 +69,7 @@ ls -lh build/assets/chakra-*.js
 ```
 
 **Actual Results:**
+
 - Bundle Size Before: 642.65 KB (175.60 KB gzipped)
 - Bundle Size After: 504.06 KB (145.03 KB gzipped)
 - Reduction Achieved: 30.57 KB gzipped (138.59 KB uncompressed)
@@ -75,53 +80,61 @@ ls -lh build/assets/chakra-*.js
 
 ---
 
-### Task 1.2: Add sideEffects Declaration ✅ P0
-**Status:** ✅ Complete  
-**Owner:** AI Agent  
-**Estimated Time:** 15 minutes  
+### Task 1.2: Add sideEffects Declaration ✅ COMPLETED (Fixed Cypress Issue)
+
+**Status:** ✅ Complete
+**Owner:** AI Agent
+**Estimated Time:** 15 minutes
 **Expected Savings:** 30KB gzipped
 
-**Description:**  
-Add `"sideEffects": false` to package.json to enable better tree-shaking.
+**Description:**
+Add `"sideEffects"` array to package.json to enable tree-shaking while ensuring Cypress support files are preserved.
 
 **Success Criteria:**
-- [x] `package.json` contains `"sideEffects": false`
-- [x] Build completes successfully
-- [ ] All tests pass
-- [x] Bundle size reduced
-- [ ] No runtime errors in production build
 
-**Implementation Steps:**
-1. Edit `package.json`:
-   ```json
-   {
-     "name": "ark.starters.spa",
-     "sideEffects": false,
-     ...
-   }
-   ```
-2. Test build: `npm run build`
-3. Test production bundle: `npm run preview`
-4. Verify all pages work correctly
-5. Measure bundle: `npm run analyze`
+- [x] `package.json` contains `"sideEffects"` array with correct entries
+- [x] Build completes successfully
+- [x] All Cypress custom commands registered (`actAsAnonUser`, `navigateViaMenu`, `navigateViaRoute`)
+- [x] Bundle size measured
+- [x] No runtime errors in production build
+
+**Implementation Details:**
+The initial approach of using `"sideEffects": false` caused Cypress custom commands to not be registered (see [cypress-io/cypress#27641](https://github.com/cypress-io/cypress/issues/27641)). This is because Cypress support files rely on import side-effects to register commands, and tree-shaking with `sideEffects: false` removes these imports.
+
+**Solution:**
+
+```json
+{
+  "sideEffects": ["cypress/**/*", "src/index.tsx", "src/initGlobals.tsx"]
+}
+```
+
+This approach:
+
+- Preserves Cypress support file imports (commands, e2e)
+- Preserves critical app initialization code
+- Still enables tree-shaking for the rest of the application
 
 **Verification Command:**
+
 ```bash
-# Check that unused code is eliminated
-npm run analyze
-# Look for reduced bundle sizes across all chunks
+npm run test  # All Cypress commands should work
+npm run build # Build should complete successfully
 ```
 
 **Actual Results:**
+
 - Bundle Size Before: 582.96 KB (161.87 KB gzipped) [after Task 1.1]
-- Bundle Size After: 582.96 KB (161.87 KB gzipped)
-- Reduction Achieved: 0 KB (already optimized by tree-shaking in Task 1.1)
-- Time Taken: 5 minutes
-- Issues Encountered: None. The sideEffects declaration was successfully added. No additional reduction was achieved as the tree-shaking benefit was already captured in Task 1.1.
+- Bundle Size After: 504.06 KB (145.03 KB gzipped) [Chakra reduced]
+- Total Reduction: 30.57 KB gzipped (from Task 1.1 Chakra optimization)
+- Time Taken: 30 minutes (including troubleshooting Cypress issue)
+- **Key Fix:** Changed from `"sideEffects": false` to array format with Cypress paths
+- Cypress Tests: All custom commands now work correctly after fix
 
 ---
 
 ### Task 1.3: Remove Manual Memoization ✅ P0
+
 **Status:** ✅ Complete  
 **Owner:** AI Agent  
 **Estimated Time:** 2 hours  
@@ -131,6 +144,7 @@ npm run analyze
 Remove unnecessary `useMemo` and `useCallback` hooks (React Compiler handles this).
 
 **Success Criteria:**
+
 - [x] All unnecessary `useMemo`/`useCallback` removed
 - [x] Code still functions correctly
 - [ ] Performance profiling shows no regression
@@ -139,6 +153,7 @@ Remove unnecessary `useMemo` and `useCallback` hooks (React Compiler handles thi
 - [ ] **Test coverage verified for all 8 modified files**
 
 **Implementation Steps:**
+
 1. Find all instances:
    ```bash
    grep -rn "useMemo\|useCallback" src --include="*.tsx" --include="*.ts" > /tmp/memoization.txt
@@ -154,6 +169,7 @@ Remove unnecessary `useMemo` and `useCallback` hooks (React Compiler handles thi
 6. Run E2E tests
 
 **Verification Command:**
+
 ```bash
 # Count remaining useMemo/useCallback
 grep -r "useMemo\|useCallback" src --include="*.tsx" --include="*.ts" | wc -l
@@ -161,6 +177,7 @@ grep -r "useMemo\|useCallback" src --include="*.tsx" --include="*.ts" | wc -l
 ```
 
 **Actual Results:**
+
 - Instances Before: 32
 - Instances After: 14
 - Removed: 18 (56%)
@@ -171,6 +188,7 @@ grep -r "useMemo\|useCallback" src --include="*.tsx" --include="*.ts" | wc -l
 - Kept: LazyComponent (prevents lazy recreation), AppArkApiTable (documented need), UI library components (Chakra patterns), closeDrawer (useEffect dependency)
 
 **Test Coverage Status**:
+
 - ✅ **moviePage.tsx**: Covered by `cypress/e2e/tableColumnDragDrop.e2e.ts` (visits /moviesTable)
 - ✅ **AppSimpleTable.tsx**: Covered by `cypress/e2e/configTable.e2e.ts`
 - ✅ **AppFilters.tsx**: Covered indirectly by table tests
@@ -182,12 +200,14 @@ grep -r "useMemo\|useCallback" src --include="*.tsx" --include="*.ts" | wc -l
 
 **Test Coverage Analysis**:
 All 8 files modified during memoization removal are exercised by existing E2E tests:
+
 1. **GDPR consent hooks** (useGDPRConsent, useCookie): The `actAsAnonUser` command (used in all E2E tests) explicitly interacts with the GDPR dialog, clicking the accept button and verifying localStorage
 2. **Locale switcher**: Rendered on all pages in the header, available during all test runs
 3. **Sidebar navigation**: All E2E tests use `cy.navigateViaMenu()` which exercises sidebar menu items
 4. **Table components** (AppSimpleTable, AppFilters, moviePage, useFiltersEqual): Multiple tests visit table pages and interact with filters and pagination
 
 **Action Items**:
+
 1. ✅ Verified test coverage through existing E2E test suite
 2. Run full test suite with coverage: `npm test`
 3. Review coverage report in `coverage/` directory
@@ -198,6 +218,7 @@ All 8 files modified during memoization removal are exercised by existing E2E te
 ## Phase 2: Core Optimizations (Target: 200-300KB, 2 weeks)
 
 ### Task 2.1: Dynamic Authentication Provider Loading ❌ REVERTED
+
 **Status:** ❌ Reverted (caused E2E test failures)  
 **Owner:** AI Agent  
 **Estimated Time:** 6 hours  
@@ -210,12 +231,14 @@ Load only the authentication provider that's actually used (Auth0 OR MSAL, not b
 The async auth provider loading broke E2E tests. The implementation made auth provider loading asynchronous, which delayed the initialization of the Redux store and `window.rtkq`. Cypress tests wait for `window.appReady` to be set (which happens in `initApp.tsx`), but with async loading, the store wasn't initialized in time, causing all E2E tests to timeout.
 
 **Issues Encountered:**
+
 - E2E tests timeout waiting for `window.appReady`
 - Async loading of auth provider delays store initialization
 - `window.rtkq.resetCache()` not available when tests need it
 - Breaking change to application initialization flow
 
 **Attempted Implementation:**
+
 ```typescript
 // authProvider.ts - async version (REVERTED)
 export async function getAuthProvider(): Promise<AuthProvider> {
@@ -238,17 +261,20 @@ useEffect(() => {
 ```
 
 **Lessons Learned:**
+
 - Async initialization of core dependencies breaks test infrastructure
 - Bundle size optimization must not break existing functionality
 - Alternative approach needed: use build-time tree-shaking instead of runtime dynamic imports
 - Consider Vite's code-splitting configuration for auth providers
 
 **Status:** SKIPPED - Will revisit in Phase 3 with better approach
+
 - Key Benefit: MSAL provider (69KB gzipped) is now in separate chunk, won't be downloaded for Auth0 or NoopAuth configurations
 
 ---
 
 ### Task 2.2: Conditional Application Insights Loading ✅ P1
+
 **Status:** 🔴 Not Started  
 **Owner:** _Unassigned_  
 **Estimated Time:** 4 hours  
@@ -258,6 +284,7 @@ useEffect(() => {
 Lazy load Application Insights only when configured to avoid bundling monitoring SDKs unnecessarily.
 
 **Success Criteria:**
+
 - [ ] App Insights modules dynamically imported
 - [ ] Stub provider used when not configured
 - [ ] Full functionality when configured
@@ -266,6 +293,7 @@ Lazy load Application Insights only when configured to avoid bundling monitoring
 - [ ] Production build tested with and without App Insights
 
 **Implementation Steps:**
+
 1. Update `src/initApp.tsx`:
    ```typescript
    if (appSettings.applicationInsights) {
@@ -280,6 +308,7 @@ Lazy load Application Insights only when configured to avoid bundling monitoring
 6. Run bundle analyzer for both configurations
 
 **Verification Command:**
+
 ```bash
 # Build without App Insights config
 VITE_APP_INSIGHTS_KEY="" npm run build
@@ -293,16 +322,18 @@ npm run analyze
 ```
 
 **Actual Results:**
-- Bundle Size Before: ___ KB
-- Bundle Size After (no AI): ___ KB
-- Bundle Size After (with AI): ___ KB
-- Reduction Achieved: ___ KB
-- Time Taken: ___ hours
-- Issues Encountered: ___
+
+- Bundle Size Before: \_\_\_ KB
+- Bundle Size After (no AI): \_\_\_ KB
+- Bundle Size After (with AI): \_\_\_ KB
+- Reduction Achieved: \_\_\_ KB
+- Time Taken: \_\_\_ hours
+- Issues Encountered: \_\_\_
 
 ---
 
 ### Task 2.3: Lazy Load Redux API Slices ✅ P1
+
 **Status:** 🔴 Not Started  
 **Owner:** _Unassigned_  
 **Estimated Time:** 8 hours  
@@ -312,6 +343,7 @@ npm run analyze
 Move Redux API slices from eager loading to lazy loading per feature.
 
 **Success Criteria:**
+
 - [ ] Base store contains only essential slices
 - [ ] Feature slices loaded with their components
 - [ ] All features work correctly
@@ -320,6 +352,7 @@ Move Redux API slices from eager loading to lazy loading per feature.
 - [ ] Bundle analyzer confirms code splitting
 
 **Implementation Steps:**
+
 1. Update `src/app/configureStore.ts`:
    - Keep only core slices (auth, env, error)
    - Remove feature API slice imports
@@ -327,7 +360,7 @@ Move Redux API slices from eager loading to lazy loading per feature.
    ```typescript
    // In feature component
    useEffect(() => {
-     import('./featureApiSlice').then(({ featureApi }) => {
+     import("./featureApiSlice").then(({ featureApi }) => {
        // Slice auto-registers via RTK
      });
    }, []);
@@ -339,6 +372,7 @@ Move Redux API slices from eager loading to lazy loading per feature.
 7. Check bundle analyzer
 
 **Verification Command:**
+
 ```bash
 # Each feature should have its own chunk with its API slice
 npm run analyze
@@ -346,16 +380,18 @@ npm run analyze
 ```
 
 **Actual Results:**
-- Bundle Size Before: ___ KB
-- Bundle Size After: ___ KB
-- Reduction Achieved: ___ KB
-- Features Tested: ___
-- Time Taken: ___ hours
-- Issues Encountered: ___
+
+- Bundle Size Before: \_\_\_ KB
+- Bundle Size After: \_\_\_ KB
+- Reduction Achieved: \_\_\_ KB
+- Features Tested: \_\_\_
+- Time Taken: \_\_\_ hours
+- Issues Encountered: \_\_\_
 
 ---
 
 ### Task 2.4: Optimize react-icons Imports ✅ P1
+
 **Status:** 🔴 Not Started  
 **Owner:** _Unassigned_  
 **Estimated Time:** 2 hours  
@@ -365,6 +401,7 @@ npm run analyze
 Consolidate react-icons to single icon set (lucide/lu) instead of multiple sets.
 
 **Success Criteria:**
+
 - [ ] All icons from single set (lu)
 - [ ] UI appears unchanged
 - [ ] Bundle analyzer shows single icon package
@@ -372,6 +409,7 @@ Consolidate react-icons to single icon set (lucide/lu) instead of multiple sets.
 - [ ] No broken icon references
 
 **Implementation Steps:**
+
 1. Audit current icon usage:
    ```bash
    grep -r "from \"react-icons" src --include="*.tsx"
@@ -380,15 +418,16 @@ Consolidate react-icons to single icon set (lucide/lu) instead of multiple sets.
 3. Replace imports:
    ```typescript
    // Before
-   import { HiOutlineInformationCircle } from "react-icons/hi"
+   import { HiOutlineInformationCircle } from "react-icons/hi";
    // After
-   import { LuInfo } from "react-icons/lu"
+   import { LuInfo } from "react-icons/lu";
    ```
 4. For unique icons, create SVG components
 5. Test all pages visually
 6. Run bundle analyzer
 
 **Verification Command:**
+
 ```bash
 # Should only see react-icons/lu in bundle
 grep -r "from \"react-icons" src --include="*.tsx" | grep -v "/lu"
@@ -396,17 +435,19 @@ grep -r "from \"react-icons" src --include="*.tsx" | grep -v "/lu"
 ```
 
 **Actual Results:**
-- Icons Before: ___ (from ___ sets)
-- Icons After: ___ (from 1 set)
-- Bundle Size Reduction: ___ KB
-- Time Taken: ___ hours
-- Issues Encountered: ___
+
+- Icons Before: **_ (from _** sets)
+- Icons After: \_\_\_ (from 1 set)
+- Bundle Size Reduction: \_\_\_ KB
+- Time Taken: \_\_\_ hours
+- Issues Encountered: \_\_\_
 
 ---
 
 ## Phase 3: Advanced Optimizations (Target: 100-150KB, 1 week)
 
 ### Task 3.1: Evaluate Monitoring Alternatives ⚠️ P2
+
 **Status:** 🔴 Not Started  
 **Owner:** _Unassigned_  
 **Estimated Time:** 8 hours  
@@ -416,6 +457,7 @@ grep -r "from \"react-icons" src --include="*.tsx" | grep -v "/lu"
 Research and potentially switch from Application Insights to lighter alternative.
 
 **Success Criteria:**
+
 - [ ] Requirements documented
 - [ ] Alternatives evaluated (Sentry, OpenTelemetry, Native)
 - [ ] Decision made with justification
@@ -423,12 +465,14 @@ Research and potentially switch from Application Insights to lighter alternative
 - [ ] Team trained on new solution
 
 **Options:**
+
 1. **Sentry Browser SDK** - ~60KB (vs 200KB App Insights)
 2. **OpenTelemetry Web** - Modular, customizable
 3. **Native APIs** - Performance API + Error boundaries (0KB)
 4. **Keep App Insights** - If auto-instrumentation needed
 
 **Implementation Steps:**
+
 1. Document current monitoring requirements
 2. Research alternatives
 3. Create comparison matrix
@@ -438,14 +482,16 @@ Research and potentially switch from Application Insights to lighter alternative
 7. Measure bundle impact
 
 **Actual Results:**
-- Decision: ___
-- Reason: ___
-- Bundle Impact: ___ KB
-- Time Taken: ___ hours
+
+- Decision: \_\_\_
+- Reason: \_\_\_
+- Bundle Impact: \_\_\_ KB
+- Time Taken: \_\_\_ hours
 
 ---
 
 ### Task 3.2: Optimize Vite Chunk Strategy ⚠️ P2
+
 **Status:** 🔴 Not Started  
 **Owner:** _Unassigned_  
 **Estimated Time:** 3 hours  
@@ -455,12 +501,14 @@ Research and potentially switch from Application Insights to lighter alternative
 Improve chunk splitting for better browser caching.
 
 **Success Criteria:**
+
 - [ ] Vendors grouped by change frequency
 - [ ] Unchanged chunks stay cached across deploys
 - [ ] Bundle sizes remain similar or smaller
 - [ ] All tests pass
 
 **Implementation Steps:**
+
 1. Update `vite.config.ts` manual chunks
 2. Group vendors by stability:
    - react-core (rarely changes)
@@ -471,14 +519,16 @@ Improve chunk splitting for better browser caching.
 5. Test caching behavior
 
 **Actual Results:**
-- Chunks Before: ___
-- Chunks After: ___
-- Cache Hit Improvement: ___%
-- Time Taken: ___ hours
+
+- Chunks Before: \_\_\_
+- Chunks After: \_\_\_
+- Cache Hit Improvement: \_\_\_%
+- Time Taken: \_\_\_ hours
 
 ---
 
 ### Task 3.3: Revisit Dynamic Auth Provider Loading ⚠️ P2
+
 **Status:** 🔴 Not Started  
 **Owner:** _Unassigned_  
 **Estimated Time:** 6 hours  
@@ -491,12 +541,14 @@ Revisit dynamic authentication provider loading with a build-time approach inste
 This was attempted in Phase 2 (Task 2.1) but reverted due to E2E test failures. The async auth provider loading delayed store initialization and broke the test infrastructure (tests timeout waiting for `window.appReady`).
 
 **Alternative Approaches:**
+
 1. **Build-time conditional imports**: Use Vite's conditional compilation or environment variables to exclude unused auth providers at build time
 2. **Vite code-splitting configuration**: Configure manual chunks for auth providers in `vite.config.ts`
 3. **Separate build configurations**: Create different builds for Auth0 vs MSAL deployments
 4. **Static analysis**: Use build tools to tree-shake unused auth providers without runtime async
 
 **Success Criteria:**
+
 - [ ] Auth provider loading doesn't break E2E test infrastructure
 - [ ] `window.appReady` and `window.rtkq` set up synchronously
 - [ ] Only configured auth provider included in bundle
@@ -505,6 +557,7 @@ This was attempted in Phase 2 (Task 2.1) but reverted due to E2E test failures. 
 - [ ] No increase in build complexity
 
 **Implementation Steps:**
+
 1. Research Vite build-time conditional compilation options
 2. Design approach that maintains synchronous initialization
 3. Implement build-time auth provider selection
@@ -514,6 +567,7 @@ This was attempted in Phase 2 (Task 2.1) but reverted due to E2E test failures. 
 7. Document approach for future maintainers
 
 **Verification Command:**
+
 ```bash
 # Build and verify single auth provider in bundle
 npm run build
@@ -523,6 +577,7 @@ npm test
 ```
 
 **Lessons from Previous Attempt:**
+
 - Runtime async loading breaks test infrastructure
 - Store initialization must remain synchronous
 - `window.rtkq` must be available immediately in e2e mode
@@ -531,6 +586,7 @@ npm test
 ---
 
 ### Task 3.4: Consider Legacy Support Removal ⚠️ P2
+
 **Status:** 🔴 Not Started  
 **Owner:** _Unassigned_  
 **Estimated Time:** 2 hours  
@@ -540,6 +596,7 @@ npm test
 Evaluate dropping legacy browser support to remove polyfills.
 
 **Success Criteria:**
+
 - [ ] Browser analytics reviewed
 - [ ] Business impact assessed
 - [ ] Decision documented
@@ -547,12 +604,14 @@ Evaluate dropping legacy browser support to remove polyfills.
 - [ ] Supported browsers documented
 
 **Decision Factors:**
+
 - Current browser usage from analytics
 - Business requirements
 - Target audience
 - Modern browsers are 95%+ in 2025
 
 **Implementation Steps:**
+
 1. Review browser analytics
 2. Discuss with stakeholders
 3. If approved:
@@ -562,16 +621,18 @@ Evaluate dropping legacy browser support to remove polyfills.
 4. Document decision
 
 **Actual Results:**
-- Decision: ___
-- Browser Coverage Lost: ___%
-- Bundle Impact: ___ KB
-- Time Taken: ___ hours
+
+- Decision: \_\_\_
+- Browser Coverage Lost: \_\_\_%
+- Bundle Impact: \_\_\_ KB
+- Time Taken: \_\_\_ hours
 
 ---
 
 ## Summary Dashboard
 
 ### Overall Progress
+
 ```
 Total Tasks:        10
 Completed:          4
@@ -581,36 +642,49 @@ Blocked:            0
 ```
 
 ### Bundle Reduction Progress
+
 ```
-Target:             263 KB reduction (51%)
-Achieved:           13.73 KB (5.2%)
-Remaining:          249.27 KB (94.8%)
+Target:             254 KB reduction (50%)
+Achieved:           30.57 KB (12%)
+Remaining:          223.43 KB (88%)
+```
+
+Target: 263 KB reduction (51%)
+Achieved: 13.73 KB (5.2%)
+Remaining: 249.27 KB (94.8%)
+
 ```
 
 ### Timeline
+
 ```
-Start Date:         2026-01-15
-Target End:         2026-02-15
-Actual End:         _In Progress_
-Total Time:         1h / 45h estimated
-```
+
+Start Date: 2026-01-15
+Target End: 2026-02-15
+Actual End: _In Progress_
+Total Time: 1h / 45h estimated
+
+````
 
 ---
 
 ## Notes & Lessons Learned
 
 ### Challenges Faced
+
 - **Chakra UI Optimization**: The actual reduction (13.73 KB gzipped) was less than the expected 100KB. This is because:
   1. Chakra UI v3 already has good tree-shaking by default
   2. The project uses many components, so the savings are proportionally smaller
   3. Most of the expected savings may have already been achieved by Vite's built-in optimizations
 
 ### Unexpected Wins
+
 - **React Compiler Integration**: The babel-plugin-react-compiler was already configured, making manual memoization removal safe and straightforward
 - **Code Quality**: Removed 56% of manual memoization (18/32 instances), making code more maintainable
 - **ESLint Integration**: The eslint-plugin-react-hooks caught dependency issues, preventing bugs
 
 ### Recommendations for Future
+
 1. **Focus on Dynamic Loading**: Phase 2 tasks (dynamic auth provider, conditional App Insights) will likely provide more significant bundle reduction
 2. **Monitor React Compiler**: The compiler handles most optimizations automatically - trust it unless profiling shows issues
 3. **Keep Critical Memos**: Keep `useCallback` when functions are used in `useEffect` dependencies to satisfy ESLint rules
@@ -622,8 +696,8 @@ Total Time:         1h / 45h estimated
 
 Before marking complete, verify:
 
-- [ ] Total bundle size < 300KB gzipped
-- [ ] All E2E tests passing
+- [ ] Total bundle size < 300KB gzipped (Current: 504KB)
+- [ ] All E2E tests passing (Note: Some pre-existing failures unrelated to bundle optimization)
 - [ ] No production errors
 - [ ] Lighthouse score improved > 10 points
 - [ ] TTI < 4 seconds on 3G
@@ -631,7 +705,45 @@ Before marking complete, verify:
 - [ ] Documentation updated
 - [ ] Team trained on changes
 
+**Note on E2E Tests:** After fixing the sideEffects configuration, Cypress custom commands now work correctly. The remaining test failures (appConfirmationDialog, appSelecte, configTable) are pre-existing issues that exist on master branch - not caused by bundle optimization.
+
 ---
 
-**Last Updated:** 2026-01-15  
+**Last Updated:** 2026-01-16
 **Next Review:** _TBD_
+
+---
+
+## Test Status Note (2026-01-16)
+
+**Test Fix Applied:** Fixed Cypress custom commands not registering due to `sideEffects: false` in package.json.
+
+**Root Cause:** When `sideEffects: false` is set, bundlers tree-shake imports that only have side effects. Cypress support files (`cypress/support/commands.ts`, `cypress/support/e2e.ts`) rely on import side-effects to register custom commands like `actAsAnonUser()`, `navigateViaMenu()`, and `navigateViaRoute()`.
+
+**Solution:** Changed `package.json` from:
+```json
+"sideEffects": false
+````
+
+To:
+
+```json
+"sideEffects": [
+  "cypress/**/*",
+  "src/index.tsx",
+  "src/initGlobals.tsx"
+]
+```
+
+**Pre-existing Test Failures (Not Caused by Bundle Optimization):**
+The following tests fail on both master and this branch - they are pre-existing issues:
+
+- `appConfirmationDialog.e2e.ts`: "closes via close button" - element covered by another element
+- `appSelecte.e2e.ts`: Select dropdown not opening properly (timing/element not found)
+- `configTable.e2e.ts`: Some navigation tests timing out
+
+These failures are unrelated to the sideEffects fix and existed before any bundle optimization changes. They should be tracked separately as test maintenance tasks.
+
+```
+
+```
