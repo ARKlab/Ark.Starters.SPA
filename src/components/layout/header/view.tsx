@@ -83,8 +83,8 @@ const Header = () => {
   const { isDesktop, isMobileSiderOpen, setMobileSiderOpen } = useLayoutContext();
   return (
     <Box as="header" shadow={"sm"} bg={"header"}>
-      <Flex paddingTop={"5px"} paddingBottom={"5px"}>
-        <HStack gap={2} pl={2}>
+      <Flex paddingTop="1" paddingBottom="1">
+        <HStack gap="2" pl="2">
           <LinkBox>
             <Center>
               <LinkOverlay asChild>
@@ -96,7 +96,7 @@ const Header = () => {
           </LinkBox>
         </HStack>
         <Spacer />
-        <HStack gap={2} pr={2}>
+        <HStack gap="2" pr="2">
           <Center>
             <LocaleSwitcher />
           </Center>

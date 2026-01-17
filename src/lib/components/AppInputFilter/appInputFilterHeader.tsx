@@ -4,7 +4,10 @@ import { TiTimes } from "react-icons/ti";
 
 import { InputGroup } from "../../../components/ui/input-group";
 
-import type { AppInputFilterHeaderProps } from "./appInputFilter";
+export interface AppInputFilterHeaderProps {
+  value: string | number;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+}
 
 export const AppInputFilterHeader: React.FC<AppInputFilterHeaderProps> = ({ value, onChange }) => {
   const [inputValue, setInputValue] = useState(value);

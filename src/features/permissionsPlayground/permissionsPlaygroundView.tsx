@@ -20,14 +20,14 @@ const PlaygroundView = () => {
     <Box>
       <Heading> {t("permissionsPlayground_title")}</Heading>
       <Box>
-        <Heading size="md" my={"20px"}></Heading>
-        <Heading size="sm" my={"20px"}>
+        <Heading size="md" my={"5"}></Heading>
+        <Heading size="sm" my={"5"}>
           {t("permissionsPlayground_yourPermissions", {
             username: user?.username,
           })}
         </Heading>
         <Box>
-          <List.Root bg={"bg.error"} w="20%">
+          <List.Root bg={"bg.error"} w="1/5">
             {permissions.map(permission => {
               return (
                 <List.Item key={permission}>
@@ -40,17 +40,17 @@ const PlaygroundView = () => {
             })}
           </List.Root>
           {permissions.length === 0 && <Text>{t("permissionsPlayground_noPermissions")}</Text>}
-          <Separator my={"20px"} />
-          <Heading size="md" my={"20px"}>
+          <Separator my={"5"} />
+          <Heading size="md" my={"5"}>
             {t("permissionsPlayground_componentTitle")}
           </Heading>
-          <Text my="10px">{t("permissionsPlayground_setPermission")}</Text>
+          <Text my="2.5">{t("permissionsPlayground_setPermission")}</Text>
           <InputGroup
-            w={"20%"}
+            w={"1/5"}
             endElement={
-              <Box width="4.5rem">
+              <Box width="16">
                 <Button
-                  h="1.75rem"
+                  h="6"
                   size="sm"
                   onClick={() => {
                     setRequiredPermission(inputValue);
@@ -69,7 +69,7 @@ const PlaygroundView = () => {
               }}
             />
           </InputGroup>
-          <Heading size="sm" my={"20px"}>
+          <Heading size="sm" my={"5"}>
             {t("permissionsPlayground_protectedComponent")}
           </Heading>
           <ProtectedComponent
@@ -79,9 +79,9 @@ const PlaygroundView = () => {
             <Box>{t("permissionsPlayground_havePermission")}</Box>
           </ProtectedComponent>
         </Box>
-        <Separator my={"20px"} />
+        <Separator my={"5"} />
         <Box>
-          <Heading size="md" my={"20px"}>
+          <Heading size="md" my={"5"}>
             {t("permissionsPlayground_goToProtectedRoute")}
           </Heading>
           <Button

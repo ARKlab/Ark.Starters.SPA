@@ -35,7 +35,7 @@ const SelectClearTrigger = React.forwardRef<
         size="xs"
         variant="plain"
         focusVisibleRing="inside"
-        focusRingWidth="2px"
+        focusRingWidth="0.5"
         pointerEvents="auto"
       />
     </ChakraSelect.ClearTrigger>

@@ -87,11 +87,11 @@ const MovieTableView = () => {
           External filters rendering is done here by this AppFilters component that is a demo. it uses a drawer to show filters. 
           Feel free to implement your own mantaining and extending the Typing in the Filters.ts from BaseFilter<T> 
       */}
-      <Flex my="2%" alignItems={"flex-start"} justifyItems={"center"}>
+      <Flex my="0.5" alignItems={"flex-start"} justifyItems={"center"}>
         <Button size="sm" onClick={toggleSidebar}>
           Show Filters <FaFilter style={{ marginLeft: "8px" }} />
         </Button>
-        <Box mt={4}>
+        <Box mt="4">
           <AppFilters<Movie>
             isOpen={isSidebarOpen}
             onClose={toggleSidebar}

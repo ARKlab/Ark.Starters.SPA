@@ -68,6 +68,13 @@ const config = defineConfig({
     },
 
     tokens: {
+      spacing: {
+        inherit: { value: "inherit" },
+        "0": { value: "0rem" },
+      },
+      sizes: {
+        "0": { value: "0" }, // needed for "flex" for minWidth and minHeight
+      },
       colors: {
         brandPalette: {
           100: { value: "#e4f1ff" },

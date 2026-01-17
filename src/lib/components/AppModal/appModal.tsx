@@ -49,7 +49,7 @@ export const AppModal = (props: {
         <DialogBackdrop asChild>
           <Box backdropFilter="blur(8px)" data-test="appmodal-backdrop" />
         </DialogBackdrop>
-        <DialogContent bg="bg" h={props.h ?? "auto"} data-test="appmodal-content">
+        <DialogContent bg="bg" h={props.h ?? "lg"} data-test="appmodal-content">
           <DialogHeader data-test="appmodal-header">
             <Flex direction="column" align="center">
               <Heading data-test="appmodal-title">{props.title}</Heading>

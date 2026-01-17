@@ -155,7 +155,7 @@ export const GdprConsentDialog = () => {
           </DialogHeader>
 
           <DialogBody>
-            <VStack separator={<StackSeparator borderColor="brand.muted" />} gap={"4"} align="stretch">
+            <VStack separator={<StackSeparator borderColor="fg.muted" />} gap={"4"} align="stretch">
               <Text>
                 <Trans t={t} i18nKey="customize">
                   The options provided in this section allow you to customize your consent preferences for any tracking

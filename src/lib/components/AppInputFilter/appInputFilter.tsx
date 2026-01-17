@@ -13,10 +13,6 @@ interface AppInputFilterProps {
   disabled?: boolean;
   isRequired?: boolean;
 }
-export interface AppInputFilterHeaderProps {
-  value: string | number;
-  onChange?: React.ChangeEventHandler<HTMLInputElement>;
-}
 
 export const AppInputFilter: React.FC<AppInputFilterProps> = ({
   value,

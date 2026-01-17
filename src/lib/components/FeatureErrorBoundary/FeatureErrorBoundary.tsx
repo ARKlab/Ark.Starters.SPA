@@ -38,10 +38,10 @@ function DefaultFallback({ error, resetErrorBoundary, featureLabel }: FallbackPr
   const { t } = useTranslation("libComponents");
 
   return (
-    <Box p={4} bg="error.subtle" borderRadius="md" borderWidth="1px" borderColor="error.emphasized">
-      <VStack align="start" gap={3}>
-        <HStack gap={2}>
-          <IoMdAlert size={20} color="var(--chakra-colors-error-fg)" />
+    <Box p={"4"} bg="error.subtle" borderRadius="md" border="xs" borderColor="error.emphasized">
+      <VStack align="start" gap={"3"}>
+        <HStack gap={"2"}>
+          <IoMdAlert size={"20"} color="var(--chakra-colors-error-fg)" />
           <Heading as="h3" size="sm" color="error.fg">
             {featureLabel
               ? t("featureErrorBoundary_errorInFeature", { feature: featureLabel })

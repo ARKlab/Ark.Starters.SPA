@@ -13,7 +13,7 @@ export function PageTitle(props: { pageTitle: string; backBtn?: boolean } & Head
   }
 
   return (
-    <HStack alignItems={"center"} mb={4}>
+    <HStack alignItems={"center"} mb="4">
       {backBtn && (
         <Button variant={"subtle"} size={"xs"} onClick={goBack}>
           <FaCaretLeft />

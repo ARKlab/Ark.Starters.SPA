@@ -16,23 +16,23 @@ const Layout = () => {
   return (
     <LayoutContextProvider>
       <Grid
-        h={"100vh"}
-        w={"100vw"}
+        h="vh"
+        w="vw"
         gridTemplateAreas={`'header header'
                             'nav content'
                             `}
         gridTemplateColumns={"auto 1fr"}
         gridTemplateRows={"4rem 1fr auto"}
       >
-        <GridItem area={"header"} position={"sticky"} top={0} left={0} zIndex={"banner"}>
+        <GridItem area={"header"} position={"sticky"} top="0" left="0" zIndex={"banner"}>
           <Header />
         </GridItem>
 
         <GridItem
           area={"nav"}
           position={"sticky"}
-          left={0}
-          top={"4rem"}
+          left="0"
+          top="16"
           zIndex={"banner"}
           overflowY={"auto"}
           overflowX={"hidden"}
@@ -40,7 +40,7 @@ const Layout = () => {
           <SimpleSidebar />
         </GridItem>
 
-        <GridItem area={"content"} as={"main"} p={4} overflow={"auto"} bg={"page"}>
+        <GridItem area={"content"} as={"main"} p="4" overflow={"auto"} bg={"page"}>
           <ErrorBoundary>
             <Suspense fallback={<CenterSpinner />}>
               <Outlet />
