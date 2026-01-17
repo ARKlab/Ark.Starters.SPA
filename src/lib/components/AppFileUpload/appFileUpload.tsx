@@ -77,19 +77,19 @@ export default function AppFileUpload({
   };
 
   return (
-    <VStack gap={4} width="100%" alignItems="stretch" data-test="fileupload-root">
+    <VStack gap={"4"} width="full" alignItems="stretch" data-test="fileupload-root">
       <Box
         data-test="fileupload-dropzone"
         position="relative"
-        width="100%"
-        minHeight="200px"
-        borderWidth="2px"
-        borderStyle="dashed"
-        borderColor={isDragging ? "primary" : error ? "danger" : "border"}
+        width="full"
+        minHeight="3xs"
+        border="xs"
+        borderColor={isDragging ? "brand.primary" : error ? "error.fg" : "border"}
         borderRadius="xl"
         bg={isDragging ? "brand.subtle" : "bg"}
-        cursor="pointer"
-        transition="all 0.2s"
+        cursor="checkbox"
+        transition="all"
+        transitionDuration="fast"
         onDragEnter={handleDragEnter}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -98,35 +98,36 @@ export default function AppFileUpload({
       >
         <VStack
           position="absolute"
-          top="50%"
-          left="50%"
+          top="1/2"
+          left="1/2"
           transform="translate(-50%, -50%)"
           gap={"3"}
           pointerEvents="none"
           data-test="fileupload-center"
         >
           <Box
-            p={4}
+            p={"4"}
             borderRadius="full"
-            bg={isDragging ? "primary" : "brand.muted"}
-            color={isDragging ? "text" : "primary"}
-            transition="all 0.2s"
+            bg={isDragging ? "brand.primary" : "brand.muted"}
+            color={isDragging ? "fg" : "brand.primary"}
+            transition="all"
+            transitionDuration="fast"
             data-test="fileupload-icon-wrapper"
           >
             <Icon size={"md"} data-test="fileupload-upload-icon">
               <FaUpload />
             </Icon>
           </Box>
-          <VStack gap={1}>
-            <Text fontSize="lg" fontWeight="semibold" color="text" data-test="fileupload-main-text">
+          <VStack gap={"1"}>
+            <Text fontSize="lg" fontWeight="semibold" color="fg" data-test="fileupload-main-text">
               {isDragging ? "Rilascia i file qui" : "Trascina i file qui"}
             </Text>
-            <Text fontSize="sm" color="text.muted" data-test="fileupload-secondary-text">
+            <Text fontSize="sm" color="fg.muted" data-test="fileupload-secondary-text">
               oppure clicca per selezionare
             </Text>
           </VStack>
           {accept && (
-            <Text fontSize="xs" color="text.muted" data-test="fileupload-accept">
+            <Text fontSize="xs" color="fg.muted" data-test="fileupload-accept">
               Formati supportati: {accept}
             </Text>
           )}
@@ -144,22 +145,22 @@ export default function AppFileUpload({
 
       {error && (
         <Box
-          p={3}
+          p="3"
           bg="red.100"
           borderRadius="md"
-          borderLeftWidth="4px"
-          borderLeftColor="danger"
+          borderLeft="xs"
+          borderLeftColor="error.solid"
           data-test="fileupload-error"
         >
-          <Text fontSize="sm" color="danger">
+          <Text fontSize="sm" color="error.fg">
             {error}
           </Text>
         </Box>
       )}
 
       {selectedFiles.length > 0 && (
-        <VStack gap={2} alignItems="stretch" data-test="fileupload-list">
-          <Text fontSize="sm" fontWeight="semibold" color="text" data-test="fileupload-count">
+        <VStack gap="2" alignItems="stretch" data-test="fileupload-list">
+          <Text fontSize="sm" fontWeight="semibold" color="fg" data-test="fileupload-count">
             File selezionati ({selectedFiles.length})
           </Text>
           {selectedFiles.map((file, index) => (
@@ -168,25 +169,25 @@ export default function AppFileUpload({
               display="flex"
               alignItems="center"
               justifyContent="space-between"
-              p={3}
-              bg="surface"
+              p={"3"}
+              bg="bg"
               borderRadius="lg"
-              borderWidth="1px"
+              border="xs"
               borderColor="border"
               data-test="fileupload-item"
               data-name={file.name}
             >
-              <Box display="flex" alignItems="center" gap={3} flex={1} minWidth={0}>
-                <Box p={2} borderRadius="md" bg="brand.muted" color="primary" flexShrink={0}>
+              <Box display="flex" alignItems="center" gap={"3"} flex={"1"} minWidth={"0"}>
+                <Box p={"2"} borderRadius="md" bg="brand.muted" color="brand.primary" flexShrink={0}>
                   <Icon size={"md"} data-test="fileupload-file-icon">
                     <FaFile />
                   </Icon>
                 </Box>
-                <Box flex={1} minWidth={0}>
+                <Box flex={"1"} minWidth={"0"}>
                   <Text
                     fontSize="sm"
                     fontWeight="medium"
-                    color="text"
+                    color="fg"
                     overflow="hidden"
                     textOverflow="ellipsis"
                     whiteSpace="nowrap"
@@ -194,16 +195,16 @@ export default function AppFileUpload({
                   >
                     {file.name}
                   </Text>
-                  <Text fontSize="xs" color="text.muted" data-test="fileupload-item-size">
+                  <Text fontSize="xs" color="fg.muted" data-test="fileupload-item-size">
                     {formatFileSize(file.size)}
                   </Text>
                 </Box>
               </Box>
               <Box
                 as="button"
-                p={1}
+                p={"1"}
                 borderRadius="md"
-                color="text.muted"
+                color="fg.muted"
                 onClick={e => {
                   e.stopPropagation();
                   handleRemoveFile(index);

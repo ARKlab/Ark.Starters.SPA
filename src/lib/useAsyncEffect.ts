@@ -24,8 +24,8 @@ function useAsyncEffect(effect: () => Promise<void> | AsyncGenerator<void, void,
         } else {
           await task;
         }
-        // eslint-disable-next-line  @typescript-eslint/no-unused-vars
-      })().then(r => {
+         
+      })().then(_ => {
         /* do nothing */
       }, showBoundary);
 

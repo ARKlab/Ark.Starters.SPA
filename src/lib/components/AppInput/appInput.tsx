@@ -40,9 +40,9 @@ export const AppInput: React.FC<InputWithClearProps> = ({
           {title}
         </Text>
       </FieldLabel>
-      <Stack w={"100%"}>
+      <Stack w={"full"}>
         <InputGroup
-          endElementProps={{ _hover: { fontWeight: "bold", cursor: "pointer" }, color: "fg" }}
+          endElementProps={{ _hover: { fontWeight: "bold", cursor: "checkbox" }, color: "fg" }}
           endElement={value && <LiaTimesSolid onClick={handleClear} data-test="appinput-clear" />}
         >
           <Input

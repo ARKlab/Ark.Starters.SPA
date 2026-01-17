@@ -7,7 +7,7 @@ import type { ThemeProviderProps } from "next-themes"
 import * as React from "react"
 import { LuMoon, LuSun } from "react-icons/lu"
 
-export interface ColorModeProviderProps extends ThemeProviderProps {}
+export interface ColorModeProviderProps extends ThemeProviderProps { }
 
 export function ColorModeProvider(props: ColorModeProviderProps) {
   return (
@@ -46,7 +46,7 @@ export function ColorModeIcon() {
   return colorMode === "dark" ? <LuMoon /> : <LuSun />
 }
 
-interface ColorModeButtonProps extends Omit<IconButtonProps, "aria-label"> {}
+interface ColorModeButtonProps extends Omit<IconButtonProps, "aria-label"> { }
 
 export const ColorModeButton = React.forwardRef<
   HTMLButtonElement,
@@ -77,15 +77,21 @@ export const ColorModeButton = React.forwardRef<
 
 export const LightMode = React.forwardRef<HTMLSpanElement, SpanProps>(
   function LightMode(props, ref) {
+
+    const defaultProps = {
+      color: "fg",
+      display: "contents",
+      className: "chakra-theme light",
+      colorPalette: "gray",
+      colorScheme: "light"
+    } as SpanProps;
+
+    const mergedProps = { ...defaultProps, ...props };
+
     return (
       <Span
-        color="fg"
-        display="contents"
-        className="chakra-theme light"
-        colorPalette="gray"
-        colorScheme="light"
+        {...mergedProps}
         ref={ref}
-        {...props}
       />
     )
   },
@@ -93,15 +99,21 @@ export const LightMode = React.forwardRef<HTMLSpanElement, SpanProps>(
 
 export const DarkMode = React.forwardRef<HTMLSpanElement, SpanProps>(
   function DarkMode(props, ref) {
+
+    const defaultProps = {
+      color: "fg",
+      display: "contents",
+      className: "chakra-theme dark",
+      colorPalette: "gray",
+      colorScheme: "dark"
+    } as SpanProps;
+
+    const mergedProps = { ...defaultProps, ...props };
+
     return (
       <Span
-        color="fg"
-        display="contents"
-        className="chakra-theme dark"
-        colorPalette="gray"
-        colorScheme="dark"
+        {...mergedProps}
         ref={ref}
-        {...props}
       />
     )
   },

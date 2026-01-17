@@ -1,4 +1,5 @@
-import { createListCollection, Field, Spinner, Stack, Text } from "@chakra-ui/react";
+import type { SelectContentProps, SelectRootProps, SelectTriggerProps } from "@chakra-ui/react";
+import { createListCollection, Field, FieldLabel, Spinner, Stack, Text } from "@chakra-ui/react";
 
 import { SelectContent, SelectItem, SelectRoot, SelectTrigger, SelectValueText } from "./baseSelectSnippets";
 
@@ -14,17 +15,17 @@ interface AppSelectProps {
   isLoading?: boolean;
   onChange: (value: string | undefined) => void;
   value: string | undefined;
-  triggerBg?: string;
-  bg?: string;
-  size?: "sm" | "md" | "lg" | "xs" | undefined;
+  triggerBg?: SelectTriggerProps["bg"];
+  bg?: SelectContentProps["bg"];
+  size?: SelectRootProps["size"];
   placeholder?: string;
   clearable?: boolean;
-  zIndex?: string;
+  zIndex?: SelectContentProps["zIndex"];
   disabled?: boolean;
   invalid?: boolean;
   fieldErrorText?: string;
-  border?: string;
-  color?: string;
+  border?: SelectTriggerProps["border"];
+  color?: SelectRootProps["color"];
 }
 
 //THE SELECT COMPONENT USED FOR THIS SUPPORTS MULTIPLE SELECTION. THIS IMPLEMENTATION ONLY SUPPORTS SINGLE SELECTION
@@ -50,26 +51,22 @@ const AppSelect: React.FC<AppSelectProps> = ({
   const optionCollection = createListCollection({ items: options });
 
   return (
-    <Field.Root
-      mr={title ? "2%" : "0"}
-      p={title ? "inherit" : "0"}
-      m={title ? "inherit" : "0"}
-      invalid={invalid}
-      border="none"
-    >
+    <Field.Root mr={title ? "0.5" : "0"} p={title ? "inherit" : "0"} m={title ? "inherit" : "0"} invalid={invalid}>
       {title && (
-        <Text as="b" data-test="appselect-title">
-          {title}
-        </Text>
+        <FieldLabel data-test="appselect-label">
+          <Text as="b" data-test="appselect-title">
+            {title}
+          </Text>
+        </FieldLabel>
       )}
-      <Stack gap={title ? "inherit" : "0"} width="100%">
+      <Stack gap={title ? "inherit" : "0"} width="full">
         {isLoading ? (
           <Spinner data-test="appselect-loading" />
         ) : (
           <SelectRoot
             data-test="appselect-root-internal"
             disabled={disabled}
-            layerStyle={disabled ? "disabled" : ""}
+            layerStyle={disabled ? "disabled" : undefined}
             collection={optionCollection}
             size={size}
             onValueChange={e => {
@@ -84,7 +81,7 @@ const AppSelect: React.FC<AppSelectProps> = ({
               onClear={() => {
                 onChange("");
               }}
-              bg={triggerBg ?? bg}
+              bg={triggerBg}
               rounded={"md"}
               border={border}
             >

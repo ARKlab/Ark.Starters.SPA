@@ -19,15 +19,15 @@ const Unauthorized = () => {
       </Heading>
       {!isLogged ? (
         <>
-          <Text fontSize="lg" mt={4}>
+          <Text fontSize="lg" mt={"4"}>
             You need to be logged in to view this page.
           </Text>
-          <Button colorPalette="primary" variant="outline" mt={4} onClick={login}>
+          <Button colorPalette="primary" variant="outline" mt={"4"} onClick={login}>
             Login
           </Button>
         </>
       ) : (
-        <Text fontSize="lg" mt={4}>
+        <Text fontSize="lg" mt={"4"}>
           You do not have the right permissions to access this page.
         </Text>
       )}

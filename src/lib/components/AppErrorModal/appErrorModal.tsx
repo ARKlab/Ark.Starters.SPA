@@ -53,7 +53,7 @@ const ModalBody = (props: { problem: ErrorDetailsType | null }) => {
                   </Box>
                 </AccordionItemTrigger>
               </h2>
-              <AccordionItemContent pb={4}>
+              <AccordionItemContent pb="4">
                 <CodeBlock>{problem.details}</CodeBlock>
               </AccordionItemContent>
             </AccordionItem>
@@ -68,7 +68,7 @@ const ModalBody = (props: { problem: ErrorDetailsType | null }) => {
                   </Box>
                 </AccordionItemTrigger>
               </h2>
-              <AccordionItemContent pb={4}>
+              <AccordionItemContent pb="4">
                 <ParsedStackTrace stack={problem.stack} />
               </AccordionItemContent>
             </AccordionItem>

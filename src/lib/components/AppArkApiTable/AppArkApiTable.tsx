@@ -1,6 +1,12 @@
 import { Box, Button, Center, HStack, Spinner, Table, VStack } from "@chakra-ui/react";
+import type { DragEndEvent } from "@dnd-kit/core";
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, horizontalListSortingStrategy } from "@dnd-kit/sortable";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  horizontalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import type {
   Column,
   ColumnDef,
@@ -223,13 +229,13 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
     }),
   );
 
-  const handleDragEnd = (event: { active: { id: string }; over: { id: string } | null }) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
       setColumnOrder(items => {
-        const oldIndex = items.indexOf(active.id);
-        const newIndex = items.indexOf(over.id);
+        const oldIndex = items.indexOf(active.id.toString());
+        const newIndex = items.indexOf(over.id.toString());
 
         return arrayMove(items, oldIndex, newIndex);
       });
@@ -269,11 +275,11 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
                                   <Filter<T> column={header.column} table={table} isLoading={isFetching} />
                                 ) : null}
                               </Box>
-                          </VStack>
-                        </>
-                      )}
-                    </Table.ColumnHeader>
-                  ))}
+                            </VStack>
+                          </>
+                        )}
+                      </Table.ColumnHeader>
+                    ))}
                   </SortableContext>
                 </Table.Row>
               ))}
@@ -350,14 +356,10 @@ function Filter<T>({ column }: { column: Column<T>; table: ReactTable<T>; isLoad
           </datalist>
           {/* className is used here for datalist functionality - it's passed to the underlying HTML input element */}
           <DebouncedInputColumnHeader
-            type="text"
             value={(columnFilterValue ?? "") as string}
             onChange={value => {
               column.setFilterValue(value);
             }}
-            placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
-            className="w-36 border shadow rounded"
-            list={column.id + "list"}
           />
         </>
       );

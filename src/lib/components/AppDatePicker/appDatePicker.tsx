@@ -1,5 +1,6 @@
 import type { DateValue } from "@ark-ui/react/date-picker";
 import { DatePicker, parseDate, useDatePicker } from "@ark-ui/react/date-picker";
+import type { StackProps } from "@chakra-ui/react";
 import { Box, Button, Field, FieldLabel, HStack, IconButton, Input, Stack, Text } from "@chakra-ui/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -17,9 +18,9 @@ interface AppDatePickerProps extends DatePicker.RootProps {
   label?: string;
   fieldErrorText?: string;
   invalid?: boolean;
-  w?: string;
-  border?: string;
-  bg?: string;
+  w?: StackProps["w"];
+  border?: StackProps["border"];
+  bg?: StackProps["bg"];
   inputSize?: "sm" | "md" | "lg" | "xl" | "2xl" | "2xs" | "xs" | undefined;
   timeZone?: string;
   showCalendarButton?: boolean;
@@ -30,7 +31,7 @@ interface AppDatePickerProps extends DatePicker.RootProps {
 }
 export const AppDatePicker = (props: AppDatePickerProps) => {
   const { t, i18n } = useTranslation();
-  
+
   const {
     date,
     minDate,
@@ -55,9 +56,10 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
     if (!date) return undefined;
     try {
       // dateFormat is typically "yyyy-MM-dd" for parseDate
-      const formatted = dateFormat === "yyyy-MM-dd" 
-        ? t('{{val, isoDate}}', { val: date })
-        : t('{{val, dateFormat}}', { val: date, format: dateFormat });
+      const formatted =
+        dateFormat === "yyyy-MM-dd"
+          ? t("{{val, isoDate}}", { val: date })
+          : t("{{val, dateFormat}}", { val: date, format: dateFormat });
       return parseDate(formatted);
     } catch {
       return undefined;
@@ -79,19 +81,23 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
 
   function getFormat(dv: DateValue) {
     const d = dv.toDate(timeZone ?? "UTC");
-    return t('{{val, dateFormat}}', { val: d, format: dateDisplayFormat });
+    return t("{{val, dateFormat}}", { val: d, format: dateDisplayFormat });
   }
 
-  const min = minDate ? parseDate(
-    dateFormat === "yyyy-MM-dd" 
-      ? t('{{val, isoDate}}', { val: minDate })
-      : t('{{val, dateFormat}}', { val: minDate, format: dateFormat })
-  ) : undefined;
-  const max = maxDate ? parseDate(
-    dateFormat === "yyyy-MM-dd" 
-      ? t('{{val, isoDate}}', { val: maxDate })
-      : t('{{val, dateFormat}}', { val: maxDate, format: dateFormat })
-  ) : undefined;
+  const min = minDate
+    ? parseDate(
+      dateFormat === "yyyy-MM-dd"
+        ? t("{{val, isoDate}}", { val: minDate })
+        : t("{{val, dateFormat}}", { val: minDate, format: dateFormat }),
+    )
+    : undefined;
+  const max = maxDate
+    ? parseDate(
+      dateFormat === "yyyy-MM-dd"
+        ? t("{{val, isoDate}}", { val: maxDate })
+        : t("{{val, dateFormat}}", { val: maxDate, format: dateFormat }),
+    )
+    : undefined;
 
   const datePicker = useDatePicker({
     positioning: { sameWidth: true, placement: "bottom-start", overlap: true, strategy: "fixed" },
@@ -126,7 +132,7 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
   }, []);
 
   return (
-    <Stack ref={datePickerRef} w={w ?? ""} data-test="datepicker">
+    <Stack ref={datePickerRef} w={w ?? undefined} data-test="datepicker">
       <Field.Root invalid={invalid}>
         {label && (
           <FieldLabel>
@@ -150,8 +156,15 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
                   onClick={() => {
                     setOpen(true);
                   }}
-                  placeholder={parsedValue ? t('{{val, dateFormat}}', { val: parsedValue.toDate(timeZone ?? "UTC"), format: dateDisplayFormat }) : ""}
-                  borderWidth={border}
+                  placeholder={
+                    parsedValue
+                      ? t("{{val, dateFormat}}", {
+                        val: parsedValue.toDate(timeZone ?? "UTC"),
+                        format: dateDisplayFormat,
+                      })
+                      : ""
+                  }
+                  border={border}
                   size={inputSize ?? "md"}
                   value={parsedValue ? getFormat(parsedValue) : ""}
                   readOnly

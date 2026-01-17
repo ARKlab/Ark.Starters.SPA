@@ -5,10 +5,10 @@ import { Link } from "react-router";
 const DetailsPageExampleMainView = () => {
   const { t } = useTranslation();
   return (
-    <Box ml={"20px"}>
+    <Box ml={"5"}>
       <Heading>{t("playground")}</Heading>
       <Box>
-        <Heading size="md" my={"20px"}>
+        <Heading size="md" my={"5"}>
           {t("notification_example")}
         </Heading>
         {t("detailspage_clickIdToViewDetails")}

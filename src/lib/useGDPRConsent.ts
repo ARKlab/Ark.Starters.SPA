@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import { useLocalStorage } from "usehooks-ts";
 
 export interface PurposeCookieTypes {
@@ -35,19 +34,16 @@ export const useCookieConsent = (): [
     initializeWithValue: true,
   });
 
-  const acceptAll = useCallback(() => {
+  const acceptAll = () => {
     update(allCookiesSetToValue(true));
-  }, [update]);
-  const rejectNotNecessary = useCallback(() => {
+  };
+  const rejectNotNecessary = () => {
     update(allCookiesSetToValue(false));
-  }, [update]);
+  };
 
-  const acceptSome = useCallback(
-    (c: ConsentState) => {
-      update({ ...c, necessary: true });
-    },
-    [update],
-  );
+  const acceptSome = (c: ConsentState) => {
+    update({ ...c, necessary: true });
+  };
 
   return [
     consent,

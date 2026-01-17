@@ -27,29 +27,29 @@ export const ParsedStackTrace = ({ stack }: { stack?: string }) => {
 export function ErrorDisplay({ name, message, stack }: { name?: string; message?: string; stack?: string }) {
   const { t } = useTranslation("template");
   return (
-    <Box py={10} px={6}>
+    <Box py="10" px="6">
       <Container>
-        <VStack w="100%">
+        <VStack w="full">
           <Box display="inline-block">
             <Flex
               flexDirection="column"
               justifyContent="center"
               alignItems="center"
               bg={"error.solid"}
-              rounded={"50px"}
-              w={"55px"}
-              h={"55px"}
+              rounded="xl"
+              w="16"
+              h="16"
               textAlign="center"
             >
               <IoMdClose color={"fg.error"} />
             </Flex>
           </Box>
-          <Heading asChild size="md" mt={6} mb={2}>
+          <Heading asChild size="md" mt="6" mb="2">
             <Link to="" reloadDocument style={{ textDecoration: "underline" }}>
               {t("errorHandler.reload")}{" "}
             </Link>
           </Heading>
-          <Heading as="h2" size="xl" mt={6} mb={2}>
+          <Heading as="h2" size="xl" mt="6" mb="2">
             {name ?? t("errorHandler.error")}
           </Heading>
           <Text color={"fg.muted"}>{message}</Text>

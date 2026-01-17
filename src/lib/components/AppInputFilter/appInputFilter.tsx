@@ -1,5 +1,4 @@
 /* eslint-disable*/
-import type { InputProps } from "@chakra-ui/react";
 import { Field, Input, Stack, Text } from "@chakra-ui/react";
 
 import { InputGroup } from "../../../components/ui/input-group";
@@ -13,10 +12,6 @@ interface AppInputFilterProps {
   propName: string;
   disabled?: boolean;
   isRequired?: boolean;
-}
-export interface AppInputFilterHeaderProps extends InputProps {
-  value: string | number;
-  onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }
 
 export const AppInputFilter: React.FC<AppInputFilterProps> = ({
@@ -32,12 +27,12 @@ export const AppInputFilter: React.FC<AppInputFilterProps> = ({
   };
 
   return (
-    <Field.Root mr={title ? "2%" : "0"} p={title ? "inherit" : "0"} m={title ? "inherit" : "0"}>
+    <Field.Root mr={title ? "0.5" : "0"} p={title ? "inherit" : "0"} m={title ? "inherit" : "0"}>
       <Text as="b">{title}</Text>
 
-      <Stack w={"100%"}>
+      <Stack w={"full"}>
         <InputGroup
-          endElementProps={{ _hover: { fontWeight: "bold", cursor: "pointer" }, color: "fg" }}
+          endElementProps={{ _hover: { fontWeight: "bold", cursor: "checkbox" }, color: "fg" }}
           endElement={value && <LiaTimesSolid onClick={handleClear} />}
         >
           <Input

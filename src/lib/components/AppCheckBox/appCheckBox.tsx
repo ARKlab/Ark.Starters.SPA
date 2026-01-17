@@ -25,7 +25,7 @@ export const AppCheckBox: React.FC<CheckBoxProps> = ({
   invalid = false,
 }) => {
   return (
-    <Field.Root m={title ? undefined : 0} p={title ? undefined : 0} invalid={invalid} data-test="checkbox-root">
+    <Field.Root invalid={invalid} data-test="checkbox-root">
       {title && (
         <FieldLabel data-test="checkbox-title">
           <Text as="b">{title}</Text>
@@ -42,7 +42,7 @@ export const AppCheckBox: React.FC<CheckBoxProps> = ({
       >
         <Checkbox.HiddenInput data-test="checkbox-hidden-input" />
         <Checkbox.Control data-test="checkbox-visual">
-          <Checkbox.Indicator color="text.def" data-test="checkbox-indicator" />
+          <Checkbox.Indicator color="brand.fg" data-test="checkbox-indicator" />
         </Checkbox.Control>
         <Checkbox.Label data-test="checkbox-label">{label ?? ""}</Checkbox.Label>
       </Checkbox.Root>

@@ -3,7 +3,6 @@
 import type { UserAccountInfo } from "../authTypes";
 import { LoginStatus } from "../authTypes";
 
-type TokenResponse = string | null;
 export interface AuthProvider {
   /**
    * Initializes the authentication module with configuration data,
@@ -77,11 +76,13 @@ export class NoopAuthProvider implements AuthProvider {
     return;
   }
 
+  // @ts-expect-error: unused parameter
   async getToken(audience?: string): Promise<string | null> {
     // No token available in noop provider.
     return null;
   }
 
+  // @ts-expect-error: unused parameter
   hasPermission(permission: string, audience?: string): boolean {
     // No permissions; always false.
     return false;

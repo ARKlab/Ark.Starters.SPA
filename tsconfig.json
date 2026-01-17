@@ -22,15 +22,33 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noUncheckedSideEffectImports": true,
+    "allowImportingTsExtensions": true,
+    "moduleDetection": "force",
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "incremental": true,
+    "tsBuildInfoFile": "./node_modules/.cache/tsbuildinfo/tsconfig.tsbuildinfo"
   },
   "include": [
     "./src"
+  ],
+  "exclude": [
+    "./node_modules",
+    "./build",
+    "./dev-dist",
+    "./cypress"
   ],
   "files": [
     "./vite.config.ts",

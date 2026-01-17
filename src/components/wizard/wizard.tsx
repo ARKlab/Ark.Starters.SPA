@@ -46,8 +46,8 @@ export function Wizard<SchemaType extends object>(props: WizardProps<SchemaType>
       <form onSubmit={handleSubmit(_onSubmit)}>
         <Box>{activePage}</Box>
 
-        <Box className="buttons" mt={4}>
-          <Flex gap={"20px"}>
+        <Box className="buttons" mt="4">
+          <Flex gap="5">
             {page > 0 && (
               <Button type="button" onClick={previous}>
                 « Previous
@@ -66,7 +66,7 @@ export function Wizard<SchemaType extends object>(props: WizardProps<SchemaType>
           </Flex>
         </Box>
 
-        <Card.Root mt={4} padding={".5rem 1rem"} bgColor={"brand.primary"} w={"50%s"}>
+        <Card.Root mt="4" p="2" px="4" bg="brand.solid" w="full">
           <Text fontWeight={"bold"}>Form Data:</Text>
 
           <List.Root>

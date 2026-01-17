@@ -7,7 +7,7 @@ type DebouncedInputColumnHeaderProps = {
   value: string | number;
   onChange: (value: string | number) => void;
   debounce?: number;
-} & Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "size">;
+};
 
 export function DebouncedInputColumnHeader({
   value: initialValue,

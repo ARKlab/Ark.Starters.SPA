@@ -4,7 +4,7 @@ import imgUrl from './logo.png'
 
 export const Logo = () => {
     return <Image
-        height={'50px'}
+        height={'12'}
         src={imgUrl}
         alt="ARK Logo"
         loading="eager"

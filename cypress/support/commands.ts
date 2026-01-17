@@ -16,7 +16,7 @@ Cypress.Commands.add("actAsAnonUser", () => {
     },
     {
       validate: () => {
-        cy.getLocalStorage("GDPR_CONSENT_STATE").then(x => expect(x).not.be.null);
+        cy.getLocalStorage("GDPR_CONSENT_STATE").then(x => expect(x).not.to.be.null);
       },
       cacheAcrossSpecs: true,
     },

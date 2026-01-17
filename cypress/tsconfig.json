@@ -1,11 +1,23 @@
 {
-  "extends": "../tsconfig.json",
-  "include": ["./**/*.ts", "../src/global.d.ts", "../cypress.config.ts"],
+  "include": [
+    "./**/*.ts",
+    "../src/global.d.ts",
+    "../cypress.config.ts"
+  ],
   "exclude": [],
   "compilerOptions": {
-    "types": ["cypress", "@testing-library/cypress", "cypress-wait-until"],
-    "lib": ["es2023", "dom"],
+    "types": [
+      "cypress",
+      "@testing-library/cypress",
+      "cypress-wait-until"
+    ],
+    "lib": [
+      "ES2023",
+      "dom"
+    ],
+    "sourceMap": true,
     "isolatedModules": false,
+    "incremental": true,
     "allowJs": false,
     "noEmit": true
   }
