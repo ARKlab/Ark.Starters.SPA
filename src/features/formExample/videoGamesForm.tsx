@@ -72,14 +72,14 @@ function VideoGamesForm() {
         onChange={() => {
           setFlag(!flag);
         }}
-        my="30px"
+        my="12"
       >
         <AccordionItem value="addVideoGame">
           <AccordionItemTrigger>{t("games_add_video_game")}</AccordionItemTrigger>
-          <AccordionItemContent pb={4}>
-            <Container maxW="container.md">
+          <AccordionItemContent pb="4">
+            <Container maxW="md">
               <form onSubmit={handleSubmit(onSubmit)}>
-                <Box mb={4}>
+                <Box mb="4">
                   <Field.Root invalid={!!errors.title} id="title">
                     <FieldLabel>{t("games_title_placeholder")}</FieldLabel>
                     <Controller
@@ -91,7 +91,7 @@ function VideoGamesForm() {
                     <Field.ErrorText>{errors.title?.message}</Field.ErrorText>
                   </Field.Root>
 
-                  <Spacer height="20px" />
+                  <Spacer height="5" />
 
                   <Field.Root>
                     <FieldLabel>{t("games_genre_placeholder")}</FieldLabel>
@@ -115,7 +115,7 @@ function VideoGamesForm() {
                     />
                   </Field.Root>
 
-                  <Spacer height="20px" />
+                  <Spacer height="5" />
 
                   <Field.Root invalid={!!errors.releaseYear}>
                     <FieldLabel>Release Year</FieldLabel>
@@ -130,7 +130,7 @@ function VideoGamesForm() {
                     <Field.ErrorText>{errors.releaseYear?.message}</Field.ErrorText>
                   </Field.Root>
 
-                  <Spacer height="20px" />
+                  <Spacer height="5" />
 
                   <Field.Root invalid={!!errors.developer}>
                     <FieldLabel>Developer</FieldLabel>
@@ -143,7 +143,7 @@ function VideoGamesForm() {
                     <Field.ErrorText>{errors.developer?.message}</Field.ErrorText>
                   </Field.Root>
 
-                  <Spacer height="20px" />
+                  <Spacer height="5" />
 
                   <Field.Root invalid={!!errors.platform}>
                     <FieldLabel>System</FieldLabel>
@@ -156,7 +156,7 @@ function VideoGamesForm() {
                     <Field.ErrorText>{errors.platform?.message}</Field.ErrorText>
                   </Field.Root>
 
-                  <Spacer height="20px" />
+                  <Spacer height="5" />
 
                   <Field.Root invalid={!!errors.rating}>
                     <FieldLabel>Rating</FieldLabel>
@@ -171,7 +171,7 @@ function VideoGamesForm() {
                     <Field.ErrorText>{errors.rating?.message}</Field.ErrorText>
                   </Field.Root>
 
-                  <Spacer height="20px" />
+                  <Spacer height="5" />
 
                   <Field.Root invalid={!!errors.salesMillions}>
                     <FieldLabel>Sells (Millions)</FieldLabel>
@@ -184,9 +184,9 @@ function VideoGamesForm() {
                     <Field.ErrorText>{errors.salesMillions?.message}</Field.ErrorText>
                   </Field.Root>
 
-                  <Spacer height="20px" />
+                  <Spacer height="5" />
 
-                  <Button mt={4} colorPalette="primary" loading={isSubmitting} type="submit">
+                  <Button mt="4" colorPalette="brand" loading={isSubmitting} type="submit">
                     {t("games_save_button")}
                   </Button>
                 </Box>

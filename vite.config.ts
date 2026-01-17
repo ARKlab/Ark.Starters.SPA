@@ -15,6 +15,7 @@ import istanbul from "vite-plugin-istanbul";
 import { VitePWA } from "vite-plugin-pwa";
 import { reactClickToComponent } from "vite-plugin-react-click-to-component";
 import svgr from "vite-plugin-svgr";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 import { supportedLngs } from "./src/config/lang";
 
@@ -46,11 +47,12 @@ export default defineConfig(({ mode }) => {
       }),
       ViteImageOptimizer(),
       react({
-        jsxImportSource: "@emotion/react",
+        //jsxImportSource: "@emotion/react",
         babel: {
           plugins: [["babel-plugin-react-compiler", {}]],
         },
       }),
+      tsconfigPaths(),
       reactClickToComponent(),
       VitePWA({
         disable: mode == "e2e", // disable PWA in e2e mode due to conflict with MSW (only 1 ServiceWorker can be registered)
@@ -104,7 +106,7 @@ export default defineConfig(({ mode }) => {
         lintOnStart: mode != "e2e",
         lintInWorker: mode == "development",
         cache: true,
-        cacheLocation: "node_modules/.vite/.eslintcache",
+        cacheLocation: "node_modules/.cache/.eslintcache",
         exclude: ["**/node_modules/**", "**/build/**", "**/public/**", "**/dev-dist/**", "virtual:**"],
         include: ["./src/**/*.{ts,tsx}"],
       }),
@@ -112,7 +114,7 @@ export default defineConfig(({ mode }) => {
         cypress: true,
         requireEnv: true,
         include: ["src/"],
-        forceBuildInstrument: true,
+        // forceBuildInstrument: true,
       }),
       // Bundle analyzer - only in analyze mode
       mode === "analyze" &&
@@ -123,7 +125,7 @@ export default defineConfig(({ mode }) => {
           brotliSize: true,
           template: "treemap", // 'sunburst' | 'treemap' | 'network'
         }),
-    ].filter(Boolean),
+    ],
     test: {
       globals: true,
       environment: "jsdom",
@@ -152,7 +154,7 @@ export default defineConfig(({ mode }) => {
           },
         },
       },
-      sourcemap: true,
+      sourcemap: "hidden",
     },
     server: {
       port: parseInt(process.env.PORT ?? "", 10) || 3000,

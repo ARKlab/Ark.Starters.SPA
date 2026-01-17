@@ -1,10 +1,9 @@
 import { Box, Code, Heading } from '@chakra-ui/react'
-import React from 'react'
 
 const NoEntryPoint = () => {
   return (
-    <Box p={5} marginTop={'50px'}>
-      <Heading mb={5}>
+    <Box p={"5"} marginTop={'12'}>
+      <Heading mb={"5"}>
         Please choose an EntryPoint in your siteMap sections using{' '}
         <Code>isEntryPoint</Code> flag
       </Heading>

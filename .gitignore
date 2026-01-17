@@ -34,3 +34,4 @@ debug.log
 
 # Bundle analysis
 stats.html
+*.tsbuildinfo

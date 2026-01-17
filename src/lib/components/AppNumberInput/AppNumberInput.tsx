@@ -1,5 +1,6 @@
 "use client";
 
+import type { InputProps, TextProps } from "@chakra-ui/react";
 import { Field, FieldLabel, Input, Stack, Text } from "@chakra-ui/react";
 import { useRef } from "react";
 
@@ -9,12 +10,12 @@ interface InputWithClearProps {
   value: number | undefined;
   setValue: (value: number | undefined) => void;
   title?: string;
-  width?: string;
+  width?: Field.RootProps["width"];
   invalid?: boolean;
   fieldErrorText?: string;
   noPadding?: boolean;
-  fontSize?: "xs" | "sm" | "md" | "lg" | undefined;
-  inputSize?: "xs" | "sm" | "md" | "lg" | undefined;
+  fontSize?: TextProps["fontSize"];
+  inputSize?: InputProps["size"];
 }
 
 export const AppNumberInput: React.FC<InputWithClearProps> = ({
@@ -34,14 +35,12 @@ export const AppNumberInput: React.FC<InputWithClearProps> = ({
     setValue(Number(e.target.value));
   };
 
-  const padding = noPadding ? 0 : title ? "inherit" : "0";
-
   return (
     <>
       <Field.Root
         data-test="appnumberinput-root"
-        mr={title ? "2%" : "0"}
-        p={padding}
+        mr={title ? "0.5" : "0"}
+        p={noPadding ? "0" : title ? "inherit" : "0"}
         m={title ? "inherit" : "0"}
         width={width}
         invalid={invalid}
@@ -53,7 +52,7 @@ export const AppNumberInput: React.FC<InputWithClearProps> = ({
             </Text>
           </FieldLabel>
         )}
-        <Stack gap={title ? 2 : 0} width="100%">
+        <Stack gap={title ? "2" : "0"} width="full">
           <InputGroup>
             <Input
               data-test="appnumberinput-input"

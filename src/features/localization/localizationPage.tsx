@@ -53,21 +53,21 @@ export default function LocalizationPage() {
       <Heading lineClamp={1} size="xl">
         {t("localization-samples.title")} <LocaleSwitcher />
       </Heading>
-      <VStack separator={<StackSeparator borderColor="border" />} gap={4} align="stretch">
-        <Box my="5px" borderRadius={"md"} p={"20px"} bg={"header"}>
+      <VStack separator={<StackSeparator borderColor="border" />} gap="4" align="stretch">
+        <Box my="1" borderRadius={"md"} p={"5"} bg={"header"}>
           <Heading lineClamp={1} size="md">
             <strong>{t("localization_simple_text")}</strong>
           </Heading>
           <Text>{t("hello_world")}</Text>
         </Box>
 
-        <Box my="5px" borderRadius={"md"} p={"20px"} bg={"header"}>
+        <Box my="1" borderRadius={"md"} p={"5"} bg={"header"}>
           <Heading size={"md"}>
             <strong>{t("form_error")}:</strong>
           </Heading>
           <pre>{JSON.stringify(errors, (k: string, v: unknown) => (k !== "ref" ? v : ""), 2)}</pre>
 
-          <Flex as={"form"} onSubmit={handleSubmit(onSubmit)} display={"flex"} gap={"1rem"} flexFlow={"column"}>
+          <Flex as={"form"} onSubmit={handleSubmit(onSubmit)} display={"flex"} gap="4" flexFlow={"column"}>
             <Heading size={"md"}>
               <strong>{t("form_values")}:</strong>
             </Heading>
@@ -91,17 +91,17 @@ export default function LocalizationPage() {
             </Field.Root>
           </Flex>
         </Box>
-        <Box my="5px" borderRadius={"md"} p={"20px"} bg={"header"}>
+        <Box my="1" borderRadius={"md"} p={"5"} bg={"header"}>
           <Heading lineClamp={1} size="md">
             <strong>{t("localization_dynamic_text")}</strong>
           </Heading>
-          <Text my="5px" fontSize={"sm"}>
+          <Text my="1" fontSize={"sm"}>
             {t("localization_dynamic_text_explanation")}
           </Text>
           <Field.Root>
             {t("localization_control_label")}
             <Input
-              w="10em"
+              w="40"
               id="apples"
               type="number"
               value={apples}
@@ -113,51 +113,38 @@ export default function LocalizationPage() {
           <Text my="3">{t("localization_example_1", { number: apples })}</Text>
         </Box>
 
-        <Box my="5px" borderRadius={"md"} p={"20px"} bg={"header"}>
+        <Box my="1" borderRadius={"md"} p={"5"} bg={"header"}>
           <Heading lineClamp={1} size="md">
             <strong>{t("localization_date")}</strong>
           </Heading>
-          <Text my="5px" fontSize={"sm"}>
+          <Text my="1" fontSize={"sm"}>
             {t("localization_date_explanation")}
           </Text>
 
-          <Text my="3">
-            {t("localization_date_raw")}
-          </Text>
+          <Text my="3">{t("localization_date_raw")}</Text>
           <Text my="3">{new Date().toString()}</Text>
 
-          <Text my="3">
-            {t("localization_date_using_i18n")}
-          </Text>
+          <Text my="3">{t("localization_date_using_i18n")}</Text>
           <Text my="3">{t("date", { val: new Date() })}</Text>
 
+          <Text my="3">{t("localization_date_using_i18n_component")}</Text>
           <Text my="3">
-            {t("localization_date_using_i18n_component")}
-          </Text>
-          <Text my="3">
-            <AppDateFormatter
-              dateTime={new Date()}
-              formatOptions={{ weekday: 'long' }}
-            />
+            <AppDateFormatter dateTime={new Date()} formatOptions={{ weekday: "long" }} />
           </Text>
         </Box>
 
-        <Box my="5px" borderRadius={"md"} p={"20px"} bg={"header"}>
+        <Box my="1" borderRadius={"md"} p={"5"} bg={"header"}>
           <Heading lineClamp={1} size="md">
             <strong>{t("localization_currencies")}</strong>
           </Heading>
-          <Text my="5px" fontSize={"sm"}>
+          <Text my="1" fontSize={"sm"}>
             {t("localization_currencies_explanation")}
           </Text>
 
-          <Text my="3">
-            {t("localization_currency_raw")}
-          </Text>
+          <Text my="3">{t("localization_currency_raw")}</Text>
           <Text my="3">{(123456.78).toString()}</Text>
 
-          <Text my="3">
-            {t("localization_currency_using_i18n")}
-          </Text>
+          <Text my="3">{t("localization_currency_using_i18n")}</Text>
           <Text my="3">{t("currency", { val: 123456.78, currency: "EUR" })}</Text>
         </Box>
       </VStack>

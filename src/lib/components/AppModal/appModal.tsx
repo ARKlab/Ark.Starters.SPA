@@ -1,3 +1,4 @@
+import type { DialogContentProps } from "@chakra-ui/react";
 import { Box, Button, DialogHeader, Flex, Heading } from "@chakra-ui/react";
 import type { JSX } from "react";
 
@@ -14,7 +15,7 @@ export const AppModal = (props: {
   body: JSX.Element;
   blurredOverlay?: boolean;
   size: "xs" | "sm" | "md" | "lg" | "xl" | "cover" | "full";
-  h?: string;
+  h?: DialogContentProps["h"];
 }) => {
   const executeSubmit = () => {
     if (props.onSubmit) props.onSubmit();

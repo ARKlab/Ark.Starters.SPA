@@ -1,71 +1,18 @@
-import { createSystem, defaultBaseConfig } from "@chakra-ui/react";
-import {
-  // Recipes (simple components) - only the ones actually used
-  buttonRecipe,
-  codeRecipe,
-  containerRecipe,
-  headingRecipe,
-  iconRecipe,
-  inputRecipe,
-  linkRecipe,
-  spinnerRecipe,
-  // Slot Recipes (complex components) - only the ones actually used
-  accordionSlotRecipe,
-  avatarSlotRecipe,
-  cardSlotRecipe,
-  checkboxSlotRecipe,
-  dialogSlotRecipe,
-  drawerSlotRecipe,
-  fieldSlotRecipe,
-  listSlotRecipe,
-  menuSlotRecipe,
-  nativeSelectSlotRecipe,
-  selectSlotRecipe,
-  switchSlotRecipe,
-  tableSlotRecipe,
-  toastSlotRecipe,
-} from "@chakra-ui/react/theme";
+import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
 
-const theme = createSystem(defaultBaseConfig, {
+const config = defineConfig({
   strictTokens: true,
   globalCss: {
-    html: { colorPalette: "brand" },
+    html: { colorPalette: "brandPalette" },
   },
   theme: {
-    // Include only the recipes we actually use (21 total: 8 simple + 13 slot)
-    recipes: {
-      button: buttonRecipe,
-      code: codeRecipe,
-      container: containerRecipe,
-      heading: headingRecipe,
-      icon: iconRecipe,
-      input: inputRecipe,
-      link: linkRecipe,
-      spinner: spinnerRecipe,
-    },
-    slotRecipes: {
-      accordion: accordionSlotRecipe,
-      avatar: avatarSlotRecipe,
-      card: cardSlotRecipe,
-      checkbox: checkboxSlotRecipe,
-      dialog: dialogSlotRecipe,
-      drawer: drawerSlotRecipe,
-      field: fieldSlotRecipe,
-      list: listSlotRecipe,
-      menu: menuSlotRecipe,
-      nativeSelect: nativeSelectSlotRecipe,
-      select: selectSlotRecipe,
-      switch: switchSlotRecipe,
-      table: tableSlotRecipe,
-      toast: toastSlotRecipe,
-    },
     semanticTokens: {
       colors: {
         bg: {
-          info: { value: { _light: "{colors.brand.primary}", _dark: "{colors.cyan.700}" } }, // Sfondo bianco in dark mode
+          info: { value: { _light: "{colors.brand.primary}", _dark: "{colors.cyan.700}" } },
         },
         border: {
-          value: { _light: "{colors.gray.300}", _dark: "white" }, // Bordo bianco in dark mode
+          value: { _light: "{colors.gray.300}", _dark: "white" },
         },
         header: {
           value: { base: "{colors.blue.200}", _dark: "{colors.cyan.700}" },
@@ -82,9 +29,7 @@ const theme = createSystem(defaultBaseConfig, {
         brand: {
           selected: { value: { base: "{colors.blue.200}", _dark: "{colors.cyan.900}" } },
           solid: { value: "#4a76ac" },
-          contrast: {
-            value: { base: "black", _dark: "white" },
-          },
+          contrast: { value: { base: "black", _dark: "white" } },
           fg: { value: { base: "rgb(101, 131, 162)", _dark: "#a3cfff" } },
           muted: { value: "#14204a" },
           subtle: { value: { base: "rgb(165, 197, 216)", _dark: "#1a3478" } },
@@ -149,5 +94,7 @@ const theme = createSystem(defaultBaseConfig, {
     },
   },
 });
+
+const theme = createSystem(defaultConfig, config);
 
 export default theme;

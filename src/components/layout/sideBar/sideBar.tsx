@@ -34,7 +34,7 @@ export default function SimpleSidebar() {
     if (isDesktop) closeDrawer();
   }, [isDesktop, closeDrawer]);
 
-  if (isDesktop) return <SidebarContent h={"full"} borderRight="1px" bg={"sider.bg"} />;
+  if (isDesktop) return <SidebarContent h={"full"} borderRight="xs" bg={"bg.panel"} />;
   else {
     return (
       <DrawerRoot
@@ -45,7 +45,7 @@ export default function SimpleSidebar() {
         }}
       >
         <DrawerBackdrop />
-        <DrawerContent bg={"sider.bg"}>
+        <DrawerContent bg="bg.panel">
           <DrawerCloseTrigger />
           <DrawerHeader></DrawerHeader>
           <DrawerBody>
@@ -62,24 +62,20 @@ const SidebarContent = ({ ...rest }: BoxProps) => {
 
   return (
     <Box as={"nav"} {...rest}>
-      <AccordionRoot borderStyle="[none]" borderWidth={0} collapsible multiple defaultValue={[defaultValue]}>
+      <AccordionRoot collapsible multiple defaultValue={[defaultValue]}>
         {siteMap.map((section, index) => (
-          <AccordionItem
-            value={section.label + "accordionItem" + index}
-            border="none"
-            key={section.label + "accordionItem" + index}
-          >
+          <AccordionItem value={section.label + "accordionItem" + index} key={section.label + "accordionItem" + index}>
             <h2>
               <AccordionItemTrigger
-                borderRadius={0}
+                borderRadius="none"
                 key={section.label + "accordionButton" + index}
                 _hover={{
                   background: "bg.info",
                   color: "fg",
                 }}
-                paddingRight={2}
+                paddingRight={"2"}
               >
-                <Box as="span" flex="1" textAlign="left" padding={"0 .5em"}>
+                <Box as="span" flex="1" textAlign="left" padding={"0.5"}>
                   {section.label}
                 </Box>
               </AccordionItemTrigger>
@@ -112,25 +108,11 @@ const InnerAccordionSections = (props: { section: ArkSubRoute; parentPath: strin
   const section = props.section;
   if (section.subsections)
     return (
-      <AccordionRoot
-        collapsible
-        multiple
-        my="0px"
-        borderStyle={"hidden"}
-        key={section.path + "accordion"}
-        width={"100%"}
-        mx={"1"}
-        borderWidth={0}
-        padding={"0 .5em"}
-      >
-        <AccordionItem
-          value={section.path + "AccordionItemInner"}
-          key={section.path + "AccordionItemInner"}
-          border="none"
-        >
+      <AccordionRoot collapsible multiple my="0" key={section.path + "accordion"} width={"full"} mx={"1"}>
+        <AccordionItem value={section.path + "AccordionItemInner"} key={section.path + "AccordionItemInner"}>
           <h2>
             <AccordionItemTrigger
-              borderRadius={0}
+              borderRadius="none"
               key={section.path + "AccordionButtonInner"}
               _hover={{
                 background: "brand.primary",
@@ -142,10 +124,10 @@ const InnerAccordionSections = (props: { section: ArkSubRoute; parentPath: strin
               </Box>
             </AccordionItemTrigger>
           </h2>
-          <AccordionItemContent pb={4} key={section.path + "AccordionPanelInner"}>
+          <AccordionItemContent pb="4" key={section.path + "AccordionPanelInner"}>
             {section.subsections.map((x, index) =>
               x.isInMenu ? (
-                <Box key={section.path + "menuItemBox" + index} p={"0 1em"}>
+                <Box key={section.path + "menuItemBox" + index} px="4" py="0">
                   <MenuItem
                     key={x.path + "AccordionMenuItemInner"}
                     path={[props.parentPath, x.path].join("/")}
@@ -184,7 +166,8 @@ const InnerMenuItems = (props: { section: ArkSubRoute; path: string; index: numb
         color: "brandPalette.900",
       }}
       background={isActive ? "brand.selected" : undefined}
-      p={"0 1em"}
+      px="4"
+      py="0"
     >
       <MenuItem
         key={section.path + "menuItem" + index}

@@ -27,7 +27,7 @@ export const AppInputFilterHeader: React.FC<AppInputFilterHeaderProps> = ({ valu
   return (
     <Stack>
       <InputGroup
-        endElementProps={{ _hover: { fontWeight: "bold", cursor: "pointer" }, color: "fg" }}
+        endElementProps={{ _hover: { fontWeight: "bold", cursor: "checkbox" }, color: "fg" }}
         endElement={inputValue && <TiTimes onClick={handleClear} />}
       >
         <Input size={"sm"} required={true} value={inputValue} onChange={handleChange} />
