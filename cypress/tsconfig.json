@@ -6,19 +6,40 @@
   ],
   "exclude": [],
   "compilerOptions": {
+    "target": "ESNext",
+    "lib": [
+      "ES2023",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "types": [
       "cypress",
       "@testing-library/cypress",
       "cypress-wait-until"
     ],
-    "lib": [
-      "ES2023",
-      "dom"
-    ],
-    "sourceMap": true,
-    "isolatedModules": false,
-    "incremental": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "allowJs": false,
-    "noEmit": true
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "resolveJsonModule": true,
+    "isolatedModules": false,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "sourceMap": true,
+    "incremental": true,
+    "paths": {
+      "@/*": [
+        "../src/*"
+      ]
+    }
   }
 }

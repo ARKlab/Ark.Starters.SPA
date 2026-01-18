@@ -3,7 +3,7 @@ import "./commands";
 
 afterEach(() => {
   cy.window().then(win => {
-    if (win.rtkq) win.rtkq.resetCache();
-    if (win.msw) win.msw.worker.resetHandlers();
+    win.rtkq?.resetCache();
+    win.msw?.worker.resetHandlers();
   });
 });

@@ -8,7 +8,7 @@ import type { ZodSchemaError } from "../../lib/rtk/withZodResultValidation";
 
 export type PlainTablePropsType<T extends ZodRawShape> = {
   data: z.output<ZodObject<T>>[] | undefined;
-  colorPalette?: any;
+  colorPalette?: string;
   variant?: "line" | "outline";
   striped?: boolean;
   isLoading: boolean;
