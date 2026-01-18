@@ -8,8 +8,8 @@ const ProtectedRouteView = () => {
 
   return (
     <Box>
-      <Heading my="10px">
-        <BackButton mx="20px" />
+      <Heading my="2.5">
+        <BackButton mx="5" />
         {t("permissionsPlayground_protected_route")}
       </Heading>
     </Box>

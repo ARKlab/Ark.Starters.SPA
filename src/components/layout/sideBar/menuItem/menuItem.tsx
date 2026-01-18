@@ -14,15 +14,15 @@ export default function MenuItem(props: MenuItemProps) {
           <Grid
             templateColumns="auto 1fr auto"
             alignItems="center"
-            width={"100%"}
-            height={"2.5em"}
+            width={"full"}
+            height="10"
             color={"brand.contrast"}
-            gap={3}
+            gap="3"
           >
             {icon && (
               <Icon
                 ml="1"
-                fontSize="1em"
+                fontSize="md"
                 _groupHover={{
                   color: "brandPalette.900",
                 }}
@@ -30,7 +30,7 @@ export default function MenuItem(props: MenuItemProps) {
               />
             )}
             <Text>{label}</Text>
-            <Box width="1em" /> {/* Placeholder to ensure consistent spacing */}
+            <Box width="4" /> {/* Placeholder to ensure consistent spacing */}
           </Grid>
         </WrapItem>
       </ReactRouterLink>

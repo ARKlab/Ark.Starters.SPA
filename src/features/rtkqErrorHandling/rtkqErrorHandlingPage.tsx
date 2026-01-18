@@ -20,38 +20,69 @@ const GetResult = ({ option }: { option: ResultOption }) => {
     return <IoMdClose />;
   }
 
-  return <Stack><CodeBlock data-test="query-results">{JSON.stringify(data)}</CodeBlock></Stack>;
-}
+  return (
+    <Stack>
+      <CodeBlock data-test="query-results">{JSON.stringify(data)}</CodeBlock>
+    </Stack>
+  );
+};
 
 const PostResult = ({ option }: { option: ResultOption }) => {
   const [post, result] = usePostMutation();
 
-  return <>
-    <Stack>
-      <Box><Button onClick={async () => post(option)} loading={result.isLoading}>Post</Button></Box>
-      {(result.data ? <CodeBlock data-test="mutation-results-data">{JSON.stringify(result.data, null, 2)}</CodeBlock> : null)}
-      {(result.error ? <CodeBlock data-test="mutation-results-error">{JSON.stringify(result.error, null, 2)}</CodeBlock> : null)}
-    </Stack>
-  </>;
-}
+  return (
+    <>
+      <Stack>
+        <Box>
+          <Button onClick={async () => post(option)} loading={result.isLoading}>
+            Post
+          </Button>
+        </Box>
+        {result.data ? (
+          <CodeBlock data-test="mutation-results-data">{JSON.stringify(result.data, null, 2)}</CodeBlock>
+        ) : null}
+        {result.error ? (
+          <CodeBlock data-test="mutation-results-error">{JSON.stringify(result.error, null, 2)}</CodeBlock>
+        ) : null}
+      </Stack>
+    </>
+  );
+};
 
 const Download = () => {
-
   const [download, { error, isLoading }] = useDownloadMutation();
 
-  return (<>
-    <Wrap gap={1} my={"20px"}>
-      <WrapItem>
-        <Button colorPalette={"primary"} loading={isLoading} disabled={isLoading} onClick={async () => download("Success")} data-test="download-success" >Download</Button>
-      </WrapItem>
-      <WrapItem>
-        <Button colorPalette={"error"} loading={isLoading} disabled={isLoading} onClick={async () => download("Failure")} data-test="download-failure" >Fail Download</Button>
-      </WrapItem>
-    </Wrap>
+  return (
+    <>
+      <Wrap gap={"1"} my={"5"}>
+        <WrapItem>
+          <Button
+            colorPalette={"primary"}
+            loading={isLoading}
+            disabled={isLoading}
+            onClick={async () => download("Success")}
+            data-test="download-success"
+          >
+            Download
+          </Button>
+        </WrapItem>
+        <WrapItem>
+          <Button
+            colorPalette={"error"}
+            loading={isLoading}
+            disabled={isLoading}
+            onClick={async () => download("Failure")}
+            data-test="download-failure"
+          >
+            Fail Download
+          </Button>
+        </WrapItem>
+      </Wrap>
 
-    {(error ? <CodeBlock data-test="mutation-download-error">{JSON.stringify(error, null, 2)}</CodeBlock> : null)}
-  </>);
-}
+      {error ? <CodeBlock data-test="mutation-download-error">{JSON.stringify(error, null, 2)}</CodeBlock> : null}
+    </>
+  );
+};
 
 const RTKQErrorHandlingPage = () => {
   const { t } = useTranslation();
@@ -59,7 +90,7 @@ const RTKQErrorHandlingPage = () => {
   const [selectMutationValue, setSelectMutationValue] = useState<ResultOption>();
 
   const options = createListCollection({
-    "items": [
+    items: [
       { label: "200", value: "200" as ResultOption },
       { label: "200WithWrongSchema", value: "200WithWrongSchema" as ResultOption },
       { label: "400", value: "400" as ResultOption },
@@ -67,23 +98,25 @@ const RTKQErrorHandlingPage = () => {
       { label: "500", value: "500" as ResultOption },
       { label: "Error", value: "Error" as ResultOption },
       { label: "Timeout", value: "Timeout" as ResultOption },
-    ]
+    ],
   });
 
   return (
-    <Stack >
+    <Stack>
       <Heading>{t("rtkqErrorHandling.title")}</Heading>
       <Text>{t("rtkqErrorHandling.description")}</Text>
       <Box>
         <Heading size={"md"}>RTK Query</Heading>
-        <Wrap gap={1} my={"20px"}>
+        <Wrap gap={"1"} my={"5"}>
           <WrapItem>
             <SelectRoot
               name="query"
               collection={options}
               size="sm"
-              width="320px"
-              onValueChange={({ value }) => { setSelectQueryValue(value[0] as ResultOption); }}
+              w="xs"
+              onValueChange={({ value }) => {
+                setSelectQueryValue(value[0] as ResultOption);
+              }}
               value={selectQueryValue ? [selectQueryValue] : undefined}
             >
               <SelectTrigger clearable>
@@ -99,19 +132,21 @@ const RTKQErrorHandlingPage = () => {
             </SelectRoot>
           </WrapItem>
         </Wrap>
-        {(selectQueryValue !== undefined ? <GetResult option={selectQueryValue} /> : null)}
+        {selectQueryValue !== undefined ? <GetResult option={selectQueryValue} /> : null}
       </Box>
 
       <Box>
         <Heading size={"md"}>RTK Mutation</Heading>
-        <Wrap gap={1} my={"20px"}>
+        <Wrap gap={"1"} my={"5"}>
           <WrapItem>
             <SelectRoot
               name="mutation"
               collection={options}
               size="sm"
-              width="320px"
-              onValueChange={({ value }) => { setSelectMutationValue(value[0] as ResultOption); }}
+              width="xs"
+              onValueChange={({ value }) => {
+                setSelectMutationValue(value[0] as ResultOption);
+              }}
               value={selectMutationValue ? [selectMutationValue] : undefined}
             >
               <SelectTrigger clearable>
@@ -127,9 +162,8 @@ const RTKQErrorHandlingPage = () => {
             </SelectRoot>
           </WrapItem>
         </Wrap>
-        {(selectMutationValue !== undefined ? <PostResult option={selectMutationValue} /> : null)}
+        {selectMutationValue !== undefined ? <PostResult option={selectMutationValue} /> : null}
       </Box>
-
 
       <Box>
         <Heading size={"md"}>Download File</Heading>

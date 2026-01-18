@@ -1,6 +1,5 @@
 import { Button } from "@chakra-ui/react";
 import type { RefObject } from "react";
-import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { GoChevronDown } from "react-icons/go";
 import { LiaGlobeEuropeSolid } from "react-icons/lia";
@@ -11,12 +10,9 @@ import { supportedLngs } from "../../config/lang";
 export const LocaleSwitcher = ({ portalRef }: { portalRef?: React.RefObject<HTMLDivElement | null> }) => {
   const { i18n } = useTranslation();
 
-  const swith = useCallback(
-    async (k: string) => {
-      await i18n.changeLanguage(k);
-    },
-    [i18n],
-  );
+  const swith = async (k: string) => {
+    await i18n.changeLanguage(k);
+  };
 
   if (Object.entries(supportedLngs).length < 2) {
     return <></>;

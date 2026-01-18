@@ -34,7 +34,7 @@ export const zod2FormValidator = (schema: z.ZodType) => (values: Record<string, 
     const errors = {};
     for (const err of res.error.issues) {
       const index = typeof err.path[1] === "number" ? err.path[1] : 0;
-      const path = err.path[0];
+      const path = String(err.path[0]);
       setNestedValue(errors, path, [err.message + " at index " + index]);
     }
     return errors;

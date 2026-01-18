@@ -1,12 +1,45 @@
 {
-  "extends": "../tsconfig.json",
-  "include": ["./**/*.ts", "../src/global.d.ts", "../cypress.config.ts"],
+  "include": [
+    "./**/*.ts",
+    "../src/global.d.ts",
+    "../cypress.config.ts"
+  ],
   "exclude": [],
   "compilerOptions": {
-    "types": ["cypress", "@testing-library/cypress", "cypress-wait-until"],
-    "lib": ["es2023", "dom"],
-    "isolatedModules": false,
+    "target": "ESNext",
+    "lib": [
+      "ES2023",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "types": [
+      "cypress",
+      "@testing-library/cypress",
+      "cypress-wait-until"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "allowJs": false,
-    "noEmit": true
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "resolveJsonModule": true,
+    "isolatedModules": false,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "sourceMap": true,
+    "incremental": true,
+    "paths": {
+      "@/*": [
+        "../src/*"
+      ]
+    }
   }
 }

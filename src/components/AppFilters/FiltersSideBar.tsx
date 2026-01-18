@@ -46,7 +46,7 @@ export function FilterSidebar<T extends object>(props: FilterSidebarProps<T>) {
       <Portal>
         <Drawer.Backdrop />
         <Drawer.Positioner padding="4">
-          <Drawer.Content rounded="md" bg={"sidebar"}>
+          <Drawer.Content rounded="md" bg="bg.panel">
             <Drawer.Header>
               <Drawer.Title>{t("common.filters")}</Drawer.Title>
             </Drawer.Header>

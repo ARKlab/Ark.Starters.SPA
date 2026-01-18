@@ -18,10 +18,10 @@ const NotificationPlaygroundView = () => {
     <Box>
       <Heading>{t("playground")}</Heading>
       <Box>
-        <Heading size="md" my={"20px"}>
+        <Heading size="md" my={"5"}>
           {t("notification_example")}
         </Heading>
-        <HStack wrap="wrap" gap={1} my={"20px"}>
+        <HStack wrap="wrap" gap={"1"} my={"5"}>
           <HStack wrap="wrap" align="flex">
             <Button
               onClick={() => {

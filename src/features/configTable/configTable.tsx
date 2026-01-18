@@ -93,10 +93,10 @@ export default function EditableTableExample() {
   //#endregion
 
   return (
-    <VStack as="form" onSubmit={handleSubmit(onSubmit)} gap={6}>
+    <VStack as="form" onSubmit={handleSubmit(onSubmit)} gap="6">
       <Heading>{t("employee")}</Heading>
 
-      <HStack gap={4}>
+      <HStack gap="4">
         <Button
           onClick={() => {
             append({

@@ -1,3 +1,4 @@
+import type { DialogContentProps } from "@chakra-ui/react";
 import { Box, Button, DialogHeader, Flex, Heading } from "@chakra-ui/react";
 import type { JSX } from "react";
 
@@ -14,7 +15,7 @@ export const AppModal = (props: {
   body: JSX.Element;
   blurredOverlay?: boolean;
   size: "xs" | "sm" | "md" | "lg" | "xl" | "cover" | "full";
-  h?: string;
+  h?: DialogContentProps["h"];
 }) => {
   const executeSubmit = () => {
     if (props.onSubmit) props.onSubmit();
@@ -48,7 +49,7 @@ export const AppModal = (props: {
         <DialogBackdrop asChild>
           <Box backdropFilter="blur(8px)" data-test="appmodal-backdrop" />
         </DialogBackdrop>
-        <DialogContent bg="bg" h={props.h ?? "auto"} data-test="appmodal-content">
+        <DialogContent bg="bg" h={props.h ?? "lg"} data-test="appmodal-content">
           <DialogHeader data-test="appmodal-header">
             <Flex direction="column" align="center">
               <Heading data-test="appmodal-title">{props.title}</Heading>

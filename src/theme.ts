@@ -1,18 +1,18 @@
-import { createSystem, defaultConfig } from "@chakra-ui/react";
+import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
 
-const theme = createSystem(defaultConfig, {
+const config = defineConfig({
   strictTokens: true,
   globalCss: {
-    html: { colorPalette: "brand" },
+    html: { colorPalette: "brandPalette" },
   },
   theme: {
     semanticTokens: {
       colors: {
         bg: {
-          info: { value: { _light: "{colors.brand.primary}", _dark: "{colors.cyan.700}" } }, // Sfondo bianco in dark mode
+          info: { value: { _light: "{colors.brand.primary}", _dark: "{colors.cyan.700}" } },
         },
         border: {
-          value: { _light: "{colors.gray.300}", _dark: "white" }, // Bordo bianco in dark mode
+          value: { _light: "{colors.gray.300}", _dark: "white" },
         },
         header: {
           value: { base: "{colors.blue.200}", _dark: "{colors.cyan.700}" },
@@ -29,9 +29,7 @@ const theme = createSystem(defaultConfig, {
         brand: {
           selected: { value: { base: "{colors.blue.200}", _dark: "{colors.cyan.900}" } },
           solid: { value: "#4a76ac" },
-          contrast: {
-            value: { base: "black", _dark: "white" },
-          },
+          contrast: { value: { base: "black", _dark: "white" } },
           fg: { value: { base: "rgb(101, 131, 162)", _dark: "#a3cfff" } },
           muted: { value: "#14204a" },
           subtle: { value: { base: "rgb(165, 197, 216)", _dark: "#1a3478" } },
@@ -70,6 +68,13 @@ const theme = createSystem(defaultConfig, {
     },
 
     tokens: {
+      spacing: {
+        inherit: { value: "inherit" },
+        "0": { value: "0rem" },
+      },
+      sizes: {
+        "0": { value: "0" }, // needed for "flex" for minWidth and minHeight
+      },
       colors: {
         brandPalette: {
           100: { value: "#e4f1ff" },
@@ -96,5 +101,7 @@ const theme = createSystem(defaultConfig, {
     },
   },
 });
+
+const theme = createSystem(defaultConfig, config);
 
 export default theme;

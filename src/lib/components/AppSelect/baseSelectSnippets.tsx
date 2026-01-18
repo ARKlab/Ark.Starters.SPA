@@ -8,12 +8,11 @@ import { CloseButton } from "../../../components/ui/close-button";
 
 interface SelectTriggerProps extends ChakraSelect.ControlProps {
   clearable?: boolean;
-  border?: string;
+  border?: ChakraSelect.ClearTriggerProps["border"];
   onClear?: () => void;
 }
 interface ClearTriggerProps extends ChakraSelect.ClearTriggerProps {
   clearable?: boolean;
-  border?: string;
   onClear?: () => void;
 }
 
@@ -38,7 +37,7 @@ const SelectClearTrigger = React.forwardRef<HTMLButtonElement, ClearTriggerProps
   function SelectClearTrigger(props, ref) {
     return (
       <ChakraSelect.ClearTrigger asChild {...props} ref={ref} onClick={props.onClear}>
-        <CloseButton size="xs" variant="plain" focusVisibleRing="inside" focusRingWidth="2px" pointerEvents="auto" />
+        <CloseButton size="xs" variant="plain" focusVisibleRing="inside" focusRingWidth="xs" pointerEvents="auto" />
       </ChakraSelect.ClearTrigger>
     );
   },

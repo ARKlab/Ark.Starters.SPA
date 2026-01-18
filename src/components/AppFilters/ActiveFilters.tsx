@@ -18,7 +18,7 @@ export function ActiveFiltersBar(props: ActiveFiltersBarProps) {
   if (filters.length === 0) return null;
 
   return (
-    <Box p="4" bg="bg.panel" borderRadius="lg" borderWidth="1px" borderColor="border.muted">
+    <Box p="4" bg="bg.panel" borderRadius="lg" border="xs" borderColor="brand.muted">
       <HStack justify="space-between" mb="3">
         <Text fontWeight="semibold" fontSize="sm" color="fg.muted">
           {t("filters.active_filters")} ({filters.length})
@@ -36,12 +36,13 @@ export function ActiveFiltersBar(props: ActiveFiltersBarProps) {
             gap="2"
             px="3"
             py="1.5"
-            bg="primary"
+            bg="bg"
             borderRadius="full"
             fontSize="sm"
-            transition="all 0.2s"
+            transition="all"
+            transitionDuration="fast"
             _hover={{
-              bg: "blue.600",
+              bg: "brand.emphasized",
             }}
           >
             <Text fontWeight="medium">{filter.label}:</Text>
@@ -52,14 +53,14 @@ export function ActiveFiltersBar(props: ActiveFiltersBarProps) {
               onClick={() => {
                 onRemoveFilter(filter.filterId);
               }}
-              color="text"
-              minW="auto"
-              h="auto"
-              p="0"
-              _hover={{ bg: "transparent", opacity: 0.8 }}
+              color="fg"
+              minW="fit"
+              h="fit"
+              p={"0"}
+              _hover={{ bg: "transparent/80" }}
               aria-label={`Rimuovi filtro ${filter.label}`}
             >
-              <Icon size={"md"} as={FaTimes} />
+              <Icon size="md" as={FaTimes} />
             </Button>
           </Box>
         ))}

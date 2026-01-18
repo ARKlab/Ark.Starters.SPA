@@ -7,8 +7,8 @@ import type { ProblemDetailsError } from "../../lib/rtk/withProblemDetails";
 import type { ZodSchemaError } from "../../lib/rtk/withZodResultValidation";
 
 export type PlainTablePropsType<T extends ZodRawShape> = {
-  data: z.infer<ZodObject<T>>[] | undefined;
-  colorPalette?: string;
+  data: z.output<ZodObject<T>>[] | undefined;
+  colorPalette?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
   variant?: "line" | "outline";
   striped?: boolean;
   isLoading: boolean;
@@ -31,7 +31,7 @@ export const AppSimpleNonPaginatedTable = <T extends ZodRawShape>({
   const headers = Object.keys(schema.shape) as (keyof T)[];
   return (
     <>
-      <Table.Root my="30px" variant={variant} colorPalette={colorPalette} striped={striped}>
+      <Table.Root my="8" variant={variant} colorPalette={colorPalette} striped={striped}>
         <Table.Header>
           <Table.Row>
             {headers.map(header => (
@@ -61,7 +61,9 @@ export const AppSimpleNonPaginatedTable = <T extends ZodRawShape>({
               data?.map((row, rowIndex) => (
                 <Table.Row key={rowIndex}>
                   {headers.map(header => (
-                    <Table.Cell key={String(header)}>{row[header] as any}</Table.Cell> // eslint-disable-line @typescript-eslint/no-explicit-any
+                    <Table.Cell key={String(header)}>
+                      {String(row[String(header) as keyof typeof row] ?? "")}
+                    </Table.Cell>
                   ))}
                 </Table.Row>
               ))

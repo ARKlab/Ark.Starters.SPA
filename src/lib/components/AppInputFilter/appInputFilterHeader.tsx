@@ -4,7 +4,10 @@ import { TiTimes } from "react-icons/ti";
 
 import { InputGroup } from "../../../components/ui/input-group";
 
-import type { AppInputFilterHeaderProps } from "./appInputFilter";
+export interface AppInputFilterHeaderProps {
+  value: string | number;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+}
 
 export const AppInputFilterHeader: React.FC<AppInputFilterHeaderProps> = ({ value, onChange }) => {
   const [inputValue, setInputValue] = useState(value);
@@ -27,7 +30,7 @@ export const AppInputFilterHeader: React.FC<AppInputFilterHeaderProps> = ({ valu
   return (
     <Stack>
       <InputGroup
-        endElementProps={{ _hover: { fontWeight: "bold", cursor: "pointer" }, color: "fg" }}
+        endElementProps={{ _hover: { fontWeight: "bold", cursor: "checkbox" }, color: "fg" }}
         endElement={inputValue && <TiTimes onClick={handleClear} />}
       >
         <Input size={"sm"} required={true} value={inputValue} onChange={handleChange} />

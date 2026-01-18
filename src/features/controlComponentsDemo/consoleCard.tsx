@@ -8,7 +8,7 @@ interface ConsoleCardProps {
 
 const ConsoleCard: React.FC<ConsoleCardProps> = ({ logs, setLogs }) => {
   return (
-    <Box borderWidth="1px" borderRadius="lg" padding="10px" marginTop="20px">
+    <Box borderRadius="lg" padding="3" marginTop="5">
       <Flex justifyContent="space-between" alignItems="center">
         <Text fontWeight="bold">Console</Text>
         <Button
