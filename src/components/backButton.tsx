@@ -1,7 +1,7 @@
 import type { IconButtonProps } from "@chakra-ui/react";
 import { IconButton } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-import { FaArrowLeft } from "react-icons/fa";
+import { LuArrowLeft } from "react-icons/lu";
 import { useNavigate } from "react-router";
 
 type BackButtonProps = {
@@ -20,7 +20,7 @@ const BackButton = ({ mx }: BackButtonProps) => {
       rounded={"full"}
       mx={mx ?? "0"}
     >
-      <FaArrowLeft />
+      <LuArrowLeft />
     </IconButton>
   );
 };

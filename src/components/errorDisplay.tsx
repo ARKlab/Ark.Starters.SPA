@@ -1,7 +1,7 @@
 import { Box, Container, Flex, Heading, Text, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { IoMdClose } from "react-icons/io";
+import { LuX } from "react-icons/lu";
 import { Link } from "react-router";
 import * as StackTrace from "stacktrace-js";
 
@@ -41,7 +41,7 @@ export function ErrorDisplay({ name, message, stack }: { name?: string; message?
               h="16"
               textAlign="center"
             >
-              <IoMdClose color={"fg.error"} />
+              <LuX color={"fg.error"} />
             </Flex>
           </Box>
           <Heading asChild size="md" mt="6" mb="2">

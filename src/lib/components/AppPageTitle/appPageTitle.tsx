@@ -1,6 +1,6 @@
 import type { HeadingProps } from "@chakra-ui/react";
 import { Button, Heading, HStack } from "@chakra-ui/react";
-import { FaCaretLeft } from "react-icons/fa";
+import { LuChevronLeft } from "react-icons/lu";
 import { useNavigate } from "react-router";
 
 export function PageTitle(props: { pageTitle: string; backBtn?: boolean } & HeadingProps) {
@@ -16,7 +16,7 @@ export function PageTitle(props: { pageTitle: string; backBtn?: boolean } & Head
     <HStack alignItems={"center"} mb="4">
       {backBtn && (
         <Button variant={"subtle"} size={"xs"} onClick={goBack}>
-          <FaCaretLeft />
+          <LuChevronLeft />
         </Button>
       )}
 

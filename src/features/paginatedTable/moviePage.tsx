@@ -3,7 +3,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { createColumnHelper } from "@tanstack/react-table";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FaFilter } from "react-icons/fa";
+import { LuFilter } from "react-icons/lu";
 
 import { useAppDispatch } from "../../app/hooks";
 import { AppFilters } from "../../components/AppFilters/AppFilters";
@@ -89,7 +89,7 @@ const MovieTableView = () => {
       */}
       <Flex my="0.5" alignItems={"flex-start"} justifyItems={"center"}>
         <Button size="sm" onClick={toggleSidebar}>
-          Show Filters <FaFilter style={{ marginLeft: "8px" }} />
+          Show Filters <LuFilter style={{ marginLeft: "8px" }} />
         </Button>
         <Box mt="4">
           <AppFilters<Movie>

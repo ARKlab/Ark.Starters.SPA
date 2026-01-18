@@ -1,7 +1,7 @@
 import { Box, Button, Separator, Heading, Input, List, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { MdCheckCircle } from "react-icons/md";
+import { LuCircleCheck } from "react-icons/lu";
 import { useNavigate } from "react-router";
 
 import { useAppSelector } from "../../app/hooks";
@@ -32,7 +32,7 @@ const PlaygroundView = () => {
               return (
                 <List.Item key={permission}>
                   <List.Indicator asChild color="bg.success">
-                    <MdCheckCircle />
+                    <LuCircleCheck />
                   </List.Indicator>
                   {permission}
                 </List.Item>

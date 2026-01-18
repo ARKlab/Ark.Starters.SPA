@@ -1,7 +1,7 @@
 import { Box, Button, createListCollection, Heading, Stack, Text, Wrap, WrapItem } from "@chakra-ui/react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { IoMdClose } from "react-icons/io";
+import { LuX } from "react-icons/lu";
 
 import CenterSpinner from "../../components/centerSpinner";
 import CodeBlock from "../../components/codeBlock";
@@ -17,7 +17,7 @@ const GetResult = ({ option }: { option: ResultOption }) => {
   }
 
   if (error) {
-    return <IoMdClose />;
+    return <LuX />;
   }
 
   return (

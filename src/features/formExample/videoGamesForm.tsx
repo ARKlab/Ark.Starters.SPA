@@ -2,7 +2,7 @@ import { Box, Button, Container, Field, FieldLabel, Input, Spacer, Spinner } fro
 import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { MdArrowDropDown } from "react-icons/md";
+import { LuChevronDown } from "react-icons/lu";
 import * as z from "zod";
 
 import {
@@ -101,7 +101,7 @@ function VideoGamesForm() {
                       render={({ field }) => (
                         <NativeSelectRoot
                           {...field}
-                          icon={genreLoading ? <Spinner data-test="spinner" /> : <MdArrowDropDown />}
+                          icon={genreLoading ? <Spinner data-test="spinner" /> : <LuChevronDown />}
                         >
                           <NativeSelectField>
                             {genres?.map(genre => (

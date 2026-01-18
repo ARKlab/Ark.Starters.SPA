@@ -3,7 +3,7 @@ import { Field, Input, Stack, Text } from "@chakra-ui/react";
 
 import { InputGroup } from "../../../components/ui/input-group";
 
-import { LiaTimesSolid } from "react-icons/lia";
+import { LuX } from "react-icons/lu";
 
 interface AppInputFilterProps {
   value: string;
@@ -33,7 +33,7 @@ export const AppInputFilter: React.FC<AppInputFilterProps> = ({
       <Stack w={"full"}>
         <InputGroup
           endElementProps={{ _hover: { fontWeight: "bold", cursor: "checkbox" }, color: "fg" }}
-          endElement={value && <LiaTimesSolid onClick={handleClear} />}
+          endElement={value && <LuX onClick={handleClear} />}
         >
           <Input
             size={"sm"}

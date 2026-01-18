@@ -4,7 +4,7 @@ import { SeverityLevel } from "@microsoft/applicationinsights-web";
 import type { ErrorInfo, ReactNode } from "react";
 import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
 import { useTranslation } from "react-i18next";
-import { IoMdAlert } from "react-icons/io";
+import { LuTriangleAlert } from "react-icons/lu";
 
 interface FeatureErrorBoundaryProps {
   /**
@@ -41,7 +41,7 @@ function DefaultFallback({ error, resetErrorBoundary, featureLabel }: FallbackPr
     <Box p={"4"} bg="error.subtle" borderRadius="md" border="xs" borderColor="error.emphasized">
       <VStack align="start" gap={"3"}>
         <HStack gap={"2"}>
-          <IoMdAlert size={"20"} color="var(--chakra-colors-error-fg)" />
+          <LuTriangleAlert size={"20"} color="var(--chakra-colors-error-fg)" />
           <Heading as="h3" size="sm" color="error.fg">
             {featureLabel
               ? t("featureErrorBoundary_errorInFeature", { feature: featureLabel })

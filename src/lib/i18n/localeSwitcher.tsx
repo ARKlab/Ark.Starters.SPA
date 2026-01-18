@@ -1,8 +1,7 @@
 import { Button } from "@chakra-ui/react";
 import type { RefObject } from "react";
 import { useTranslation } from "react-i18next";
-import { GoChevronDown } from "react-icons/go";
-import { LiaGlobeEuropeSolid } from "react-icons/lia";
+import { LuChevronDown , LuGlobe } from "react-icons/lu";
 
 import { MenuItemGroup, MenuTrigger, MenuContent, MenuItem, MenuRoot } from "../../components/ui/menu";
 import { supportedLngs } from "../../config/lang";
@@ -21,9 +20,9 @@ export const LocaleSwitcher = ({ portalRef }: { portalRef?: React.RefObject<HTML
     <MenuRoot>
       <MenuTrigger asChild>
         <Button variant={"ghost"} size={"sm"}>
-          <LiaGlobeEuropeSolid />
+          <LuGlobe />
           {i18n.language}
-          <GoChevronDown />
+          <LuChevronDown />
         </Button>
       </MenuTrigger>
       <MenuContent portalRef={portalRef as RefObject<HTMLElement> | undefined}>
