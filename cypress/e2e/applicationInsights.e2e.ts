@@ -69,7 +69,7 @@ describe("Application Insights Telemetry", () => {
   it("tracks all route changes and verifies telemetry count", () => {
     // Navigate to multiple routes
     const routes = [
-      { menu: /posts/i, expectedInUrl: "posts" },
+      { menu: /posts/i, expectedInUrl: "jsonplaceholder" },
       { menu: /config table/i, expectedInUrl: "configTable" },
       { menu: /movie paginated/i, expectedInUrl: "moviesTable" },
     ];
