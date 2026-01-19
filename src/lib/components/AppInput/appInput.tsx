@@ -1,6 +1,6 @@
 import type { InputProps } from "@chakra-ui/react";
 import { Field, FieldLabel, Input, Stack, Text } from "@chakra-ui/react";
-import { LiaTimesSolid } from "react-icons/lia";
+import { LuX } from "react-icons/lu";
 
 import { InputGroup } from "../../../components/ui/input-group";
 
@@ -43,7 +43,7 @@ export const AppInput: React.FC<InputWithClearProps> = ({
       <Stack w={"full"}>
         <InputGroup
           endElementProps={{ _hover: { fontWeight: "bold", cursor: "checkbox" }, color: "fg" }}
-          endElement={value && <LiaTimesSolid onClick={handleClear} data-test="appinput-clear" />}
+          endElement={value && <LuX onClick={handleClear} data-test="appinput-clear" />}
         >
           <Input
             data-test="appinput-input"

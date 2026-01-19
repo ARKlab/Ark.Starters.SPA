@@ -4,9 +4,7 @@ import type { StackProps } from "@chakra-ui/react";
 import { Box, Button, Field, FieldLabel, HStack, IconButton, Input, Stack, Text } from "@chakra-ui/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FaTimes } from "react-icons/fa";
-import { LuCalendar, LuCalendarOff } from "react-icons/lu";
-import { MdOutlineChevronLeft, MdOutlineChevronRight } from "react-icons/md";
+import { LuX , LuCalendar, LuCalendarOff , LuChevronLeft, LuChevronRight } from "react-icons/lu";
 
 import "./appDatePicker.css";
 
@@ -193,7 +191,7 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
                     setDate(undefined);
                   }}
                 >
-                  <FaTimes />
+                  <LuX />
                 </IconButton>
               ) : null}
             </HStack>
@@ -207,7 +205,7 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
                       <DatePicker.ViewControl data-test="datepicker-nav">
                         <DatePicker.PrevTrigger asChild>
                           <IconButton variant="ghost" size="sm" data-test="datepicker-prev-month">
-                            <MdOutlineChevronLeft />
+                            <LuChevronLeft />
                           </IconButton>
                         </DatePicker.PrevTrigger>
                         <DatePicker.ViewTrigger asChild>
@@ -217,7 +215,7 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
                         </DatePicker.ViewTrigger>
                         <DatePicker.NextTrigger asChild>
                           <IconButton variant="ghost" size="sm">
-                            <MdOutlineChevronRight />
+                            <LuChevronRight />
                           </IconButton>
                         </DatePicker.NextTrigger>
                       </DatePicker.ViewControl>
@@ -265,7 +263,7 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
                       <DatePicker.ViewControl>
                         <DatePicker.PrevTrigger asChild>
                           <IconButton variant="ghost" size="sm">
-                            <MdOutlineChevronLeft />
+                            <LuChevronLeft />
                           </IconButton>
                         </DatePicker.PrevTrigger>
                         <DatePicker.ViewTrigger asChild>
@@ -275,7 +273,7 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
                         </DatePicker.ViewTrigger>
                         <DatePicker.NextTrigger asChild>
                           <IconButton variant="ghost" size="sm">
-                            <MdOutlineChevronRight />
+                            <LuChevronRight />
                           </IconButton>
                         </DatePicker.NextTrigger>
                       </DatePicker.ViewControl>
@@ -306,7 +304,7 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
                       <DatePicker.ViewControl>
                         <DatePicker.PrevTrigger asChild>
                           <IconButton variant="ghost" size="sm">
-                            <MdOutlineChevronLeft />
+                            <LuChevronLeft />
                           </IconButton>
                         </DatePicker.PrevTrigger>
                         <DatePicker.ViewTrigger asChild>
@@ -316,7 +314,7 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
                         </DatePicker.ViewTrigger>
                         <DatePicker.NextTrigger asChild>
                           <IconButton variant="ghost" size="sm">
-                            <MdOutlineChevronRight />
+                            <LuChevronRight />
                           </IconButton>
                         </DatePicker.NextTrigger>
                       </DatePicker.ViewControl>

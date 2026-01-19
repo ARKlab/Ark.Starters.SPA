@@ -1,7 +1,7 @@
 import { Field, IconButton, Input, Table } from "@chakra-ui/react";
 import type { Control, FieldErrors } from "react-hook-form";
 import { Controller } from "react-hook-form";
-import { FaTrash } from "react-icons/fa";
+import { LuTrash2 } from "react-icons/lu";
 
 import { Checkbox } from "../../components/ui/checkbox";
 
@@ -53,7 +53,7 @@ export function TableRow(props: TableRowProps) {
       </Table.Cell>
       <Table.Cell>
         <IconButton aria-label="Delete row" onClick={onDelete} colorPalette={"error"} size="xs">
-          <FaTrash />
+          <LuTrash2 />
         </IconButton>
       </Table.Cell>
     </Table.Row>

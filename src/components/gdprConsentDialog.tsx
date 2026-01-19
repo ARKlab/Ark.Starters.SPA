@@ -19,7 +19,7 @@ import { useRef, type ReactNode } from "react";
 import type { Control } from "react-hook-form";
 import { Controller, useForm } from "react-hook-form";
 import { Trans, useTranslation } from "react-i18next";
-import { FaCookieBite } from "react-icons/fa";
+import { LuCookie } from "react-icons/lu";
 
 import { cookiePolicyHref, hasMarketingCookies, hasPreferencesCookies, hasStatisticsCookies } from "../config/gdpr";
 import { LocaleSwitcher } from "../lib/i18n/localeSwitcher";
@@ -91,7 +91,7 @@ export const GdprConsentDialog = () => {
         <DialogContent ref={contentRef}>
           <DialogHeader fontSize="lg" fontWeight="bold">
             <Text>
-              <Icon mr={"1"} as={FaCookieBite} />
+              <Icon mr={"1"} as={LuCookie} />
               <Trans t={t} i18nKey="title">
                 We've Cookies!
               </Trans>

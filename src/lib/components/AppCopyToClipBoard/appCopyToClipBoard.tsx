@@ -1,5 +1,5 @@
 import { Button, Clipboard } from "@chakra-ui/react";
-import { FaCopy } from "react-icons/fa";
+import { LuCopy } from "react-icons/lu";
 
 export const AppCopyToClipBoard = ({ value, useIcon }: { value: string; useIcon?: boolean }) => {
   return (
@@ -7,7 +7,7 @@ export const AppCopyToClipBoard = ({ value, useIcon }: { value: string; useIcon?
       <Clipboard.Trigger asChild data-test="copyclip-trigger">
         {useIcon ? (
           <span data-test="copyclip-icon-trigger">
-            <FaCopy />
+            <LuCopy />
             <Clipboard.Indicator data-test="copyclip-indicator" />
           </span>
         ) : (

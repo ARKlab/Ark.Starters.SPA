@@ -1,6 +1,6 @@
 import { Box, Button, HStack, Icon, Text } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-import { FaTimes } from "react-icons/fa";
+import { LuX } from "react-icons/lu";
 
 import type { ActiveFilter } from "./Filters";
 
@@ -60,7 +60,7 @@ export function ActiveFiltersBar(props: ActiveFiltersBarProps) {
               _hover={{ bg: "transparent/80" }}
               aria-label={`Rimuovi filtro ${filter.label}`}
             >
-              <Icon size="md" as={FaTimes} />
+              <Icon size="md" as={LuX} />
             </Button>
           </Box>
         ))}

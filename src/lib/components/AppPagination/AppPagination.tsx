@@ -1,7 +1,7 @@
 import { Button, Stack } from "@chakra-ui/react";
 import type { JSX, MouseEventHandler } from "react";
 import { useTranslation } from "react-i18next";
-import { MdChevronLeft, MdChevronRight, MdFirstPage, MdLastPage } from "react-icons/md";
+import { LuChevronLeft, LuChevronRight, LuChevronsLeft, LuChevronsRight } from "react-icons/lu";
 
 import { NativeSelectField, NativeSelectRoot } from "../../../components/ui/native-select";
 
@@ -52,13 +52,13 @@ const AppPagination = ({ count, pageSize, page, onPageChange, onPageSizeChange, 
               display={page > pageMinRange}
               onChange={() => onPageChange(1)}
               title={t("libComponents:appPagination_firstPage")}
-              value={<MdFirstPage />}
+              value={<LuChevronsLeft />}
             />
             <PageItem
               display={page > 1}
               onChange={() => onPageChange(page - 1)}
               title={t("libComponents:appPagination_previous")}
-              value={<MdChevronLeft />}
+              value={<LuChevronLeft />}
               data-test="pagination-prev"
             />
             {pageRange.map((p: number, i: number) => {
@@ -79,14 +79,14 @@ const AppPagination = ({ count, pageSize, page, onPageChange, onPageSizeChange, 
               display={page < totalPages}
               onChange={() => onPageChange(page + 1)}
               title={t("libComponents:appPagination_next")}
-              value={<MdChevronRight />}
+              value={<LuChevronRight />}
               data-test="pagination-next"
             />
             <PageItem 
               display={page < pageMaxSub} 
               onChange={() => onPageChange(totalPages)} 
               title={t("libComponents:appPagination_lastPage")}
-              value={<MdLastPage />} 
+              value={<LuChevronsRight />} 
             />
           </Stack>
         </>

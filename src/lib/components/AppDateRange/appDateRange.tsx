@@ -4,7 +4,7 @@ import { Box, Field, FieldLabel, HStack, IconButton, Stack, Text } from "@chakra
 import { addDays } from "date-fns";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { TiTimes } from "react-icons/ti";
+import { LuX } from "react-icons/lu";
 
 import { AppDatePicker } from "../AppDatePicker/appDatePicker";
 
@@ -124,7 +124,7 @@ export const AppDateRange = (props: AppDateRangeProps) => {
           </Box>
           {range.length > 0 ? (
             <IconButton aria-label="Clear date range" onClick={clear} variant="outline" data-test="daterange-clear">
-              <TiTimes />
+              <LuX />
             </IconButton>
           ) : null}
         </HStack>

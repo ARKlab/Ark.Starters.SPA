@@ -12,7 +12,7 @@ import {
   WrapItem,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-import { FiMenu } from "react-icons/fi";
+import { LuMenu } from "react-icons/lu";
 import { Link as ReactRouterLink } from "react-router";
 
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
@@ -112,7 +112,7 @@ const Header = () => {
                   setMobileSiderOpen(true);
                 }}
               >
-                <FiMenu />
+                <LuMenu />
               </IconButton>
             </Center>
           ) : undefined}

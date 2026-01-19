@@ -1,16 +1,13 @@
-import { CiLock } from "react-icons/ci";
 import {
-  FaBomb,
-  FaCloudUploadAlt,
-  FaExternalLinkAlt,
-  FaFlag,
-  FaGamepad,
-  FaLock,
-  FaPlay,
-  FaTable,
-} from "react-icons/fa";
-import { RiMovie2Line, RiTestTubeLine } from "react-icons/ri";
-import { TbListDetails } from "react-icons/tb";
+  LuBomb,
+  LuCloudUpload,
+  LuExternalLink,
+  LuFlag,
+  LuGamepad2,
+  LuLock,
+  LuPlay,
+  LuTable,
+ LuFilm, LuFlaskConical , LuListTree } from "react-icons/lu";
 import { Navigate } from "react-router";
 
 import type { ArkRoute } from "../lib/siteMapTypes";
@@ -31,28 +28,28 @@ export const siteMap: ArkRoute[] = [
       {
         path: "jsonplaceholder",
         label: "Posts",
-        icon: FaCloudUploadAlt,
+        icon: LuCloudUpload,
         isInMenu: true,
         lazy: async () => import("../features/fetchApiExample/JsonPlaceHolder"),
       },
       {
         path: "playground",
         label: "PlayGround",
-        icon: FaPlay,
+        icon: LuPlay,
         isInMenu: true,
         lazy: async () => import("../features/notificationPlayground/notificationPlaygroundView"),
       },
       {
         path: "globalLoadingBar",
         label: "GlobalLoadingBar",
-        icon: FaPlay,
+        icon: LuPlay,
         isInMenu: true,
         lazy: async () => import("../features/globalLoadingBar/globalLoadingBarPage"),
       },
       {
         path: "rtkqErrorHandling",
         label: "rtkqErrorHandling",
-        icon: FaPlay,
+        icon: LuPlay,
         isInMenu: true,
         lazy: async () => import("../features/rtkqErrorHandling/rtkqErrorHandlingPage"),
       },
@@ -60,7 +57,7 @@ export const siteMap: ArkRoute[] = [
         path: "permissionsPlayground",
         label: "Permissions",
         authenticatedOnly: true,
-        icon: CiLock,
+        icon: LuLock,
         isInMenu: true,
         lazy: async () => import("../features/permissionsPlayground/permissionsPlaygroundView"),
       },
@@ -69,7 +66,7 @@ export const siteMap: ArkRoute[] = [
         label: "Protected Route",
         authenticatedOnly: true,
         permissions: ["grant:admin"],
-        icon: CiLock,
+        icon: LuLock,
         isInMenu: false,
         lazy: async () => import("../features/permissionsPlayground/protectedRouteView"),
       },
@@ -77,28 +74,28 @@ export const siteMap: ArkRoute[] = [
       {
         path: "configTable",
         label: "Config Table",
-        icon: FaTable,
+        icon: LuTable,
         isInMenu: true,
         lazy: async () => import("../features/configTable/configTableExample"),
       },
       {
         path: "moviesTable",
         label: "Movie Paginated Table",
-        icon: RiMovie2Line,
+        icon: LuFilm,
         isInMenu: true,
         lazy: async () => import("../features/paginatedTable/moviePage"),
       },
       {
         path: "videoGamesTable",
         label: "VideoGames Table",
-        icon: FaGamepad,
+        icon: LuGamepad2,
         isInMenu: true,
         lazy: async () => import("../features/formExample/videoGamesPage"),
       },
       {
         path: "controlComponents",
         label: "Control Components",
-        icon: FaTable,
+        icon: LuTable,
         isInMenu: true,
         lazy: async () => import("../features/controlComponentsDemo/controlComponents"),
       },
@@ -106,14 +103,14 @@ export const siteMap: ArkRoute[] = [
       {
         path: "wizardForm",
         label: "Wizard Form",
-        icon: FaTable,
+        icon: LuTable,
         isInMenu: true,
         lazy: async () => import("../features/formWizard/formWizard"),
       },
       {
         path: "translation",
         label: "Translation Sample",
-        icon: FaFlag,
+        icon: LuFlag,
         isInMenu: true,
         lazy: async () => import("../features/localization/localizationPage"),
       },
@@ -121,7 +118,7 @@ export const siteMap: ArkRoute[] = [
       {
         path: "authonly",
         label: "Auth Only",
-        icon: FaLock,
+        icon: LuLock,
         isInMenu: true,
         authenticatedOnly: true,
         lazy: async () => import("../features/authentication/authInfoPage"),
@@ -129,14 +126,14 @@ export const siteMap: ArkRoute[] = [
       {
         path: "bomb",
         label: "Throw Error",
-        icon: FaBomb,
+        icon: LuBomb,
         isInMenu: true,
         lazy: async () => import("../components/Bomb"),
       },
       {
         path: "componentsTestPage",
         label: "Components Test Page",
-        icon: RiTestTubeLine,
+        icon: LuFlaskConical,
         isInMenu: true,
         lazy: async () => import("../features/tests/ComponentsPage"),
       },
@@ -144,7 +141,7 @@ export const siteMap: ArkRoute[] = [
       {
         path: "details",
         label: "Details Page",
-        icon: TbListDetails,
+        icon: LuListTree,
         isInMenu: true,
         subsections: [
           {
@@ -170,14 +167,14 @@ export const siteMap: ArkRoute[] = [
       {
         externalUrl: "https://www.google.com",
         label: "Google",
-        icon: FaExternalLinkAlt,
+        icon: LuExternalLink,
         isInMenu: true,
         authenticatedOnly: false,
       },
       {
         externalUrl: "https://react.dev/",
         label: "React",
-        icon: FaExternalLinkAlt,
+        icon: LuExternalLink,
         isInMenu: true,
         authenticatedOnly: false,
       },
@@ -197,21 +194,21 @@ export const siteMap: ArkRoute[] = [
             path: "authonly",
             label: "Auth Only",
             lazy: async () => import("../features/staticPageExample/staticPage"),
-            icon: FaTable,
+            icon: LuTable,
             isInMenu: true,
             authenticatedOnly: true,
           },
           {
             externalUrl: "https://www.google.com",
             label: "Google",
-            icon: FaExternalLinkAlt,
+            icon: LuExternalLink,
             isInMenu: true,
             authenticatedOnly: false,
           },
           {
             externalUrl: "https://react.dev/",
             label: "React",
-            icon: FaExternalLinkAlt,
+            icon: LuExternalLink,
             isInMenu: true,
             authenticatedOnly: false,
           },

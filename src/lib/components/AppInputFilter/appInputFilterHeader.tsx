@@ -1,6 +1,6 @@
 import { Input, Stack } from "@chakra-ui/react";
 import { useState } from "react";
-import { TiTimes } from "react-icons/ti";
+import { LuX } from "react-icons/lu";
 
 import { InputGroup } from "../../../components/ui/input-group";
 
@@ -31,7 +31,7 @@ export const AppInputFilterHeader: React.FC<AppInputFilterHeaderProps> = ({ valu
     <Stack>
       <InputGroup
         endElementProps={{ _hover: { fontWeight: "bold", cursor: "checkbox" }, color: "fg" }}
-        endElement={inputValue && <TiTimes onClick={handleClear} />}
+        endElement={inputValue && <LuX onClick={handleClear} />}
       >
         <Input size={"sm"} required={true} value={inputValue} onChange={handleChange} />
       </InputGroup>

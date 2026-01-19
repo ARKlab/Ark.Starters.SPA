@@ -1,7 +1,7 @@
 import { Box, Button, CloseButton, Drawer, Field, Icon, Portal, Text, VStack } from "@chakra-ui/react";
 import { useEffect, useId, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FaCheck, FaTimes } from "react-icons/fa";
+import { LuCheck, LuX } from "react-icons/lu";
 
 import { AppInput } from "../../lib/components/AppInput/appInput";
 import AppSelect from "../../lib/components/AppSelect/appSelect";
@@ -107,7 +107,7 @@ export function FilterSidebar<T extends object>(props: FilterSidebarProps<T>) {
 
             <Drawer.Footer>
               <Button variant="outline" onClick={onClose}>
-                <Icon as={FaTimes} />
+                <Icon as={LuX} />
                 {t("common.close")}
               </Button>
 
@@ -120,7 +120,7 @@ export function FilterSidebar<T extends object>(props: FilterSidebarProps<T>) {
                   bg: "brand.focusRing",
                 }}
               >
-                <Icon as={FaCheck} />
+                <Icon as={LuCheck} />
                 {t("common.apply")}
               </Button>
             </Drawer.Footer>

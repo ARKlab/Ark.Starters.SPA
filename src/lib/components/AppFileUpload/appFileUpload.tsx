@@ -1,6 +1,6 @@
 import { Box, Icon, Text, VStack } from "@chakra-ui/react";
 import { useRef, useState } from "react";
-import { FaFile, FaTimes, FaUpload } from "react-icons/fa";
+import { LuFile, LuX, LuUpload } from "react-icons/lu";
 
 interface FileUploadProps {
   onFileSelect?: (files: File[]) => void;
@@ -115,7 +115,7 @@ export default function AppFileUpload({
             data-test="fileupload-icon-wrapper"
           >
             <Icon size={"md"} data-test="fileupload-upload-icon">
-              <FaUpload />
+              <LuUpload />
             </Icon>
           </Box>
           <VStack gap={"1"}>
@@ -180,7 +180,7 @@ export default function AppFileUpload({
               <Box display="flex" alignItems="center" gap={"3"} flex={"1"} minWidth={"0"}>
                 <Box p={"2"} borderRadius="md" bg="brand.muted" color="brand.primary" flexShrink={0}>
                   <Icon size={"md"} data-test="fileupload-file-icon">
-                    <FaFile />
+                    <LuFile />
                   </Icon>
                 </Box>
                 <Box flex={"1"} minWidth={"0"}>
@@ -212,7 +212,7 @@ export default function AppFileUpload({
                 data-test="fileupload-remove"
               >
                 <Icon size={"md"}>
-                  <FaTimes />
+                  <LuX />
                 </Icon>
               </Box>
             </Box>
