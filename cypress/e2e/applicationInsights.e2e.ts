@@ -29,8 +29,11 @@ describe("Application Insights Telemetry", () => {
   it("verifies Application Insights is configured in e2e mode", () => {
     // Check that Application Insights is configured with test connection string
     cy.window().then(win => {
-      expect(win.appSettings.applicationInsights).to.exist;
-      expect(win.appSettings.applicationInsights.connectionString).to.exist;
+      // Verify AI is configured
+      assert.isDefined(win.appSettings.applicationInsights, "Application Insights should be configured");
+      assert.isDefined(win.appSettings.applicationInsights.connectionString, "Connection string should be defined");
+      
+      // Verify it includes the instrumentation key
       expect(win.appSettings.applicationInsights.connectionString).to.include("InstrumentationKey");
       // Verify it's the fake connection string for e2e
       expect(win.appSettings.applicationInsights.connectionString).to.include("00000000-0000-0000-0000-000000000000");
@@ -88,6 +91,7 @@ describe("Application Insights Telemetry", () => {
       if (interceptions.length > 0) {
         // Analyze each telemetry payload
         const allPayloads: unknown[] = [];
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         interceptions.forEach((interception: Cypress.Interception) => {
           const body = interception.request.body;
           allPayloads.push(body);
@@ -123,6 +127,7 @@ describe("Application Insights Telemetry", () => {
           `Should have at least ${routes.length} page view telemetries for ${routes.length} route navigations`);
         
         // Verify each telemetry was properly intercepted
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         interceptions.forEach((interception: Cypress.Interception) => {
           expect(interception.response?.statusCode).to.equal(200);
         });
