@@ -79,63 +79,62 @@ describe("Application Insights Telemetry", () => {
       cy.get("main").should("exist");
     });
     
-    // Wait for telemetry to be sent (AI batches it)
-    cy.wait(5000);
+    // Flush Application Insights telemetry to ensure all events are sent
+    cy.window().then(win => {
+      if (win.appInsights) {
+        // Call flush to send all batched telemetry immediately
+        void win.appInsights.flush();
+      }
+    });
+    
+    // Wait for telemetry requests to be sent after flush
+    cy.wait(2000);
     
     // Collect all intercepted telemetry
     cy.get("@aiTelemetry.all").then(interceptions => {
-      cy.log(`Total telemetry requests intercepted: ${interceptions.length}`);
-      
-      if (interceptions.length > 0) {
-        // Analyze each telemetry payload
-        const allPayloads: unknown[] = [];
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        interceptions.forEach((interception: Cypress.Interception) => {
-          const body = interception.request.body;
-          allPayloads.push(body);
-        });
+      // Analyze each telemetry payload
+      const allPayloads: unknown[] = [];
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      interceptions.forEach((interception: Cypress.Interception) => {
+        const body = interception.request.body;
+        allPayloads.push(body);
+      });
 
-        // Count telemetry items by type
-        let pageViewCount = 0;
-        let otherCount = 0;
+      // Count telemetry items by type
+      let pageViewCount = 0;
+      let otherCount = 0;
 
-        allPayloads.forEach(payload => {
-          // Handle both array and single item payloads
-          const items = Array.isArray(payload) ? payload : [payload];
-          
-          items.forEach((item: { name?: string; baseType?: string }) => {
-            if (
-              item.name === "Microsoft.ApplicationInsights.PageView" ||
-              item.baseType === "PageviewData"
-            ) {
-              pageViewCount++;
-            } else {
-              otherCount++;
-            }
-          });
-        });
-
-        cy.log(`Page view telemetries: ${pageViewCount}`);
-        cy.log(`Other telemetries: ${otherCount}`);
-
-        // If telemetry was sent, verify we got telemetry for route changes
-        // We navigated to 3 routes, so we should have at least 3 page views
-        // (could be more due to initial page load)
-        if (pageViewCount > 0) {
-          expect(pageViewCount).to.be.at.least(routes.length, 
-            `Should have at least ${routes.length} page view telemetries for ${routes.length} route navigations`);
-        }
+      allPayloads.forEach(payload => {
+        // Handle both array and single item payloads
+        const items = Array.isArray(payload) ? payload : [payload];
         
-        // Verify each telemetry was properly intercepted
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        interceptions.forEach((interception: Cypress.Interception) => {
-          expect(interception.response?.statusCode).to.equal(200);
+        items.forEach((item: { name?: string; baseType?: string }) => {
+          if (
+            item.name === "Microsoft.ApplicationInsights.PageView" ||
+            item.baseType === "PageviewData"
+          ) {
+            pageViewCount++;
+          } else {
+            otherCount++;
+          }
         });
-      } else {
-        cy.log("No telemetry sent during test - AI batches telemetry and may not send during short test duration");
-        // This is acceptable - AI batches telemetry so it might not send during test duration
-        // The important thing is that the intercept is set up and the app works with AI enabled
-      }
+      });
+
+      cy.log(`Total telemetry requests: ${interceptions.length}`);
+      cy.log(`Page view telemetries: ${pageViewCount}`);
+      cy.log(`Other telemetries: ${otherCount}`);
+
+      // Verify we got telemetry for route changes
+      // We navigated to 3 routes, so we should have at least 3 page views
+      // (could be more due to initial page load)
+      expect(pageViewCount).to.be.at.least(routes.length, 
+        `Should have at least ${routes.length} page view telemetries for ${routes.length} route navigations`);
+      
+      // Verify each telemetry was properly intercepted
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      interceptions.forEach((interception: Cypress.Interception) => {
+        expect(interception.response?.statusCode).to.equal(200);
+      });
     });
   });
 });

@@ -1,3 +1,4 @@
+import type { ApplicationInsights } from "@microsoft/applicationinsights-web";
 import type { ReactPlugin } from "@microsoft/applicationinsights-react-js";
 
 import type { ApplicationInsightsConfig } from "./types";
@@ -33,7 +34,7 @@ export const stubReactPlugin = new StubReactPlugin() as unknown as ReactPlugin;
 // Type for the result of loading Application Insights
 export type AppInsightsResult = {
   reactPlugin: ReactPlugin;
-  appInsights?: unknown;
+  appInsights?: ApplicationInsights;
   clickAnalyticsPlugin?: unknown;
 };
 

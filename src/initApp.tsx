@@ -35,6 +35,11 @@ export function InitApp() {
         const aiResult = await loadApplicationInsights(appSettings.applicationInsights);
         setReactPlugin(aiResult.reactPlugin);
 
+        // Expose appInsights instance on window for E2E tests
+        if (import.meta.env.MODE === "e2e" && aiResult.appInsights) {
+            window.appInsights = aiResult.appInsights;
+        }
+
         await i18nSetup();
 
         await context.init();
