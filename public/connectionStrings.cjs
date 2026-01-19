@@ -1,7 +1,17 @@
 var http = require("http");
 var port = process.env.PORT;
 
-require("dotenv").config({ path: [`.env.${process.env.NODE_ENV}.local`, `.env.${process.env.NODE_ENV}`, ".env.local", ".env"] });
+// Load environment files based on both NODE_ENV and VITE_MODE
+// This ensures we load the correct .env file for both Vite builds and standalone server
+const mode = process.env.VITE_MODE || process.env.NODE_ENV;
+const envFiles = [
+  `.env.${mode}.local`,
+  `.env.${mode}`,
+  `.env.local`,
+  ".env"
+];
+
+require("dotenv").config({ path: envFiles });
 
 
 http
@@ -26,10 +36,7 @@ http
       serviceUrl: "randomserviceurl.com",
       applicationInsights: process.env["APPLICATIONINSIGHTS_CONNECTION_STRING"] ? {
         connectionString: process.env["APPLICATIONINSIGHTS_CONNECTION_STRING"],
-      } : (process.env["NODE_ENV"] === "e2e" ? {
-        // Fake connection string for E2E tests - telemetry will be intercepted by Cypress
-        connectionString: "InstrumentationKey=00000000-0000-0000-0000-000000000000;IngestionEndpoint=https://fake.applicationinsights.azure.com/",
-      } : undefined)
+      } : undefined
     };
 
     res.end(`

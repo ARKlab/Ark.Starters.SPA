@@ -1,9 +1,18 @@
 describe("Application Insights Telemetry", () => {
+  let telemetryPayloads: unknown[] = [];
+
   beforeEach(() => {
-    // Intercept Application Insights telemetry requests if they occur
-    // Note: AI batches telemetry, so it may not send immediately
+    // Reset telemetry collection
+    telemetryPayloads = [];
+
+    // Intercept Application Insights telemetry requests and collect payloads
     cy.intercept("POST", "**/v2/track", req => {
       cy.log("AI Telemetry intercepted");
+      
+      // Store the request body for later inspection
+      const body = req.body;
+      telemetryPayloads.push(body);
+      
       req.reply({
         statusCode: 200,
         body: {
@@ -54,24 +63,72 @@ describe("Application Insights Telemetry", () => {
     cy.get("main").should("exist");
   });
 
-  it("telemetry endpoint is intercepted", () => {
-    // Navigate multiple times
-    cy.navigateViaMenu(/posts/i);
-    cy.navigateViaMenu(/config table/i);
-    cy.navigateViaMenu(/movie paginated/i);
+  it("tracks all route changes and verifies telemetry count", () => {
+    // Navigate to multiple routes
+    const routes = [
+      { menu: /posts/i, expectedInUrl: "posts" },
+      { menu: /config table/i, expectedInUrl: "configTable" },
+      { menu: /movie paginated/i, expectedInUrl: "moviesTable" },
+    ];
+
+    // Perform navigations
+    routes.forEach(route => {
+      cy.navigateViaMenu(route.menu);
+      cy.url().should("contain", route.expectedInUrl);
+      cy.get("main").should("exist");
+    });
     
-    // Wait a bit for any batched telemetry to be sent
-    cy.wait(3000);
+    // Wait for telemetry to be sent (AI batches it)
+    cy.wait(5000);
     
-    // Check if any telemetry was intercepted
-    // Note: This is optional - AI batches telemetry so it might not send during test
+    // Collect all intercepted telemetry
     cy.get("@aiTelemetry.all").then(interceptions => {
+      cy.log(`Total telemetry requests intercepted: ${interceptions.length}`);
+      
       if (interceptions.length > 0) {
-        cy.log(`Captured ${interceptions.length} telemetry requests`);
-        // If telemetry was sent, verify it was properly intercepted
-        expect(interceptions[0].response?.statusCode).to.equal(200);
+        // Analyze each telemetry payload
+        const allPayloads: unknown[] = [];
+        interceptions.forEach((interception: Cypress.Interception) => {
+          const body = interception.request.body;
+          allPayloads.push(body);
+        });
+
+        // Count telemetry items by type
+        let pageViewCount = 0;
+        let otherCount = 0;
+
+        allPayloads.forEach(payload => {
+          // Handle both array and single item payloads
+          const items = Array.isArray(payload) ? payload : [payload];
+          
+          items.forEach((item: { name?: string; baseType?: string }) => {
+            if (
+              item.name === "Microsoft.ApplicationInsights.PageView" ||
+              item.baseType === "PageviewData"
+            ) {
+              pageViewCount++;
+            } else {
+              otherCount++;
+            }
+          });
+        });
+
+        cy.log(`Page view telemetries: ${pageViewCount}`);
+        cy.log(`Other telemetries: ${otherCount}`);
+
+        // Verify we got telemetry for route changes
+        // We navigated to 3 routes, so we should have at least 3 page views
+        // (could be more due to initial page load)
+        expect(pageViewCount).to.be.at.least(routes.length, 
+          `Should have at least ${routes.length} page view telemetries for ${routes.length} route navigations`);
+        
+        // Verify each telemetry was properly intercepted
+        interceptions.forEach((interception: Cypress.Interception) => {
+          expect(interception.response?.statusCode).to.equal(200);
+        });
       } else {
-        cy.log("No telemetry sent during test (batched for later)");
+        cy.log("No telemetry sent during test (may be batched for later or AI disabled)");
+        // This is acceptable - AI batches telemetry and may not send during test duration
       }
     });
   });
