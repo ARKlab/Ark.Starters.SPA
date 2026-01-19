@@ -8,7 +8,7 @@ import PageNotFound from "../components/pageNotFound";
 import SEO from "../components/seo";
 import { siteMap } from "../siteMap/siteMap";
 
-import { reactPlugin } from "./applicationInsights";
+import { getReactPlugin } from "./applicationInsights/wrapper";
 import { AuthenticatedOnly } from "./authentication/components/authenticatedOnly";
 import { AuthenticationCallback } from "./authentication/components/authenticationCallback";
 import ProtectedRoute from "./authentication/components/protectedRoute";
@@ -16,6 +16,9 @@ import Unauthorized from "./authentication/unauthorized";
 import { LazyComponent } from "./components/LazyComponent";
 import { ErrorFallback } from "./errorFallback";
 import type { ArkRoute, ArkSubRoute } from "./siteMapTypes";
+
+// Get the reactPlugin (stub or real depending on configuration)
+const reactPlugin = getReactPlugin();
 
 const wrapLazy = (x: ArkRoute) => {
   const checkPermissions = x.permissions && x.permissions.length > 0;

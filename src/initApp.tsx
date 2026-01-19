@@ -1,10 +1,11 @@
 import { AppInsightsContext } from "@microsoft/applicationinsights-react-js";
+import type { ReactPlugin } from "@microsoft/applicationinsights-react-js";
 import { useRef, useState } from "react";
 
 import { useAppDispatch } from "./app/hooks";
 import CenterSpinner from "./components/centerSpinner";
 import { appSettings } from "./config/env";
-import { reactPlugin, setupAppInsights } from "./lib/applicationInsights";
+import { loadApplicationInsights, stubReactPlugin } from "./lib/applicationInsights";
 import { DetectLoggedInUser } from "./lib/authentication/authenticationSlice";
 import { useAuthContext } from "./lib/authentication/components/useAuthContext";
 import { i18nSetup } from "./lib/i18n/setup";
@@ -14,6 +15,7 @@ import Main from "./main";
 export function InitApp() {
     const ref = useRef<boolean>(false);
     const [loading, setLoading] = useState(true);
+    const [reactPlugin, setReactPlugin] = useState<ReactPlugin>(stubReactPlugin);
 
     const dispatch = useAppDispatch();
     const { context } = useAuthContext();
@@ -28,8 +30,9 @@ export function InitApp() {
 
         }
 
-        if (appSettings.applicationInsights)
-            setupAppInsights(appSettings.applicationInsights);
+        // Conditionally load Application Insights only when configured
+        const aiResult = await loadApplicationInsights(appSettings.applicationInsights);
+        setReactPlugin(aiResult.reactPlugin);
 
         await i18nSetup();
 
