@@ -40,7 +40,7 @@ export type AppInsightsResult = {
 // Dynamic loader for Application Insights
 // Returns the real reactPlugin when configured, stub when not
 export async function loadApplicationInsights(
-  config?: unknown
+  config?: ApplicationInsightsConfig
 ): Promise<AppInsightsResult> {
   if (!config) {
     return { reactPlugin: stubReactPlugin };
@@ -49,6 +49,6 @@ export async function loadApplicationInsights(
   // Dynamically import the real implementation
   const { setupAppInsights } = await import("./setup");
   
-  const result = setupAppInsights(config as ApplicationInsightsConfig);
+  const result = setupAppInsights(config);
   return result;
 }

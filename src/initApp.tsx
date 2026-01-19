@@ -6,6 +6,7 @@ import { useAppDispatch } from "./app/hooks";
 import CenterSpinner from "./components/centerSpinner";
 import { appSettings } from "./config/env";
 import { loadApplicationInsights, stubReactPlugin } from "./lib/applicationInsights";
+import { ReactPluginContext } from "./lib/applicationInsights/context";
 import { DetectLoggedInUser } from "./lib/authentication/authenticationSlice";
 import { useAuthContext } from "./lib/authentication/components/useAuthContext";
 import { i18nSetup } from "./lib/i18n/setup";
@@ -46,10 +47,11 @@ export function InitApp() {
 
     if (loading) return (<CenterSpinner />);
 
-    return (<>
-        <AppInsightsContext.Provider value={reactPlugin}>
-            <Main />
-        </AppInsightsContext.Provider>
-    </>
+    return (
+        <ReactPluginContext.Provider value={reactPlugin}>
+            <AppInsightsContext.Provider value={reactPlugin}>
+                <Main />
+            </AppInsightsContext.Provider>
+        </ReactPluginContext.Provider>
     );
 }

@@ -1,4 +1,3 @@
-import { withAITracking } from "@microsoft/applicationinsights-react-js";
 import type { ReactNode } from "react";
 import type { RouteObject } from "react-router";
 import { Outlet, createBrowserRouter } from "react-router";
@@ -8,7 +7,6 @@ import PageNotFound from "../components/pageNotFound";
 import SEO from "../components/seo";
 import { siteMap } from "../siteMap/siteMap";
 
-import { getReactPlugin } from "./applicationInsights/wrapper";
 import { AuthenticatedOnly } from "./authentication/components/authenticatedOnly";
 import { AuthenticationCallback } from "./authentication/components/authenticationCallback";
 import ProtectedRoute from "./authentication/components/protectedRoute";
@@ -17,27 +15,19 @@ import { LazyComponent } from "./components/LazyComponent";
 import { ErrorFallback } from "./errorFallback";
 import type { ArkRoute, ArkSubRoute } from "./siteMapTypes";
 
-// Get the reactPlugin (stub or real depending on configuration)
-const reactPlugin = getReactPlugin();
-
 const wrapLazy = (x: ArkRoute) => {
   const checkPermissions = x.permissions && x.permissions.length > 0;
 
   let element: ReactNode = <Outlet />;
   if (x.component) {
-    const X = withAITracking(reactPlugin, () => <>{x.component}</>, x.label);
-    element = <X />;
+    element = <>{x.component}</>;
   }
   // key={x.label} is needed to force a rerender when the route changes due to https://github.com/remix-run/react-router/issues/12474
   // assumption: x.label is unique across all routes
   // TODO: introduce x.id/x.slug to be used as key and tracking instead of x.label
   const lazy = x.lazy;
   if (lazy) {
-    const y = async () => {
-      const res = await lazy();
-      return { default: withAITracking(reactPlugin, res.default, x.label) };
-    };
-    element = <LazyComponent loader={y} key={x.label} />;
+    element = <LazyComponent loader={lazy} key={x.label} />;
   }
 
   if (checkPermissions) element = <ProtectedRoute permissions={x.permissions}>{element}</ProtectedRoute>;
@@ -87,7 +77,7 @@ export const router = createBrowserRouter(
             },
             {
               path: "Unauthorized",
-              Component: withAITracking(reactPlugin, Unauthorized),
+              Component: Unauthorized,
             },
             ...routes,
             {
@@ -96,7 +86,7 @@ export const router = createBrowserRouter(
             },
             {
               path: "*",
-              Component: withAITracking(reactPlugin, PageNotFound),
+              Component: PageNotFound,
             },
           ],
         },
