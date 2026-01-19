@@ -34,6 +34,13 @@ export const setupAppInsights = ({ connectionString, enableClickAnalytics }: App
       // TODO: enable this when the GDPR consent is accepted using appInsights.getCookieMgr().enable()
       disableCookiesUsage: true,
 
+      // Enable developer mode for immediate telemetry in e2e tests
+      ...(import.meta.env.MODE === "e2e" && {
+        loggingLevelConsole: 2, // Enable verbose logging in e2e
+        loggingLevelTelemetry: 2,
+        enableDebug: true,
+      }),
+
       extensions: ([reactPlugin] as ITelemetryPlugin[]).concat(...(enableClickAnalytics ? [clickAnalyticsPlugin] : [])),
       extensionConfig: {
         [clickAnalyticsPlugin.identifier]: {
