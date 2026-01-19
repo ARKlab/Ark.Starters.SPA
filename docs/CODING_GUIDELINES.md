@@ -24,8 +24,8 @@
 - **MUST NOT** use hardcoded color values (hex, rgb, named colors)
 - **MUST** use Chakra UI predefined z-index values only
 - **MUST NOT** use custom z-index values
-- **MUST** use `em` units for font sizes and text-related measurements
-- **MUST** use `px` units for margins and padding
+- **MUST** use Chakra tokens for text sizes and element dimensions
+- **MUST** use Chakra spacing tokens for margins and padding
 
 ### Allowed z-index Values
 
@@ -38,9 +38,10 @@ toast: 1700, tooltip: 1800
 
 ## Icons
 
+- **MUST** use a single icon set for the whole App. Lucide is the default.
 - **MUST** use Lucide icon set (`react-icons/lu`) exclusively
 - **MUST NOT** import icons from other `react-icons` packages (fa, md, io, etc.)
-- **Reason**: Ensures optimal bundle size through better tree-shaking
+- **Reason**: Using a single icon set ensures optimal bundle size through better tree-shaking
 
 ## TypeScript
 
