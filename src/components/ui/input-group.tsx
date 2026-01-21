@@ -36,7 +36,9 @@ export const InputGroup = React.forwardRef<HTMLDivElement, InputGroupProps>(
           </InputElement>
         )}
 
-        {React.cloneElement(child, {
+        {
+          // @ts-expect-error: Unable to infer type correctly
+          React.cloneElement(child, {
             ...(startElement && {
               ps: `calc(var(--input-height) - ${startOffset})`,
             }),
