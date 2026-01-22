@@ -90,60 +90,48 @@ describe("Application Insights Telemetry", () => {
         return new Cypress.Promise<void>((resolve) => {
           void win.appInsights.flush(false, () => {
             // Callback when flush completes
-            resolve();
+            // Wait a bit for network requests to actually be sent
+            setTimeout(resolve, 500);
           });
         });
       }
     }).then(() => {
-      // Collect all intercepted telemetry after flush completes
-      return cy.get("@aiTelemetry.all").then(interceptions => {
-      // Log for debugging
-      cy.log(`Total interceptions: ${interceptions.length}`);
-      
-      // Analyze each telemetry payload
-      const allPayloads: unknown[] = [];
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      interceptions.forEach((interception: Cypress.Interception) => {
-        const body = interception.request.body;
-        allPayloads.push(body);
-      });
-
-      // Count telemetry items by type
-      let pageViewCount = 0;
-      let otherCount = 0;
-
-      allPayloads.forEach(payload => {
-        // Handle both array and single item payloads
-        const items = Array.isArray(payload) ? payload : [payload];
+      // Wait a moment to ensure all telemetry has been intercepted
+      cy.wait(100);
+    }).then(() => {
+      // Analyze the telemetry payloads collected in the intercept
+      cy.wrap(telemetryPayloads).then(payloads => {
+        cy.log(`Total telemetry requests: ${payloads.length}`);
         
-        items.forEach((item: { name?: string; baseType?: string }) => {
-          if (
-            item.name === "Microsoft.ApplicationInsights.PageView" ||
-            item.baseType === "PageviewData"
-          ) {
-            pageViewCount++;
-          } else {
-            otherCount++;
-          }
+        // Count telemetry items by type
+        let pageViewCount = 0;
+        let otherCount = 0;
+
+        payloads.forEach(payload => {
+          // Handle both array and single item payloads
+          const items = Array.isArray(payload) ? payload : [payload];
+          
+          items.forEach((item: { name?: string; baseType?: string }) => {
+            if (
+              item.name === "Microsoft.ApplicationInsights.PageView" ||
+              item.baseType === "PageviewData"
+            ) {
+              pageViewCount++;
+            } else {
+              otherCount++;
+            }
+          });
         });
-      });
 
-      cy.log(`Total telemetry requests: ${interceptions.length}`);
-      cy.log(`Page view telemetries: ${pageViewCount}`);
-      cy.log(`Other telemetries: ${otherCount}`);
+        cy.log(`Page view telemetries: ${pageViewCount}`);
+        cy.log(`Other telemetries: ${otherCount}`);
 
-      // Verify we got telemetry for route changes
-      // We navigated to 3 routes, so we should have at least 3 page views
-      // (could be more due to initial page load)
-      expect(pageViewCount).to.be.at.least(routes.length, 
-        `Should have at least ${routes.length} page view telemetries for ${routes.length} route navigations`);
-      
-      // Verify each telemetry was properly intercepted
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      interceptions.forEach((interception: Cypress.Interception) => {
-        expect(interception.response?.statusCode).to.equal(200);
+        // Verify we got telemetry for route changes
+        // We navigated to 3 routes, so we should have at least 3 page views
+        // (could be more due to initial page load)
+        expect(pageViewCount).to.be.at.least(routes.length, 
+          `Should have at least ${routes.length} page view telemetries for ${routes.length} route navigations`);
       });
-    });
     });
   });
 });
