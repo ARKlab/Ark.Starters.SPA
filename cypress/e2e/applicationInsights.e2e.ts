@@ -82,25 +82,21 @@ describe("Application Insights Telemetry", () => {
     // Flush Application Insights telemetry to ensure all events are sent
     cy.window().then(win => {
       // Verify appInsights exists
-      expect(win.appInsights, "window.appInsights should be defined in e2e mode").to.exist;
+      assert.isDefined(win.appInsights, "window.appInsights should be defined in e2e mode");
       
       if (win.appInsights) {
         // Call flush to send all batched telemetry immediately
-        // Use async/await to ensure flush completes
+        // Return promise to ensure flush completes before continuing
         return new Cypress.Promise<void>((resolve) => {
-          win.appInsights.flush(false, () => {
+          void win.appInsights.flush(false, () => {
             // Callback when flush completes
             resolve();
           });
         });
       }
-    });
-    
-    // Wait for telemetry requests to be sent after flush callback
-    cy.wait(1000);
-    
-    // Collect all intercepted telemetry
-    cy.get("@aiTelemetry.all").then(interceptions => {
+    }).then(() => {
+      // Collect all intercepted telemetry after flush completes
+      return cy.get("@aiTelemetry.all").then(interceptions => {
       // Log for debugging
       cy.log(`Total interceptions: ${interceptions.length}`);
       
@@ -147,6 +143,7 @@ describe("Application Insights Telemetry", () => {
       interceptions.forEach((interception: Cypress.Interception) => {
         expect(interception.response?.statusCode).to.equal(200);
       });
+    });
     });
   });
 });
