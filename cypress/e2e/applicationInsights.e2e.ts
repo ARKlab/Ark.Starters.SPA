@@ -86,18 +86,19 @@ describe("Application Insights Telemetry", () => {
       
       if (win.appInsights) {
         // Call flush to send all batched telemetry immediately
+        // First parameter: true = synchronous/immediate send (not async)
         // Return promise to ensure flush completes before continuing
         return new Cypress.Promise<void>((resolve) => {
-          void win.appInsights.flush(false, () => {
+          void win.appInsights.flush(true, () => {
             // Callback when flush completes
-            // Wait a bit for network requests to actually be sent
-            setTimeout(resolve, 500);
+            // Wait for network requests to be sent and intercepted
+            setTimeout(resolve, 1000);
           });
         });
       }
     }).then(() => {
-      // Wait a moment to ensure all telemetry has been intercepted
-      cy.wait(100);
+      // Additional wait to ensure all telemetry has been fully intercepted
+      cy.wait(300);
     }).then(() => {
       // Analyze the telemetry payloads collected in the intercept
       cy.wrap(telemetryPayloads).then(payloads => {
