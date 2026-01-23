@@ -93,9 +93,22 @@ describe("Application Insights Telemetry", () => {
       }
     });
     
-    // Wait for Application Insights to batch and send telemetry
-    // AI sends telemetry automatically after a short delay
-    cy.wait(3000);
+    // Force Application Insights to flush telemetry
+    // Use async flush (false) to avoid synchronous XHR
+    cy.window().then(win => {
+      if (win.appInsights) {
+        return new Cypress.Promise<void>((resolve) => {
+          // false = async flush, callback is called when flush completes
+          void win.appInsights.flush(false, () => {
+            cy.log("Application Insights flush completed");
+            resolve();
+          });
+        });
+      }
+    });
+    
+    // Wait a bit more for network requests to complete
+    cy.wait(1000);
     
     // Now analyze the intercepted telemetry
     cy.wrap(telemetryPayloads).then(payloads => {

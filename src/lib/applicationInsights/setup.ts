@@ -39,7 +39,8 @@ export const setupAppInsights = ({ connectionString, enableClickAnalytics }: App
         loggingLevelConsole: 2, // Enable verbose logging in e2e
         loggingLevelTelemetry: 2,
         enableDebug: true,
-        disableXhr: true, // Disable sync XHR in e2e mode - use only fetch/beacon
+        // Note: Don't disable XHR - we need it for Cypress to intercept telemetry
+        // The SDK will use async XHR by default which Cypress can intercept
       }),
 
       extensions: ([reactPlugin] as ITelemetryPlugin[]).concat(...(enableClickAnalytics ? [clickAnalyticsPlugin] : [])),
