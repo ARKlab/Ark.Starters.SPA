@@ -136,7 +136,7 @@ describe("Application Insights Telemetry", () => {
               item.baseType === "PageviewData"
             ) {
               pageViewCount++;
-              const url = item.data?.baseData?.uri || item.data?.baseData?.name || "unknown";
+              const url = item.data?.baseData?.uri ?? item.data?.baseData?.name ?? "unknown";
               pageViewUrls.push(url);
               cy.log(`  Page View ${pageViewCount}: ${url}`);
             } else if (
@@ -144,7 +144,7 @@ describe("Application Insights Telemetry", () => {
               item.baseType === "EventData"
             ) {
               eventCount++;
-              const eventName = item.data?.baseData?.name || "unknown";
+              const eventName = item.data?.baseData?.name ?? "unknown";
               cy.log(`  Event: ${eventName}`);
             } else {
               otherCount++;
