@@ -65,81 +65,115 @@ describe("Application Insights Telemetry", () => {
   });
 
   it("tracks all route changes and verifies telemetry count", () => {
-    // Navigate to multiple routes
+    // Navigate to multiple routes to test auto route tracking
     const routes = [
-      { menu: /posts/i, expectedInUrl: "jsonplaceholder" },
-      { menu: /config table/i, expectedInUrl: "configTable" },
-      { menu: /movie paginated/i, expectedInUrl: "moviesTable" },
+      { menu: /posts/i, expectedInUrl: "jsonplaceholder", testName: "Posts" },
+      { menu: /config table/i, expectedInUrl: "configTable", testName: "Config Table" },
+      { menu: /movie paginated/i, expectedInUrl: "moviesTable", testName: "Movies Table" },
     ];
 
-    // Perform navigations
-    routes.forEach(route => {
+    // Perform navigations - each should trigger a page view event
+    routes.forEach((route, index) => {
+      cy.log(`Navigating to route ${index + 1}/${routes.length}: ${route.testName}`);
       cy.navigateViaMenu(route.menu);
       cy.url().should("contain", route.expectedInUrl);
       cy.get("main").should("exist");
+      // Small delay between navigations to ensure each triggers its own page view
+      cy.wait(200);
     });
     
-    // Flush Application Insights telemetry to ensure all events are sent
+    // Give Application Insights time to process route changes
+    cy.wait(500);
+    
+    // Now manually track a test event and flush to verify the SDK can send telemetry
     cy.window().then(win => {
-      // Verify appInsights exists
       assert.isDefined(win.appInsights, "window.appInsights should be defined in e2e mode");
       
       if (win.appInsights) {
-        // Call flush to send all batched telemetry immediately
-        // First parameter: true = synchronous/immediate send (not async)
-        // Return promise to ensure flush completes before continuing
+        // Manually track a custom event to verify SDK is functional
+        win.appInsights.trackEvent({ name: "CypressTestMarker" });
+        
+        // Flush Application Insights with increased timeout
+        // Use async flush (false) which is more reliable for batch sending
         return new Cypress.Promise<void>((resolve) => {
-          void win.appInsights.flush(true, () => {
-            // Callback when flush completes
-            // Wait for network requests to be sent and intercepted
-            setTimeout(resolve, 1000);
+          void win.appInsights.flush(false, () => {
+            // Extended callback wait to ensure all telemetry is sent
+            setTimeout(resolve, 2000);
           });
         });
       }
     }).then(() => {
-      // Additional wait to ensure all telemetry has been fully intercepted
-      cy.wait(300);
+      // Additional wait for network requests to complete
+      cy.wait(1000);
     }).then(() => {
-      // Analyze the telemetry payloads collected in the intercept
+      // Now analyze the intercepted telemetry
       cy.wrap(telemetryPayloads).then(payloads => {
-        cy.log(`Total telemetry requests: ${payloads.length}`);
+        cy.log(`=== Application Insights Telemetry Analysis ===`);
+        cy.log(`Total HTTP requests intercepted: ${payloads.length}`);
         
-        // Count telemetry items by type
+        // Parse and categorize all telemetry items
         let pageViewCount = 0;
+        let eventCount = 0;
         let otherCount = 0;
+        const pageViewUrls: string[] = [];
 
         payloads.forEach(payload => {
           // Handle both array and single item payloads
           const items = Array.isArray(payload) ? payload : [payload];
           
-          items.forEach((item: { name?: string; baseType?: string }) => {
+          items.forEach((item: { 
+            name?: string; 
+            baseType?: string;
+            data?: {
+              baseData?: {
+                uri?: string;
+                name?: string;
+              };
+            };
+          }) => {
             if (
               item.name === "Microsoft.ApplicationInsights.PageView" ||
               item.baseType === "PageviewData"
             ) {
               pageViewCount++;
+              const url = item.data?.baseData?.uri || item.data?.baseData?.name || "unknown";
+              pageViewUrls.push(url);
+              cy.log(`  Page View ${pageViewCount}: ${url}`);
+            } else if (
+              item.name === "Microsoft.ApplicationInsights.Event" ||
+              item.baseType === "EventData"
+            ) {
+              eventCount++;
+              const eventName = item.data?.baseData?.name || "unknown";
+              cy.log(`  Event: ${eventName}`);
             } else {
               otherCount++;
             }
           });
         });
 
-        cy.log(`Page view telemetries: ${pageViewCount}`);
-        cy.log(`Other telemetries: ${otherCount}`);
+        cy.log(`Page Views: ${pageViewCount}`);
+        cy.log(`Events: ${eventCount}`);
+        cy.log(`Other telemetry: ${otherCount}`);
 
-        // Verify we got telemetry for route changes
-        // Note: Application Insights may batch telemetry or skip in certain test environments
-        // The main verification here is that the telemetry endpoint was called
-        if (payloads.length > 0) {
-          cy.log("✓ Application Insights telemetry endpoint was called successfully");
-          // If we received any payloads, verify page views were tracked
-          expect(pageViewCount).to.be.at.least(1, 
-            "Should have at least one page view telemetry when telemetry is sent");
-        } else {
-          // In some CI environments, telemetry might not be sent even with flush
-          // Log a warning but don't fail the test
-          cy.log("⚠ No telemetry was intercepted - this may be expected in CI");
-        }
+        // CRITICAL ASSERTIONS - These validate that auto route tracking works
+        assert.isAtLeast(
+          payloads.length, 
+          1,
+          "❌ FAILED: No telemetry requests were intercepted. " +
+          "Application Insights is not sending any data. Check SDK configuration and network settings."
+        );
+        
+        assert.isAtLeast(
+          pageViewCount,
+          routes.length,
+          `❌ FAILED: Expected at least ${routes.length} page views (one per navigation), but got ${pageViewCount}. ` +
+          "This means Application Insights auto route tracking is NOT working correctly with React Router. " +
+          "Check that enableAutoRouteTracking is true and ReactPlugin is properly integrated."
+        );
+        
+        cy.log(`✅ SUCCESS: Application Insights auto route tracking is working!`);
+        cy.log(`✅ Tracked ${pageViewCount} page views for ${routes.length} route navigations`);
       });
     });
   });
