@@ -39,6 +39,7 @@ export const setupAppInsights = ({ connectionString, enableClickAnalytics }: App
         loggingLevelConsole: 2, // Enable verbose logging in e2e
         loggingLevelTelemetry: 2,
         enableDebug: true,
+        disableXhr: true, // Disable sync XHR in e2e mode - use only fetch/beacon
       }),
 
       extensions: ([reactPlugin] as ITelemetryPlugin[]).concat(...(enableClickAnalytics ? [clickAnalyticsPlugin] : [])),
