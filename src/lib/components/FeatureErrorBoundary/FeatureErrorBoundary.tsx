@@ -113,7 +113,11 @@ export function FeatureErrorBoundary({
 
   const renderFallback = ({ error, resetErrorBoundary }: FallbackProps): ReactNode =>
     fallback ?? (
-      <DefaultFallback error={error} resetErrorBoundary={resetErrorBoundary} featureLabel={featureLabel} />
+      <DefaultFallback
+        error={error}
+        resetErrorBoundary={resetErrorBoundary}
+        featureLabel={featureLabel}
+      />
     );
 
   return (
