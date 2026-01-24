@@ -62,10 +62,10 @@ Replace `defaultConfig` with `defaultBaseConfig` and import only needed componen
    - Replace `defaultConfig` with `defaultBaseConfig`
    - Import needed recipes from `@chakra-ui/react/theme`
    - Add recipes to theme config
-3. Run build: `npm run build`
+3. Run build: `bun run build`
 4. Test all pages manually
-5. Run E2E tests: `npm test`
-6. Measure bundle: `npm run analyze`
+5. Run E2E tests: `bun run test`
+6. Measure bundle: `bun run analyze`
 
 **Verification Command:**
 
@@ -141,8 +141,8 @@ This approach:
 **Verification Command:**
 
 ```bash
-npm run test  # All Cypress commands should work
-npm run build # Build should complete successfully
+bun run test  # All Cypress commands should work
+bun run build # Build should complete successfully
 ```
 
 **Actual Results:**
@@ -232,7 +232,7 @@ All 8 files modified during memoization removal are exercised by existing E2E te
 **Action Items**:
 
 1. ✅ Verified test coverage through existing E2E test suite
-2. Run full test suite with coverage: `npm test`
+2. Run full test suite with coverage: `bun run test`
 3. Review coverage report in `coverage/` directory
 4. Target: 80%+ coverage on all modified files
 
@@ -341,13 +341,13 @@ Lazy load Application Insights only when configured to avoid bundling monitoring
 
 ```bash
 # Build without App Insights config (default)
-npm run analyze
+bun run analyze
 # Application Insights in separate chunk: setup-ZhbyqKoG.js (65.25 KB gzipped)
 # Will not be downloaded unless configured
 
 # Build with App Insights config
-VITE_APP_INSIGHTS_KEY="test-key" npm run build
-npm run analyze
+VITE_APP_INSIGHTS_KEY="test-key" bun run build
+bun run analyze
 # Should load setup chunk when needed
 ```
 
@@ -425,7 +425,7 @@ Move Redux API slices from eager loading to lazy loading per feature.
 
 ```bash
 # Each feature should have its own chunk with its API slice
-npm run analyze
+bun run analyze
 # Look for separate chunks per feature
 ```
 
@@ -474,7 +474,7 @@ Consolidate react-icons to single icon set (lucide/lu) instead of multiple sets.
    - Fixed icon naming (e.g., LuCheckCircle → LuCircleCheck, LuAlertTriangle → LuTriangleAlert)
 4. ✅ Build and lint completed successfully
 5. ⏳ Visual testing needed (manual)
-6. ⏳ Bundle analyzer to measure reduction (needs npm run analyze)
+6. ⏳ Bundle analyzer to measure reduction (needs bun run analyze)
 
 **Icon Sets Removed:**
 
@@ -647,10 +647,10 @@ This was attempted in Phase 2 (Task 2.1) but reverted due to E2E test failures. 
 
 ```bash
 # Build and verify single auth provider in bundle
-npm run build
-npm run analyze
+bun run build
+bun run analyze
 # E2E tests must pass
-npm test
+bun run test
 ```
 
 **Lessons from Previous Attempt:**

@@ -294,7 +294,7 @@ Based on bundle sizes and typical 3G network (750Kbps):
    - **Impact for Template Users:**
      - ❌ **Loses ability to receive Chakra UI theme updates** - Must manually merge theme changes from new Chakra versions
      - ❌ **Increases maintenance burden** - Team becomes responsible for maintaining entire theme codebase
-     - ❌ **Breaks upgrade path** - Cannot simply `npm update @chakra-ui/react` without reviewing ejected theme files
+     - ❌ **Breaks upgrade path** - Cannot simply `bun update @chakra-ui/react` without reviewing ejected theme files
      - ❌ **Knowledge requirement** - Requires deep understanding of Chakra internals to maintain
      - ✅ **When appropriate** - Only for projects that have stabilized their design system and don't need Chakra updates
    - **Recommendation:** Use `defaultBaseConfig` + selective recipe imports instead (achieves 80% of the savings without the maintenance cost)

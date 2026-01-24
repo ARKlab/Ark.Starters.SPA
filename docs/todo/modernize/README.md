@@ -254,7 +254,7 @@ After each phase, verify improvements:
 
 ```bash
 # 1. Run bundle analyzer
-npm run analyze
+bun run analyze
 
 # 2. Check sizes
 ls -lh build/assets/*.js | awk '{print $5, $9}' | sort -h

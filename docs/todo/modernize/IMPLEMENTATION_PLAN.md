@@ -565,7 +565,7 @@ npx @chakra-ui/cli eject
 - [ ] Create feature branch: `optimize/bundle-size`
 - [ ] Set up bundle analyzer in CI:
   ```bash
-  npm run analyze
+  bun run analyze
   ```
 - [ ] Document baseline metrics
 - [ ] Communicate plan to team
@@ -626,7 +626,7 @@ npx @chakra-ui/cli eject
 Use Lighthouse CI:
 
 ```bash
-npm install -g @lhci/cli
+bun install -g @lhci/cli
 lhci autorun --config=lighthouserc.json
 ```
 
@@ -670,7 +670,7 @@ Track over time in CI/CD pipeline.
 
 ### Tools
 
-- Bundle Analyzer: Already configured (`npm run analyze`)
+- Bundle Analyzer: Already configured (`bun run analyze`)
 - Lighthouse CI: For performance tracking
 - webpack-bundle-analyzer: Alternative visualization
 
@@ -685,20 +685,20 @@ Track over time in CI/CD pipeline.
 
 ```bash
 # Analyze bundle
-npm run analyze
+bun run analyze
 
 # Check bundle sizes
 du -sh build/assets/*.js | sort -h
 
 # Find large dependencies
-npm install -g cost-of-modules
+bun install -g cost-of-modules
 cost-of-modules
 
 # Audit imports
 grep -r "import.*from" src --include="*.tsx" | cut -d'"' -f2 | sort | uniq -c | sort -rn
 
 # Check tree-shaking
-NODE_ENV=production npm run build -- --mode analyze
+NODE_ENV=production bun run build -- --mode analyze
 
 # Performance test
 lighthouse http://localhost:3000 --view

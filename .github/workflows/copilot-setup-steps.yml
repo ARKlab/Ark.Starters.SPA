@@ -39,4 +39,4 @@ jobs:
           bun-version: latest
 
       - name: Install JavaScript dependencies
-        run: bun install
+        run: bun install --frozen-lockfile
