@@ -1,4 +1,4 @@
-import type { UnknownAction, Action, ThunkAction } from "@reduxjs/toolkit"
+import type { UnknownAction, Action, ThunkAction, WithSlice } from "@reduxjs/toolkit"
 import { configureStore, combineSlices } from "@reduxjs/toolkit"
 import { setupListeners } from "@reduxjs/toolkit/query"
 
@@ -7,6 +7,14 @@ import { envSlice } from "../lib/authentication/envSlice"
 import type { AuthProvider } from "../lib/authentication/providers/authProviderInterface"
 import { tableStateSlice } from "../lib/components/AppArkApiTable/tableStateSlice"
 import errorReducer from "../lib/errorHandler/errorHandler"
+
+// Import types of lazy-loaded API slices for proper TypeScript typing
+import type { configTableApiSlice } from "../features/configTable/configTableApi"
+import type { jsonPlaceholderApi } from "../features/fetchApiExample/jsonPlaceholderApi"
+import type { videoGameApiSlice } from "../features/formExample/videoGamesApiSlice"
+import type { globalLoadingSlice } from "../features/globalLoadingBar/globalLoadingSlice"
+import type { moviesApiSlice } from "../features/paginatedTable/paginatedTableApi"
+import type { rtkqErrorHandlingApi } from "../features/rtkqErrorHandling/rtkqErrorHandlingApi"
 
 // Base store configuration with only core slices
 // Feature-specific API slices are lazy-loaded with their routes
@@ -20,8 +28,15 @@ const rootReducer = combineSlices(
   },
 )
 
-// Enable lazy-loaded slices to be injected dynamically
-const sliceReducers = rootReducer.withLazyLoadedSlices()
+// Enable lazy-loaded slices to be injected dynamically with proper typing
+const sliceReducers = rootReducer.withLazyLoadedSlices<
+  WithSlice<typeof configTableApiSlice> &
+  WithSlice<typeof jsonPlaceholderApi> &
+  WithSlice<typeof videoGameApiSlice> &
+  WithSlice<typeof globalLoadingSlice> &
+  WithSlice<typeof moviesApiSlice> &
+  WithSlice<typeof rtkqErrorHandlingApi>
+>()
 
 // Infer the `RootState` type from the root reducer
 export type AppState = ReturnType<typeof sliceReducers>
