@@ -6,7 +6,10 @@ const isAsyncGenerator = (v: unknown): v is AsyncGenerator => {
   return Object.prototype.toString.call(v) === "[object AsyncGenerator]";
 };
 
-function useAsyncEffect(effect: () => Promise<void> | AsyncGenerator<void, void, void>, deps?: DependencyList) {
+function useAsyncEffect(
+  effect: () => Promise<void> | AsyncGenerator<void, void, void>,
+  deps?: DependencyList,
+) {
   const { showBoundary } = useErrorBoundary();
   useEffect(
     () => {
@@ -24,7 +27,6 @@ function useAsyncEffect(effect: () => Promise<void> | AsyncGenerator<void, void,
         } else {
           await task;
         }
-         
       })().then(_ => {
         /* do nothing */
       }, showBoundary);

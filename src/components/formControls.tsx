@@ -52,7 +52,9 @@ export const InputControl = (props: InputControlProps) => {
       <Controller
         name={name}
         control={control}
-        render={({ field }) => <Input {...field} {...inputProps} id={name} placeholder={placeholder} />}
+        render={({ field }) => (
+          <Input {...field} {...inputProps} id={name} placeholder={placeholder} />
+        )}
       />
       <FieldError name={name} />
     </FieldControl>

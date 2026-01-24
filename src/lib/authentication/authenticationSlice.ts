@@ -58,7 +58,13 @@ export const authSlice = createAppSlice({
   extraReducers: builder => {
     builder
       .addCase(DetectLoggedInUser.pending, state => {
-        return { ...state, status: AuthenticationSteps.Init, isLoading: true, isError: false, error: null };
+        return {
+          ...state,
+          status: AuthenticationSteps.Init,
+          isLoading: true,
+          isError: false,
+          error: null,
+        };
       })
       .addCase(DetectLoggedInUser.fulfilled, (state, action) => {
         return {
@@ -78,7 +84,13 @@ export const authSlice = createAppSlice({
         };
       })
       .addCase(HandleRedirect.pending, state => {
-        return { ...state, status: AuthenticationSteps.HandlingRedirect, isLoading: true, isError: false, error: null };
+        return {
+          ...state,
+          status: AuthenticationSteps.HandlingRedirect,
+          isLoading: true,
+          isError: false,
+          error: null,
+        };
       })
       .addCase(HandleRedirect.fulfilled, (state, action) => {
         return {
@@ -146,7 +158,13 @@ export const authSlice = createAppSlice({
       })
 
       .addCase(getLoginStatus.pending, state => {
-        return { ...state, status: AuthenticationSteps.Login, isLoading: true, isError: false, error: null };
+        return {
+          ...state,
+          status: AuthenticationSteps.Login,
+          isLoading: true,
+          isError: false,
+          error: null,
+        };
       })
       .addCase(getLoginStatus.fulfilled, state => {
         return {

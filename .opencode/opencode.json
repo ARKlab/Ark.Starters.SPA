@@ -3,11 +3,7 @@
   "mcp": {
     "chakra-ui": {
       "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "@chakra-ui/react-mcp"
-      ],
+      "command": ["npx", "-y", "@chakra-ui/react-mcp"],
       "enabled": true
     },
     "github": {
@@ -28,20 +24,12 @@
     },
     "playwright": {
       "type": "local",
-      "command": [
-        "npx",
-        "@playwright/mcp@latest"
-      ],
+      "command": ["npx", "@playwright/mcp@latest"],
       "enabled": true
     },
     "ado": {
       "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "@azure-devops/mcp",
-        "arklabita"
-      ],
+      "command": ["npx", "-y", "@azure-devops/mcp", "arklabita"],
       "enabled": true
     }
   }

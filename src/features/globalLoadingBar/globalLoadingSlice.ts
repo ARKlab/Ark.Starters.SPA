@@ -44,5 +44,9 @@ export const globalLoadingSlice = createApi({
   }),
 });
 
-export const { useFastGetQuery, useFastMutationMutation, useSlowGetQuery, useSlowMutationMutation } =
-  globalLoadingSlice;
+export const {
+  useFastGetQuery,
+  useFastMutationMutation,
+  useSlowGetQuery,
+  useSlowMutationMutation,
+} = globalLoadingSlice;

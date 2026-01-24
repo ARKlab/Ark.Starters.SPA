@@ -17,7 +17,11 @@ export const ErrorBoundary = ({ children }: { children?: React.ReactNode }) => {
       FallbackComponent={FatalError}
       resetKeys={[pathname, search]} // reset on navigation, ignoring hash
       onError={(error, info) => {
-        plugin.trackException({ exception: error, severityLevel: SeverityLevel.Error, properties: info });
+        plugin.trackException({
+          exception: error,
+          severityLevel: SeverityLevel.Error,
+          properties: info,
+        });
       }}
     >
       {children}

@@ -32,7 +32,11 @@ type SelectFilter<T> = BaseFilter<T> & {
   selectProps?: SelectRootProps;
 };
 
-export type FilterDefinition<T> = CheckboxFilter<T> | TextFilter<T> | InputFilter<T> | SelectFilter<T>;
+export type FilterDefinition<T> =
+  | CheckboxFilter<T>
+  | TextFilter<T>
+  | InputFilter<T>
+  | SelectFilter<T>;
 
 export type FilterType = FilterDefinition<unknown>["type"];
 

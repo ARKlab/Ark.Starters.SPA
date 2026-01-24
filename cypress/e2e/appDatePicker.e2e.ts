@@ -17,7 +17,9 @@ describe("AppDatePicker", () => {
 
   function pickDay(wrapper: string, day: number) {
     open(wrapper);
-    cy.get(`[data-test='datepicker-day-${day}']:not([data-outside-range])`).first().click({ force: true });
+    cy.get(`[data-test='datepicker-day-${day}']:not([data-outside-range])`)
+      .first()
+      .click({ force: true });
   }
 
   it("selects today (basic)", () => {

@@ -74,7 +74,9 @@ const PlaygroundView = () => {
           </Heading>
           <ProtectedComponent
             permissions={requiredPermission.split(",")}
-            fallBackComponent={<Box colorPalette={"error"}>{t("permissionsPlayground_noPermission")}</Box>}
+            fallBackComponent={
+              <Box colorPalette={"error"}>{t("permissionsPlayground_noPermission")}</Box>
+            }
           >
             <Box>{t("permissionsPlayground_havePermission")}</Box>
           </ProtectedComponent>

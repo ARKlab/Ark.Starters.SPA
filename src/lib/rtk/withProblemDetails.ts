@@ -1,10 +1,13 @@
- 
-
 import type { QueryReturnValue } from "@reduxjs/toolkit/query";
 import { z } from "zod";
 
 import type { ArkFetchBaseQueryFn } from "./appFetchBaseQuery";
-import type { ArkBaseQueryEnhancer, ArkBaseQueryError, ArkBaseQueryMeta, ArkBaseQueryResult } from "./arkBaseQuery";
+import type {
+  ArkBaseQueryEnhancer,
+  ArkBaseQueryError,
+  ArkBaseQueryMeta,
+  ArkBaseQueryResult,
+} from "./arkBaseQuery";
 
 export const ProblemDetailsSchema = z.looseObject({
   status: z.number().nullish(),

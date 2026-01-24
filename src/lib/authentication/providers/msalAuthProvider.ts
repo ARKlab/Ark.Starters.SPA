@@ -93,7 +93,11 @@ export class MsalAuthProvider implements AuthProvider {
         iframeHashTimeout: 20000,
       },
     };
-    this.config = { msalConfig: msalConfig, scopes: scopes, permissionsClaims: config.permissionsClaims };
+    this.config = {
+      msalConfig: msalConfig,
+      scopes: scopes,
+      permissionsClaims: config.permissionsClaims,
+    };
 
     this.loginRequest = {
       scopes: ["openid", "offline_access"],
@@ -208,7 +212,10 @@ export class MsalAuthProvider implements AuthProvider {
 
         this.idTokenClaims = resp.idTokenClaims;
         this.setLoginStatus(LoginStatus.Logged);
-        return { username: account.username, permissions: this.getUserPermissions() } as UserAccountInfo;
+        return {
+          username: account.username,
+          permissions: this.getUserPermissions(),
+        } as UserAccountInfo;
       } catch (e) {
         if (e instanceof msal.InteractionRequiredAuthError) return null;
 

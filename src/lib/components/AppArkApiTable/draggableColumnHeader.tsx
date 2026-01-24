@@ -3,7 +3,10 @@ import { CSS } from "@dnd-kit/utilities";
 import type { Header, Table as ReactTable } from "@tanstack/react-table";
 import { flexRender } from "@tanstack/react-table";
 
-export const DraggableColumnHeader = <T,>(props: { header: Header<T, unknown>; table: ReactTable<T> }) => {
+export const DraggableColumnHeader = <T,>(props: {
+  header: Header<T, unknown>;
+  table: ReactTable<T>;
+}) => {
   const { header } = props;
   const { column } = header;
 
@@ -19,10 +22,16 @@ export const DraggableColumnHeader = <T,>(props: { header: Header<T, unknown>; t
 
   return (
     <span ref={setNodeRef} style={style}>
-      <button {...attributes} {...listeners} style={{ cursor: "grab", border: "none", background: "none", padding: 0 }}>
+      <button
+        {...attributes}
+        {...listeners}
+        style={{ cursor: "grab", border: "none", background: "none", padding: 0 }}
+      >
         🟰
       </button>
-      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+      {header.isPlaceholder
+        ? null
+        : flexRender(header.column.columnDef.header, header.getContext())}
     </span>
   );
 };

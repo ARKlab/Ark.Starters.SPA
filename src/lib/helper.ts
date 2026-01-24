@@ -16,12 +16,12 @@ export const formatDateToString = (date: Date | null, dateFormat?: string) => {
   dateFormat ??= "yyyy-MM-dd";
 
   if (!date) return "";
-  
+
   // For ISO format, use the standard ECMAScript method
   if (dateFormat === "yyyy-MM-dd") {
     return formatISODate(date);
   }
-  
+
   // For other formats, use the format string helper
   return formatDateString(date, dateFormat);
 };
@@ -43,7 +43,9 @@ export const queryStringBuilder = ({ filters }: { filters: any }) => {
 };
 
 export const searchBuilder = ({ filters }: { filters: any }) => {
-  const parts = Object.keys(filters).map(key => builder({ key, data: filters, equator: "=", join: "&" }));
+  const parts = Object.keys(filters).map(key =>
+    builder({ key, data: filters, equator: "=", join: "&" }),
+  );
 
   const joined = parts.join("&");
 

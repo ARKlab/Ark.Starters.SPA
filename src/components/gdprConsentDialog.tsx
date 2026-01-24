@@ -21,7 +21,12 @@ import { Controller, useForm } from "react-hook-form";
 import { Trans, useTranslation } from "react-i18next";
 import { LuCookie } from "react-icons/lu";
 
-import { cookiePolicyHref, hasMarketingCookies, hasPreferencesCookies, hasStatisticsCookies } from "../config/gdpr";
+import {
+  cookiePolicyHref,
+  hasMarketingCookies,
+  hasPreferencesCookies,
+  hasStatisticsCookies,
+} from "../config/gdpr";
 import { LocaleSwitcher } from "../lib/i18n/localeSwitcher";
 import type { ConsentState } from "../lib/useGDPRConsent";
 import { useCookieConsent } from "../lib/useGDPRConsent";
@@ -51,7 +56,13 @@ function Option(props: OptionProps) {
           name={name}
           control={control}
           render={({ field }) => (
-            <Switch {...field} colorPalette="primary" size="lg" checked={field.value} readOnly={required} />
+            <Switch
+              {...field}
+              colorPalette="primary"
+              size="lg"
+              checked={field.value}
+              readOnly={required}
+            />
           )}
         />
       </Flex>
@@ -100,8 +111,9 @@ export const GdprConsentDialog = () => {
           <DialogBody>
             <Text>
               <Trans t={t} i18nKey="policy">
-                We and selected third parties use cookies or similar technologies for technical purposes and, with your
-                consent, for other purposes as specified in the <Link href={cookiePolicyHref}>cookie policy</Link>.
+                We and selected third parties use cookies or similar technologies for technical
+                purposes and, with your consent, for other purposes as specified in the{" "}
+                <Link href={cookiePolicyHref}>cookie policy</Link>.
               </Trans>
             </Text>
           </DialogBody>
@@ -158,10 +170,11 @@ export const GdprConsentDialog = () => {
             <VStack separator={<StackSeparator borderColor="fg.muted" />} gap={"4"} align="stretch">
               <Text>
                 <Trans t={t} i18nKey="customize">
-                  The options provided in this section allow you to customize your consent preferences for any tracking
-                  technology used for the purposes described below. To learn more about how these trackers help us and
-                  how they work, refer to the <Link href={cookiePolicyHref}>cookie policy</Link>. Please be aware that
-                  denying consent for a particular purpose may make related features unavailable.
+                  The options provided in this section allow you to customize your consent
+                  preferences for any tracking technology used for the purposes described below. To
+                  learn more about how these trackers help us and how they work, refer to the{" "}
+                  <Link href={cookiePolicyHref}>cookie policy</Link>. Please be aware that denying
+                  consent for a particular purpose may make related features unavailable.
                 </Trans>
               </Text>
               <Option

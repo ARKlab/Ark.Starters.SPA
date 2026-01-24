@@ -46,7 +46,9 @@ export const AppCheckBox: React.FC<CheckBoxProps> = ({
         </Checkbox.Control>
         <Checkbox.Label data-test="checkbox-label">{label ?? ""}</Checkbox.Label>
       </Checkbox.Root>
-      {fieldErrorText ? <Field.ErrorText data-test="checkbox-error">{fieldErrorText}</Field.ErrorText> : null}
+      {fieldErrorText ? (
+        <Field.ErrorText data-test="checkbox-error">{fieldErrorText}</Field.ErrorText>
+      ) : null}
     </Field.Root>
   );
 };

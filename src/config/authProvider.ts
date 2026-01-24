@@ -1,6 +1,9 @@
 /** Azure EntraId */
 /* */
-import { NoopAuthProvider, type AuthProvider } from "../lib/authentication/providers/authProviderInterface";
+import {
+  NoopAuthProvider,
+  type AuthProvider,
+} from "../lib/authentication/providers/authProviderInterface";
 import { MsalAuthProvider } from "../lib/authentication/providers/msalAuthProvider";
 
 import { appSettings } from "./env";

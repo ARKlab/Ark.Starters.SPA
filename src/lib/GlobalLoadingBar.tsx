@@ -30,7 +30,7 @@ export const GlobalLoadingBar = () => {
   // avoid starting the progress bar if requests take less than 500
   const debounced = useDebounce(loading, 500);
   return (
-    <Progress.Root size={"xs"} value={debounced ? null : 0} variant="subtle" >
+    <Progress.Root size={"xs"} value={debounced ? null : 0} variant="subtle">
       <Progress.Track bg={"header"}>
         <Progress.Range />
       </Progress.Track>

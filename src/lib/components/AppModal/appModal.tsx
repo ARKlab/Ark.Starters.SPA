@@ -2,7 +2,14 @@ import type { DialogContentProps } from "@chakra-ui/react";
 import { Box, Button, DialogHeader, Flex, Heading } from "@chakra-ui/react";
 import type { JSX } from "react";
 
-import { DialogBackdrop, DialogBody, DialogCloseTrigger, DialogContent, DialogFooter, DialogRoot } from "./dialog";
+import {
+  DialogBackdrop,
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogRoot,
+} from "./dialog";
 
 export const AppModal = (props: {
   open: boolean;
@@ -37,7 +44,12 @@ export const AppModal = (props: {
     );
   if (props.footerCloseButton) {
     footerCloseButton = (
-      <Button colorPalette="error" mr={"3"} onClick={props.onClose} data-test="appmodal-footer-close">
+      <Button
+        colorPalette="error"
+        mr={"3"}
+        onClick={props.onClose}
+        data-test="appmodal-footer-close"
+      >
         Close
       </Button>
     );

@@ -1,9 +1,8 @@
-
 {
-    "recommendations": [
-        "esbenp.prettier-vscode",
-        "dbaeumer.vscode-eslint",
-        "lokalise.i18n-ally",
-        "github.vscode-github-actions"
-    ]
+  "recommendations": [
+    "oxc.oxc-vscode",
+    "typescriptteam.native-preview",
+    "lokalise.i18n-ally",
+    "github.vscode-github-actions"
+  ]
 }

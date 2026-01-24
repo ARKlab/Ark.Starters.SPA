@@ -1,7 +1,4 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "local>ARKlab/renovate-config",
-    ":pinAllExceptPeerDependencies"
-  ]
+  "extends": ["local>ARKlab/renovate-config", ":pinAllExceptPeerDependencies"]
 }

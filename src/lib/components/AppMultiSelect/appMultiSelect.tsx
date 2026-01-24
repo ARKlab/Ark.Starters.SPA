@@ -1,5 +1,12 @@
 import { FieldLabel } from "@ark-ui/react";
-import { createListCollection, Portal, Select, Spinner, Text, type SelectValueChangeDetails } from "@chakra-ui/react";
+import {
+  createListCollection,
+  Portal,
+  Select,
+  Spinner,
+  Text,
+  type SelectValueChangeDetails,
+} from "@chakra-ui/react";
 
 export interface Item {
   label: string;
@@ -52,7 +59,10 @@ const AppMultiSelect: React.FC<MultiSelectProps> = ({
       )}
       <Select.Control data-test="appmultiselect-control">
         <Select.Trigger data-test="appmultiselect-trigger">
-          <Select.ValueText placeholder={placeholder ?? "Select a value..."} data-test="appmultiselect-value" />
+          <Select.ValueText
+            placeholder={placeholder ?? "Select a value..."}
+            data-test="appmultiselect-value"
+          />
           {isLoading && <Spinner size="sm" data-test="appmultiselect-loading-indicator" />}
         </Select.Trigger>
         <Select.IndicatorGroup>
@@ -63,7 +73,11 @@ const AppMultiSelect: React.FC<MultiSelectProps> = ({
         <Select.Positioner data-test="appmultiselect-positioner">
           <Select.Content zIndex="max" bg="bg" data-test="appmultiselect-content" data-state="open">
             {optionCollection.items.map(option => (
-              <Select.Item item={option} key={option.value} data-test={`appmultiselect-item-${option.value}`}>
+              <Select.Item
+                item={option}
+                key={option.value}
+                data-test={`appmultiselect-item-${option.value}`}
+              >
                 {option.label}
                 <Select.ItemIndicator data-test={`appmultiselect-item-indicator-${option.value}`} />
               </Select.Item>

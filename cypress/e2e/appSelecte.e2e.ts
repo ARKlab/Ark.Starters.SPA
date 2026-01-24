@@ -12,7 +12,10 @@ describe("AppSelect", () => {
   it("opens and selects option Bravo", () => {
     openBasic();
     cy.get("@openContent").find("[data-test='appselect-item-b']").first().click();
-    cy.get("[data-test='appselect-basic'] [data-test='appselect-value']").should("contain.text", "Bravo");
+    cy.get("[data-test='appselect-basic'] [data-test='appselect-value']").should(
+      "contain.text",
+      "Bravo",
+    );
     cy.get("[data-test='appselect-basic-value']").should("contain.text", "b");
   });
 
@@ -22,7 +25,10 @@ describe("AppSelect", () => {
       .find("[data-test='appselect-item-c']")
       .should("have.attr", "aria-disabled", "true")
       .click({ force: true });
-    cy.get("[data-test='appselect-basic'] [data-test='appselect-value']").should("not.contain.text", "Charlie");
+    cy.get("[data-test='appselect-basic'] [data-test='appselect-value']").should(
+      "not.contain.text",
+      "Charlie",
+    );
   });
 
   it("disabled select does not open", () => {

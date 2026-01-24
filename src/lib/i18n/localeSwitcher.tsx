@@ -1,12 +1,22 @@
 import { Button } from "@chakra-ui/react";
 import type { RefObject } from "react";
 import { useTranslation } from "react-i18next";
-import { LuChevronDown , LuGlobe } from "react-icons/lu";
+import { LuChevronDown, LuGlobe } from "react-icons/lu";
 
-import { MenuItemGroup, MenuTrigger, MenuContent, MenuItem, MenuRoot } from "../../components/ui/menu";
+import {
+  MenuItemGroup,
+  MenuTrigger,
+  MenuContent,
+  MenuItem,
+  MenuRoot,
+} from "../../components/ui/menu";
 import { supportedLngs } from "../../config/lang";
 
-export const LocaleSwitcher = ({ portalRef }: { portalRef?: React.RefObject<HTMLDivElement | null> }) => {
+export const LocaleSwitcher = ({
+  portalRef,
+}: {
+  portalRef?: React.RefObject<HTMLDivElement | null>;
+}) => {
   const { i18n } = useTranslation();
 
   const swith = async (k: string) => {

@@ -1,7 +1,13 @@
 import type { SelectContentProps, SelectRootProps, SelectTriggerProps } from "@chakra-ui/react";
 import { createListCollection, Field, FieldLabel, Spinner, Stack, Text } from "@chakra-ui/react";
 
-import { SelectContent, SelectItem, SelectRoot, SelectTrigger, SelectValueText } from "./baseSelectSnippets";
+import {
+  SelectContent,
+  SelectItem,
+  SelectRoot,
+  SelectTrigger,
+  SelectValueText,
+} from "./baseSelectSnippets";
 
 export interface AppSelectOptionItem {
   label: string | React.JSX.Element;
@@ -51,7 +57,12 @@ const AppSelect: React.FC<AppSelectProps> = ({
   const optionCollection = createListCollection({ items: options });
 
   return (
-    <Field.Root mr={title ? "0.5" : "0"} p={title ? "inherit" : "0"} m={title ? "inherit" : "0"} invalid={invalid}>
+    <Field.Root
+      mr={title ? "0.5" : "0"}
+      p={title ? "inherit" : "0"}
+      m={title ? "inherit" : "0"}
+      invalid={invalid}
+    >
       {title && (
         <FieldLabel data-test="appselect-label">
           <Text as="b" data-test="appselect-title">
@@ -97,7 +108,9 @@ const AppSelect: React.FC<AppSelectProps> = ({
           </SelectRoot>
         )}
       </Stack>
-      {fieldErrorText ? <Field.ErrorText data-test="appselect-error">{fieldErrorText}</Field.ErrorText> : null}
+      {fieldErrorText ? (
+        <Field.ErrorText data-test="appselect-error">{fieldErrorText}</Field.ErrorText>
+      ) : null}
     </Field.Root>
   );
 };

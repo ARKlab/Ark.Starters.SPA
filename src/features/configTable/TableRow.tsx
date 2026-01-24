@@ -5,7 +5,7 @@ import { LuTrash2 } from "react-icons/lu";
 
 import { Checkbox } from "../../components/ui/checkbox";
 
-import type { Employee } from "./configTable";
+import type { Employee } from "./employee";
 
 type TableRowProps = {
   control: Control<{ table: Employee[] }>;

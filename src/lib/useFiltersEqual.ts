@@ -4,7 +4,10 @@ import equal from "fast-deep-equal";
 /**
  * Custom hook to compare two filter states
  */
-export function useFiltersEqual(filtersA?: ColumnFiltersState, filtersB?: ColumnFiltersState): boolean {
+export function useFiltersEqual(
+  filtersA?: ColumnFiltersState,
+  filtersB?: ColumnFiltersState,
+): boolean {
   if (!filtersA && !filtersB) return true;
   if (!filtersA || !filtersB) return false;
   if (filtersA.length !== filtersB.length) return false;

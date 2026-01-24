@@ -17,18 +17,11 @@
     "awesome-copilot": {
       "type": "stdio",
       "command": "docker",
-      "args": [
-        "run",
-        "-i",
-        "--rm",
-        "ghcr.io/microsoft/mcp-dotnet-samples/awesome-copilot:latest"
-      ]
+      "args": ["run", "-i", "--rm", "ghcr.io/microsoft/mcp-dotnet-samples/awesome-copilot:latest"]
     },
     "playwright": {
       "command": "npx",
-      "args": [
-        "@playwright/mcp@latest"
-      ]
+      "args": ["@playwright/mcp@latest"]
     },
     "ado": {
       "type": "stdio",

@@ -1,6 +1,13 @@
 import { Box, Button, Center, HStack, Spinner, Table, VStack } from "@chakra-ui/react";
 import type { DragEndEvent } from "@dnd-kit/core";
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import {
   arrayMove,
   SortableContext,
@@ -46,7 +53,12 @@ import { getTableState, setTableState } from "./tableStateSlice";
 type ArkApiTableProps<T> = {
   columns: ColumnDef<T>[];
   useQueryHook: (
-    args: { pageIndex: number; pageSize: number; sorting: SortingState; filters: ColumnFiltersState },
+    args: {
+      pageIndex: number;
+      pageSize: number;
+      sorting: SortingState;
+      filters: ColumnFiltersState;
+    },
     options: { skip: boolean },
   ) => {
     data?: ListResponse<T>;
@@ -95,7 +107,9 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
   });
   const reduxTableState = useAppSelector(state => getTableState(state, tableKey));
   const filtersAreEquals = useFiltersEqual(reduxTableState?.filters, externalFiltersState);
-  const [sortingState, setSorting] = useState<SortingState>(defaultSorting ?? [{ id: "", desc: false }]);
+  const [sortingState, setSorting] = useState<SortingState>(
+    defaultSorting ?? [{ id: "", desc: false }],
+  );
   const [rowIndexSelection, setRowIndexSelection] = useState<RowSelectionState>(selectedRows ?? {}); //this is the state of the selected rows
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -120,19 +134,27 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
 
     if (!filtersAreEquals && tableKey) {
       reduxDispatchHook(
-        setTableState({ key: tableKey, tableState: storeFilters, overWrite: props.overWriteStore ?? true }),
+        setTableState({
+          key: tableKey,
+          tableState: storeFilters,
+          overWrite: props.overWriteStore ?? true,
+        }),
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columnFilters, pageIndex, pageSize, sortingState, tableKey]);
 
   const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(
-    columns.filter((x): x is ColumnDef<T> & { id: string } => x.id !== undefined).map(column => column.id), //must start out with populated columnOrder so we can splice
+    columns
+      .filter((x): x is ColumnDef<T> & { id: string } => x.id !== undefined)
+      .map(column => column.id), //must start out with populated columnOrder so we can splice
   );
 
   const resetOrder = () => {
     setColumnOrder(
-      columns.filter((x): x is ColumnDef<T> & { id: string } => x.id !== undefined).map(column => column.id),
+      columns
+        .filter((x): x is ColumnDef<T> & { id: string } => x.id !== undefined)
+        .map(column => column.id),
     );
   };
 
@@ -263,7 +285,11 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
                               <HStack gap="1">
                                 <Box>
                                   {isDraggable ? (
-                                    <DraggableColumnHeader key={header.id} header={header} table={table} />
+                                    <DraggableColumnHeader
+                                      key={header.id}
+                                      header={header}
+                                      table={table}
+                                    />
                                   ) : (
                                     flexRender(header.column.columnDef.header, header.getContext())
                                   )}
@@ -272,7 +298,11 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
                               </HStack>
                               <Box>
                                 {header.column.getCanFilter() && !disableHeaderFilters ? (
-                                  <Filter<T> column={header.column} table={table} isLoading={isFetching} />
+                                  <Filter<T>
+                                    column={header.column}
+                                    table={table}
+                                    isLoading={isFetching}
+                                  />
                                 ) : null}
                               </Box>
                             </VStack>
@@ -334,8 +364,8 @@ function Filter<T>({ column }: { column: Column<T>; table: ReactTable<T>; isLoad
     switch (column.columnDef.meta?.type) {
       case "string":
         return Array.from(columnFacetedUniqueValues.keys())
-          .sort()
-          .map(x => String(x));
+          .map(x => String(x))
+          .sort((a, b) => a.localeCompare(b));
       default:
         return [];
     }

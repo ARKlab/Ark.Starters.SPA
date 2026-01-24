@@ -34,7 +34,9 @@ npm run preview        # Preview production build
 npm run analyze        # Build with bundle analysis (generates build/stats.html)
 
 # Quality
-npm run lint           # ESLint check
+npm run lint           # oxlint check (type-aware)
+npm run format         # Format code with oxfmt
+npm run format:check   # Check formatting without changes
 npm test               # Run E2E tests (Cypress)
 
 # E2E - interactive loop (UI)
@@ -295,6 +297,63 @@ test(e2e): add tests for login flow
 **Types**: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`
 
 **Common scopes**: `auth`, `i18n`, `ui`, `routing`, `state`, `forms`, `tables`, `pwa`, `gdpr`, `api`, `config`, `deps`, `dx`, `a11y`, `e2e`
+
+#### 10. Code Formatting Style
+
+**Automated with oxfmt** - Run `npm run format` before committing.
+
+**Key formatting rules optimized for AI code generation:**
+
+```typescript
+// ✅ CORRECT - No semicolons (cleaner for AI generation)
+import { useState } from "react"
+import type { User } from "./types"
+
+export const MyComponent = () => {
+  const [count, setCount] = useState(0)
+  return <div>{count}</div>
+}
+
+// ✅ CORRECT - 2-space indentation
+const config = {
+  api: {
+    baseUrl: "https://api.example.com",
+    timeout: 5000,
+  },
+}
+
+// ✅ CORRECT - Trailing commas
+const items = [
+  "first",
+  "second",
+  "third",
+]
+
+// ❌ WRONG - 4-space indentation (inconsistent)
+const badConfig = {
+    indentation: "too wide"
+}
+
+// ❌ WRONG - Semicolons (unnecessary noise)
+import { Component } from "react";
+const value = 42;
+```
+
+**Formatting Configuration (.oxfmtrc.json):**
+
+- **indentWidth**: 2 spaces
+- **semi**: false (no semicolons)
+- **singleQuote**: false (double quotes)
+- **trailingComma**: "all"
+- **arrowParens**: "avoid"
+- **lineWidth**: 120
+
+**Why no semicolons?**
+
+- Reduces visual noise in AI-generated code
+- Cleaner import/export statements
+- Modern JavaScript ASI (Automatic Semicolon Insertion) handles edge cases
+- Aligns with popular frameworks (Svelte, Vue 3 composition API examples)
 
 ---
 

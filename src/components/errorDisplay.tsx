@@ -24,7 +24,15 @@ export const ParsedStackTrace = ({ stack }: { stack?: string }) => {
   return <CodeBlock>{v}</CodeBlock>;
 };
 
-export function ErrorDisplay({ name, message, stack }: { name?: string; message?: string; stack?: string }) {
+export function ErrorDisplay({
+  name,
+  message,
+  stack,
+}: {
+  name?: string;
+  message?: string;
+  stack?: string;
+}) {
   const { t } = useTranslation("template");
   return (
     <Box py="10" px="6">

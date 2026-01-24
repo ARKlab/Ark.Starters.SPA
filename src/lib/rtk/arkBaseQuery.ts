@@ -18,13 +18,13 @@ export interface ArkBaseQueryApiType<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   E = any,
 > extends Modify<
-    BaseQueryApi,
-    {
-      dispatch: D;
-      getState: () => S;
-      extra: E;
-    }
-  > {}
+  BaseQueryApi,
+  {
+    dispatch: D;
+    getState: () => S;
+    extra: E;
+  }
+> {}
 
 export type ArkBaseQueryFn<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -56,14 +56,20 @@ export type ArkBaseQueryError<BaseQuery extends ArkBaseQueryFn> = Exclude<
   }
 >["error"];
 
-export type ArkBaseQueryMeta<BaseQuery extends ArkBaseQueryFn> = UnwrapPromise<ReturnType<BaseQuery>>["meta"];
+export type ArkBaseQueryMeta<BaseQuery extends ArkBaseQueryFn> = UnwrapPromise<
+  ReturnType<BaseQuery>
+>["meta"];
 
-export type ArkBaseQueryExtraOptions<BaseQuery extends ArkBaseQueryFn> = NonNullable<Parameters<BaseQuery>[2]>;
+export type ArkBaseQueryExtraOptions<BaseQuery extends ArkBaseQueryFn> = NonNullable<
+  Parameters<BaseQuery>[2]
+>;
 
 export type ArkBaseQueryApi<BaseQuery extends ArkBaseQueryFn> = Parameters<BaseQuery>[1];
 
 // Helper types to avoid redundant type constituents
-type IntersectIfNotUnknown<Base, Additional> = [Additional] extends [unknown] ? Base : Base & Additional;
+type IntersectIfNotUnknown<Base, Additional> = [Additional] extends [unknown]
+  ? Base
+  : Base & Additional;
 type UnionIfObject<Base, Additional> = [Additional] extends [object] ? Base | Additional : Base;
 
 export type ArkBaseQueryEnhancer<
@@ -84,8 +90,15 @@ export type ArkBaseQueryEnhancer<
   ArkBaseQueryApi<BaseQuery>
 >;
 
-export const arkRetry: ArkBaseQueryEnhancer<unknown, RetryOptions, RetryOptions> = (baseQuery, retryConfig) => {
+export const arkRetry: ArkBaseQueryEnhancer<unknown, RetryOptions, RetryOptions> = (
+  baseQuery,
+  retryConfig,
+) => {
   const retryFn = retry(baseQuery, retryConfig);
   return (args, api, extraOptions) =>
-    retryFn(args, api, extraOptions ?? ({} as ArkBaseQueryExtraOptions<typeof baseQuery> & RetryOptions));
+    retryFn(
+      args,
+      api,
+      extraOptions ?? ({} as ArkBaseQueryExtraOptions<typeof baseQuery> & RetryOptions),
+    );
 };

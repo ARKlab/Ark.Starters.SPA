@@ -6,7 +6,12 @@ import { useLocation } from "react-router";
 import type { ArkSubRoute } from "../../../lib/siteMapTypes";
 import useRouteChanged from "../../../lib/useRouteChanged";
 import { siteMap } from "../../../siteMap/siteMap";
-import { AccordionItem, AccordionItemContent, AccordionItemTrigger, AccordionRoot } from "../../ui/accordion";
+import {
+  AccordionItem,
+  AccordionItemContent,
+  AccordionItemTrigger,
+  AccordionRoot,
+} from "../../ui/accordion";
 import {
   DrawerBackdrop,
   DrawerBody,
@@ -64,7 +69,10 @@ const SidebarContent = ({ ...rest }: BoxProps) => {
     <Box as={"nav"} {...rest}>
       <AccordionRoot collapsible multiple defaultValue={[defaultValue]}>
         {siteMap.map((section, index) => (
-          <AccordionItem value={section.label + "accordionItem" + index} key={section.label + "accordionItem" + index}>
+          <AccordionItem
+            value={section.label + "accordionItem" + index}
+            key={section.label + "accordionItem" + index}
+          >
             <h2>
               <AccordionItemTrigger
                 borderRadius="none"
@@ -100,7 +108,9 @@ const SidebarContent = ({ ...rest }: BoxProps) => {
 
 function doINeedAnInnerAccordion(section: ArkSubRoute) {
   return (
-    section.subsections && section.subsections.length > 0 && section.subsections.filter(x => x.isInMenu).length > 0
+    section.subsections &&
+    section.subsections.length > 0 &&
+    section.subsections.filter(x => x.isInMenu).length > 0
   );
 }
 
@@ -108,8 +118,18 @@ const InnerAccordionSections = (props: { section: ArkSubRoute; parentPath: strin
   const section = props.section;
   if (section.subsections)
     return (
-      <AccordionRoot collapsible multiple my="0" key={section.path + "accordion"} width={"full"} mx={"1"}>
-        <AccordionItem value={section.path + "AccordionItemInner"} key={section.path + "AccordionItemInner"}>
+      <AccordionRoot
+        collapsible
+        multiple
+        my="0"
+        key={section.path + "accordion"}
+        width={"full"}
+        mx={"1"}
+      >
+        <AccordionItem
+          value={section.path + "AccordionItemInner"}
+          key={section.path + "AccordionItemInner"}
+        >
           <h2>
             <AccordionItemTrigger
               borderRadius="none"

@@ -24,7 +24,9 @@ export function AppFilters<T extends object>(props: AppFiltersProps<T>) {
     .filter(([_, value]) => !!value)
     .map(([key, value]) => {
       const filterDef = filterDefinitions.find(f => f.id === key);
-      const displayValue = filterDef?.getDisplayValue ? filterDef.getDisplayValue(value) : (value?.toString() ?? "");
+      const displayValue = filterDef?.getDisplayValue
+        ? filterDef.getDisplayValue(value)
+        : (value?.toString() ?? "");
 
       return {
         filterId: key,
@@ -46,7 +48,11 @@ export function AppFilters<T extends object>(props: AppFiltersProps<T>) {
 
   return (
     <>
-      <ActiveFiltersBar filters={activeFilters} onRemoveFilter={onRemoveFilter} onClearAll={onClearAllFilters} />
+      <ActiveFiltersBar
+        filters={activeFilters}
+        onRemoveFilter={onRemoveFilter}
+        onClearAll={onClearAllFilters}
+      />
 
       <FilterSidebar<T>
         isOpen={isOpen}

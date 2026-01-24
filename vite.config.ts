@@ -8,10 +8,10 @@ import copy from "rollup-plugin-copy";
 import { visualizer } from "rollup-plugin-visualizer";
 import Info from "unplugin-info/vite";
 import { defineConfig, loadEnv } from "vite";
-import eslint from "vite-plugin-eslint2";
 import { i18nAlly } from "vite-plugin-i18n-ally";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import istanbul from "vite-plugin-istanbul";
+import oxlint from "vite-plugin-oxlint";
 import { VitePWA } from "vite-plugin-pwa";
 import { reactClickToComponent } from "vite-plugin-react-click-to-component";
 import svgr from "vite-plugin-svgr";
@@ -56,7 +56,12 @@ export default defineConfig(({ mode }) => {
       reactClickToComponent(),
       VitePWA({
         disable: mode == "e2e", // disable PWA in e2e mode due to conflict with MSW (only 1 ServiceWorker can be registered)
-        pwaAssets: { disabled: false, config: true, htmlPreset: "2023", overrideManifestIcons: true },
+        pwaAssets: {
+          disabled: false,
+          config: true,
+          htmlPreset: "2023",
+          overrideManifestIcons: true,
+        },
         workbox: {
           maximumFileSizeToCacheInBytes: chunkSizeLimit * 1024,
           globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
@@ -100,15 +105,8 @@ export default defineConfig(({ mode }) => {
         hook: "buildStart",
       }),
       i18nAlly(),
-      eslint({
-        fix: true,
-        build: true,
-        lintOnStart: mode != "e2e",
-        lintInWorker: mode == "development",
-        cache: true,
-        cacheLocation: "node_modules/.cache/.eslintcache",
-        exclude: ["**/node_modules/**", "**/build/**", "**/public/**", "**/dev-dist/**", "virtual:**"],
-        include: ["./src/**/*.{ts,tsx}"],
+      oxlint({
+        path: "src",
       }),
       istanbul({
         cypress: true,
@@ -135,7 +133,14 @@ export default defineConfig(({ mode }) => {
       // since parsing CSS is slow
       css: true,
 
-      exclude: ["**/node_modules/**", "**/build/**", "**/public/**", "**/dev-dist/**", "virtual:**", "**/cypress/**"],
+      exclude: [
+        "**/node_modules/**",
+        "**/build/**",
+        "**/public/**",
+        "**/dev-dist/**",
+        "virtual:**",
+        "**/cypress/**",
+      ],
     },
     build: {
       emptyOutDir: true,
@@ -146,7 +151,12 @@ export default defineConfig(({ mode }) => {
         output: {
           manualChunks: {
             react: ["react", "react-router", "react-dom", "react-error-boundary"],
-            rtk: ["@reduxjs/toolkit", "@reduxjs/toolkit/query", "@reduxjs/toolkit/react", "react-redux"],
+            rtk: [
+              "@reduxjs/toolkit",
+              "@reduxjs/toolkit/query",
+              "@reduxjs/toolkit/react",
+              "react-redux",
+            ],
             chakra: ["@chakra-ui/react", "@emotion/react"],
             i18n: ["i18next", "react-i18next", "@semihbou/zod-i18n-map"],
             hookForm: ["react-hook-form", "@hookform/resolvers"],

@@ -1,7 +1,7 @@
 import { delay, http, HttpResponse } from "msw";
 import { z } from "zod";
 
-import type { Employee } from "./configTable";
+import type { Employee } from "./employee";
 
 export const url = "https://config.api";
 

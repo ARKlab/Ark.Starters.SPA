@@ -53,4 +53,5 @@ export const videoGameApiSlice = createApi({
   }),
 });
 
-export const { useGetVideoGamesQuery, useInsertNewVideoGameMutation, useGetVideoGamesGenresQuery } = videoGameApiSlice;
+export const { useGetVideoGamesQuery, useInsertNewVideoGameMutation, useGetVideoGamesGenresQuery } =
+  videoGameApiSlice;

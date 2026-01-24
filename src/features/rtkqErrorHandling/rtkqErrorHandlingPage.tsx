@@ -1,13 +1,33 @@
-import { Box, Button, createListCollection, Heading, Stack, Text, Wrap, WrapItem } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  createListCollection,
+  Heading,
+  Stack,
+  Text,
+  Wrap,
+  WrapItem,
+} from "@chakra-ui/react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LuX } from "react-icons/lu";
 
 import CenterSpinner from "../../components/centerSpinner";
 import CodeBlock from "../../components/codeBlock";
-import { SelectContent, SelectItem, SelectRoot, SelectTrigger, SelectValueText } from "../../components/ui/select";
+import {
+  SelectContent,
+  SelectItem,
+  SelectRoot,
+  SelectTrigger,
+  SelectValueText,
+} from "../../components/ui/select";
 
-import { useDownloadMutation, useGetQuery, usePostMutation, type ResultOption } from "./rtkqErrorHandlingApi";
+import {
+  useDownloadMutation,
+  useGetQuery,
+  usePostMutation,
+  type ResultOption,
+} from "./rtkqErrorHandlingApi";
 
 const GetResult = ({ option }: { option: ResultOption }) => {
   const { data, error, isFetching } = useGetQuery(option);
@@ -39,10 +59,14 @@ const PostResult = ({ option }: { option: ResultOption }) => {
           </Button>
         </Box>
         {result.data ? (
-          <CodeBlock data-test="mutation-results-data">{JSON.stringify(result.data, null, 2)}</CodeBlock>
+          <CodeBlock data-test="mutation-results-data">
+            {JSON.stringify(result.data, null, 2)}
+          </CodeBlock>
         ) : null}
         {result.error ? (
-          <CodeBlock data-test="mutation-results-error">{JSON.stringify(result.error, null, 2)}</CodeBlock>
+          <CodeBlock data-test="mutation-results-error">
+            {JSON.stringify(result.error, null, 2)}
+          </CodeBlock>
         ) : null}
       </Stack>
     </>
@@ -79,7 +103,9 @@ const Download = () => {
         </WrapItem>
       </Wrap>
 
-      {error ? <CodeBlock data-test="mutation-download-error">{JSON.stringify(error, null, 2)}</CodeBlock> : null}
+      {error ? (
+        <CodeBlock data-test="mutation-download-error">{JSON.stringify(error, null, 2)}</CodeBlock>
+      ) : null}
     </>
   );
 };

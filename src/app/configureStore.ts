@@ -75,4 +75,9 @@ export type ExtraType = {
 export type AppStore = ReturnType<typeof initStore>;
 // Infer the `AppDispatch` type from the store itself
 export type AppDispatch = AppStore["dispatch"];
-export type AppThunk<ThunkReturnType = void> = ThunkAction<ThunkReturnType, AppState, ExtraType, Action>;
+export type AppThunk<ThunkReturnType = void> = ThunkAction<
+  ThunkReturnType,
+  AppState,
+  ExtraType,
+  Action
+>;

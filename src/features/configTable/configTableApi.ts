@@ -2,7 +2,7 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 
 import { appFetchQuery } from "../../app/appFetchQuery";
 
-import type { Employee } from "./configTable";
+import type { Employee } from "./employee";
 
 export const configTableApiSlice = createApi({
   reducerPath: "configTableApi",

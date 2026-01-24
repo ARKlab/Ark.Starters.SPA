@@ -3,7 +3,14 @@ import { z } from "zod";
 
 import { appFetchQuery } from "../../app/appFetchQuery";
 
-export type ResultOption = "200" | "400" | "429" | "500" | "Error" | "200WithWrongSchema" | "Timeout";
+export type ResultOption =
+  | "200"
+  | "400"
+  | "429"
+  | "500"
+  | "Error"
+  | "200WithWrongSchema"
+  | "Timeout";
 
 export const rtkqErrorHandlingApi = createApi({
   reducerPath: "rtkqErrorHandlingApi",

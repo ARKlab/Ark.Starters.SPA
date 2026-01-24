@@ -48,14 +48,21 @@ export const simulatedArkQueryWithParams = (params: ArkPagedQueryParameters) => 
         const movieValue = movie[columnFilter.id as keyof Movie];
         if (columnFilter.id === "releaseDate" && Array.isArray(columnFilter.value)) {
           const releaseDate = new Date(movieValue as string);
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          const filterStartDate = columnFilter.value[0] ? new Date(columnFilter.value[0]).toISOString() : null;
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          const filterEndDate = columnFilter.value[1] ? new Date(columnFilter.value[1]).toISOString() : null;
+          const filterStartDate = columnFilter.value[0]
+            ? // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+              new Date(columnFilter.value[0]).toISOString()
+            : null;
+          const filterEndDate = columnFilter.value[1]
+            ? // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+              new Date(columnFilter.value[1]).toISOString()
+            : null;
 
           if (filterStartDate && filterEndDate) {
             // Both dates are specified, check if release date is within the range
-            return releaseDate.toISOString() >= filterStartDate && releaseDate.toISOString() <= filterEndDate;
+            return (
+              releaseDate.toISOString() >= filterStartDate &&
+              releaseDate.toISOString() <= filterEndDate
+            );
           } else if (filterStartDate) {
             // If only the filter start date is specified, check if the release date is greater than or equal to it
             return releaseDate.toISOString() >= filterStartDate;
@@ -76,9 +83,9 @@ export const simulatedArkQueryWithParams = (params: ArkPagedQueryParameters) => 
       for (const sort of sorting) {
         const aVal = a[sort.id as keyof Movie];
         const bVal = b[sort.id as keyof Movie];
-        
+
         if (aVal === bVal) continue;
-        
+
         const comparison = aVal > bVal ? 1 : -1;
         return sort.desc ? -comparison : comparison;
       }

@@ -8,12 +8,12 @@
 
 ## Priority Matrix
 
-| Priority | Impact | Effort | Risk | Focus |
-|----------|--------|--------|------|-------|
-| P0 | High | Low | Low | Quick wins |
-| P1 | High | Medium | Low-Medium | Core optimizations |
-| P2 | Medium | Medium | Medium | Nice to have |
-| P3 | Low | Any | Any | Future consideration |
+| Priority | Impact | Effort | Risk       | Focus                |
+| -------- | ------ | ------ | ---------- | -------------------- |
+| P0       | High   | Low    | Low        | Quick wins           |
+| P1       | High   | Medium | Low-Medium | Core optimizations   |
+| P2       | Medium | Medium | Medium     | Nice to have         |
+| P3       | Low    | Any    | Any        | Future consideration |
 
 ---
 
@@ -28,6 +28,7 @@
 **Current Issue:** Using `defaultConfig` which includes ALL component recipes and theme tokens.
 
 **Solution:**
+
 ```typescript
 // ❌ BEFORE (src/theme.ts)
 import { createSystem, defaultConfig } from "@chakra-ui/react";
@@ -54,7 +55,9 @@ const theme = createSystem(defaultBaseConfig, {
 ```
 
 **Implementation Steps:**
+
 1. Analyze which Chakra components are actually used:
+
    ```bash
    grep -r "from \"@chakra-ui/react\"" src --include="*.tsx" | \
    sed 's/.*import.*{\(.*\)}.*/\1/' | \
@@ -85,16 +88,18 @@ const theme = createSystem(defaultBaseConfig, {
 **Current Issue:** `package.json` missing `sideEffects` declaration, limiting tree-shaking.
 
 **Solution:**
+
 ```json
 // package.json
 {
   "name": "ark.starters.spa",
-  "sideEffects": false,
+  "sideEffects": false
   // ... rest of config
 }
 ```
 
 **Implementation:**
+
 1. Add `"sideEffects": false` to package.json
 2. Test thoroughly to ensure no side-effect code is removed
 3. If issues arise, whitelist specific files:
@@ -130,7 +135,9 @@ const memoizedCallback = () => doSomething();
 ```
 
 **Implementation:**
+
 1. Search for all useMemo/useCallback:
+
    ```bash
    grep -r "useMemo\|useCallback" src --include="*.tsx" --include="*.ts"
    ```
@@ -160,26 +167,26 @@ const memoizedCallback = () => doSomething();
 
 ```typescript
 // ❌ BEFORE (src/config/authProvider.ts)
-import { Auth0Provider } from './lib/authentication/providers/auth0Provider';
-import { MsalProvider } from './lib/authentication/providers/msalProvider';
+import { Auth0Provider } from "./lib/authentication/providers/auth0Provider";
+import { MsalProvider } from "./lib/authentication/providers/msalProvider";
 
-export const authProvider = settings.authType === 'auth0' 
-  ? new Auth0Provider(settings) 
-  : new MsalProvider(settings);
+export const authProvider =
+  settings.authType === "auth0" ? new Auth0Provider(settings) : new MsalProvider(settings);
 
 // ✅ AFTER
 export async function getAuthProvider(settings: AppSettings): Promise<AuthProvider> {
-  if (settings.authType === 'auth0') {
-    const { Auth0Provider } = await import('./lib/authentication/providers/auth0Provider');
+  if (settings.authType === "auth0") {
+    const { Auth0Provider } = await import("./lib/authentication/providers/auth0Provider");
     return new Auth0Provider(settings);
   } else {
-    const { MsalProvider } = await import('./lib/authentication/providers/msalProvider');
+    const { MsalProvider } = await import("./lib/authentication/providers/msalProvider");
     return new MsalProvider(settings);
   }
 }
 ```
 
 **Implementation:**
+
 1. Convert `authProvider` to async function
 2. Update `initGlobals.tsx` to await provider initialization:
    ```typescript
@@ -215,7 +222,7 @@ const sliceReducers = combineSlices(
 );
 
 // ✅ AFTER - Use reducer injection
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 // Base store with only essential slices
 const baseSliceReducers = combineSlices(
@@ -227,22 +234,22 @@ const baseSliceReducers = combineSlices(
 
 // In feature components, inject reducers dynamically:
 // src/features/configTable/configTableExample.tsx
-import { useEffect } from 'react';
-import { useAppDispatch } from '@/app/hooks';
+import { useEffect } from "react";
+import { useAppDispatch } from "@/app/hooks";
 
 export function ConfigTableExample() {
   const dispatch = useAppDispatch();
-  
+
   useEffect(() => {
-    import('./configTableApi').then(({ configTableApiSlice }) => {
+    import("./configTableApi").then(({ configTableApiSlice }) => {
       // Inject reducer if not already present
       if (!store.asyncReducers?.configTableApi) {
-        store.injectReducer('configTableApi', configTableApiSlice.reducer);
+        store.injectReducer("configTableApi", configTableApiSlice.reducer);
         dispatch(configTableApiSlice.middleware);
       }
     });
   }, [dispatch]);
-  
+
   // Component logic
 }
 ```
@@ -250,20 +257,21 @@ export function ConfigTableExample() {
 **Alternative Simpler Approach:**
 
 Use React.lazy for feature bundles:
+
 ```typescript
 // src/app/routes.tsx
-const ConfigTablePage = lazy(() => import('@/features/configTable/configTableExample'));
-const MoviesPage = lazy(() => import('@/features/paginatedTable/moviePage'));
+const ConfigTablePage = lazy(() => import("@/features/configTable/configTableExample"));
+const MoviesPage = lazy(() => import("@/features/paginatedTable/moviePage"));
 ```
 
 Each lazy-loaded route component imports its own API slice, automatically code-splitting it.
 
 **Implementation:**
+
 1. **Option A (Advanced):** Implement dynamic reducer injection
    - Add `injectReducer` method to store
    - Update each feature to inject its own API slice
    - Remove imports from configureStore.ts
-   
 2. **Option B (Simpler - RECOMMENDED):** Rely on existing lazy loading
    - Verify all route-level components use React.lazy
    - Move API slice imports closer to component usage
@@ -301,6 +309,7 @@ const AppInsightsProvider = appSettings.applicationInsights
 ```
 
 **Implementation:**
+
 1. Wrap Application Insights imports in dynamic import
 2. Create stub/no-op provider when not configured
 3. Update `main.tsx` to use conditional provider
@@ -333,7 +342,9 @@ export const InfoIcon = () => (
 ```
 
 **Implementation:**
+
 1. Audit all react-icons usage:
+
    ```bash
    grep -r "from \"react-icons" src --include="*.tsx"
    ```
@@ -361,17 +372,20 @@ export const InfoIcon = () => (
 **Solution:**
 
 Consider lighter alternatives:
+
 - **Sentry Browser SDK:** ~60KB (vs 200KB for App Insights)
 - **OpenTelemetry Web:** Modular, pay-for-what-you-use
 - **Native Browser APIs:** Performance API + Error boundaries (0KB)
 
 **Implementation:**
+
 1. Research team requirements for monitoring/analytics
 2. If only error tracking needed, consider Sentry
 3. If full telemetry needed but willing to self-host, try OpenTelemetry
 4. If minimal needs, use native APIs with custom reporting
 
 **Decision Criteria:**
+
 - Do you need auto-instrumentation? → Keep App Insights
 - Only error tracking? → Switch to Sentry
 - Custom telemetry? → OpenTelemetry or native APIs
@@ -385,6 +399,7 @@ Consider lighter alternatives:
 **Current Issue:** TanStack Table in common chunk (bundled with all pages).
 
 **Analysis:**
+
 ```bash
 grep -r "@tanstack/react-table" src --include="*.tsx"
 ```
@@ -392,14 +407,17 @@ grep -r "@tanstack/react-table" src --include="*.tsx"
 **Solution:**
 
 If used in <5 places:
+
 - Consider simpler table implementation for basic cases
 - Keep TanStack for complex tables only
 - Code-split table-heavy features
 
 If used extensively:
+
 - Current approach is optimal
 
 **Implementation:**
+
 1. Count actual usage of TanStack Table
 2. Evaluate if simple tables could use native `<table>`
 3. Move complex table features to lazy-loaded routes
@@ -422,14 +440,14 @@ export default defineConfig({
       output: {
         manualChunks: {
           // Separate vendors by frequency of change
-          'react-core': ['react', 'react-dom', 'react-router'],
-          'state': ['@reduxjs/toolkit', 'react-redux'],
-          'ui-chakra': ['@chakra-ui/react', '@emotion/react'],
-          'ui-icons': ['react-icons/lu'], // After consolidating
-          'i18n': ['i18next', 'react-i18next'],
-          'forms': ['react-hook-form', '@hookform/resolvers', 'zod'],
-          'tables': ['@tanstack/react-table'], // If kept
-          'utils': ['date-fns', '@dnd-kit/core', '@dnd-kit/sortable'],
+          "react-core": ["react", "react-dom", "react-router"],
+          state: ["@reduxjs/toolkit", "react-redux"],
+          "ui-chakra": ["@chakra-ui/react", "@emotion/react"],
+          "ui-icons": ["react-icons/lu"], // After consolidating
+          i18n: ["i18next", "react-i18next"],
+          forms: ["react-hook-form", "@hookform/resolvers", "zod"],
+          tables: ["@tanstack/react-table"], // If kept
+          utils: ["date-fns", "@dnd-kit/core", "@dnd-kit/sortable"],
         },
       },
     },
@@ -438,6 +456,7 @@ export default defineConfig({
 ```
 
 **Implementation:**
+
 1. Update manual chunks configuration
 2. Analyze bundle to verify optimal splitting
 3. Test caching effectiveness with version updates
@@ -451,6 +470,7 @@ export default defineConfig({
 **Current Issue:** Legacy polyfills add 65KB.
 
 **Analysis:**
+
 - Check analytics for browser versions
 - Modern browsers (Chrome 90+, Firefox 88+, Safari 14+) are 95%+ in 2025
 
@@ -463,7 +483,7 @@ legacy({
   modernTargets: [
     // Tighten requirements further
     'chrome>=100',
-    'firefox>=100', 
+    'firefox>=100',
     'safari>=15',
     'edge>=100',
   ],
@@ -472,6 +492,7 @@ legacy({
 ```
 
 **Implementation:**
+
 1. Review browser analytics
 2. Discuss with stakeholders
 3. Update browserslist if approved
@@ -492,11 +513,13 @@ legacy({
 **Description:** Eject Chakra theme for complete control.
 
 **When:**
+
 - After exhausting other optimizations
 - If need <100KB Chakra bundle
 - Team comfortable maintaining custom theme
 
 **Process:**
+
 ```bash
 npx @chakra-ui/cli eject
 ```
@@ -511,6 +534,7 @@ npx @chakra-ui/cli eject
 **Current:** date-fns 4.1.0 (minimal usage, well tree-shaken)
 
 **Alternatives:**
+
 - Native `Intl.DateTimeFormat` (0KB)
 - Temporal API (when available)
 - Keep date-fns (currently optimal)
@@ -524,6 +548,7 @@ npx @chakra-ui/cli eject
 **When:** If app grows to 50+ routes
 
 **Approach:**
+
 - Split into separate apps by domain
 - Use module federation
 - Independent deployment
@@ -536,6 +561,7 @@ npx @chakra-ui/cli eject
 ## Implementation Checklist
 
 ### Before Starting
+
 - [ ] Create feature branch: `optimize/bundle-size`
 - [ ] Set up bundle analyzer in CI:
   ```bash
@@ -545,6 +571,7 @@ npx @chakra-ui/cli eject
 - [ ] Communicate plan to team
 
 ### Phase 1 (Quick Wins)
+
 - [ ] Optimize Chakra UI config (2.1)
 - [ ] Add sideEffects declaration (2.2)
 - [ ] Remove manual memoization (2.3)
@@ -554,6 +581,7 @@ npx @chakra-ui/cli eject
 - [ ] Merge to main
 
 ### Phase 2 (Core)
+
 - [ ] Dynamic auth provider loading (3.1)
 - [ ] Lazy load Redux slices (3.2)
 - [ ] Conditional App Insights (3.3)
@@ -564,6 +592,7 @@ npx @chakra-ui/cli eject
 - [ ] Merge to main
 
 ### Phase 3 (Advanced)
+
 - [ ] Evaluate monitoring alternatives (4.1)
 - [ ] Review table library usage (4.2)
 - [ ] Optimize Vite config (4.3)
@@ -578,23 +607,24 @@ npx @chakra-ui/cli eject
 
 ### Bundle Size Targets
 
-| Metric | Before | Target | Stretch |
-|--------|--------|--------|---------|
-| Total Gzipped | 513KB | 300KB | 250KB |
-| Largest Chunk | 628KB | 300KB | 200KB |
-| Initial Load | 1.4MB | 800KB | 600KB |
+| Metric        | Before | Target | Stretch |
+| ------------- | ------ | ------ | ------- |
+| Total Gzipped | 513KB  | 300KB  | 250KB   |
+| Largest Chunk | 628KB  | 300KB  | 200KB   |
+| Initial Load  | 1.4MB  | 800KB  | 600KB   |
 
 ### Performance Targets
 
-| Metric | Before | Target | Stretch |
-|--------|--------|--------|---------|
-| TTI (3G) | 7-8s | 4s | 3s |
-| FCP | 2-3s | 1.5s | 1s |
-| Bundle Parse | 800ms | 400ms | 300ms |
+| Metric       | Before | Target | Stretch |
+| ------------ | ------ | ------ | ------- |
+| TTI (3G)     | 7-8s   | 4s     | 3s      |
+| FCP          | 2-3s   | 1.5s   | 1s      |
+| Bundle Parse | 800ms  | 400ms  | 300ms   |
 
 ### Measurement
 
 Use Lighthouse CI:
+
 ```bash
 npm install -g @lhci/cli
 lhci autorun --config=lighthouserc.json
@@ -607,6 +637,7 @@ Track over time in CI/CD pipeline.
 ## Risk Mitigation
 
 ### Testing Strategy
+
 1. **Unit Tests:** Verify functionality unchanged
 2. **E2E Tests:** Run full Cypress suite
 3. **Manual Testing:** Test all auth flows
@@ -614,12 +645,14 @@ Track over time in CI/CD pipeline.
 5. **Bundle Analysis:** Compare at each phase
 
 ### Rollback Plan
+
 1. Keep Git tags at each phase
 2. Feature flags for risky changes
 3. Gradual rollout (10% → 50% → 100%)
 4. Monitor error rates in production
 
 ### Communication
+
 - Weekly updates on progress
 - Demo size improvements to stakeholders
 - Document any breaking changes
@@ -629,17 +662,20 @@ Track over time in CI/CD pipeline.
 ## Resources & References
 
 ### Documentation
+
 - Chakra UI Optimization: https://next.chakra-ui.com/guides/component-bundle-optimization
 - Vite Performance: https://vite.dev/guide/performance
 - React 19 Compiler: https://react.dev/learn/react-compiler
 - Tree Shaking Guide: https://webpack.js.org/guides/tree-shaking/
 
 ### Tools
+
 - Bundle Analyzer: Already configured (`npm run analyze`)
 - Lighthouse CI: For performance tracking
 - webpack-bundle-analyzer: Alternative visualization
 
 ### Community Examples
+
 - Next.js Performance: https://nextjs.org/docs/app/building-your-application/optimizing
 - Vercel Analytics: https://vercel.com/analytics
 
@@ -693,6 +729,7 @@ Create incremental PRs for review:
    - Update Vite config
 
 Each PR should:
+
 - Show bundle size comparison
 - Include performance metrics
 - Pass all tests

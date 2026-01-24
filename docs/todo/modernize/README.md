@@ -16,6 +16,7 @@ This directory contains a comprehensive analysis and implementation plan for red
 ## 📊 Key Findings
 
 ### Current State
+
 - **Total Bundle Size:** ~513KB gzipped (1.66MB uncompressed)
 - **Largest Chunks:**
   - Chakra UI: 628KB (175KB gzipped) - 38% of total
@@ -24,6 +25,7 @@ This directory contains a comprehensive analysis and implementation plan for red
 - **Main Issues:** Inefficient library imports, eager loading, lack of optimization hints
 
 ### Target State
+
 - **Target Bundle Size:** ~250-300KB gzipped (50% reduction)
 - **Target TTI:** ~3-4 seconds on 3G (60% improvement)
 - **Implementation Time:** 2-3 sprints
@@ -34,7 +36,9 @@ This directory contains a comprehensive analysis and implementation plan for red
 ## 📁 Documents
 
 ### 1. [IMPLEMENTATION_TRACKING.md](./IMPLEMENTATION_TRACKING.md) ⭐ NEW
+
 **Real-time implementation progress tracker:**
+
 - Task-by-task checklist with status
 - Verifiable success criteria for each task
 - Actual vs expected results tracking
@@ -44,7 +48,9 @@ This directory contains a comprehensive analysis and implementation plan for red
 **Use this** to track implementation progress and record results.
 
 ### 2. [BUNDLE_ANALYSIS.md](./BUNDLE_ANALYSIS.md)
+
 **Comprehensive bundle analysis including:**
+
 - Detailed breakdown of all bundle components
 - Identification of size culprits (Chakra UI, Redux, Auth, App Insights)
 - Tree-shaking assessment (what works, what doesn't)
@@ -55,7 +61,9 @@ This directory contains a comprehensive analysis and implementation plan for red
 **Read this first** to understand the current state and issues.
 
 ### 3. [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)
+
 **Step-by-step implementation guide with:**
+
 - 4 phases of optimization (Quick Wins → Core → Advanced → Future)
 - Detailed code examples for each optimization
 - Expected savings for each change
@@ -72,6 +80,7 @@ This directory contains a comprehensive analysis and implementation plan for red
 If you only have time for the highest-impact changes:
 
 ### 1. Optimize Chakra UI Config (P0)
+
 **Impact:** 80-120KB savings  
 **Effort:** 2-4 hours  
 **Risk:** Low
@@ -79,10 +88,11 @@ If you only have time for the highest-impact changes:
 Switch from `defaultConfig` to `defaultBaseConfig` and import only needed component recipes.
 
 **How to add more components:**
+
 ```typescript
 // src/theme.ts - Add import at top
-import { 
-  buttonRecipe, 
+import {
+  buttonRecipe,
   inputRecipe,
   // Add new recipe imports here as you use components:
   selectRecipe,
@@ -110,6 +120,7 @@ const theme = createSystem(defaultBaseConfig, {
 → See [Implementation Plan §1.1](./IMPLEMENTATION_PLAN.md#11-optimize-chakra-ui-configuration)
 
 ### 2. Dynamic Auth Provider Loading (P1)
+
 **Impact:** 60-80KB savings  
 **Effort:** 4-6 hours  
 **Risk:** Low
@@ -119,6 +130,7 @@ Load only the authentication provider that's actually used (Auth0 OR MSAL, not b
 → See [Implementation Plan §2.1](./IMPLEMENTATION_PLAN.md#21-dynamic-authentication-provider-loading)
 
 ### 3. Conditional App Insights (P1)
+
 **Impact:** 80-120KB savings  
 **Effort:** 3-4 hours  
 **Risk:** Low-Medium
@@ -128,6 +140,7 @@ Lazy load Application Insights only when configured.
 → See [Implementation Plan §2.3](./IMPLEMENTATION_PLAN.md#23-conditional-application-insights-loading)
 
 ### 4. Add sideEffects Declaration (P0)
+
 **Impact:** 20-40KB savings  
 **Effort:** 15 minutes  
 **Risk:** Very Low
@@ -137,6 +150,7 @@ Add `"sideEffects": false` to package.json to improve tree-shaking.
 → See [Implementation Plan §1.2](./IMPLEMENTATION_PLAN.md#12-add-sideeffects-declaration)
 
 ### 5. Lazy Load Redux Slices (P1)
+
 **Impact:** 40-60KB savings  
 **Effort:** 6-8 hours  
 **Risk:** Medium
@@ -153,20 +167,20 @@ Move Redux API slices from eager to lazy loading.
 
 ### Bundle Size Reduction
 
-| Phase | Changes | Savings (gzipped) | Cumulative | % of Target |
-|-------|---------|-------------------|------------|-------------|
-| Phase 1 | Chakra + sideEffects + cleanup | 150-200KB | 150-200KB | 60-80% |
-| Phase 2 | Dynamic imports + optimization | 200-300KB | 350-500KB | 100%+ |
-| Phase 3 | Advanced optimizations | 100-150KB | 450-650KB | 150%+ |
+| Phase   | Changes                        | Savings (gzipped) | Cumulative | % of Target |
+| ------- | ------------------------------ | ----------------- | ---------- | ----------- |
+| Phase 1 | Chakra + sideEffects + cleanup | 150-200KB         | 150-200KB  | 60-80%      |
+| Phase 2 | Dynamic imports + optimization | 200-300KB         | 350-500KB  | 100%+       |
+| Phase 3 | Advanced optimizations         | 100-150KB         | 450-650KB  | 150%+       |
 
 ### Performance Improvement
 
-| Metric | Before | After P1 | After P2 | Improvement |
-|--------|--------|----------|----------|-------------|
-| Bundle (gzipped) | 513KB | 350KB | 250KB | 51% |
-| TTI (3G) | 7-8s | 5s | 3-4s | 50-57% |
-| Parse Time | 800ms | 500ms | 300ms | 62% |
-| FCP | 2-3s | 1.5s | 1s | 50-67% |
+| Metric           | Before | After P1 | After P2 | Improvement |
+| ---------------- | ------ | -------- | -------- | ----------- |
+| Bundle (gzipped) | 513KB  | 350KB    | 250KB    | 51%         |
+| TTI (3G)         | 7-8s   | 5s       | 3-4s     | 50-57%      |
+| Parse Time       | 800ms  | 500ms    | 300ms    | 62%         |
+| FCP              | 2-3s   | 1.5s     | 1s       | 50-67%      |
 
 ---
 
@@ -175,31 +189,36 @@ Move Redux API slices from eager to lazy loading.
 ### Recommended Path
 
 **Week 1: Quick Wins (Phase 1)**
+
 - Day 1-2: Chakra UI optimization
 - Day 2-3: Add sideEffects, remove manual memoization
 - Day 3-4: Test and validate
 - Day 5: Deploy and monitor
 
 **Week 2: Core Optimizations Part 1 (Phase 2)**
+
 - Day 1-2: Dynamic auth provider loading
 - Day 3-4: Conditional App Insights loading
 - Day 5: Test and validate
 
 **Week 3: Core Optimizations Part 2 (Phase 2)**
+
 - Day 1-2: Lazy load Redux slices
 - Day 3: Optimize react-icons
 - Day 4-5: Test, validate, deploy
 
 **Week 4+: Advanced (Phase 3) - As needed**
+
 - Evaluate based on results from Phases 1-2
 - Implement remaining optimizations if targets not met
 
 ### Feature Flags
 
 For risky changes, use feature flags:
+
 ```typescript
 // Example: Gradual rollout of optimizations
-const useOptimizedChakra = import.meta.env.VITE_OPTIMIZED_CHAKRA === 'true';
+const useOptimizedChakra = import.meta.env.VITE_OPTIMIZED_CHAKRA === "true";
 ```
 
 ---
@@ -207,6 +226,7 @@ const useOptimizedChakra = import.meta.env.VITE_OPTIMIZED_CHAKRA === 'true';
 ## ✅ Success Criteria
 
 ### Must Have (Phase 1-2)
+
 - [ ] Bundle size < 350KB gzipped (32% reduction)
 - [ ] TTI < 5 seconds on 3G (37% improvement)
 - [ ] All E2E tests passing
@@ -214,11 +234,13 @@ const useOptimizedChakra = import.meta.env.VITE_OPTIMIZED_CHAKRA === 'true';
 - [ ] Lighthouse score improvement > 10 points
 
 ### Nice to Have (Phase 3)
+
 - [ ] Bundle size < 250KB gzipped (51% reduction)
 - [ ] TTI < 3 seconds on 3G (62% improvement)
 - [ ] Perfect Lighthouse score (100)
 
 ### Continuous Monitoring
+
 - [ ] Bundle size tracked in CI/CD
 - [ ] Performance budgets enforced
 - [ ] Lighthouse CI integrated
@@ -256,6 +278,7 @@ gzip -c build/assets/initGlobals-*.js | wc -c
 ### Tree-Shaking Status
 
 **Good News:** Tree-shaking IS working for most dependencies!
+
 - ✓ date-fns: Well tree-shaken (only 4 imports)
 - ✓ Most modern ES modules: Working correctly
 - ⚠️ Chakra UI: Needs configuration optimization
@@ -273,17 +296,20 @@ React Compiler is already enabled and working! The remaining manual memoization 
 ## 📚 Additional Resources
 
 ### Benchmarks & References
+
 - **Chakra UI Optimization Guide:** https://next.chakra-ui.com/guides/component-bundle-optimization
 - **Vite Performance Guide:** https://vite.dev/guide/performance
 - **React 19 Best Practices:** https://react.dev/blog/2024/04/25/react-19-upgrade-guide
 - **Web.dev Performance:** https://web.dev/performance/
 
 ### Tools Used
+
 - **Vite Bundle Analyzer:** rollup-plugin-visualizer (already installed)
 - **Lighthouse:** For performance metrics
 - **DevTools:** Network and Performance panels
 
 ### Similar Optimizations
+
 - **Vercel Next.js:** https://nextjs.org/docs/app/building-your-application/optimizing
 - **Material-UI Migration:** https://mui.com/material-ui/guides/minimizing-bundle-size/
 
@@ -292,6 +318,7 @@ React Compiler is already enabled and working! The remaining manual memoization 
 ## 🤝 Getting Help
 
 ### For Questions About:
+
 - **Analysis:** See BUNDLE_ANALYSIS.md
 - **Implementation:** See IMPLEMENTATION_PLAN.md
 - **Chakra UI:** https://chakra-ui.com/docs
@@ -299,6 +326,7 @@ React Compiler is already enabled and working! The remaining manual memoization 
 - **React:** https://react.dev/
 
 ### Before Starting Implementation:
+
 1. Read both documents completely
 2. Review current codebase
 3. Set up bundle analyzer
@@ -310,6 +338,7 @@ React Compiler is already enabled and working! The remaining manual memoization 
 ## 📝 Changelog
 
 ### 2026-01-15
+
 - Initial analysis completed
 - Bundle size breakdown identified
 - Implementation plan created

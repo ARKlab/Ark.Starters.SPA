@@ -21,8 +21,12 @@ describe("AppMultiSelect", () => {
 
   it("opens and selects multiple options", () => {
     open("[data-test='appmultiselect-basic']");
-    cy.get("[data-test='appmultiselect-content'] [data-test='appmultiselect-item-a']").first().click();
-    cy.get("[data-test='appmultiselect-content'] [data-test='appmultiselect-item-c']").first().click();
+    cy.get("[data-test='appmultiselect-content'] [data-test='appmultiselect-item-a']")
+      .first()
+      .click();
+    cy.get("[data-test='appmultiselect-content'] [data-test='appmultiselect-item-c']")
+      .first()
+      .click();
     cy.get("[data-test='appmultiselect-basic'] [data-test='appmultiselect-value']")
       .should("contain.text", "Alpha")
       .and("contain.text", "Charlie");
@@ -31,14 +35,25 @@ describe("AppMultiSelect", () => {
 
   it("deselects an already selected option", () => {
     open("[data-test='appmultiselect-basic']");
-    cy.get("[data-test='appmultiselect-content'] [data-test='appmultiselect-item-b']").first().click();
-    cy.get("[data-test='appmultiselect-content'] [data-test='appmultiselect-item-d']").first().click();
-    cy.get("[data-test='appmultiselect-content'] [data-test='appmultiselect-item-b']").first().click();
-    cy.get("[data-test='appmultiselect-basic-value']").should("contain.text", "d").and("not.contain.text", "b");
+    cy.get("[data-test='appmultiselect-content'] [data-test='appmultiselect-item-b']")
+      .first()
+      .click();
+    cy.get("[data-test='appmultiselect-content'] [data-test='appmultiselect-item-d']")
+      .first()
+      .click();
+    cy.get("[data-test='appmultiselect-content'] [data-test='appmultiselect-item-b']")
+      .first()
+      .click();
+    cy.get("[data-test='appmultiselect-basic-value']")
+      .should("contain.text", "d")
+      .and("not.contain.text", "b");
   });
 
   it("shows placeholder when nothing selected", () => {
-    cy.get("[data-test='appmultiselect-basic'] [data-test='appmultiselect-value']").should("have.text", "Pick many");
+    cy.get("[data-test='appmultiselect-basic'] [data-test='appmultiselect-value']").should(
+      "have.text",
+      "Pick many",
+    );
   });
 
   it("loading variant shows spinner", () => {

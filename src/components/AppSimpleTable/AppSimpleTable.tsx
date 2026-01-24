@@ -32,7 +32,12 @@ const getNestedValue = <T,>(obj: T, path: string, defaultValue: any = null): any
   return result === undefined ? defaultValue : result;
 };
 
-const AppSimpleTable = <T,>({ data, columns, pageSize = 20, isLoading = false }: AppSimpleTableProps<T>) => {
+const AppSimpleTable = <T,>({
+  data,
+  columns,
+  pageSize = 20,
+  isLoading = false,
+}: AppSimpleTableProps<T>) => {
   const [pageIndex, setPageIndex] = useState(1);
   const [itemPerPage, setPageSize] = useState(pageSize);
 

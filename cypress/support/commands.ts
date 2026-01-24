@@ -48,6 +48,3 @@ Cypress.Commands.add("navigateViaRoute", (route: string) => {
   cy.url().should("contain", route);
   cy.get("[data-test='spinner']").should("not.exist");
 });
-
-
-

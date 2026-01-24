@@ -78,10 +78,10 @@ export const i18nSetup = async () => {
         z.config({
           customError: makeZodI18nMap({ t, ns: zodNs, handlePath: { keyPrefix: "paths" } }),
         });
-        
+
         // Add custom formatters for date formatting
         addCustomFormatters(i18next);
-        
+
         resolve();
       },
       onResourceLoaded: (resources, { lng, ns }) => {

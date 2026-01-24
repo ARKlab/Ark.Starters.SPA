@@ -14,11 +14,19 @@ type AppPaginationProps = {
   isLoading: boolean;
 };
 
-const AppPagination = ({ count, pageSize, page, onPageChange, onPageSizeChange, isLoading }: AppPaginationProps) => {
+const AppPagination = ({
+  count,
+  pageSize,
+  page,
+  onPageChange,
+  onPageSizeChange,
+  isLoading,
+}: AppPaginationProps) => {
   const { t } = useTranslation();
   const totalPages = Math.ceil(count / pageSize);
   const pageMinRange = 3;
-  const pageMinRangeVal = page > pageMinRange ? Math.min(page - pageMinRange, totalPages - pageMinRange) : 0;
+  const pageMinRangeVal =
+    page > pageMinRange ? Math.min(page - pageMinRange, totalPages - pageMinRange) : 0;
 
   const pageMaxRange = 2;
   const pageMaxSub = totalPages - pageMaxRange;
@@ -39,7 +47,10 @@ const AppPagination = ({ count, pageSize, page, onPageChange, onPageSizeChange, 
         <>
           <Stack gap={"4"} direction="row" align="center" justifyContent="center" my="5">
             <NativeSelectRoot w="32">
-              <NativeSelectField value={pageSize} onChange={e => onPageSizeChange(Number(e.target.value))}>
+              <NativeSelectField
+                value={pageSize}
+                onChange={e => onPageSizeChange(Number(e.target.value))}
+              >
                 {[10, 20, 30, 40, 50].map(pageSize => (
                   <option key={pageSize} value={pageSize}>
                     Show {pageSize}
@@ -82,18 +93,21 @@ const AppPagination = ({ count, pageSize, page, onPageChange, onPageSizeChange, 
               value={<LuChevronRight />}
               data-test="pagination-next"
             />
-            <PageItem 
-              display={page < pageMaxSub} 
-              onChange={() => onPageChange(totalPages)} 
+            <PageItem
+              display={page < pageMaxSub}
+              onChange={() => onPageChange(totalPages)}
               title={t("libComponents:appPagination_lastPage")}
-              value={<LuChevronsRight />} 
+              value={<LuChevronsRight />}
             />
           </Stack>
         </>
       ) : (
         <Stack gap={"4"} direction="row" align="center" justifyContent="center" my="5">
           <NativeSelectRoot w="32">
-            <NativeSelectField value={pageSize} onChange={e => onPageSizeChange(Number(e.target.value))}>
+            <NativeSelectField
+              value={pageSize}
+              onChange={e => onPageSizeChange(Number(e.target.value))}
+            >
               {[10, 20, 30, 40, 50].map(pageSize => (
                 <option key={pageSize} value={pageSize}>
                   Show {pageSize}
@@ -121,7 +135,12 @@ type PageItemsTypes = {
 const PageItem = ({ display, onChange, title, disable, currentPage, value }: PageItemsTypes) => {
   if (display) {
     return (
-      <Button disabled={disable} onClick={onChange} title={title} variant={currentPage ? "outline" : "solid"}>
+      <Button
+        disabled={disable}
+        onClick={onChange}
+        title={title}
+        variant={currentPage ? "outline" : "solid"}
+      >
         {value}
       </Button>
     );

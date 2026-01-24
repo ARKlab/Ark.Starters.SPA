@@ -24,7 +24,7 @@ const Main = () => {
     if (user) {
       (ai.getAppInsights() as IApplicationInsights).setAuthenticatedUserContext(user.username);
     }
-  }, [user, ai])
+  }, [user, ai]);
 
   return (
     <>

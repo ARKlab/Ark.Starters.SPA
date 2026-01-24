@@ -10,7 +10,11 @@ import z from "zod";
  * @param path - The path to set (string or array of keys)
  * @param value - The value to set
  */
-function setNestedValue(obj: Record<string, unknown>, path: string | (string | number)[], value: unknown): void {
+function setNestedValue(
+  obj: Record<string, unknown>,
+  path: string | (string | number)[],
+  value: unknown,
+): void {
   const keys = Array.isArray(path) ? path : path.split(".");
   let current = obj;
 

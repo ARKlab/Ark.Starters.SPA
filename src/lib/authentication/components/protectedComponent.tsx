@@ -7,7 +7,11 @@ type ProtectedComponentProps = {
   fallBackComponent?: React.ReactNode;
 };
 
-const ProtectedComponent = ({ permissions, children, fallBackComponent }: ProtectedComponentProps) => {
+const ProtectedComponent = ({
+  permissions,
+  children,
+  fallBackComponent,
+}: ProtectedComponentProps) => {
   const user = useAppSelector(userSelector);
   const userPermissions = user?.permissions ?? ([] as string[]);
   const hasAllPermissions = permissions.every(permission => userPermissions.includes(permission));

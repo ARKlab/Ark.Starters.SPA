@@ -23,7 +23,9 @@ export default function AppFileUpload({
   const validateFiles = (files: File[]): boolean => {
     for (const file of files) {
       if (file.size > maxSize) {
-        setError(`Il file ${file.name} supera la dimensione massima di ${(maxSize / 1024 / 1024).toFixed(1)}MB`);
+        setError(
+          `Il file ${file.name} supera la dimensione massima di ${(maxSize / 1024 / 1024).toFixed(1)}MB`,
+        );
         return false;
       }
     }
@@ -178,7 +180,13 @@ export default function AppFileUpload({
               data-name={file.name}
             >
               <Box display="flex" alignItems="center" gap={"3"} flex={"1"} minWidth={"0"}>
-                <Box p={"2"} borderRadius="md" bg="brand.muted" color="brand.primary" flexShrink={0}>
+                <Box
+                  p={"2"}
+                  borderRadius="md"
+                  bg="brand.muted"
+                  color="brand.primary"
+                  flexShrink={0}
+                >
                   <Icon size={"md"} data-test="fileupload-file-icon">
                     <LuFile />
                   </Icon>

@@ -7,12 +7,10 @@ import { AuthenticationContext } from "./authenticationContext";
 export function useAuthContext() {
   const context = useContext(AuthenticationContext);
 
-  const [isLogged, setIsLogged] = useState(
-    context.getLoginStatus() === LoginStatus.Logged
-  );
+  const [isLogged, setIsLogged] = useState(context.getLoginStatus() === LoginStatus.Logged);
 
   useEffect(() => {
-    const unsubscribe = context.onLoginStatus((status) => {
+    const unsubscribe = context.onLoginStatus(status => {
       const newIsLogged = status === LoginStatus.Logged;
       if (isLogged !== newIsLogged) {
         setIsLogged(newIsLogged);

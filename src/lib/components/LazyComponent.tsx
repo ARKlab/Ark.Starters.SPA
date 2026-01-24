@@ -21,32 +21,32 @@ type LazyComponentProps<C extends ComponentType<any>> = {
 
 /**
  * LazyComponent - Component-based approach for dynamic lazy loading
- * 
+ *
  * Use this when you need to lazy load a component with dynamic props or when
  * the loader function might change over time.
- * 
+ *
  * The component is memoized based on the loader function to prevent
  * unnecessary re-creation of the lazy component.
- * 
+ *
  * @template C - The component type being lazy loaded
  * @param props - LazyComponentProps including loader and component props
  * @returns A lazy-loaded component wrapped in Suspense
- * 
+ *
  * @example
  * // Dynamic lazy loading with props (Component-based)
  * function RouteExample() {
  *   return (
- *     <LazyComponent 
- *       loader={() => import('./DynamicPage')} 
+ *     <LazyComponent
+ *       loader={() => import('./DynamicPage')}
  *       userId={123}
  *       onLoad={handleLoad}
  *     />
  *   );
  * }
- * 
+ *
  * @example
  * // With custom fallback
- * <LazyComponent 
+ * <LazyComponent
  *   loader={() => import('./MyComponent')}
  *   fallback={<div>Loading...</div>}
  * />

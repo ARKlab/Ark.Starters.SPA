@@ -1,7 +1,7 @@
 import { HttpResponse } from "msw";
 
 import { url } from "../../src/features/configTable/config.mocks";
-import type { Employee } from "../../src/features/configTable/configTable";
+import type { Employee } from "../../src/features/configTable/employee";
 import type { PostDataType } from "../../src/features/fetchApiExample/jsonPlaceholderTypes";
 
 describe("Config Table", () => {
@@ -46,7 +46,9 @@ describe("Config Table", () => {
 
     it("API mocks via Cypress", () => {
       // the global 'beforeEach' and the local 'actAsAnon' ensure we're on /null start'
-      const data = [{ id: 42, userId: 100, title: "Cypress Mock", body: "lorem ipsum ..." }] as PostDataType[];
+      const data = [
+        { id: 42, userId: 100, title: "Cypress Mock", body: "lorem ipsum ..." },
+      ] as PostDataType[];
       cy.intercept("GET", "https://jsonplaceholder.typicode.com/posts", {
         statusCode: 200,
         body: data,

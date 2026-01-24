@@ -4,7 +4,10 @@ import { useState } from "react";
 export default function useCookie<T>(
   name: string,
   defaultValue: T | undefined,
-): [T | undefined, { updateCookie: (value: T, options: Cookies.CookieAttributes) => void; deleteCookie: () => void }] {
+): [
+  T | undefined,
+  { updateCookie: (value: T, options: Cookies.CookieAttributes) => void; deleteCookie: () => void },
+] {
   const cookies = Cookies.withConverter<T>({
     read: (value, n) => JSON.parse(Cookies.converter.read(value, n)) as T,
 

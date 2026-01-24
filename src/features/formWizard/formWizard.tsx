@@ -38,12 +38,27 @@ export default function WizardFormView() {
     <Box>
       <Heading>{t("wizard_form_title")}</Heading>
       <Box mt="4">
-        <Wizard<Schema> onSubmit={onSubmit} formProps={{ mode: "onChange", resolver: zodResolver(_wizardSchema) }}>
+        <Wizard<Schema>
+          onSubmit={onSubmit}
+          formProps={{ mode: "onChange", resolver: zodResolver(_wizardSchema) }}
+        >
           <WizardPage>
             <Stack gap="4">
-              <InputControl name="firstName" label={t("firstname")} placeholder={t("wizard_first_name_placeholder")} />
-              <InputControl name="lastName" label={t("lastname")} placeholder={t("wizard_last_name_placeholder")} />
-              <InputControl name="email" label={t("email")} placeholder={t("wizard_email_placeholder")} />
+              <InputControl
+                name="firstName"
+                label={t("firstname")}
+                placeholder={t("wizard_first_name_placeholder")}
+              />
+              <InputControl
+                name="lastName"
+                label={t("lastname")}
+                placeholder={t("wizard_last_name_placeholder")}
+              />
+              <InputControl
+                name="email"
+                label={t("email")}
+                placeholder={t("wizard_email_placeholder")}
+              />
               <InputControl
                 name="password"
                 label={t("password")}
@@ -55,7 +70,11 @@ export default function WizardFormView() {
 
           <WizardPage>
             <Stack gap={"4"}>
-              <InputControl name="phone" label={t("Phone")} placeholder={t("wizard_phone_placeholder")} />
+              <InputControl
+                name="phone"
+                label={t("Phone")}
+                placeholder={t("wizard_phone_placeholder")}
+              />
               <InputControl
                 name="billingAddress"
                 label={t("billing_address")}
@@ -73,7 +92,10 @@ export default function WizardFormView() {
             <Stack gap={"4"}>
               <CheckboxControl name="newsletter" label={t("wizard_newsletter_label")} />
               <CheckboxControl name="specialOffers" label={t("wizard_special_offers_label")} />
-              <CheckboxControl name="smsNotifications" label={t("wizard_sms_notifications_label")} />
+              <CheckboxControl
+                name="smsNotifications"
+                label={t("wizard_sms_notifications_label")}
+              />
             </Stack>
           </WizardPage>
         </Wizard>

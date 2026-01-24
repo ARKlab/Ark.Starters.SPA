@@ -1,4 +1,13 @@
-import { Box, Button, Container, Field, FieldLabel, Input, Spacer, Spinner } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Container,
+  Field,
+  FieldLabel,
+  Input,
+  Spacer,
+  Spinner,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -86,7 +95,9 @@ function VideoGamesForm() {
                       name="title"
                       control={control}
                       rules={{ required: "Title is required" }}
-                      render={({ field }) => <Input {...field} placeholder={t("games_title_placeholder")} />}
+                      render={({ field }) => (
+                        <Input {...field} placeholder={t("games_title_placeholder")} />
+                      )}
                     />
                     <Field.ErrorText>{errors.title?.message}</Field.ErrorText>
                   </Field.Root>
@@ -164,7 +175,8 @@ function VideoGamesForm() {
                       name="rating"
                       control={control}
                       rules={{
-                        validate: value => ratingValidator.safeParse(value).success || "Invalid rating",
+                        validate: value =>
+                          ratingValidator.safeParse(value).success || "Invalid rating",
                       }}
                       render={({ field }) => <Input {...field} placeholder="Rating" />}
                     />

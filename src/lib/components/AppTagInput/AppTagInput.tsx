@@ -13,7 +13,7 @@ interface TagInputProps {
 
 const AppTagInput: React.FC<TagInputProps> = ({ title, disabled = false, onChange, value }) => {
   const { t } = useTranslation();
-  
+
   return (
     <Field.Root disabled={disabled} data-test="taginput-root">
       {title && (
@@ -30,7 +30,10 @@ const AppTagInput: React.FC<TagInputProps> = ({ title, disabled = false, onChang
         <TagsInput.Label>{t("libComponents:appTagInput_tags")}</TagsInput.Label>
         <TagsInput.Control>
           <TagsInput.Items />
-          <TagsInput.Input data-test="taginput-input" placeholder={t("libComponents:appTagInput_addTag")} />
+          <TagsInput.Input
+            data-test="taginput-input"
+            placeholder={t("libComponents:appTagInput_addTag")}
+          />
         </TagsInput.Control>
       </TagsInput.Root>
     </Field.Root>

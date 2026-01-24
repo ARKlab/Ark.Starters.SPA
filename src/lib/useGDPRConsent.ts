@@ -30,9 +30,13 @@ export const useCookieConsent = (): [
     acceptSome: (c: ConsentState) => void;
   },
 ] => {
-  const [consent, update] = useLocalStorage<ConsentState | undefined>(COOKIE_CONSENT_KEY, undefined, {
-    initializeWithValue: true,
-  });
+  const [consent, update] = useLocalStorage<ConsentState | undefined>(
+    COOKIE_CONSENT_KEY,
+    undefined,
+    {
+      initializeWithValue: true,
+    },
+  );
 
   const acceptAll = () => {
     update(allCookiesSetToValue(true));

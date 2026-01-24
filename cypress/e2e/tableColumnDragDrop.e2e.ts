@@ -32,7 +32,7 @@ describe("Table Column Drag & Drop", () => {
     cy.get("table thead th").eq(1).should("contain", "Director");
     cy.get("table thead th").eq(2).should("contain", "Genre");
 
-    // Find the drag handle button in the Director column header  
+    // Find the drag handle button in the Director column header
     cy.get("table thead th")
       .eq(1)
       .find("button")
@@ -46,8 +46,10 @@ describe("Table Column Drag & Drop", () => {
             const targetRect = $target[0].getBoundingClientRect();
 
             // Calculate the distance to move (from drag handle center to target center)
-            const deltaX = targetRect.left + targetRect.width / 2 - (dragRect.left + dragRect.width / 2);
-            const deltaY = targetRect.top + targetRect.height / 2 - (dragRect.top + dragRect.height / 2);
+            const deltaX =
+              targetRect.left + targetRect.width / 2 - (dragRect.left + dragRect.width / 2);
+            const deltaY =
+              targetRect.top + targetRect.height / 2 - (dragRect.top + dragRect.height / 2);
 
             // Perform drag and drop using cypress-real-events with correct delta movements
             cy.wrap($dragHandle)
@@ -79,8 +81,10 @@ describe("Table Column Drag & Drop", () => {
           .then($target => {
             const dragRect = $dragHandle[0].getBoundingClientRect();
             const targetRect = $target[0].getBoundingClientRect();
-            const deltaX = targetRect.left + targetRect.width / 2 - (dragRect.left + dragRect.width / 2);
-            const deltaY = targetRect.top + targetRect.height / 2 - (dragRect.top + dragRect.height / 2);
+            const deltaX =
+              targetRect.left + targetRect.width / 2 - (dragRect.left + dragRect.width / 2);
+            const deltaY =
+              targetRect.top + targetRect.height / 2 - (dragRect.top + dragRect.height / 2);
 
             cy.wrap($dragHandle)
               .realMouseDown({ position: "center" })
@@ -118,8 +122,10 @@ describe("Table Column Drag & Drop", () => {
           .then($target1 => {
             const dragRect1 = $dragHandle1[0].getBoundingClientRect();
             const targetRect1 = $target1[0].getBoundingClientRect();
-            const deltaX1 = targetRect1.left + targetRect1.width / 2 - (dragRect1.left + dragRect1.width / 2);
-            const deltaY1 = targetRect1.top + targetRect1.height / 2 - (dragRect1.top + dragRect1.height / 2);
+            const deltaX1 =
+              targetRect1.left + targetRect1.width / 2 - (dragRect1.left + dragRect1.width / 2);
+            const deltaY1 =
+              targetRect1.top + targetRect1.height / 2 - (dragRect1.top + dragRect1.height / 2);
 
             cy.wrap($dragHandle1)
               .realMouseDown({ position: "center" })
@@ -145,8 +151,14 @@ describe("Table Column Drag & Drop", () => {
                   .then($target2 => {
                     const dragRect2 = $dragHandle2[0].getBoundingClientRect();
                     const targetRect2 = $target2[0].getBoundingClientRect();
-                    const deltaX2 = targetRect2.left + targetRect2.width / 2 - (dragRect2.left + dragRect2.width / 2);
-                    const deltaY2 = targetRect2.top + targetRect2.height / 2 - (dragRect2.top + dragRect2.height / 2);
+                    const deltaX2 =
+                      targetRect2.left +
+                      targetRect2.width / 2 -
+                      (dragRect2.left + dragRect2.width / 2);
+                    const deltaY2 =
+                      targetRect2.top +
+                      targetRect2.height / 2 -
+                      (dragRect2.top + dragRect2.height / 2);
 
                     cy.wrap($dragHandle2)
                       .realMouseDown({ position: "center" })
@@ -194,8 +206,10 @@ describe("Table Column Drag & Drop", () => {
               .then($target => {
                 const dragRect = $dragHandle[0].getBoundingClientRect();
                 const targetRect = $target[0].getBoundingClientRect();
-                const deltaX = targetRect.left + targetRect.width / 2 - (dragRect.left + dragRect.width / 2);
-                const deltaY = targetRect.top + targetRect.height / 2 - (dragRect.top + dragRect.height / 2);
+                const deltaX =
+                  targetRect.left + targetRect.width / 2 - (dragRect.left + dragRect.width / 2);
+                const deltaY =
+                  targetRect.top + targetRect.height / 2 - (dragRect.top + dragRect.height / 2);
 
                 cy.wrap($dragHandle)
                   .realMouseDown({ position: "center" })
@@ -209,11 +223,7 @@ describe("Table Column Drag & Drop", () => {
 
                 // After reordering, Director column moved to position 2
                 // The data should follow the column
-                cy.get("table tbody tr")
-                  .first()
-                  .find("td")
-                  .eq(2)
-                  .should("contain", directorValue);
+                cy.get("table tbody tr").first().find("td").eq(2).should("contain", directorValue);
               });
           });
       });
@@ -231,8 +241,10 @@ describe("Table Column Drag & Drop", () => {
           .then($target => {
             const dragRect = $dragHandle[0].getBoundingClientRect();
             const targetRect = $target[0].getBoundingClientRect();
-            const deltaX = targetRect.left + targetRect.width / 2 - (dragRect.left + dragRect.width / 2);
-            const deltaY = targetRect.top + targetRect.height / 2 - (dragRect.top + dragRect.height / 2);
+            const deltaX =
+              targetRect.left + targetRect.width / 2 - (dragRect.left + dragRect.width / 2);
+            const deltaY =
+              targetRect.top + targetRect.height / 2 - (dragRect.top + dragRect.height / 2);
 
             cy.wrap($dragHandle)
               .realMouseDown({ position: "center" })
@@ -252,4 +264,3 @@ describe("Table Column Drag & Drop", () => {
       });
   });
 });
-

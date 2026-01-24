@@ -9,12 +9,7 @@ import { toaster } from "../../components/ui/toaster";
 
 import { useGetConfigQuery, usePostConfigMutation } from "./configTableApi";
 import { TableRow } from "./TableRow";
-
-export type Employee = {
-  name: string;
-  surName: string;
-  employed: boolean;
-};
+import type { Employee } from "./employee";
 
 const configTableSchema = z.object({
   table: z
@@ -109,7 +104,11 @@ export default function EditableTableExample() {
         >
           {t("new")}
         </Button>
-        <Button type="submit" disabled={isSubmitting || postConfigIsLoading || !isValid} loading={isSubmitting}>
+        <Button
+          type="submit"
+          disabled={isSubmitting || postConfigIsLoading || !isValid}
+          loading={isSubmitting}
+        >
           {t("submit")}
         </Button>
         <Button

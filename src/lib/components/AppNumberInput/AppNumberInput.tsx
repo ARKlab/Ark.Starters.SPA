@@ -65,7 +65,9 @@ export const AppNumberInput: React.FC<InputWithClearProps> = ({
             />
           </InputGroup>
         </Stack>
-        {fieldErrorText ? <Field.ErrorText data-test="appnumberinput-error">{fieldErrorText}</Field.ErrorText> : null}
+        {fieldErrorText ? (
+          <Field.ErrorText data-test="appnumberinput-error">{fieldErrorText}</Field.ErrorText>
+        ) : null}
       </Field.Root>
     </>
   );

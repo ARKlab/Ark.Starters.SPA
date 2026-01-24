@@ -154,6 +154,9 @@ describe("RTKQ Extensions", () => {
       cy.get("[data-part='title']").should("contain.text", "You do not have enough credit");
     });
 
-    cy.get("[data-test='mutation-download-error']").should("contain.text", "https://example.com/probs/out-of-credit");
+    cy.get("[data-test='mutation-download-error']").should(
+      "contain.text",
+      "https://example.com/probs/out-of-credit",
+    );
   });
 });

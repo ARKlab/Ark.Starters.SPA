@@ -1,7 +1,7 @@
-import type { JSX } from "react"
+import type { JSX } from "react";
 
 const Bomb = (): JSX.Element => {
-  throw new Error('💥 CABOOM 💥')
-}
+  throw new Error("💥 CABOOM 💥");
+};
 
-export default Bomb
+export default Bomb;

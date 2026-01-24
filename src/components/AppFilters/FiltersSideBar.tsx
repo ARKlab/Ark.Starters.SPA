@@ -1,4 +1,14 @@
-import { Box, Button, CloseButton, Drawer, Field, Icon, Portal, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  CloseButton,
+  Drawer,
+  Field,
+  Icon,
+  Portal,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { useEffect, useId, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LuCheck, LuX } from "react-icons/lu";
@@ -81,7 +91,9 @@ export function FilterSidebar<T extends object>(props: FilterSidebarProps<T>) {
                       {filter.type === "select" && (
                         <Field.Root>
                           <AppSelect
-                            placeholder={filter.placeholder ?? `Cerca ${filter.label?.toLowerCase() ?? ""}...`}
+                            placeholder={
+                              filter.placeholder ?? `Cerca ${filter.label?.toLowerCase() ?? ""}...`
+                            }
                             value={localValues[filter.propName] as string}
                             onChange={value => {
                               setLocalValues(prev => ({
@@ -151,7 +163,12 @@ function AppInputFilterWrapper({
 
   return (
     <Field.Root>
-      <AppInput placeholder={placeholder} value={value ?? ""} onChange={handleChange} title={filterLabel} />
+      <AppInput
+        placeholder={placeholder}
+        value={value ?? ""}
+        onChange={handleChange}
+        title={filterLabel}
+      />
     </Field.Root>
   );
 }

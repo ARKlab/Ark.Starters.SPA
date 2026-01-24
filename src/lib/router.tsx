@@ -30,7 +30,8 @@ const wrapLazy = (x: ArkRoute) => {
     element = <LazyComponent loader={lazy} key={x.label} />;
   }
 
-  if (checkPermissions) element = <ProtectedRoute permissions={x.permissions}>{element}</ProtectedRoute>;
+  if (checkPermissions)
+    element = <ProtectedRoute permissions={x.permissions}>{element}</ProtectedRoute>;
 
   if (x.authenticatedOnly) element = <AuthenticatedOnly>{element}</AuthenticatedOnly>;
 

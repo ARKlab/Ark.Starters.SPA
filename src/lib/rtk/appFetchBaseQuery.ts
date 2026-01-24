@@ -30,11 +30,21 @@ export type ArkFetchBaseQueryArgs<
   QueryApi extends ArkBaseQueryApiType<
     ThunkDispatch<any, any, any>,
     any,
-    { authProvider: { getToken: (audience: string) => Promise<string | null>; logout: () => Promise<void> } }
+    {
+      authProvider: {
+        getToken: (audience: string) => Promise<string | null>;
+        logout: () => Promise<void>;
+      };
+    }
   > = ArkBaseQueryApiType<
     ThunkDispatch<any, any, any>,
     any,
-    { authProvider: { getToken: (audience: string) => Promise<string | null>; logout: () => Promise<void> } }
+    {
+      authProvider: {
+        getToken: (audience: string) => Promise<string | null>;
+        logout: () => Promise<void>;
+      };
+    }
   >,
 > = Modify<
   FetchBaseQueryArgs,
@@ -59,7 +69,9 @@ export type AuthOptions = {
 };
 
 export function handleExportsDownload(blob: Blob, fileName?: string, mimeType?: string) {
-  const url = window.URL.createObjectURL(new Blob([blob], mimeType ? { type: mimeType } : undefined));
+  const url = window.URL.createObjectURL(
+    new Blob([blob], mimeType ? { type: mimeType } : undefined),
+  );
   const link = document.createElement("a");
   link.href = url;
   link.setAttribute("download", (fileName ?? "download") || "download");
@@ -99,7 +111,8 @@ const betterContentTypeResponseHandler =
       }
     }
 
-    if (["application/octet-stream", "binary/octet-stream"].includes(contentType ?? "")) return response.blob();
+    if (["application/octet-stream", "binary/octet-stream"].includes(contentType ?? ""))
+      return response.blob();
 
     return response.text();
   };
@@ -176,7 +189,11 @@ export function arkFetchBaseQuery(
 
     // SKIP retry if the error doesn't look transient
     if (result.error) {
-      if (typeof result.error.status === "number" && result.error.status < 500 && result.error.status !== 429) {
+      if (
+        typeof result.error.status === "number" &&
+        result.error.status < 500 &&
+        result.error.status !== 429
+      ) {
         retry.fail(result.error, result.meta);
       }
       if (result.error.status === "PARSING_ERROR") retry.fail(result.error, result.meta);

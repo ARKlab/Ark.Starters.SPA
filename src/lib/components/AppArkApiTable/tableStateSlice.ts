@@ -19,7 +19,11 @@ export const tableStateSlice = createAppSlice({
   reducers: {
     setTableState: (
       state,
-      action: PayloadAction<{ key: string; tableState: TableState | undefined; overWrite?: boolean }>,
+      action: PayloadAction<{
+        key: string;
+        tableState: TableState | undefined;
+        overWrite?: boolean;
+      }>,
     ) => {
       const { key, tableState, overWrite: replaceOthers = true } = action.payload;
 

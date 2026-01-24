@@ -14,8 +14,6 @@ export default function AuthenticationProviderContext({
   authProvider: instance,
 }: AuthContextChildrens) {
   return (
-    <AuthenticationContext.Provider value={instance}>
-      {children}
-    </AuthenticationContext.Provider>
+    <AuthenticationContext.Provider value={instance}>{children}</AuthenticationContext.Provider>
   );
 }

@@ -13,13 +13,11 @@ export const ErrorFallback = () => {
     if (error instanceof Error) {
       plugin.trackException({ exception: error, severityLevel: SeverityLevel.Error });
     }
-  }
-    , [error, plugin]);
+  }, [error, plugin]);
 
   if (isRouteErrorResponse(error)) {
     return <ErrorDisplay name={String(error.status)} message={error.statusText} />;
   } else if (error instanceof Error)
     return <ErrorDisplay name={error.name} message={error.message} stack={error.stack} />;
-  else
-    return <ErrorDisplay />;
+  else return <ErrorDisplay />;
 };

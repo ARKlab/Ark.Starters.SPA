@@ -12,9 +12,13 @@ import { version, name } from "~build/package";
 
 import type { ApplicationInsightsConfig } from "./types";
 
-const versionString = "v" + (version === "0.0.0" ? (tag ?? lastTag ?? version) : version) + "@" + abbreviatedSha;
+const versionString =
+  "v" + (version === "0.0.0" ? (tag ?? lastTag ?? version) : version) + "@" + abbreviatedSha;
 
-export const setupAppInsights = ({ connectionString, enableClickAnalytics }: ApplicationInsightsConfig) => {
+export const setupAppInsights = ({
+  connectionString,
+  enableClickAnalytics,
+}: ApplicationInsightsConfig) => {
   // Create the ReactPlugin instance inside the function to avoid module-level side effects
   const reactPlugin = new ReactPlugin();
   const clickAnalyticsPlugin = new ClickAnalyticsPlugin();
@@ -48,7 +52,9 @@ export const setupAppInsights = ({ connectionString, enableClickAnalytics }: App
         // The SDK will use async XHR by default which Cypress can intercept
       }),
 
-      extensions: ([reactPlugin] as ITelemetryPlugin[]).concat(...(enableClickAnalytics ? [clickAnalyticsPlugin] : [])),
+      extensions: ([reactPlugin] as ITelemetryPlugin[]).concat(
+        ...(enableClickAnalytics ? [clickAnalyticsPlugin] : []),
+      ),
       extensionConfig: {
         [clickAnalyticsPlugin.identifier]: {
           autoCapture: true,

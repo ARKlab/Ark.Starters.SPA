@@ -1,4 +1,14 @@
-import { Box, Flex, Field, Heading, Input, Text, VStack, FieldLabel, StackSeparator } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Field,
+  Heading,
+  Input,
+  Text,
+  VStack,
+  FieldLabel,
+  StackSeparator,
+} from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -67,7 +77,13 @@ export default function LocalizationPage() {
           </Heading>
           <pre>{JSON.stringify(errors, (k: string, v: unknown) => (k !== "ref" ? v : ""), 2)}</pre>
 
-          <Flex as={"form"} onSubmit={handleSubmit(onSubmit)} display={"flex"} gap="4" flexFlow={"column"}>
+          <Flex
+            as={"form"}
+            onSubmit={handleSubmit(onSubmit)}
+            display={"flex"}
+            gap="4"
+            flexFlow={"column"}
+          >
             <Heading size={"md"}>
               <strong>{t("form_values")}:</strong>
             </Heading>
@@ -85,7 +101,9 @@ export default function LocalizationPage() {
             </Field.Root>
 
             <Field.Root invalid={!!errors.customErrorInline} disabled={isSubmitting}>
-              <FieldLabel htmlFor="customErrorInline">{t("translation-samples.custom-error")}</FieldLabel>
+              <FieldLabel htmlFor="customErrorInline">
+                {t("translation-samples.custom-error")}
+              </FieldLabel>
               <Input id="customErrorInline" {...register("customErrorInline")} type="number" />
               <Field.ErrorText>{errors.customErrorInline?.message}</Field.ErrorText>
             </Field.Root>

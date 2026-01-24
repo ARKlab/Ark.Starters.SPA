@@ -83,7 +83,7 @@ const MovieTableView = () => {
   return (
     <Box>
       <Heading>{t("movies_movies")}</Heading>
-      {/* 
+      {/*
           External filters rendering is done here by this AppFilters component that is a demo. it uses a drawer to show filters. 
           Feel free to implement your own mantaining and extending the Typing in the Filters.ts from BaseFilter<T> 
       */}
