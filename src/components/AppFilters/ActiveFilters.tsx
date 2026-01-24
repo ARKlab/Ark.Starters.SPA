@@ -1,21 +1,21 @@
-import { Box, Button, HStack, Icon, Text } from "@chakra-ui/react"
-import { useTranslation } from "react-i18next"
-import { LuX } from "react-icons/lu"
+import { Box, Button, HStack, Icon, Text } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
+import { LuX } from "react-icons/lu";
 
-import type { ActiveFilter } from "./Filters"
+import type { ActiveFilter } from "./Filters";
 
 interface ActiveFiltersBarProps {
-  filters: ActiveFilter[]
-  onRemoveFilter: (filterId: string) => void
-  onClearAll: () => void
+  filters: ActiveFilter[];
+  onRemoveFilter: (filterId: string) => void;
+  onClearAll: () => void;
 }
 
 export function ActiveFiltersBar(props: ActiveFiltersBarProps) {
-  const { filters, onRemoveFilter, onClearAll } = props
+  const { filters, onRemoveFilter, onClearAll } = props;
 
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
-  if (filters.length === 0) return null
+  if (filters.length === 0) return null;
 
   return (
     <Box p="4" bg="bg.panel" borderRadius="lg" border="xs" borderColor="brand.muted">
@@ -51,7 +51,7 @@ export function ActiveFiltersBar(props: ActiveFiltersBarProps) {
               variant="ghost"
               size="xs"
               onClick={() => {
-                onRemoveFilter(filter.filterId)
+                onRemoveFilter(filter.filterId);
               }}
               color="fg"
               minW="fit"
@@ -66,5 +66,5 @@ export function ActiveFiltersBar(props: ActiveFiltersBarProps) {
         ))}
       </HStack>
     </Box>
-  )
+  );
 }

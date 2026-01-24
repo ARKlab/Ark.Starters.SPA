@@ -61,7 +61,7 @@ toast: 1700, tooltip: 1800
 
 - **MUST** set a custom localStorage key for color mode to avoid conflicts:
   ```typescript
-  const colorModeManager = createLocalStorageManager("appName-ColorMode")
+  const colorModeManager = createLocalStorageManager("appName-ColorMode");
   ```
 
 ## Commit Messages

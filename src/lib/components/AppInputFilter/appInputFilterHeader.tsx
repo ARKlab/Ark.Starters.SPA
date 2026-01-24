@@ -1,31 +1,31 @@
-import { Input, Stack } from "@chakra-ui/react"
-import { useState } from "react"
-import { LuX } from "react-icons/lu"
+import { Input, Stack } from "@chakra-ui/react";
+import { useState } from "react";
+import { LuX } from "react-icons/lu";
 
-import { InputGroup } from "../../../components/ui/input-group"
+import { InputGroup } from "../../../components/ui/input-group";
 
 export interface AppInputFilterHeaderProps {
-  value: string | number
-  onChange?: React.ChangeEventHandler<HTMLInputElement>
+  value: string | number;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }
 
 export const AppInputFilterHeader: React.FC<AppInputFilterHeaderProps> = ({ value, onChange }) => {
-  const [inputValue, setInputValue] = useState(value)
+  const [inputValue, setInputValue] = useState(value);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value)
-    if (onChange) onChange(e)
-  }
+    setInputValue(e.target.value);
+    if (onChange) onChange(e);
+  };
 
   const handleClear = () => {
-    setInputValue("")
+    setInputValue("");
     const event = {
       target: {
         value: "",
       },
-    } as React.ChangeEvent<HTMLInputElement>
-    if (onChange) onChange(event)
-  }
+    } as React.ChangeEvent<HTMLInputElement>;
+    if (onChange) onChange(event);
+  };
 
   return (
     <Stack>
@@ -36,5 +36,5 @@ export const AppInputFilterHeader: React.FC<AppInputFilterHeaderProps> = ({ valu
         <Input size={"sm"} required={true} value={inputValue} onChange={handleChange} />
       </InputGroup>
     </Stack>
-  )
-}
+  );
+};

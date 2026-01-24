@@ -2,11 +2,12 @@
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["typescript", "import", "jsx-a11y"],
   "categories": {
-    "correctness": "off"
+    "correctness": "warn"
   },
   "env": {
     "builtin": true,
-    "es2018": true
+    "browser": true,
+    "es2023": true
   },
   "ignorePatterns": [
     "src/components/ui/**/*.{ts,tsx}",
@@ -264,21 +265,7 @@
     {
       "files": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
       "rules": {
-        "constructor-super": "off",
-        "no-class-assign": "off",
-        "no-const-assign": "off",
-        "no-dupe-class-members": "off",
-        "no-dupe-keys": "off",
-        "no-func-assign": "off",
-        "no-import-assign": "off",
-        "no-new-native-nonconstructor": "off",
-        "no-obj-calls": "off",
-        "no-redeclare": "off",
-        "no-setter-return": "off",
-        "no-this-before-super": "off",
-        "no-unsafe-negation": "off",
         "no-var": "error",
-        "no-with": "off",
         "prefer-rest-params": "error",
         "prefer-spread": "error"
       }
@@ -286,9 +273,11 @@
     {
       "files": ["cypress/**/*.{ts,tsx,mtsx}", "cypress.config.{ts,tsx,mtsx}"],
       "env": {
-        "mocha": true
+        "mocha": true,
+        "chai": true
       },
       "rules": {
+        "no-redeclare": "off",
         "no-unused-expressions": "off"
       }
     },

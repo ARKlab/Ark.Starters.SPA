@@ -1,53 +1,54 @@
-import { withAITracking } from "@microsoft/applicationinsights-react-js"
-import type { ReactNode } from "react"
-import type { RouteObject } from "react-router"
-import { Outlet, createBrowserRouter } from "react-router"
+import { withAITracking } from "@microsoft/applicationinsights-react-js";
+import type { ReactNode } from "react";
+import type { RouteObject } from "react-router";
+import { Outlet, createBrowserRouter } from "react-router";
 
-import Layout from "../components/layout/layout"
-import PageNotFound from "../components/pageNotFound"
-import SEO from "../components/seo"
-import { siteMap } from "../siteMap/siteMap"
+import Layout from "../components/layout/layout";
+import PageNotFound from "../components/pageNotFound";
+import SEO from "../components/seo";
+import { siteMap } from "../siteMap/siteMap";
 
-import { reactPlugin } from "./applicationInsights"
-import { AuthenticatedOnly } from "./authentication/components/authenticatedOnly"
-import { AuthenticationCallback } from "./authentication/components/authenticationCallback"
-import ProtectedRoute from "./authentication/components/protectedRoute"
-import Unauthorized from "./authentication/unauthorized"
-import { LazyComponent } from "./components/LazyComponent"
-import { ErrorFallback } from "./errorFallback"
-import type { ArkRoute, ArkSubRoute } from "./siteMapTypes"
+import { reactPlugin } from "./applicationInsights";
+import { AuthenticatedOnly } from "./authentication/components/authenticatedOnly";
+import { AuthenticationCallback } from "./authentication/components/authenticationCallback";
+import ProtectedRoute from "./authentication/components/protectedRoute";
+import Unauthorized from "./authentication/unauthorized";
+import { LazyComponent } from "./components/LazyComponent";
+import { ErrorFallback } from "./errorFallback";
+import type { ArkRoute, ArkSubRoute } from "./siteMapTypes";
 
 const wrapLazy = (x: ArkRoute) => {
-  const checkPermissions = x.permissions && x.permissions.length > 0
+  const checkPermissions = x.permissions && x.permissions.length > 0;
 
-  let element: ReactNode = <Outlet />
+  let element: ReactNode = <Outlet />;
   if (x.component) {
-    const X = withAITracking(reactPlugin, () => <>{x.component}</>, x.label)
-    element = <X />
+    const X = withAITracking(reactPlugin, () => <>{x.component}</>, x.label);
+    element = <X />;
   }
   // key={x.label} is needed to force a rerender when the route changes due to https://github.com/remix-run/react-router/issues/12474
   // assumption: x.label is unique across all routes
   // TODO: introduce x.id/x.slug to be used as key and tracking instead of x.label
-  const lazy = x.lazy
+  const lazy = x.lazy;
   if (lazy) {
     const y = async () => {
-      const res = await lazy()
-      return { default: withAITracking(reactPlugin, res.default, x.label) }
-    }
-    element = <LazyComponent loader={y} key={x.label} />
+      const res = await lazy();
+      return { default: withAITracking(reactPlugin, res.default, x.label) };
+    };
+    element = <LazyComponent loader={y} key={x.label} />;
   }
 
-  if (checkPermissions) element = <ProtectedRoute permissions={x.permissions}>{element}</ProtectedRoute>
+  if (checkPermissions)
+    element = <ProtectedRoute permissions={x.permissions}>{element}</ProtectedRoute>;
 
-  if (x.authenticatedOnly) element = <AuthenticatedOnly>{element}</AuthenticatedOnly>
+  if (x.authenticatedOnly) element = <AuthenticatedOnly>{element}</AuthenticatedOnly>;
 
   return (
     <>
       <SEO title={x.label} />
       {element}
     </>
-  )
-}
+  );
+};
 
 const renderSections = (s?: ArkSubRoute[]) => {
   return s
@@ -57,8 +58,8 @@ const renderSections = (s?: ArkSubRoute[]) => {
         x.path === "" && !x.subsections // index route, shall not have children
           ? { index: true, element: wrapLazy(x) }
           : { path: x.path, element: wrapLazy(x), children: renderSections(x.subsections) },
-    )
-}
+    );
+};
 
 const routes = siteMap
   .filter(x => x.path !== undefined)
@@ -67,7 +68,7 @@ const routes = siteMap
       x.path === "" && !x.subsections // index route, shall not have children
         ? { index: true, element: wrapLazy(x) }
         : { path: x.path, element: wrapLazy(x), children: renderSections(x.subsections) },
-  )
+  );
 
 export const router = createBrowserRouter(
   [
@@ -103,6 +104,6 @@ export const router = createBrowserRouter(
   {
     future: {},
   },
-)
+);
 
-if (import.meta.env.DEV || import.meta.env.MODE === "e2e") window.router = router
+if (import.meta.env.DEV || import.meta.env.MODE === "e2e") window.router = router;

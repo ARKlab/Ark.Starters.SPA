@@ -1,9 +1,9 @@
-import { Box, Heading, List } from "@chakra-ui/react"
-import { useTranslation } from "react-i18next"
-import { Link } from "react-router"
+import { Box, Heading, List } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router";
 
 const DetailsPageExampleMainView = () => {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
   return (
     <Box ml={"5"}>
       <Heading>{t("playground")}</Heading>
@@ -28,7 +28,7 @@ const DetailsPageExampleMainView = () => {
         </List.Root>
       </Box>
     </Box>
-  )
-}
+  );
+};
 
-export default DetailsPageExampleMainView
+export default DetailsPageExampleMainView;

@@ -1,20 +1,20 @@
-import { Button, Heading, HStack, Spinner, Table, VStack } from "@chakra-ui/react"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useState } from "react"
-import { useFieldArray, useForm } from "react-hook-form"
-import { useTranslation } from "react-i18next"
-import * as z from "zod"
+import { Button, Heading, HStack, Spinner, Table, VStack } from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import * as z from "zod";
 
-import { toaster } from "../../components/ui/toaster"
+import { toaster } from "../../components/ui/toaster";
 
-import { useGetConfigQuery, usePostConfigMutation } from "./configTableApi"
-import { TableRow } from "./TableRow"
+import { useGetConfigQuery, usePostConfigMutation } from "./configTableApi";
+import { TableRow } from "./TableRow";
 
 export type Employee = {
-  name: string
-  surName: string
-  employed: boolean
-}
+  name: string;
+  surName: string;
+  employed: boolean;
+};
 
 const configTableSchema = z.object({
   table: z
@@ -33,9 +33,9 @@ const configTableSchema = z.object({
     )
     .superRefine((table, ctx) => {
       const names = table.reduce<Record<string, number>>((acc, x) => {
-        acc[x.name] = (acc[x.name] || 0) + 1
-        return acc
-      }, {})
+        acc[x.name] = (acc[x.name] || 0) + 1;
+        return acc;
+      }, {});
 
       table.forEach((t, idx) => {
         if (names[t.name] > 1) {
@@ -43,35 +43,35 @@ const configTableSchema = z.object({
             code: "custom",
             message: "Duplicate names are not allowed",
             path: [idx, "name"],
-          })
+          });
         }
-      })
+      });
     }),
-})
+});
 
 export default function EditableTableExample() {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
-  const [postConfig, { isLoading: postConfigIsLoading }] = usePostConfigMutation()
+  const [postConfig, { isLoading: postConfigIsLoading }] = usePostConfigMutation();
 
   const { data, isLoading } = useGetConfigQuery(null, {
     refetchOnReconnect: true,
     refetchOnMountOrArgChange: true,
-  })
+  });
 
-  const [throwError, setError] = useState<boolean>(false)
+  const [throwError, setError] = useState<boolean>(false);
 
   const onSubmit = async (values: { table: Employee[] }) => {
-    const r = await postConfig({ employees: values.table, throwError })
-    setError(false)
+    const r = await postConfig({ employees: values.table, throwError });
+    setError(false);
     if (!r.error)
       toaster.create({
         title: "Config Submitted!",
         description: "Configuration has been submitted successfully",
         type: "success",
         duration: 5000,
-      })
-  }
+      });
+  };
 
   //#region FormConfiguration
   const {
@@ -84,12 +84,12 @@ export default function EditableTableExample() {
     values: { table: data ?? [] },
     mode: "onChange",
     resolver: zodResolver(configTableSchema),
-  })
+  });
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: "table",
-  })
+  });
   //#endregion
 
   return (
@@ -103,13 +103,17 @@ export default function EditableTableExample() {
               name: "",
               surName: "",
               employed: false,
-            })
+            });
           }}
           aria-label="Add Employee"
         >
           {t("new")}
         </Button>
-        <Button type="submit" disabled={isSubmitting || postConfigIsLoading || !isValid} loading={isSubmitting}>
+        <Button
+          type="submit"
+          disabled={isSubmitting || postConfigIsLoading || !isValid}
+          loading={isSubmitting}
+        >
           {t("submit")}
         </Button>
         <Button
@@ -117,7 +121,7 @@ export default function EditableTableExample() {
           disabled={isSubmitting || !isDirty || !errors}
           loading={isSubmitting || postConfigIsLoading}
           onClick={() => {
-            setError(true)
+            setError(true);
           }}
         >
           {t("triggerError")}
@@ -125,7 +129,7 @@ export default function EditableTableExample() {
         <Button
           disabled={!isDirty}
           onClick={() => {
-            reset()
+            reset();
           }}
         >
           {t("reset")}
@@ -156,7 +160,7 @@ export default function EditableTableExample() {
                 index={i}
                 errors={errors}
                 onDelete={() => {
-                  remove(i)
+                  remove(i);
                 }}
               />
             ))
@@ -164,5 +168,5 @@ export default function EditableTableExample() {
         </Table.Body>
       </Table.Root>
     </VStack>
-  )
+  );
 }

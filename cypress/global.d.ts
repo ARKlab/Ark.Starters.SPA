@@ -3,8 +3,8 @@
 
 declare namespace Cypress {
   interface Chainable {
-    actAsAnonUser(): void
-    navigateViaMenu(title: string | RegExp): void
-    navigateViaRoute(route: string): void
+    actAsAnonUser(): void;
+    navigateViaMenu(title: string | RegExp): void;
+    navigateViaRoute(route: string): void;
   }
 }

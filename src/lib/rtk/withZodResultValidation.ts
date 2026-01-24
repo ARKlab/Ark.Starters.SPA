@@ -1,5 +1,5 @@
-import type { BaseQueryArg, QueryReturnValue } from "@reduxjs/toolkit/query"
-import type { z } from "zod"
+import type { BaseQueryArg, QueryReturnValue } from "@reduxjs/toolkit/query";
+import type { z } from "zod";
 
 import type {
   ArkBaseQueryError,
@@ -8,16 +8,16 @@ import type {
   ArkBaseQueryFn,
   ArkBaseQueryExtraOptions,
   ArkBaseQueryApi,
-} from "./arkBaseQuery"
+} from "./arkBaseQuery";
 
 export type ZodSchemaError = {
-  status: "ZOD_SCHEMA_ERROR"
-  payload?: unknown
-  error: string
-}
+  status: "ZOD_SCHEMA_ERROR";
+  payload?: unknown;
+  error: string;
+};
 
 // Helper type to create union without redundancy
-type UnionWithZodError<BaseError> = BaseError | ZodSchemaError
+type UnionWithZodError<BaseError> = BaseError | ZodSchemaError;
 
 export type withZodResultValidationType = <BaseQuery extends ArkBaseQueryFn>(
   baseQuery: BaseQuery,
@@ -29,7 +29,7 @@ export type withZodResultValidationType = <BaseQuery extends ArkBaseQueryFn>(
   ArkBaseQueryExtraOptions<BaseQuery> & { dataSchema?: z.ZodType<ArkBaseQueryResult<BaseQuery>> },
   NonNullable<ArkBaseQueryMeta<BaseQuery>>,
   ArkBaseQueryApi<BaseQuery>
->
+>;
 
 /**
  * HOF that wraps a base query function with additional functionality for data validation using zod
@@ -44,19 +44,19 @@ export const withZodResultValidation: withZodResultValidationType =
       ArkBaseQueryResult<typeof baseQuery>,
       ArkBaseQueryError<typeof baseQuery>,
       ArkBaseQueryMeta<typeof baseQuery>
-    >
+    >;
 
     // Retrieve the data schema from the extraOptions object
-    const zodSchema = extraOptions?.dataSchema
+    const zodSchema = extraOptions?.dataSchema;
 
-    if (!zodSchema) return returnValue
-    if (returnValue.error) return returnValue
+    if (!zodSchema) return returnValue;
+    if (returnValue.error) return returnValue;
 
-    const { data } = returnValue
+    const { data } = returnValue;
 
-    const res = zodSchema.safeParse(data)
-    if (res.success) return returnValue
-    const error = res.error.message
+    const res = zodSchema.safeParse(data);
+    if (res.success) return returnValue;
+    const error = res.error.message;
     return {
       ...returnValue,
       error: {
@@ -64,5 +64,5 @@ export const withZodResultValidation: withZodResultValidationType =
         error,
         status: "ZOD_SCHEMA_ERROR",
       },
-    }
-  }
+    };
+  };

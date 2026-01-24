@@ -1,58 +1,60 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 
-import { formatDateString, formatISODate } from "./i18n/formatDate"
+import { formatDateString, formatISODate } from "./i18n/formatDate";
 
 const getType = (val: any): string => {
-  return Object.prototype.toString.call(val).slice(8, -1)
-}
+  return Object.prototype.toString.call(val).slice(8, -1);
+};
 const isEmpty = (val: any): boolean => {
-  if (val === null || val === undefined) return true
-  if (typeof val === "string" || Array.isArray(val)) return val.length === 0
-  if (typeof val === "object") return Object.keys(val).length === 0
-  return false
-}
+  if (val === null || val === undefined) return true;
+  if (typeof val === "string" || Array.isArray(val)) return val.length === 0;
+  if (typeof val === "object") return Object.keys(val).length === 0;
+  return false;
+};
 export const formatDateToString = (date: Date | null, dateFormat?: string) => {
-  dateFormat ??= "yyyy-MM-dd"
+  dateFormat ??= "yyyy-MM-dd";
 
-  if (!date) return ""
+  if (!date) return "";
 
   // For ISO format, use the standard ECMAScript method
   if (dateFormat === "yyyy-MM-dd") {
-    return formatISODate(date)
+    return formatISODate(date);
   }
 
   // For other formats, use the format string helper
-  return formatDateString(date, dateFormat)
-}
+  return formatDateString(date, dateFormat);
+};
 
 export async function delay(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms))
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 export const queryStringBuilder = ({ filters }: { filters: any }) => {
   const parts = Object.keys(filters)
     .map(key => builder({ key, data: filters, equator: "eq", join: "or" }))
-    .filter(x => !!x)
+    .filter(x => !!x);
 
-  if (parts.length === 0) return ""
+  if (parts.length === 0) return "";
 
-  const joined = parts.join(" and ")
-  const encoded = encodeURIComponent(joined)
-  return `&$filter=${encoded}`
-}
+  const joined = parts.join(" and ");
+  const encoded = encodeURIComponent(joined);
+  return `&$filter=${encoded}`;
+};
 
 export const searchBuilder = ({ filters }: { filters: any }) => {
-  const parts = Object.keys(filters).map(key => builder({ key, data: filters, equator: "=", join: "&" }))
+  const parts = Object.keys(filters).map(key =>
+    builder({ key, data: filters, equator: "=", join: "&" }),
+  );
 
-  const joined = parts.join("&")
+  const joined = parts.join("&");
 
-  if (!joined) return ""
+  if (!joined) return "";
 
-  const result = `&${joined}`
+  const result = `&${joined}`;
 
-  return result.replace(/\B\s+|\s+\B/g, "")
-}
+  return result.replace(/\B\s+|\s+\B/g, "");
+};
 
 const builder = ({
   key,
@@ -60,34 +62,34 @@ const builder = ({
   equator,
   join,
 }: {
-  key: string | number | symbol
-  data: any
-  equator: string
-  join: string
+  key: string | number | symbol;
+  data: any;
+  equator: string;
+  join: string;
 }) => {
-  const val = data[key]
-  const type = getType(val)
+  const val = data[key];
+  const type = getType(val);
 
   switch (type) {
     case "Array":
-      return arrDataBuilder({ key, data: val, equator, join })
+      return arrDataBuilder({ key, data: val, equator, join });
     case "Object":
-      return objDataBuilder({ data: val, equator, join })
+      return objDataBuilder({ data: val, equator, join });
     case "Number":
     case "String": {
-      const res = equator === "eq" ? `'${val}'` : encodeURIComponent(val)
-      return isEmpty(val) ? "" : `${String(key)} ${equator} ${res}`
+      const res = equator === "eq" ? `'${val}'` : encodeURIComponent(val);
+      return isEmpty(val) ? "" : `${String(key)} ${equator} ${res}`;
     }
     default:
-      return ""
+      return "";
   }
-}
+};
 
 const objDataBuilder = ({ data, equator, join }: { data: any; equator: string; join: string }) => {
   return Object.keys(data)
     .map(key => `${key} ${equator} '${data[key]}'`)
-    .join(` ${join} `)
-}
+    .join(` ${join} `);
+};
 
 const arrDataBuilder = ({
   key,
@@ -95,35 +97,35 @@ const arrDataBuilder = ({
   equator,
   join,
 }: {
-  key: string | number | symbol
-  data: any[]
-  equator: string
-  join: string
+  key: string | number | symbol;
+  data: any[];
+  equator: string;
+  join: string;
 }) => {
-  if (data.length === 0) return ""
-  const firstItemType = getType(data[0])
+  if (data.length === 0) return "";
+  const firstItemType = getType(data[0]);
 
   switch (firstItemType) {
     case "Object":
       return data
         .map((item: any) => {
-          const { value } = item
-          const val = equator === "eq" ? `'${value}'` : value
-          return `${String(key)} ${equator} ${val}`
+          const { value } = item;
+          const val = equator === "eq" ? `'${value}'` : value;
+          return `${String(key)} ${equator} ${val}`;
         })
-        .join(` ${join} `)
+        .join(` ${join} `);
     case "Number":
     case "String":
       return data
         .map((value: number | string) => {
-          const val = equator === "eq" ? `'${value}'` : value
-          return `${String(key)} ${equator} ${val}`
+          const val = equator === "eq" ? `'${value}'` : value;
+          return `${String(key)} ${equator} ${val}`;
         })
-        .join(` ${join} `)
+        .join(` ${join} `);
     default:
-      return ""
+      return "";
   }
-}
+};
 
 /**
  * This is the "whole set" validator for the form. of course for us is a table but it is in fact a form
@@ -134,37 +136,37 @@ const arrDataBuilder = ({
  */
 export function primaryKeyValidator<T>(propsToCheck: (keyof T)[]) {
   return (values: { table?: T[] }) => {
-    const table = values.table
+    const table = values.table;
 
-    if (!table) return null
+    if (!table) return null;
 
-    const errors: { table?: { _rowError?: string[] }[] } = {}
+    const errors: { table?: { _rowError?: string[] }[] } = {};
 
-    const seen = new Map<string, number[]>()
+    const seen = new Map<string, number[]>();
 
     table.forEach((row, index) => {
       // Build key <Prop1Value>|<Prop2Value>|...|<PropNValue>
-      const key = propsToCheck.map(prop => row[prop]).join("|")
+      const key = propsToCheck.map(prop => row[prop]).join("|");
 
       if (seen.has(key)) {
-        seen.get(key)?.push(index)
+        seen.get(key)?.push(index);
       } else {
-        seen.set(key, [index])
+        seen.set(key, [index]);
       }
-    })
+    });
 
     seen.forEach(indexes => {
       if (indexes.length > 1) {
         indexes.forEach(index => {
-          errors.table = errors.table ?? []
-          errors.table[index] = errors.table[index] || { _rowError: [] }
+          errors.table = errors.table ?? [];
+          errors.table[index] = errors.table[index] || { _rowError: [] };
           errors.table[index]._rowError?.push(
             `Duplicate ${propsToCheck.join(", ")} values found at indexes: ${indexes.join(", ")}`,
-          )
-        })
+          );
+        });
       }
-    })
+    });
 
-    return errors.table?.length ? errors : null
-  }
+    return errors.table?.length ? errors : null;
+  };
 }

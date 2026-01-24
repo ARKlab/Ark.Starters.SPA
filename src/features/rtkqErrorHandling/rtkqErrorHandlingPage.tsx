@@ -1,34 +1,54 @@
-import { Box, Button, createListCollection, Heading, Stack, Text, Wrap, WrapItem } from "@chakra-ui/react"
-import { useState } from "react"
-import { useTranslation } from "react-i18next"
-import { LuX } from "react-icons/lu"
+import {
+  Box,
+  Button,
+  createListCollection,
+  Heading,
+  Stack,
+  Text,
+  Wrap,
+  WrapItem,
+} from "@chakra-ui/react";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { LuX } from "react-icons/lu";
 
-import CenterSpinner from "../../components/centerSpinner"
-import CodeBlock from "../../components/codeBlock"
-import { SelectContent, SelectItem, SelectRoot, SelectTrigger, SelectValueText } from "../../components/ui/select"
+import CenterSpinner from "../../components/centerSpinner";
+import CodeBlock from "../../components/codeBlock";
+import {
+  SelectContent,
+  SelectItem,
+  SelectRoot,
+  SelectTrigger,
+  SelectValueText,
+} from "../../components/ui/select";
 
-import { useDownloadMutation, useGetQuery, usePostMutation, type ResultOption } from "./rtkqErrorHandlingApi"
+import {
+  useDownloadMutation,
+  useGetQuery,
+  usePostMutation,
+  type ResultOption,
+} from "./rtkqErrorHandlingApi";
 
 const GetResult = ({ option }: { option: ResultOption }) => {
-  const { data, error, isFetching } = useGetQuery(option)
+  const { data, error, isFetching } = useGetQuery(option);
 
   if (isFetching) {
-    return <CenterSpinner />
+    return <CenterSpinner />;
   }
 
   if (error) {
-    return <LuX />
+    return <LuX />;
   }
 
   return (
     <Stack>
       <CodeBlock data-test="query-results">{JSON.stringify(data)}</CodeBlock>
     </Stack>
-  )
-}
+  );
+};
 
 const PostResult = ({ option }: { option: ResultOption }) => {
-  const [post, result] = usePostMutation()
+  const [post, result] = usePostMutation();
 
   return (
     <>
@@ -39,18 +59,22 @@ const PostResult = ({ option }: { option: ResultOption }) => {
           </Button>
         </Box>
         {result.data ? (
-          <CodeBlock data-test="mutation-results-data">{JSON.stringify(result.data, null, 2)}</CodeBlock>
+          <CodeBlock data-test="mutation-results-data">
+            {JSON.stringify(result.data, null, 2)}
+          </CodeBlock>
         ) : null}
         {result.error ? (
-          <CodeBlock data-test="mutation-results-error">{JSON.stringify(result.error, null, 2)}</CodeBlock>
+          <CodeBlock data-test="mutation-results-error">
+            {JSON.stringify(result.error, null, 2)}
+          </CodeBlock>
         ) : null}
       </Stack>
     </>
-  )
-}
+  );
+};
 
 const Download = () => {
-  const [download, { error, isLoading }] = useDownloadMutation()
+  const [download, { error, isLoading }] = useDownloadMutation();
 
   return (
     <>
@@ -79,15 +103,17 @@ const Download = () => {
         </WrapItem>
       </Wrap>
 
-      {error ? <CodeBlock data-test="mutation-download-error">{JSON.stringify(error, null, 2)}</CodeBlock> : null}
+      {error ? (
+        <CodeBlock data-test="mutation-download-error">{JSON.stringify(error, null, 2)}</CodeBlock>
+      ) : null}
     </>
-  )
-}
+  );
+};
 
 const RTKQErrorHandlingPage = () => {
-  const { t } = useTranslation()
-  const [selectQueryValue, setSelectQueryValue] = useState<ResultOption>()
-  const [selectMutationValue, setSelectMutationValue] = useState<ResultOption>()
+  const { t } = useTranslation();
+  const [selectQueryValue, setSelectQueryValue] = useState<ResultOption>();
+  const [selectMutationValue, setSelectMutationValue] = useState<ResultOption>();
 
   const options = createListCollection({
     items: [
@@ -99,7 +125,7 @@ const RTKQErrorHandlingPage = () => {
       { label: "Error", value: "Error" as ResultOption },
       { label: "Timeout", value: "Timeout" as ResultOption },
     ],
-  })
+  });
 
   return (
     <Stack>
@@ -115,7 +141,7 @@ const RTKQErrorHandlingPage = () => {
               size="sm"
               w="xs"
               onValueChange={({ value }) => {
-                setSelectQueryValue(value[0] as ResultOption)
+                setSelectQueryValue(value[0] as ResultOption);
               }}
               value={selectQueryValue ? [selectQueryValue] : undefined}
             >
@@ -145,7 +171,7 @@ const RTKQErrorHandlingPage = () => {
               size="sm"
               width="xs"
               onValueChange={({ value }) => {
-                setSelectMutationValue(value[0] as ResultOption)
+                setSelectMutationValue(value[0] as ResultOption);
               }}
               value={selectMutationValue ? [selectMutationValue] : undefined}
             >
@@ -170,7 +196,7 @@ const RTKQErrorHandlingPage = () => {
         <Download />
       </Box>
     </Stack>
-  )
-}
+  );
+};
 
-export default RTKQErrorHandlingPage
+export default RTKQErrorHandlingPage;

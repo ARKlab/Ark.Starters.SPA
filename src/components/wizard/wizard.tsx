@@ -1,45 +1,45 @@
-import { Box, Button, Card, Flex, List, Text } from "@chakra-ui/react"
-import type { ReactNode } from "react"
-import { Children, useState } from "react"
-import type { UseFormProps } from "react-hook-form"
-import { FormProvider, useForm } from "react-hook-form"
+import { Box, Button, Card, Flex, List, Text } from "@chakra-ui/react";
+import type { ReactNode } from "react";
+import { Children, useState } from "react";
+import type { UseFormProps } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 
 type WizardProps<SchemaType extends object> = {
-  onSubmit: (v: SchemaType) => void
-  children: ReactNode
-  formProps?: UseFormProps<SchemaType>
-}
+  onSubmit: (v: SchemaType) => void;
+  children: ReactNode;
+  formProps?: UseFormProps<SchemaType>;
+};
 
 export function Wizard<SchemaType extends object>(props: WizardProps<SchemaType>) {
-  const { onSubmit, children, formProps } = props
+  const { onSubmit, children, formProps } = props;
 
-  const [page, setPage] = useState(0)
-  const activePage = Children.toArray(children)[page]
-  const isLastPage = page === Children.count(children) - 1
+  const [page, setPage] = useState(0);
+  const activePage = Children.toArray(children)[page];
+  const isLastPage = page === Children.count(children) - 1;
 
   const next = () => {
-    setPage(Math.min(page + 1, Children.count(children) - 1))
-  }
+    setPage(Math.min(page + 1, Children.count(children) - 1));
+  };
 
   const previous = () => {
-    setPage(Math.max(page - 1, 0))
-  }
+    setPage(Math.max(page - 1, 0));
+  };
 
-  const form = useForm(formProps)
+  const form = useForm(formProps);
 
   const {
     handleSubmit,
     formState: { isSubmitting },
     getValues,
-  } = form
+  } = form;
 
   const _onSubmit = (values: SchemaType) => {
     if (isLastPage) {
-      onSubmit(values)
+      onSubmit(values);
     } else {
-      next()
+      next();
     }
-  }
+  };
 
   return (
     <FormProvider {...form}>
@@ -79,7 +79,7 @@ export function Wizard<SchemaType extends object>(props: WizardProps<SchemaType>
         </Card.Root>
       </form>
     </FormProvider>
-  )
+  );
 }
 
-export const WizardPage = ({ children }: { children: ReactNode }) => <Box>{children}</Box>
+export const WizardPage = ({ children }: { children: ReactNode }) => <Box>{children}</Box>;

@@ -47,10 +47,10 @@ The production build generates a total bundle size of approximately **2.8MB** (b
 
 ```typescript
 // src/theme.ts
-import { createSystem, defaultConfig } from "@chakra-ui/react"
+import { createSystem, defaultConfig } from "@chakra-ui/react";
 
 // src/components/ui/provider.tsx
-import { ChakraProvider, defaultSystem } from "@chakra-ui/react"
+import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 ```
 
 **Opportunities:**
@@ -89,8 +89,8 @@ The `initGlobals.tsx` file is deceptively simple but pulls in massive dependenci
    ```typescript
    // src/initApp.tsx lines 25-28
    if (import.meta.env.DEV || import.meta.env.MODE === "e2e") {
-     const { worker } = await import("./lib/mocks/browserWorker")
-     await worker.start({ onUnhandledRequest: "warn" })
+     const { worker } = await import("./lib/mocks/browserWorker");
+     await worker.start({ onUnhandledRequest: "warn" });
    }
    ```
 

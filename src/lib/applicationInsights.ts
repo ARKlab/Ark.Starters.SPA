@@ -1,25 +1,29 @@
-import type { IClickAnalyticsConfiguration } from "@microsoft/applicationinsights-clickanalytics-js"
-import { ClickAnalyticsPlugin } from "@microsoft/applicationinsights-clickanalytics-js"
-import { ReactPlugin } from "@microsoft/applicationinsights-react-js"
-import type { ITelemetryPlugin } from "@microsoft/applicationinsights-web"
-import { ApplicationInsights } from "@microsoft/applicationinsights-web"
+import type { IClickAnalyticsConfiguration } from "@microsoft/applicationinsights-clickanalytics-js";
+import { ClickAnalyticsPlugin } from "@microsoft/applicationinsights-clickanalytics-js";
+import { ReactPlugin } from "@microsoft/applicationinsights-react-js";
+import type { ITelemetryPlugin } from "@microsoft/applicationinsights-web";
+import { ApplicationInsights } from "@microsoft/applicationinsights-web";
 
 // eslint-disable-next-line import/no-unresolved
-import { sha, abbreviatedSha, tag, lastTag } from "~build/git"
+import { sha, abbreviatedSha, tag, lastTag } from "~build/git";
 // eslint-disable-next-line import/no-unresolved
-import { version, name } from "~build/package"
+import { version, name } from "~build/package";
 
-const versionString = "v" + (version === "0.0.0" ? (tag ?? lastTag ?? version) : version) + "@" + abbreviatedSha
+const versionString =
+  "v" + (version === "0.0.0" ? (tag ?? lastTag ?? version) : version) + "@" + abbreviatedSha;
 
-export const reactPlugin = new ReactPlugin()
+export const reactPlugin = new ReactPlugin();
 
 export type ApplicationInsightsConfig = {
-  connectionString: string | Promise<string>
-  enableClickAnalytics?: boolean
-}
+  connectionString: string | Promise<string>;
+  enableClickAnalytics?: boolean;
+};
 
-export const setupAppInsights = ({ connectionString, enableClickAnalytics }: ApplicationInsightsConfig) => {
-  const clickAnalyticsPlugin = new ClickAnalyticsPlugin()
+export const setupAppInsights = ({
+  connectionString,
+  enableClickAnalytics,
+}: ApplicationInsightsConfig) => {
+  const clickAnalyticsPlugin = new ClickAnalyticsPlugin();
   const appInsights = new ApplicationInsights({
     config: {
       connectionString: connectionString,
@@ -36,7 +40,9 @@ export const setupAppInsights = ({ connectionString, enableClickAnalytics }: App
       // TODO: enable this when the GDPR consent is accepted using appInsights.getCookieMgr().enable()
       disableCookiesUsage: true,
 
-      extensions: ([reactPlugin] as ITelemetryPlugin[]).concat(...(enableClickAnalytics ? [clickAnalyticsPlugin] : [])),
+      extensions: ([reactPlugin] as ITelemetryPlugin[]).concat(
+        ...(enableClickAnalytics ? [clickAnalyticsPlugin] : []),
+      ),
       extensionConfig: {
         [clickAnalyticsPlugin.identifier]: {
           autoCapture: true,
@@ -46,15 +52,15 @@ export const setupAppInsights = ({ connectionString, enableClickAnalytics }: App
         } as IClickAnalyticsConfiguration,
       },
     },
-  })
+  });
 
   appInsights.addTelemetryInitializer(envelope => {
-    envelope.data ??= {}
-    envelope.data["app.name"] = name
-    envelope.data["app.version"] = versionString
-    envelope.data["app.sha"] = sha
-  })
+    envelope.data ??= {};
+    envelope.data["app.name"] = name;
+    envelope.data["app.version"] = versionString;
+    envelope.data["app.sha"] = sha;
+  });
 
-  appInsights.loadAppInsights()
-  return { appInsights, reactPlugin, clickAnalyticsPlugin }
-}
+  appInsights.loadAppInsights();
+  return { appInsights, reactPlugin, clickAnalyticsPlugin };
+};

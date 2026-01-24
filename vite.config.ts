@@ -1,29 +1,29 @@
 /// <reference types="vite/client" />
 /// <reference types="vite-plugin-svgr/client" />
 
-import msw from "@iodigital/vite-plugin-msw"
-import legacy from "@vitejs/plugin-legacy"
-import react from "@vitejs/plugin-react"
-import copy from "rollup-plugin-copy"
-import { visualizer } from "rollup-plugin-visualizer"
-import Info from "unplugin-info/vite"
-import { defineConfig, loadEnv } from "vite"
-import { i18nAlly } from "vite-plugin-i18n-ally"
-import { ViteImageOptimizer } from "vite-plugin-image-optimizer"
-import istanbul from "vite-plugin-istanbul"
-import oxlint from "vite-plugin-oxlint"
-import { VitePWA } from "vite-plugin-pwa"
-import { reactClickToComponent } from "vite-plugin-react-click-to-component"
-import svgr from "vite-plugin-svgr"
-import tsconfigPaths from "vite-tsconfig-paths"
+import msw from "@iodigital/vite-plugin-msw";
+import legacy from "@vitejs/plugin-legacy";
+import react from "@vitejs/plugin-react";
+import copy from "rollup-plugin-copy";
+import { visualizer } from "rollup-plugin-visualizer";
+import Info from "unplugin-info/vite";
+import { defineConfig, loadEnv } from "vite";
+import { i18nAlly } from "vite-plugin-i18n-ally";
+import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
+import istanbul from "vite-plugin-istanbul";
+import oxlint from "vite-plugin-oxlint";
+import { VitePWA } from "vite-plugin-pwa";
+import { reactClickToComponent } from "vite-plugin-react-click-to-component";
+import svgr from "vite-plugin-svgr";
+import tsconfigPaths from "vite-tsconfig-paths";
 
-import { supportedLngs } from "./src/config/lang"
+import { supportedLngs } from "./src/config/lang";
 
-const chunkSizeLimit = 10048
+const chunkSizeLimit = 10048;
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), "")
+  const env = loadEnv(mode, process.cwd(), "");
 
   return {
     plugins: [
@@ -56,7 +56,12 @@ export default defineConfig(({ mode }) => {
       reactClickToComponent(),
       VitePWA({
         disable: mode == "e2e", // disable PWA in e2e mode due to conflict with MSW (only 1 ServiceWorker can be registered)
-        pwaAssets: { disabled: false, config: true, htmlPreset: "2023", overrideManifestIcons: true },
+        pwaAssets: {
+          disabled: false,
+          config: true,
+          htmlPreset: "2023",
+          overrideManifestIcons: true,
+        },
         workbox: {
           maximumFileSizeToCacheInBytes: chunkSizeLimit * 1024,
           globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
@@ -95,7 +100,7 @@ export default defineConfig(({ mode }) => {
           return {
             src: "node_modules/@semihbou/zod-i18n-map/locales/" + l,
             dest: "src/locales",
-          }
+          };
         }),
         hook: "buildStart",
       }),
@@ -128,7 +133,14 @@ export default defineConfig(({ mode }) => {
       // since parsing CSS is slow
       css: true,
 
-      exclude: ["**/node_modules/**", "**/build/**", "**/public/**", "**/dev-dist/**", "virtual:**", "**/cypress/**"],
+      exclude: [
+        "**/node_modules/**",
+        "**/build/**",
+        "**/public/**",
+        "**/dev-dist/**",
+        "virtual:**",
+        "**/cypress/**",
+      ],
     },
     build: {
       emptyOutDir: true,
@@ -139,7 +151,12 @@ export default defineConfig(({ mode }) => {
         output: {
           manualChunks: {
             react: ["react", "react-router", "react-dom", "react-error-boundary"],
-            rtk: ["@reduxjs/toolkit", "@reduxjs/toolkit/query", "@reduxjs/toolkit/react", "react-redux"],
+            rtk: [
+              "@reduxjs/toolkit",
+              "@reduxjs/toolkit/query",
+              "@reduxjs/toolkit/react",
+              "react-redux",
+            ],
             chakra: ["@chakra-ui/react", "@emotion/react"],
             i18n: ["i18next", "react-i18next", "@semihbou/zod-i18n-map"],
             hookForm: ["react-hook-form", "@hookform/resolvers"],
@@ -166,5 +183,5 @@ export default defineConfig(({ mode }) => {
     esbuild: {
       drop: mode == "production" ? ["console", "debugger"] : [],
     },
-  }
-})
+  };
+});

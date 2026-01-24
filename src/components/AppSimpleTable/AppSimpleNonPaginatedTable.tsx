@@ -1,21 +1,21 @@
-import { Center, Spinner, Table } from "@chakra-ui/react"
-import type { SerializedError } from "@reduxjs/toolkit"
-import type { FetchBaseQueryError } from "@reduxjs/toolkit/query"
-import type { z, ZodObject, ZodRawShape } from "zod"
+import { Center, Spinner, Table } from "@chakra-ui/react";
+import type { SerializedError } from "@reduxjs/toolkit";
+import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import type { z, ZodObject, ZodRawShape } from "zod";
 
-import type { ProblemDetailsError } from "../../lib/rtk/withProblemDetails"
-import type { ZodSchemaError } from "../../lib/rtk/withZodResultValidation"
+import type { ProblemDetailsError } from "../../lib/rtk/withProblemDetails";
+import type { ZodSchemaError } from "../../lib/rtk/withZodResultValidation";
 
 export type PlainTablePropsType<T extends ZodRawShape> = {
-  data: z.output<ZodObject<T>>[] | undefined
-  colorPalette?: any // eslint-disable-line @typescript-eslint/no-explicit-any
-  variant?: "line" | "outline"
-  striped?: boolean
-  isLoading: boolean
-  isError: boolean
-  schema: ZodObject<T>
-  error: ProblemDetailsError | ZodSchemaError | FetchBaseQueryError | SerializedError | undefined
-}
+  data: z.output<ZodObject<T>>[] | undefined;
+  colorPalette?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  variant?: "line" | "outline";
+  striped?: boolean;
+  isLoading: boolean;
+  isError: boolean;
+  schema: ZodObject<T>;
+  error: ProblemDetailsError | ZodSchemaError | FetchBaseQueryError | SerializedError | undefined;
+};
 
 export const AppSimpleNonPaginatedTable = <T extends ZodRawShape>({
   data,
@@ -27,8 +27,8 @@ export const AppSimpleNonPaginatedTable = <T extends ZodRawShape>({
   error,
   schema,
 }: PlainTablePropsType<T>) => {
-  const notFetchingError = isError && error && data === undefined
-  const headers = Object.keys(schema.shape) as (keyof T)[]
+  const notFetchingError = isError && error && data === undefined;
+  const headers = Object.keys(schema.shape) as (keyof T)[];
   return (
     <>
       <Table.Root my="8" variant={variant} colorPalette={colorPalette} striped={striped}>
@@ -72,5 +72,5 @@ export const AppSimpleNonPaginatedTable = <T extends ZodRawShape>({
         )}
       </Table.Root>
     </>
-  )
-}
+  );
+};

@@ -26,10 +26,10 @@ export enum AuthenticationSteps {
 }
 
 export type UserAccountInfo = {
-  username: string
-  permissions: string[] | null
-}
+  username: string;
+  permissions: string[] | null;
+};
 export type AuthStoreType = {
   //To be implemented with needed infos about the user depending on the situation.
-  userInfo: UserAccountInfo | null
-}
+  userInfo: UserAccountInfo | null;
+};

@@ -38,7 +38,7 @@ On a deployed environment this do not rapresent any problem but, locally, having
 To avoid this ensure to set a custom name to this variable in the **index.tsx** file:
 
 ```typescript
-const colorModeManager = createLocalStorageManager("appName-ColorMode")
+const colorModeManager = createLocalStorageManager("appName-ColorMode");
 ```
 
 and then pass it in the **Provider**:
@@ -68,7 +68,7 @@ const zIndices = {
   skipLink: 1600,
   toast: 1700,
   tooltip: 1800,
-}
+};
 ```
 
 #### Distancing
@@ -145,16 +145,16 @@ _env_ is an object of type **AppSettingsType** defined as it follows:
 
 ```typescript
 type AppSettingsType = {
-  clientID: string
-  domain: string
-  scopes: string
-  knownAuthorities: string
-  signUpSignInPolicyId: string
-  serviceUrl: string
-  redirectUri: string
-  authority: string
-  audience: string
-}
+  clientID: string;
+  domain: string;
+  scopes: string;
+  knownAuthorities: string;
+  signUpSignInPolicyId: string;
+  serviceUrl: string;
+  redirectUri: string;
+  authority: string;
+  audience: string;
+};
 ```
 
 This will be used as globals configuration and can be implemented to support more features (ex: subsidiaries).
@@ -182,24 +182,24 @@ In order to make this works locally you must create a **.env.local** file in the
 ##### .env.local
 
 ```javascript
-AUTH0_ClientId = "yourclientId"
-AUTH0_Domain = "yourDomain"
-AUTH0_Audience = "https://yourAudience.auth0.com/api/v2/"
-AUTH0_RedirectUri = "yourRedirectUri"
-SERVICE_URL = "yourApi.com"
+AUTH0_ClientId = "yourclientId";
+AUTH0_Domain = "yourDomain";
+AUTH0_Audience = "https://yourAudience.auth0.com/api/v2/";
+AUTH0_RedirectUri = "yourRedirectUri";
+SERVICE_URL = "yourApi.com";
 ```
 
 ##### connectionStrings.cjs
 
 ```javascript
-var http = require("http")
-var port = process.env.port
+var http = require("http");
+var port = process.env.port;
 if (process.env.NODE_ENV === "development") {
-  require("dotenv").config({ path: ".env.local" })
+  require("dotenv").config({ path: ".env.local" });
 }
 http
   .createServer(function (req, res) {
-    res.writeHead(200, { "Content-Type": "text/javascript" })
+    res.writeHead(200, { "Content-Type": "text/javascript" });
     res.end(`
   window.appSettings = {
   clientID: "${process.env["AUTH0_ClientId"]}",
@@ -208,9 +208,9 @@ http
   redirectUri: "${process.env["AUTH0_RedirectUri"]}",
   serviceUrl: "${process.env["SERVICE_URL"]}",
   };
- `)
+ `);
   })
-  .listen(port)
+  .listen(port);
 ```
 
 #### MSAL
@@ -218,27 +218,27 @@ http
 ##### .env.local
 
 ```javascript
-PORT = 4000
-MSAL_ClientId = "yourclientId"
-MSAL_Domain = "yourDomain"
-MSAL_Scopes = "YourScopes"
-MSAL_knownAuthorities = "yourKnownAutorities"
-MSAL_authority = "YourMsalAutority"
-MSAL_RedirectUri = "yourRedirectUri"
-SERVICE_URL = "yourApi.com"
+PORT = 4000;
+MSAL_ClientId = "yourclientId";
+MSAL_Domain = "yourDomain";
+MSAL_Scopes = "YourScopes";
+MSAL_knownAuthorities = "yourKnownAutorities";
+MSAL_authority = "YourMsalAutority";
+MSAL_RedirectUri = "yourRedirectUri";
+SERVICE_URL = "yourApi.com";
 ```
 
 ##### connectionStrings.cjs
 
 ```javascript
-var http = require("http")
-var port = process.env.port
+var http = require("http");
+var port = process.env.port;
 if (process.env.NODE_ENV === "development") {
-  require("dotenv").config({ path: ".env.local" })
+  require("dotenv").config({ path: ".env.local" });
 }
 http
   .createServer(function (req, res) {
-    res.writeHead(200, { "Content-Type": "text/javascript" })
+    res.writeHead(200, { "Content-Type": "text/javascript" });
     res.end(`
   window.appSettings = {
   clientID: "${process.env["MSAL_ClientId"]}",
@@ -249,9 +249,9 @@ http
   redirectUri: "${process.env["MSAL_RedirectUri"]}",
   serviceUrl: "${process.env["SERVICE_URL"]}",
   };
- `)
+ `);
   })
-  .listen(port)
+  .listen(port);
 ```
 
 #### Adding providers
@@ -265,41 +265,41 @@ export interface AuthProvider {
    * Initializes the authentication module with configuration data,
    * typically fetched from Azure, and stores it in the Redux store.
    */
-  init: () => Promise<void>
+  init: () => Promise<void>;
   /**
    * Initiates the login process.
    */
-  login: () => void
+  login: () => void;
   /**
    * Initiates the logout process.
    */
-  logout: () => void
+  logout: () => void;
   /**
    * Retrieves the authentication token information
    * if token is not valid token will be refreshed silently
    * @returns The authentication token information.
    */
-  handleLoginRedirect: () => Promise<void>
-  getToken: (audience?: string) => TokenResponse
+  handleLoginRedirect: () => Promise<void>;
+  getToken: (audience?: string) => TokenResponse;
   /*
    * Checks whether the current user has the specified permission.
    *
    * @param permission - The permission to check.
    * @returns true if the user has the permission, false otherwise.
    */
-  hasPermission: (permission: string, audience?: string) => boolean
+  hasPermission: (permission: string, audience?: string) => boolean;
   /**
    * Provides information about the current login status,
    * including whether the authentication process is loading, any data retrieved,
    * and any encountered errors.
    */
-  getLoginStatus: () => LoginStatus
+  getLoginStatus: () => LoginStatus;
   /**
    * Provides information about the current token retrieval status,
    * including whether the process is loading, any data retrieved,
    * and any encountered errors.
    */
-  getUserDetail: () => Promise<UserAccountInfo | null>
+  getUserDetail: () => Promise<UserAccountInfo | null>;
 }
 ```
 
@@ -326,7 +326,7 @@ const TestSchema = z.object({
       i18n: { key: "custom_error" },
     },
   }),
-})
+});
 ```
 
 ```json

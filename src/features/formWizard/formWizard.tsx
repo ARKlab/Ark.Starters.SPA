@@ -1,11 +1,11 @@
-import { Box, Heading, Stack } from "@chakra-ui/react"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useTranslation } from "react-i18next"
-import * as z from "zod"
+import { Box, Heading, Stack } from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslation } from "react-i18next";
+import * as z from "zod";
 
-import { CheckboxControl, InputControl } from "../../components/formControls"
-import { Wizard, WizardPage } from "../../components/wizard/wizard"
-import { delay } from "../../lib/helper"
+import { CheckboxControl, InputControl } from "../../components/formControls";
+import { Wizard, WizardPage } from "../../components/wizard/wizard";
+import { delay } from "../../lib/helper";
 
 const _wizardSchema = z.object({
   firstName: z.string().min(6),
@@ -23,27 +23,42 @@ const _wizardSchema = z.object({
   newsletter: z.boolean(),
   specialOffers: z.boolean(),
   smsNotifications: z.boolean(),
-})
-type Schema = z.infer<typeof _wizardSchema>
+});
+type Schema = z.infer<typeof _wizardSchema>;
 
 export default function WizardFormView() {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   const onSubmit = async (values: Schema) => {
-    await delay(300)
-    window.alert(JSON.stringify(values, null, 2))
-  }
+    await delay(300);
+    window.alert(JSON.stringify(values, null, 2));
+  };
 
   return (
     <Box>
       <Heading>{t("wizard_form_title")}</Heading>
       <Box mt="4">
-        <Wizard<Schema> onSubmit={onSubmit} formProps={{ mode: "onChange", resolver: zodResolver(_wizardSchema) }}>
+        <Wizard<Schema>
+          onSubmit={onSubmit}
+          formProps={{ mode: "onChange", resolver: zodResolver(_wizardSchema) }}
+        >
           <WizardPage>
             <Stack gap="4">
-              <InputControl name="firstName" label={t("firstname")} placeholder={t("wizard_first_name_placeholder")} />
-              <InputControl name="lastName" label={t("lastname")} placeholder={t("wizard_last_name_placeholder")} />
-              <InputControl name="email" label={t("email")} placeholder={t("wizard_email_placeholder")} />
+              <InputControl
+                name="firstName"
+                label={t("firstname")}
+                placeholder={t("wizard_first_name_placeholder")}
+              />
+              <InputControl
+                name="lastName"
+                label={t("lastname")}
+                placeholder={t("wizard_last_name_placeholder")}
+              />
+              <InputControl
+                name="email"
+                label={t("email")}
+                placeholder={t("wizard_email_placeholder")}
+              />
               <InputControl
                 name="password"
                 label={t("password")}
@@ -55,7 +70,11 @@ export default function WizardFormView() {
 
           <WizardPage>
             <Stack gap={"4"}>
-              <InputControl name="phone" label={t("Phone")} placeholder={t("wizard_phone_placeholder")} />
+              <InputControl
+                name="phone"
+                label={t("Phone")}
+                placeholder={t("wizard_phone_placeholder")}
+              />
               <InputControl
                 name="billingAddress"
                 label={t("billing_address")}
@@ -73,11 +92,14 @@ export default function WizardFormView() {
             <Stack gap={"4"}>
               <CheckboxControl name="newsletter" label={t("wizard_newsletter_label")} />
               <CheckboxControl name="specialOffers" label={t("wizard_special_offers_label")} />
-              <CheckboxControl name="smsNotifications" label={t("wizard_sms_notifications_label")} />
+              <CheckboxControl
+                name="smsNotifications"
+                label={t("wizard_sms_notifications_label")}
+              />
             </Stack>
           </WizardPage>
         </Wizard>
       </Box>
     </Box>
-  )
+  );
 }

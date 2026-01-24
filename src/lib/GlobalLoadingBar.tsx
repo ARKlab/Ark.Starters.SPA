@@ -1,39 +1,39 @@
-import { Progress } from "@chakra-ui/react"
-import { QueryStatus } from "@reduxjs/toolkit/query"
+import { Progress } from "@chakra-ui/react";
+import { QueryStatus } from "@reduxjs/toolkit/query";
 
-import { useAppSelector } from "../app/hooks"
+import { useAppSelector } from "../app/hooks";
 
-import useDebounce from "./useDebounce"
+import useDebounce from "./useDebounce";
 
 type X = {
-  queries?: Record<string, { status: QueryStatus } | undefined>
-  mutations?: Record<string, { status: QueryStatus } | undefined>
-}
-type S = Record<string, X>
+  queries?: Record<string, { status: QueryStatus } | undefined>;
+  mutations?: Record<string, { status: QueryStatus } | undefined>;
+};
+type S = Record<string, X>;
 
 export const GlobalLoadingBar = () => {
   const loading = useAppSelector(s => {
     return Object.values(s as unknown as S)
       .flatMap(x => {
-        let r: ({ status: QueryStatus } | undefined)[] = []
+        let r: ({ status: QueryStatus } | undefined)[] = [];
         if (x.queries) {
-          r = [...r, ...Object.values(x.queries)]
+          r = [...r, ...Object.values(x.queries)];
         }
         if (x.mutations) {
-          r = [...r, ...Object.values(x.mutations)]
+          r = [...r, ...Object.values(x.mutations)];
         }
-        return r
+        return r;
       })
-      .some(q => q?.status === QueryStatus.pending)
-  })
+      .some(q => q?.status === QueryStatus.pending);
+  });
 
   // avoid starting the progress bar if requests take less than 500
-  const debounced = useDebounce(loading, 500)
+  const debounced = useDebounce(loading, 500);
   return (
     <Progress.Root size={"xs"} value={debounced ? null : 0} variant="subtle">
       <Progress.Track bg={"header"}>
         <Progress.Range />
       </Progress.Track>
     </Progress.Root>
-  )
-}
+  );
+};

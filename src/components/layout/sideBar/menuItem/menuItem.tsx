@@ -1,12 +1,12 @@
-import { Box, Link as ChakraLink, Grid, Icon, Text, WrapItem } from "@chakra-ui/react"
-import { Link as ReactRouterLink } from "react-router"
+import { Box, Link as ChakraLink, Grid, Icon, Text, WrapItem } from "@chakra-ui/react";
+import { Link as ReactRouterLink } from "react-router";
 
-import type { ArkSubRoute } from "../../../../lib/siteMapTypes"
+import type { ArkSubRoute } from "../../../../lib/siteMapTypes";
 
-type MenuItemProps = Omit<ArkSubRoute, "isInMenu" | "component" | "authenticatedOnly">
+type MenuItemProps = Omit<ArkSubRoute, "isInMenu" | "component" | "authenticatedOnly">;
 
 export default function MenuItem(props: MenuItemProps) {
-  const { label, path = "", icon, externalUrl } = props
+  const { label, path = "", icon, externalUrl } = props;
   return (
     <ChakraLink asChild outline={"none"} _hover={{ textDecoration: "none" }}>
       <ReactRouterLink to={externalUrl ?? path} target={externalUrl ? "_blank" : undefined}>
@@ -35,5 +35,5 @@ export default function MenuItem(props: MenuItemProps) {
         </WrapItem>
       </ReactRouterLink>
     </ChakraLink>
-  )
+  );
 }

@@ -1,20 +1,30 @@
-import { Button } from "@chakra-ui/react"
-import type { RefObject } from "react"
-import { useTranslation } from "react-i18next"
-import { LuChevronDown, LuGlobe } from "react-icons/lu"
+import { Button } from "@chakra-ui/react";
+import type { RefObject } from "react";
+import { useTranslation } from "react-i18next";
+import { LuChevronDown, LuGlobe } from "react-icons/lu";
 
-import { MenuItemGroup, MenuTrigger, MenuContent, MenuItem, MenuRoot } from "../../components/ui/menu"
-import { supportedLngs } from "../../config/lang"
+import {
+  MenuItemGroup,
+  MenuTrigger,
+  MenuContent,
+  MenuItem,
+  MenuRoot,
+} from "../../components/ui/menu";
+import { supportedLngs } from "../../config/lang";
 
-export const LocaleSwitcher = ({ portalRef }: { portalRef?: React.RefObject<HTMLDivElement | null> }) => {
-  const { i18n } = useTranslation()
+export const LocaleSwitcher = ({
+  portalRef,
+}: {
+  portalRef?: React.RefObject<HTMLDivElement | null>;
+}) => {
+  const { i18n } = useTranslation();
 
   const swith = async (k: string) => {
-    await i18n.changeLanguage(k)
-  }
+    await i18n.changeLanguage(k);
+  };
 
   if (Object.entries(supportedLngs).length < 2) {
-    return <></>
+    return <></>;
   }
   return (
     <MenuRoot>
@@ -35,5 +45,5 @@ export const LocaleSwitcher = ({ portalRef }: { portalRef?: React.RefObject<HTML
         </MenuItemGroup>
       </MenuContent>
     </MenuRoot>
-  )
-}
+  );
+};

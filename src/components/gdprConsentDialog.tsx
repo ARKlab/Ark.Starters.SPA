@@ -14,31 +14,36 @@ import {
   Text,
   useDisclosure,
   VStack,
-} from "@chakra-ui/react"
-import { useRef, type ReactNode } from "react"
-import type { Control } from "react-hook-form"
-import { Controller, useForm } from "react-hook-form"
-import { Trans, useTranslation } from "react-i18next"
-import { LuCookie } from "react-icons/lu"
+} from "@chakra-ui/react";
+import { useRef, type ReactNode } from "react";
+import type { Control } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import { Trans, useTranslation } from "react-i18next";
+import { LuCookie } from "react-icons/lu";
 
-import { cookiePolicyHref, hasMarketingCookies, hasPreferencesCookies, hasStatisticsCookies } from "../config/gdpr"
-import { LocaleSwitcher } from "../lib/i18n/localeSwitcher"
-import type { ConsentState } from "../lib/useGDPRConsent"
-import { useCookieConsent } from "../lib/useGDPRConsent"
+import {
+  cookiePolicyHref,
+  hasMarketingCookies,
+  hasPreferencesCookies,
+  hasStatisticsCookies,
+} from "../config/gdpr";
+import { LocaleSwitcher } from "../lib/i18n/localeSwitcher";
+import type { ConsentState } from "../lib/useGDPRConsent";
+import { useCookieConsent } from "../lib/useGDPRConsent";
 
-import { DialogBody, DialogContent, DialogFooter, DialogHeader, DialogRoot } from "./ui/dialog"
-import { Switch } from "./ui/switch"
+import { DialogBody, DialogContent, DialogFooter, DialogHeader, DialogRoot } from "./ui/dialog";
+import { Switch } from "./ui/switch";
 
 type OptionProps = {
-  title: ReactNode
-  desc: ReactNode
-  name: string
-  control: Control
-  required?: boolean
-}
+  title: ReactNode;
+  desc: ReactNode;
+  name: string;
+  control: Control;
+  required?: boolean;
+};
 
 function Option(props: OptionProps) {
-  const { title, desc, name, control, required } = props
+  const { title, desc, name, control, required } = props;
 
   return (
     <Field.Root id={name}>
@@ -51,32 +56,38 @@ function Option(props: OptionProps) {
           name={name}
           control={control}
           render={({ field }) => (
-            <Switch {...field} colorPalette="primary" size="lg" checked={field.value} readOnly={required} />
+            <Switch
+              {...field}
+              colorPalette="primary"
+              size="lg"
+              checked={field.value}
+              readOnly={required}
+            />
           )}
         />
       </Flex>
       <FieldHelperText mt={"4"}>{desc}</FieldHelperText>
     </Field.Root>
-  )
+  );
 }
 
 export const GdprConsentDialog = () => {
-  const [consent, actions] = useCookieConsent()
-  const ref = useRef<HTMLButtonElement>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
-  const { open, onOpen, onClose } = useDisclosure()
-  const { t } = useTranslation("gdpr")
+  const [consent, actions] = useCookieConsent();
+  const ref = useRef<HTMLButtonElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const { open, onOpen, onClose } = useDisclosure();
+  const { t } = useTranslation("gdpr");
 
   const { handleSubmit, control, reset } = useForm<ConsentState>({
     defaultValues: { necessary: true },
-  })
+  });
 
-  if (consent) return <></>
+  if (consent) return <></>;
 
   const onSubmit = (values: ConsentState) => {
-    actions.acceptSome(values)
-    onClose()
-  }
+    actions.acceptSome(values);
+    onClose();
+  };
 
   return (
     <>
@@ -100,8 +111,9 @@ export const GdprConsentDialog = () => {
           <DialogBody>
             <Text>
               <Trans t={t} i18nKey="policy">
-                We and selected third parties use cookies or similar technologies for technical purposes and, with your
-                consent, for other purposes as specified in the <Link href={cookiePolicyHref}>cookie policy</Link>.
+                We and selected third parties use cookies or similar technologies for technical
+                purposes and, with your consent, for other purposes as specified in the{" "}
+                <Link href={cookiePolicyHref}>cookie policy</Link>.
               </Trans>
             </Text>
           </DialogBody>
@@ -115,8 +127,8 @@ export const GdprConsentDialog = () => {
               <Button
                 ref={ref}
                 onClick={() => {
-                  actions.rejectNotNecessary()
-                  onClose()
+                  actions.rejectNotNecessary();
+                  onClose();
                 }}
                 data-test="gdpr-reject"
               >
@@ -125,8 +137,8 @@ export const GdprConsentDialog = () => {
               <Button
                 colorPalette="error"
                 onClick={() => {
-                  actions.acceptAll()
-                  onClose()
+                  actions.acceptAll();
+                  onClose();
                 }}
                 ml={"3"}
                 data-test="gdpr-acceptAll"
@@ -141,8 +153,8 @@ export const GdprConsentDialog = () => {
       <DialogRoot
         open={open}
         onExitComplete={() => {
-          reset({ necessary: true })
-          onClose()
+          reset({ necessary: true });
+          onClose();
         }}
         size={"xl"}
         scrollBehavior="inside"
@@ -158,10 +170,11 @@ export const GdprConsentDialog = () => {
             <VStack separator={<StackSeparator borderColor="fg.muted" />} gap={"4"} align="stretch">
               <Text>
                 <Trans t={t} i18nKey="customize">
-                  The options provided in this section allow you to customize your consent preferences for any tracking
-                  technology used for the purposes described below. To learn more about how these trackers help us and
-                  how they work, refer to the <Link href={cookiePolicyHref}>cookie policy</Link>. Please be aware that
-                  denying consent for a particular purpose may make related features unavailable.
+                  The options provided in this section allow you to customize your consent
+                  preferences for any tracking technology used for the purposes described below. To
+                  learn more about how these trackers help us and how they work, refer to the{" "}
+                  <Link href={cookiePolicyHref}>cookie policy</Link>. Please be aware that denying
+                  consent for a particular purpose may make related features unavailable.
                 </Trans>
               </Text>
               <Option
@@ -203,8 +216,8 @@ export const GdprConsentDialog = () => {
             <Box>
               <Button
                 onClick={() => {
-                  reset({ necessary: true })
-                  onClose()
+                  reset({ necessary: true });
+                  onClose();
                 }}
               >
                 Back
@@ -220,5 +233,5 @@ export const GdprConsentDialog = () => {
         </DialogContent>
       </DialogRoot>
     </>
-  )
-}
+  );
+};

@@ -1,42 +1,42 @@
-import { Box, Heading } from "@chakra-ui/react"
-import { useState } from "react"
-import { useTranslation } from "react-i18next"
+import { Box, Heading } from "@chakra-ui/react";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
-import { AppDateRange } from "../../lib/components/AppDateRange/appDateRange"
-import { AppInputFilter } from "../../lib/components/AppInputFilter/appInputFilter"
-import type { AppSelectOptionItem } from "../../lib/components/AppSelect/appSelect"
-import AppSelect from "../../lib/components/AppSelect/appSelect"
+import { AppDateRange } from "../../lib/components/AppDateRange/appDateRange";
+import { AppInputFilter } from "../../lib/components/AppInputFilter/appInputFilter";
+import type { AppSelectOptionItem } from "../../lib/components/AppSelect/appSelect";
+import AppSelect from "../../lib/components/AppSelect/appSelect";
 
-import ConsoleCard from "./consoleCard"
+import ConsoleCard from "./consoleCard";
 enum TestEnum {
   OptionOne = "OptionOne",
   OptionTwo = "OptionTwo",
   OptionThree = "OptionThree",
 }
 export default function ControlComponentsView() {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
-  const [textFilterValue, setTextFilterValue] = useState<string>("")
-  const [selectValue, setSelectValue] = useState<string | undefined>(undefined)
-  const [logs, setLogs] = useState<{ name: string; value: unknown }[]>([])
-  const [dateRange, setDateRange] = useState<Date[]>([])
+  const [textFilterValue, setTextFilterValue] = useState<string>("");
+  const [selectValue, setSelectValue] = useState<string | undefined>(undefined);
+  const [logs, setLogs] = useState<{ name: string; value: unknown }[]>([]);
+  const [dateRange, setDateRange] = useState<Date[]>([]);
   const handleInputChange = (name: string, value: unknown): void => {
-    setLogs(prevLogs => [...prevLogs, { name, value }])
-  }
+    setLogs(prevLogs => [...prevLogs, { name, value }]);
+  };
 
   function setDateRangeValue(value: Date[]) {
-    setDateRange(value)
+    setDateRange(value);
     if (value.length >= 1) {
-      handleInputChange("dateRange start", t("{{val, isoDate}}", { val: value[0] }))
+      handleInputChange("dateRange start", t("{{val, isoDate}}", { val: value[0] }));
     }
     if (value.length >= 2) {
-      handleInputChange("dateRange end", t("{{val, isoDate}}", { val: value[1] }))
+      handleInputChange("dateRange end", t("{{val, isoDate}}", { val: value[1] }));
     }
   }
 
   function onChangeSelect(value: string | undefined) {
-    handleInputChange("selectFromEnum", value)
-    setSelectValue(value)
+    handleInputChange("selectFromEnum", value);
+    setSelectValue(value);
   }
 
   function getOptionsFromEnumValues(
@@ -48,8 +48,11 @@ export default function ControlComponentsView() {
       .filter(value => !excludeValues?.includes(value)) // Step 2: Filter out excluded values
       .map(
         value =>
-          ({ label: value, value: parser ? parser(value) : value !== "NotSet" ? value : "" }) as AppSelectOptionItem,
-      )
+          ({
+            label: value,
+            value: parser ? parser(value) : value !== "NotSet" ? value : "",
+          }) as AppSelectOptionItem,
+      );
   }
 
   return (
@@ -63,12 +66,16 @@ export default function ControlComponentsView() {
           value={selectValue}
         />
 
-        <AppDateRange range={dateRange} setRange={setDateRangeValue} label={t("controlComponents_dateRange")} />
+        <AppDateRange
+          range={dateRange}
+          setRange={setDateRangeValue}
+          label={t("controlComponents_dateRange")}
+        />
         <AppInputFilter
           value={textFilterValue}
           handleInputChange={(name: string, value: unknown) => {
-            handleInputChange(name, value)
-            setTextFilterValue(value as string)
+            handleInputChange(name, value);
+            setTextFilterValue(value as string);
           }}
           title={t("controlComponents_inputFilterWithClear")}
           propName={"textFilter"}
@@ -76,5 +83,5 @@ export default function ControlComponentsView() {
       </Box>
       <ConsoleCard logs={logs} setLogs={setLogs} />
     </Box>
-  )
+  );
 }

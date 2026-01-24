@@ -319,8 +319,8 @@ Lazy load Application Insights only when configured to avoid bundling monitoring
 1. Update `src/initApp.tsx`:
    ```typescript
    if (appSettings.applicationInsights) {
-     const { setupAppInsights } = await import("./lib/applicationInsights")
-     setupAppInsights(appSettings.applicationInsights)
+     const { setupAppInsights } = await import("./lib/applicationInsights");
+     setupAppInsights(appSettings.applicationInsights);
    }
    ```
 2. Create stub context provider for when not loaded
@@ -384,8 +384,8 @@ Move Redux API slices from eager loading to lazy loading per feature.
    useEffect(() => {
      import("./featureApiSlice").then(({ featureApi }) => {
        // Slice auto-registers via RTK
-     })
-   }, [])
+     });
+   }, []);
    ```
 3. Alternative: Ensure all routes use React.lazy
 4. Test each feature page

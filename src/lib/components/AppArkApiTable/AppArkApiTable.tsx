@@ -1,12 +1,19 @@
-import { Box, Button, Center, HStack, Spinner, Table, VStack } from "@chakra-ui/react"
-import type { DragEndEvent } from "@dnd-kit/core"
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core"
+import { Box, Button, Center, HStack, Spinner, Table, VStack } from "@chakra-ui/react";
+import type { DragEndEvent } from "@dnd-kit/core";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   horizontalListSortingStrategy,
-} from "@dnd-kit/sortable"
+} from "@dnd-kit/sortable";
 import type {
   Column,
   ColumnDef,
@@ -17,7 +24,7 @@ import type {
   Table as ReactTable,
   RowSelectionState,
   SortingState,
-} from "@tanstack/react-table"
+} from "@tanstack/react-table";
 import {
   flexRender,
   getCoreRowModel,
@@ -27,48 +34,53 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   useReactTable,
-} from "@tanstack/react-table"
-import { useEffect, useMemo, useState } from "react"
-import { useTranslation } from "react-i18next"
+} from "@tanstack/react-table";
+import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
-import type { AppDispatch } from "../../../app/configureStore"
-import { useAppSelector } from "../../../app/hooks"
-import { DebouncedInputColumnHeader } from "../../../components/debouncedInputColumnHeader"
-import type { ListResponse } from "../../apiTypes"
-import { useFiltersEqual } from "../../useFiltersEqual"
-import { ChackraDateRangeInHeader } from "../AppDateRange/chackraDateRangeInHeader"
-import AppPagination from "../AppPagination/AppPagination"
+import type { AppDispatch } from "../../../app/configureStore";
+import { useAppSelector } from "../../../app/hooks";
+import { DebouncedInputColumnHeader } from "../../../components/debouncedInputColumnHeader";
+import type { ListResponse } from "../../apiTypes";
+import { useFiltersEqual } from "../../useFiltersEqual";
+import { ChackraDateRangeInHeader } from "../AppDateRange/chackraDateRangeInHeader";
+import AppPagination from "../AppPagination/AppPagination";
 
-import { ColumnSorter } from "./columnSorter"
-import { DraggableColumnHeader } from "./draggableColumnHeader"
-import { getTableState, setTableState } from "./tableStateSlice"
+import { ColumnSorter } from "./columnSorter";
+import { DraggableColumnHeader } from "./draggableColumnHeader";
+import { getTableState, setTableState } from "./tableStateSlice";
 
 type ArkApiTableProps<T> = {
-  columns: ColumnDef<T>[]
+  columns: ColumnDef<T>[];
   useQueryHook: (
-    args: { pageIndex: number; pageSize: number; sorting: SortingState; filters: ColumnFiltersState },
+    args: {
+      pageIndex: number;
+      pageSize: number;
+      sorting: SortingState;
+      filters: ColumnFiltersState;
+    },
     options: { skip: boolean },
   ) => {
-    data?: ListResponse<T>
-    isLoading: boolean
-    isFetching: boolean
-  }
-  reduxDispatchHook: AppDispatch
-  isDraggable?: boolean
-  isSortable?: boolean
-  disableHeaderFilters?: boolean
-  externalFilters?: boolean
-  externalFiltersState?: ColumnFiltersState
-  setRowSelection?: OnChangeFn<T[]> | ((rows: T[]) => void)
-  selectedRows?: RowSelectionState
-  pageSize?: number
-  getRowId?: (row: T) => string
-  defaultSorting?: SortingState
-  skipQuery?: boolean //set this to true if you want the useQueryHook to be skipped
-  extractPagination?: (pagination: PaginationState) => void
-  tableKey: string
-  overWriteStore?: boolean //if true, when setting the table state in the store, it will overwrite all other table states. Deafault is true. Could be usueful when you have multiple tables in the same page and you want to retain filters for all of them
-}
+    data?: ListResponse<T>;
+    isLoading: boolean;
+    isFetching: boolean;
+  };
+  reduxDispatchHook: AppDispatch;
+  isDraggable?: boolean;
+  isSortable?: boolean;
+  disableHeaderFilters?: boolean;
+  externalFilters?: boolean;
+  externalFiltersState?: ColumnFiltersState;
+  setRowSelection?: OnChangeFn<T[]> | ((rows: T[]) => void);
+  selectedRows?: RowSelectionState;
+  pageSize?: number;
+  getRowId?: (row: T) => string;
+  defaultSorting?: SortingState;
+  skipQuery?: boolean; //set this to true if you want the useQueryHook to be skipped
+  extractPagination?: (pagination: PaginationState) => void;
+  tableKey: string;
+  overWriteStore?: boolean; //if true, when setting the table state in the store, it will overwrite all other table states. Deafault is true. Could be usueful when you have multiple tables in the same page and you want to retain filters for all of them
+};
 
 export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
   const {
@@ -88,53 +100,63 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
     skipQuery: skip = false,
     extractPagination,
     tableKey,
-  } = props
+  } = props;
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 1,
     pageSize: pageSizeProp ?? 10,
-  })
-  const reduxTableState = useAppSelector(state => getTableState(state, tableKey))
-  const filtersAreEquals = useFiltersEqual(reduxTableState?.filters, externalFiltersState)
-  const [sortingState, setSorting] = useState<SortingState>(defaultSorting ?? [{ id: "", desc: false }])
-  const [rowIndexSelection, setRowIndexSelection] = useState<RowSelectionState>(selectedRows ?? {}) //this is the state of the selected rows
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  });
+  const reduxTableState = useAppSelector(state => getTableState(state, tableKey));
+  const filtersAreEquals = useFiltersEqual(reduxTableState?.filters, externalFiltersState);
+  const [sortingState, setSorting] = useState<SortingState>(
+    defaultSorting ?? [{ id: "", desc: false }],
+  );
+  const [rowIndexSelection, setRowIndexSelection] = useState<RowSelectionState>(selectedRows ?? {}); //this is the state of the selected rows
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   //When filters are provided externally, we use them instead of the internal state
   useEffect(() => {
     if (externalFilters) {
-      setColumnFilters(externalFiltersState ?? [])
+      setColumnFilters(externalFiltersState ?? []);
       setPagination({
         pageIndex: 1,
         pageSize: pageSizeProp ?? 10,
-      })
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [externalFilters, externalFiltersState])
+  }, [externalFilters, externalFiltersState]);
 
   useEffect(() => {
     const storeFilters = {
       filters: columnFilters,
       pagination: { pageIndex, pageSize },
       sorting: sortingState,
-    }
+    };
 
     if (!filtersAreEquals && tableKey) {
       reduxDispatchHook(
-        setTableState({ key: tableKey, tableState: storeFilters, overWrite: props.overWriteStore ?? true }),
-      )
+        setTableState({
+          key: tableKey,
+          tableState: storeFilters,
+          overWrite: props.overWriteStore ?? true,
+        }),
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [columnFilters, pageIndex, pageSize, sortingState, tableKey])
+  }, [columnFilters, pageIndex, pageSize, sortingState, tableKey]);
 
   const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(
-    columns.filter((x): x is ColumnDef<T> & { id: string } => x.id !== undefined).map(column => column.id), //must start out with populated columnOrder so we can splice
-  )
+    columns
+      .filter((x): x is ColumnDef<T> & { id: string } => x.id !== undefined)
+      .map(column => column.id), //must start out with populated columnOrder so we can splice
+  );
 
   const resetOrder = () => {
     setColumnOrder(
-      columns.filter((x): x is ColumnDef<T> & { id: string } => x.id !== undefined).map(column => column.id),
-    )
-  }
+      columns
+        .filter((x): x is ColumnDef<T> & { id: string } => x.id !== undefined)
+        .map(column => column.id),
+    );
+  };
 
   const { data, isLoading, isFetching } = useQueryHook(
     {
@@ -144,34 +166,34 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
       filters: columnFilters,
     },
     { skip }, // Skip the query if the skip prop is true
-  )
+  );
 
-  const tableData: T[] = data?.data ?? []
+  const tableData: T[] = data?.data ?? [];
   useEffect(() => {
     if (!getRowId) {
-      return
+      return;
     }
 
-    const selectedIds = Object.keys(rowIndexSelection).filter(key => rowIndexSelection[key]) // Get selected row IDs
+    const selectedIds = Object.keys(rowIndexSelection).filter(key => rowIndexSelection[key]); // Get selected row IDs
 
     const rows = selectedIds
       .map(id => data?.data.find(row => getRowId(row) === id)) // Find rows by ID
-      .filter(row => row !== undefined) as T[] // Filter out undefined rows
+      .filter(row => row !== undefined) as T[]; // Filter out undefined rows
 
-    if (setRowSelection) setRowSelection(rows)
+    if (setRowSelection) setRowSelection(rows);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowIndexSelection, data?.data])
+  }, [rowIndexSelection, data?.data]);
   // useMemo is used here to optimize performance by memoizing the sorting and pagination states.
   // This avoids unnecessary re-renders and computations if these states do not change between renders.
-  const sorting = useMemo(() => sortingState, [sortingState])
+  const sorting = useMemo(() => sortingState, [sortingState]);
   const pagination = useMemo(
     () => ({
       pageIndex,
       pageSize,
     }),
     [pageIndex, pageSize],
-  )
-  const { t } = useTranslation()
+  );
+  const { t } = useTranslation();
   const table = useReactTable<T>({
     //this is the definition of the table
     data: tableData,
@@ -205,42 +227,42 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
     enableColumnFilters: true,
     enableFilters: true,
     manualFiltering: true,
-  })
+  });
 
   const onPageIndexChange = (pageIndex: number) => {
-    setPagination(prevState => ({ ...prevState, pageIndex: pageIndex }))
-    extractPagination?.({ ...pagination, pageIndex: pageIndex })
+    setPagination(prevState => ({ ...prevState, pageIndex: pageIndex }));
+    extractPagination?.({ ...pagination, pageIndex: pageIndex });
     /*
     this is the solution we found to set the state in a manual pagination system. 
     normally you would doi something like this: table.setPageIndex(pageIndex) but that is not working 
     probably because of the manualPagination: true,.
  
     */
-  }
+  };
   const onPageSizeChange = (pageSize: number) => {
-    setPagination(prevState => ({ ...prevState, pageSize: pageSize }))
-    extractPagination?.({ ...pagination, pageSize: pageSize })
-  }
+    setPagination(prevState => ({ ...prevState, pageSize: pageSize }));
+    extractPagination?.({ ...pagination, pageSize: pageSize });
+  };
 
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
-  )
+  );
 
   const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event
+    const { active, over } = event;
 
     if (over && active.id !== over.id) {
       setColumnOrder(items => {
-        const oldIndex = items.indexOf(active.id.toString())
-        const newIndex = items.indexOf(over.id.toString())
+        const oldIndex = items.indexOf(active.id.toString());
+        const newIndex = items.indexOf(over.id.toString());
 
-        return arrayMove(items, oldIndex, newIndex)
-      })
+        return arrayMove(items, oldIndex, newIndex);
+      });
     }
-  }
+  };
 
   return (
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
@@ -263,7 +285,11 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
                               <HStack gap="1">
                                 <Box>
                                   {isDraggable ? (
-                                    <DraggableColumnHeader key={header.id} header={header} table={table} />
+                                    <DraggableColumnHeader
+                                      key={header.id}
+                                      header={header}
+                                      table={table}
+                                    />
                                   ) : (
                                     flexRender(header.column.columnDef.header, header.getContext())
                                   )}
@@ -272,7 +298,11 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
                               </HStack>
                               <Box>
                                 {header.column.getCanFilter() && !disableHeaderFilters ? (
-                                  <Filter<T> column={header.column} table={table} isLoading={isFetching} />
+                                  <Filter<T>
+                                    column={header.column}
+                                    table={table}
+                                    isLoading={isFetching}
+                                  />
                                 ) : null}
                               </Box>
                             </VStack>
@@ -323,28 +353,28 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
         />
       </Box>
     </DndContext>
-  )
+  );
 }
 
 function Filter<T>({ column }: { column: Column<T>; table: ReactTable<T>; isLoading: boolean }) {
-  const columnFilterValue = column.getFilterValue()
-  const columnFacetedUniqueValues = column.getFacetedUniqueValues()
+  const columnFilterValue = column.getFilterValue();
+  const columnFacetedUniqueValues = column.getFacetedUniqueValues();
 
   const sortedUniqueValues = useMemo(() => {
     switch (column.columnDef.meta?.type) {
       case "string":
         return Array.from(columnFacetedUniqueValues.keys())
-          .sort()
           .map(x => String(x))
+          .sort((a, b) => a.localeCompare(b));
       default:
-        return []
+        return [];
     }
-  }, [column, columnFacetedUniqueValues])
+  }, [column, columnFacetedUniqueValues]);
 
   //You can add all the filters you need and want here, even multiple per column (min max for numbers for example)
   switch (column.columnDef.meta?.type) {
     case "date":
-      return <ChackraDateRangeInHeader />
+      return <ChackraDateRangeInHeader />;
     case "number":
     case "string":
       return (
@@ -358,12 +388,12 @@ function Filter<T>({ column }: { column: Column<T>; table: ReactTable<T>; isLoad
           <DebouncedInputColumnHeader
             value={(columnFilterValue ?? "") as string}
             onChange={value => {
-              column.setFilterValue(value)
+              column.setFilterValue(value);
             }}
           />
         </>
-      )
+      );
     default:
-      return <></>
+      return <></>;
   }
 }

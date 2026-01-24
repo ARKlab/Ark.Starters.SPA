@@ -1,17 +1,17 @@
 /* eslint-disable*/
-import { Field, Input, Stack, Text } from "@chakra-ui/react"
+import { Field, Input, Stack, Text } from "@chakra-ui/react";
 
-import { InputGroup } from "../../../components/ui/input-group"
+import { InputGroup } from "../../../components/ui/input-group";
 
-import { LuX } from "react-icons/lu"
+import { LuX } from "react-icons/lu";
 
 interface AppInputFilterProps {
-  value: string
-  handleInputChange: (name: string, value: string) => void
-  title: string
-  propName: string
-  disabled?: boolean
-  isRequired?: boolean
+  value: string;
+  handleInputChange: (name: string, value: string) => void;
+  title: string;
+  propName: string;
+  disabled?: boolean;
+  isRequired?: boolean;
 }
 
 export const AppInputFilter: React.FC<AppInputFilterProps> = ({
@@ -23,8 +23,8 @@ export const AppInputFilter: React.FC<AppInputFilterProps> = ({
   isRequired,
 }) => {
   const handleClear = () => {
-    handleInputChange(propName, "")
-  }
+    handleInputChange(propName, "");
+  };
 
   return (
     <Field.Root mr={title ? "0.5" : "0"} p={title ? "inherit" : "0"} m={title ? "inherit" : "0"}>
@@ -45,5 +45,5 @@ export const AppInputFilter: React.FC<AppInputFilterProps> = ({
         </InputGroup>
       </Stack>
     </Field.Root>
-  )
-}
+  );
+};

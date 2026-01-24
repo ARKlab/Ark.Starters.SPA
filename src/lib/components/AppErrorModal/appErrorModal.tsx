@@ -1,44 +1,44 @@
-import { Box, Flex, Button, Stack } from "@chakra-ui/react"
-import { useTranslation } from "react-i18next"
-import { useNavigate } from "react-router"
+import { Box, Flex, Button, Stack } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 
-import { useAppSelector, useAppDispatch } from "../../../app/hooks"
-import CodeBlock from "../../../components/codeBlock"
-import { ParsedStackTrace } from "../../../components/errorDisplay"
+import { useAppSelector, useAppDispatch } from "../../../app/hooks";
+import CodeBlock from "../../../components/codeBlock";
+import { ParsedStackTrace } from "../../../components/errorDisplay";
 import {
   AccordionItem,
   AccordionItemContent,
   AccordionItemTrigger,
   AccordionRoot,
-} from "../../../components/ui/accordion"
-import { clearError, selectError } from "../../errorHandler/errorHandler"
-import type { ErrorDetailsType } from "../../errorHandler/errorHandler"
-import { AppModal } from "../AppModal/appModal"
+} from "../../../components/ui/accordion";
+import { clearError, selectError } from "../../errorHandler/errorHandler";
+import type { ErrorDetailsType } from "../../errorHandler/errorHandler";
+import { AppModal } from "../AppModal/appModal";
 
 export const AppErrorModal = () => {
-  const problem = useAppSelector(selectError)
-  const dispatch = useAppDispatch()
-  const therIsError = problem.error ?? false
-  const problemDetails = problem.details
+  const problem = useAppSelector(selectError);
+  const dispatch = useAppDispatch();
+  const therIsError = problem.error ?? false;
+  const problemDetails = problem.details;
 
   return (
     <AppModal
       size={"xl"}
       open={therIsError}
       onClose={() => {
-        dispatch(clearError())
+        dispatch(clearError());
       }}
       title={problemDetails?.title ?? ""}
       body={<ModalBody problem={problemDetails} />}
       blurredOverlay={true}
     />
-  )
-}
+  );
+};
 
 const ModalBody = (props: { problem: ErrorDetailsType | null }) => {
-  const problem = props.problem
-  const navigate = useNavigate()
-  const { t } = useTranslation("template")
+  const problem = props.problem;
+  const navigate = useNavigate();
+  const { t } = useTranslation("template");
   return (
     <>
       <Stack>
@@ -78,7 +78,7 @@ const ModalBody = (props: { problem: ErrorDetailsType | null }) => {
           <Button
             colorPalette={"error"}
             onClick={async () => {
-              await navigate(0)
+              await navigate(0);
             }}
           >
             {t("errorHandler.reload")}
@@ -86,5 +86,5 @@ const ModalBody = (props: { problem: ErrorDetailsType | null }) => {
         </Flex>
       </Stack>
     </>
-  )
-}
+  );
+};

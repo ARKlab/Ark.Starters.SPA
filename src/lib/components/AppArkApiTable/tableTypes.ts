@@ -1,7 +1,7 @@
-import type { ColumnFiltersState, PaginationState, SortingState } from "@tanstack/react-table"
+import type { ColumnFiltersState, PaginationState, SortingState } from "@tanstack/react-table";
 
 export type TableState = {
-  filters: ColumnFiltersState
-  pagination: PaginationState
-  sorting: SortingState
-}
+  filters: ColumnFiltersState;
+  pagination: PaginationState;
+  sorting: SortingState;
+};

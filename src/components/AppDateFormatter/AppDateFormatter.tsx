@@ -1,12 +1,12 @@
-import { useTranslation } from "react-i18next"
+import { useTranslation } from "react-i18next";
 
 type AppDateFormatterProps = {
-  dateTime: Date | string
-  formatOptions: Intl.DateTimeFormatOptions
-}
+  dateTime: Date | string;
+  formatOptions: Intl.DateTimeFormatOptions;
+};
 
 export function AppDateFormatter({ dateTime, formatOptions }: AppDateFormatterProps) {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   return (
     <>
@@ -15,5 +15,5 @@ export function AppDateFormatter({ dateTime, formatOptions }: AppDateFormatterPr
         formatParams: { val: formatOptions },
       })}
     </>
-  )
+  );
 }

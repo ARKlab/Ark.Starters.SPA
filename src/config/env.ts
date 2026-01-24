@@ -1,1 +1,1 @@
-export const appSettings = window.appSettings
+export const appSettings = window.appSettings;

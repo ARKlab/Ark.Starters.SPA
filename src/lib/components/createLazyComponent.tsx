@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { ComponentType } from "react"
-import { lazy, Suspense } from "react"
+import type { ComponentType } from "react";
+import { lazy, Suspense } from "react";
 
-import CenterSpinner from "../../components/centerSpinner"
+import CenterSpinner from "../../components/centerSpinner";
 
 /**
  * createLazyComponent - Factory function approach for static lazy loading
@@ -39,14 +39,14 @@ export function createLazyComponent<C extends ComponentType<any>>(
   loader: () => Promise<{ default: C }>,
   fallback: React.ReactNode = <CenterSpinner />,
 ) {
-  const LazyLoadedComponent = lazy(loader)
+  const LazyLoadedComponent = lazy(loader);
   const Wrapped = function LazyWrapper(props: React.ComponentProps<C>) {
     return (
       <Suspense fallback={fallback}>
         <LazyLoadedComponent {...props} />
       </Suspense>
-    )
-  }
+    );
+  };
 
-  return Wrapped
+  return Wrapped;
 }

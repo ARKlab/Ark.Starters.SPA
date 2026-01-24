@@ -1,4 +1,4 @@
-import i18next from "i18next"
+import i18next from "i18next";
 
 /**
  * Formats a date using i18n custom formatters.
@@ -10,7 +10,7 @@ import i18next from "i18next"
  * @see {@link https://date-fns.org/docs/format | date-fns format strings}
  */
 export function formatDate(date: Date | string, formatString = "P"): string {
-  return i18next.t("{{val, dateFormat}}", { val: date, format: formatString })
+  return i18next.t("{{val, dateFormat}}", { val: date, format: formatString });
 }
 
 /**
@@ -21,7 +21,7 @@ export function formatDate(date: Date | string, formatString = "P"): string {
  * @returns ISO date string (YYYY-MM-DD)
  */
 export function formatISODate(date: Date | string): string {
-  return i18next.t("{{val, isoDate}}", { val: date })
+  return i18next.t("{{val, isoDate}}", { val: date });
 }
 
 /**
@@ -33,7 +33,7 @@ export function formatISODate(date: Date | string): string {
  * @returns Formatted date string
  */
 export function formatDateString(date: Date, formatString: string): string {
-  return i18next.t("{{val, dateFormat}}", { val: date, format: formatString })
+  return i18next.t("{{val, dateFormat}}", { val: date, format: formatString });
 }
 
 /**
@@ -43,7 +43,7 @@ export function formatDateString(date: Date, formatString: string): string {
  * @returns Formatted date string (e.g., "12/31/2024" or "31/12/2024" depending on locale)
  */
 export function formatShortDate(date: Date | string): string {
-  return i18next.t("{{val, shortDate}}", { val: date })
+  return i18next.t("{{val, shortDate}}", { val: date });
 }
 
 /**
@@ -53,7 +53,7 @@ export function formatShortDate(date: Date | string): string {
  * @returns Formatted date string with weekday
  */
 export function formatLongDate(date: Date | string): string {
-  return i18next.t("{{val, longDate}}", { val: date })
+  return i18next.t("{{val, longDate}}", { val: date });
 }
 
 /**
@@ -63,5 +63,5 @@ export function formatLongDate(date: Date | string): string {
  * @returns Formatted date and time string
  */
 export function formatDateTime(date: Date | string): string {
-  return i18next.t("{{val, dateTime}}", { val: date })
+  return i18next.t("{{val, dateTime}}", { val: date });
 }

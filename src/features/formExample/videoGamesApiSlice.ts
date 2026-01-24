@@ -1,11 +1,11 @@
-import { createApi } from "@reduxjs/toolkit/query/react"
+import { createApi } from "@reduxjs/toolkit/query/react";
 
-import { appFetchQuery } from "../../app/appFetchQuery"
-import type { ArkPagedQueryParameters, ListResponse } from "../../lib/apiTypes"
-import { delay } from "../../lib/helper"
+import { appFetchQuery } from "../../app/appFetchQuery";
+import type { ArkPagedQueryParameters, ListResponse } from "../../lib/apiTypes";
+import { delay } from "../../lib/helper";
 
-import type { VideoGameGenre, VideoGame } from "./videoGamesSampleDataAndTypes"
-import { videoGamesSampleData, gameGenres } from "./videoGamesSampleDataAndTypes"
+import type { VideoGameGenre, VideoGame } from "./videoGamesSampleDataAndTypes";
+import { videoGamesSampleData, gameGenres } from "./videoGamesSampleDataAndTypes";
 
 export const videoGameApiSlice = createApi({
   reducerPath: "videoGameApi",
@@ -16,14 +16,14 @@ export const videoGameApiSlice = createApi({
   endpoints: builder => ({
     getVideoGames: builder.query<ListResponse<VideoGame>, ArkPagedQueryParameters>({
       queryFn: async (params: ArkPagedQueryParameters) => {
-        await delay(500)
-        const { pageIndex: page = 1, pageSize = 10 } = params
-        const skip = (page - 1) * pageSize
-        const limit = pageSize
+        await delay(500);
+        const { pageIndex: page = 1, pageSize = 10 } = params;
+        const skip = (page - 1) * pageSize;
+        const limit = pageSize;
         const retData = {
           data: videoGamesSampleData.slice(skip, skip + limit),
           count: videoGamesSampleData.length,
-        }
+        };
         return {
           data: {
             data: retData.data,
@@ -31,26 +31,27 @@ export const videoGameApiSlice = createApi({
             page: page,
             limit: pageSize,
           },
-        }
+        };
       },
       providesTags: ["VideoGames", "Page"],
     }),
     getVideoGamesGenres: builder.query<VideoGameGenre[], void>({
       queryFn: async () => {
-        await delay(300)
-        return { data: gameGenres }
+        await delay(300);
+        return { data: gameGenres };
       },
       providesTags: ["Genres"],
     }),
     insertNewVideoGame: builder.mutation<VideoGame, VideoGame>({
       queryFn: async newVideoGame => {
-        await delay(300)
-        videoGamesSampleData.push(newVideoGame)
-        return { data: newVideoGame }
+        await delay(300);
+        videoGamesSampleData.push(newVideoGame);
+        return { data: newVideoGame };
       },
       invalidatesTags: ["VideoGames"],
     }),
   }),
-})
+});
 
-export const { useGetVideoGamesQuery, useInsertNewVideoGameMutation, useGetVideoGamesGenresQuery } = videoGameApiSlice
+export const { useGetVideoGamesQuery, useInsertNewVideoGameMutation, useGetVideoGamesGenresQuery } =
+  videoGameApiSlice;

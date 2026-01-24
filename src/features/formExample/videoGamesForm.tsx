@@ -1,51 +1,65 @@
-import { Box, Button, Container, Field, FieldLabel, Input, Spacer, Spinner } from "@chakra-ui/react"
-import { useEffect, useState } from "react"
-import { useForm, Controller } from "react-hook-form"
-import { useTranslation } from "react-i18next"
-import { LuChevronDown } from "react-icons/lu"
-import * as z from "zod"
+import {
+  Box,
+  Button,
+  Container,
+  Field,
+  FieldLabel,
+  Input,
+  Spacer,
+  Spinner,
+} from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { LuChevronDown } from "react-icons/lu";
+import * as z from "zod";
 
-import { AccordionItem, AccordionItemContent, AccordionItemTrigger, AccordionRoot } from "../../components/ui/accordion"
-import { NativeSelectField, NativeSelectRoot } from "../../components/ui/native-select"
-import { toaster } from "../../components/ui/toaster"
+import {
+  AccordionItem,
+  AccordionItemContent,
+  AccordionItemTrigger,
+  AccordionRoot,
+} from "../../components/ui/accordion";
+import { NativeSelectField, NativeSelectRoot } from "../../components/ui/native-select";
+import { toaster } from "../../components/ui/toaster";
 
-import { useGetVideoGamesGenresQuery, useInsertNewVideoGameMutation } from "./videoGamesApiSlice"
-import type { VideoGame } from "./videoGamesSampleDataAndTypes"
+import { useGetVideoGamesGenresQuery, useInsertNewVideoGameMutation } from "./videoGamesApiSlice";
+import type { VideoGame } from "./videoGamesSampleDataAndTypes";
 
 const yearValidator = z.string().refine(
   value => {
-    const year = Number(value)
-    return year > 1900 && year < 2022
+    const year = Number(value);
+    return year > 1900 && year < 2022;
   },
   { message: "Year must be between 1900 and 2022" },
-)
+);
 const ratingValidator = z.string().refine(
   value => {
-    const rating = Number(value)
-    return rating > 0 && rating < 10
+    const rating = Number(value);
+    return rating > 0 && rating < 10;
   },
   { message: "Rating must be from 0 to 10" },
-)
+);
 
 function VideoGamesForm() {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
-  const [insertNewVideoGame, { isSuccess: insertSuccess }] = useInsertNewVideoGameMutation()
+  const [insertNewVideoGame, { isSuccess: insertSuccess }] = useInsertNewVideoGameMutation();
 
-  const [flag, setFlag] = useState(false)
-  const { data: genres, isLoading: genreLoading } = useGetVideoGamesGenresQuery()
+  const [flag, setFlag] = useState(false);
+  const { data: genres, isLoading: genreLoading } = useGetVideoGamesGenresQuery();
 
   const {
     handleSubmit,
     control,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<VideoGame>()
+  } = useForm<VideoGame>();
 
   async function onSubmit(values: VideoGame) {
-    await insertNewVideoGame(values)
-    reset()
-    setFlag(!flag)
+    await insertNewVideoGame(values);
+    reset();
+    setFlag(!flag);
   }
 
   useEffect(() => {
@@ -55,9 +69,9 @@ function VideoGamesForm() {
         description: "Game saved successfully",
         duration: 4000,
         type: "success",
-      })
+      });
     }
-  }, [insertSuccess])
+  }, [insertSuccess]);
 
   return (
     <>
@@ -65,7 +79,7 @@ function VideoGamesForm() {
         collapsible
         multiple
         onChange={() => {
-          setFlag(!flag)
+          setFlag(!flag);
         }}
         my="12"
       >
@@ -81,7 +95,9 @@ function VideoGamesForm() {
                       name="title"
                       control={control}
                       rules={{ required: "Title is required" }}
-                      render={({ field }) => <Input {...field} placeholder={t("games_title_placeholder")} />}
+                      render={({ field }) => (
+                        <Input {...field} placeholder={t("games_title_placeholder")} />
+                      )}
                     />
                     <Field.ErrorText>{errors.title?.message}</Field.ErrorText>
                   </Field.Root>
@@ -159,7 +175,8 @@ function VideoGamesForm() {
                       name="rating"
                       control={control}
                       rules={{
-                        validate: value => ratingValidator.safeParse(value).success || "Invalid rating",
+                        validate: value =>
+                          ratingValidator.safeParse(value).success || "Invalid rating",
                       }}
                       render={({ field }) => <Input {...field} placeholder="Rating" />}
                     />
@@ -191,7 +208,7 @@ function VideoGamesForm() {
         </AccordionItem>
       </AccordionRoot>
     </>
-  )
+  );
 }
 
-export default VideoGamesForm
+export default VideoGamesForm;

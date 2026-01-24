@@ -1,9 +1,9 @@
-import { delay, http, HttpResponse } from "msw"
-import { z } from "zod"
+import { delay, http, HttpResponse } from "msw";
+import { z } from "zod";
 
-import type { Employee } from "./configTable"
+import type { Employee } from "./configTable";
 
-export const url = "https://config.api"
+export const url = "https://config.api";
 
 const data = [
   { name: "Mario", surName: "Rossi", employed: true },
@@ -26,29 +26,29 @@ const data = [
   { name: "Vincenzo", surName: "Fontana", employed: false },
   { name: "Federico", surName: "Russo", employed: true },
   { name: "Gianluca", surName: "Ferrari", employed: false },
-] as Employee[]
+] as Employee[];
 
 const postSchema = z.object({
   throwError: z.boolean().optional(),
   employees: z.array(z.custom<Employee>()),
-})
+});
 
 export const handlers = [
   http.all(url + "/*", async () => {
-    return delay(2000) // enough for spinning
+    return delay(2000); // enough for spinning
   }),
 
   http.get(url + "/", () => {
-    return HttpResponse.json(data)
+    return HttpResponse.json(data);
   }),
 
   http.post(url + "/", async ({ request }) => {
     // Read the intercepted request body as JSON.
-    const body = await request.json()
-    const payload = postSchema.parse(body)
+    const body = await request.json();
+    const payload = postSchema.parse(body);
 
-    if (payload.throwError) return HttpResponse.json({ message: "Bad Request" }, { status: 400 })
+    if (payload.throwError) return HttpResponse.json({ message: "Bad Request" }, { status: 400 });
 
-    return HttpResponse.json(undefined, { status: 204 })
+    return HttpResponse.json(undefined, { status: 204 });
   }),
-]
+];

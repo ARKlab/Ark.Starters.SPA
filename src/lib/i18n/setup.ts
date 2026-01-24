@@ -1,21 +1,21 @@
-import { makeZodI18nMap } from "@semihbou/zod-i18n-map"
-import i18next, { getFixedT, use as i18nUse } from "i18next"
-import { initReactI18next } from "react-i18next"
-import { I18nAllyClient } from "vite-plugin-i18n-ally/client"
-import * as z from "zod"
+import { makeZodI18nMap } from "@semihbou/zod-i18n-map";
+import i18next, { getFixedT, use as i18nUse } from "i18next";
+import { initReactI18next } from "react-i18next";
+import { I18nAllyClient } from "vite-plugin-i18n-ally/client";
+import * as z from "zod";
 
-import { supportedLngs } from "../../config/lang"
+import { supportedLngs } from "../../config/lang";
 
-import { addCustomFormatters } from "./formatters"
+import { addCustomFormatters } from "./formatters";
 
-const langs = import.meta.env.MODE == "e2e" ? { en: "en" } : supportedLngs
-const fallbackLng = Object.keys(langs)[0]
-const lookupTarget = "lang"
+const langs = import.meta.env.MODE == "e2e" ? { en: "en" } : supportedLngs;
+const fallbackLng = Object.keys(langs)[0];
+const lookupTarget = "lang";
 
 export const i18nSetup = async () => {
-  if (i18next.isInitialized) return
-  const zodNs = ["zodCustom", "zod"]
-  i18nUse(initReactI18next)
+  if (i18next.isInitialized) return;
+  const zodNs = ["zodCustom", "zod"];
+  i18nUse(initReactI18next);
   await new Promise<void>(resolve => {
     const i18 = new I18nAllyClient({
       async onBeforeInit({ lng, ns }) {
@@ -70,22 +70,22 @@ export const i18nSetup = async () => {
             nonExplicitSupportedLngs: true,
             cleanCode: true,
             lowerCaseLng: true,
-          })
+          });
       },
       onInited() {
-        const t = getFixedT(null, zodNs)
+        const t = getFixedT(null, zodNs);
 
         z.config({
           customError: makeZodI18nMap({ t, ns: zodNs, handlePath: { keyPrefix: "paths" } }),
-        })
+        });
 
         // Add custom formatters for date formatting
-        addCustomFormatters(i18next)
+        addCustomFormatters(i18next);
 
-        resolve()
+        resolve();
       },
       onResourceLoaded: (resources, { lng, ns }) => {
-        i18next.addResourceBundle(lng, ns ?? "translation", resources)
+        i18next.addResourceBundle(lng, ns ?? "translation", resources);
       },
       fallbackLng,
       detection: [
@@ -106,15 +106,15 @@ export const i18nSetup = async () => {
           detect: "htmlTag",
         },
       ],
-    })
+    });
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    const _changeLanguage = i18next.changeLanguage
+    const _changeLanguage = i18next.changeLanguage;
     i18next.changeLanguage = async (lang: string, ...args) => {
       // Load resources before language change
 
-      await (i18.asyncLoadResource as (lang: string) => Promise<void>)(lang)
-      return _changeLanguage(lang, ...args)
-    }
-  })
-}
+      await (i18.asyncLoadResource as (lang: string) => Promise<void>)(lang);
+      return _changeLanguage(lang, ...args);
+    };
+  });
+};
