@@ -24,7 +24,49 @@ In order to Update all packages you can also use the command `bunx npm-check-upd
 
 ## Getting Started
 
-TODO: this section would provide examples on how to run the template and how to use it
+### Prerequisites
+
+This project uses [Bun](https://bun.sh) as the package manager and task runner. You'll need to install it first:
+
+```bash
+# Install Bun
+curl -fsSL https://bun.sh/install | bash
+```
+
+Or using npm/npx:
+
+```bash
+npm install -g bun
+```
+
+For Windows, use PowerShell:
+
+```powershell
+irm bun.sh/install.ps1 | iex
+```
+
+### Installation
+
+```bash
+# Install dependencies
+bun install
+
+# Start the development server
+bun start
+```
+
+The application will be available at `http://localhost:3000`.
+
+### Available Commands
+
+- `bun start` - Start development server
+- `bun run build` - Build for production
+- `bun run preview` - Preview production build
+- `bun run lint` - Run linter
+- `bun run format` - Format code
+- `bun test` - Run E2E tests
+
+For more commands, see the `scripts` section in `package.json`.
 
 ### Design Guidelines
 
