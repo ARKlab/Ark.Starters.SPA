@@ -39,6 +39,11 @@ export const setupAppInsights = ({ connectionString, enableClickAnalytics }: App
         loggingLevelConsole: 2, // Enable verbose logging in e2e
         loggingLevelTelemetry: 2,
         enableDebug: true,
+        isBeaconApiDisabled: true,
+        onunloadDisableBeacon: true,
+        endpointUrl: "/v2/track",
+        disableFlushOnBeforeUnload: true,
+        disableFlushOnUnload: true,
         // Note: Don't disable XHR - we need it for Cypress to intercept telemetry
         // The SDK will use async XHR by default which Cypress can intercept
       }),
