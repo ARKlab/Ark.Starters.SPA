@@ -6,7 +6,7 @@ In this project, we've curated a collection of UI elements, layouts, and interac
 
 ### Packages
 
-In order to mantain this project with the most updated version of LTS's packages:
+In order to maintain this project with the most updated version of LTS's packages:
 
 Run `bun outdated` to see a table of packages with the current version, wanted version, and latest version.
 
