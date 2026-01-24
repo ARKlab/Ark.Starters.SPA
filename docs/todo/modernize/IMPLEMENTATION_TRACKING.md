@@ -11,20 +11,20 @@
 | Phase     | Status         | Tasks Complete | Bundle Reduction  | Time Spent     |
 | --------- | -------------- | -------------- | ----------------- | -------------- |
 | Phase 1   | ✅ Complete    | 3/3            | 30.57 KB          | 4.5h           |
-| Phase 2   | 🟡 In Progress | 2/4            | 70.51 KB          | 5.5h           |
+| Phase 2   | 🟡 In Progress | 2/4            | 71.75 KB          | 9.0h           |
 | Phase 3   | 🔴 Not Started | 0/4            | 0 KB              | 0h             |
-| **TOTAL** | **27%**        | **6/11**       | **101.08 KB / 263KB** | **10h / 48h** |
+| **TOTAL** | **28%**        | **6/11**       | **102.32 KB / 263KB** | **13.5h / 48h** |
 
-**Current Bundle:** 411.66 KB gzipped (101.08 KB reduction achieved when AI not configured)
+**Current Bundle:** 410.42 KB gzipped (102.32 KB reduction achieved when AI not configured)
 **Target Bundle:** 250 KB gzipped
-**Reduction Needed:** 161.66 KB (39%)
+**Reduction Needed:** 160.42 KB (39%)
 **Code Split:** sideEffects declaration added, Cypress TypeScript config fixed, react-icons consolidated to Lucide, Application Insights conditionally loaded
 
 **Bundle Metrics (initGlobals.js):**
 - Baseline (commit 55ac24c): 188.32 KB gzipped
 - After Task 2.4: 183.06 KB gzipped
-- After Task 2.2 (current): 117.40 KB gzipped (Application Insights removed to separate chunk)
-- Total Reduction from baseline: 70.92 KB gzipped (37.66%)
+- After Task 2.2 (current): 116.57 KB gzipped (Application Insights removed to separate chunk)
+- Total Reduction from baseline: 71.75 KB gzipped (38.10%)
 
 ---
 
@@ -299,8 +299,8 @@ useEffect(() => {
 
 **Status:** ✅ Complete  
 **Owner:** AI Agent  
-**Estimated Time:** 4 hours  
-**Expected Savings:** 100KB gzipped (65.25KB achieved when not configured)
+**Estimated Time:** 4 hours (Actual: 9 hours including E2E test fixes)  
+**Expected Savings:** 100KB gzipped (65.50KB achieved when not configured)
 
 **Description:**  
 Lazy load Application Insights only when configured to avoid bundling monitoring SDKs unnecessarily.
@@ -310,9 +310,11 @@ Lazy load Application Insights only when configured to avoid bundling monitoring
 - [x] App Insights modules dynamically imported
 - [x] Stub provider used when not configured
 - [x] Full functionality when configured
-- [x] Bundle excludes App Insights when not configured (65.25 KB gzipped in separate chunk)
-- [x] All E2E tests pass (61/61 passing)
+- [x] Bundle excludes App Insights when not configured (65.50 KB gzipped in separate chunk)
+- [x] All E2E tests pass
 - [x] Production build tested with App Insights conditional loading
+- [x] No module-level side effects (reactPlugin created inside function)
+- [x] E2E tests added for Application Insights telemetry verification
 
 **Implementation Steps:**
 
@@ -351,23 +353,30 @@ npm run analyze
 **Actual Results:**
 
 - Bundle Size Before: 477.17 KB gzipped
-- Application Insights Chunk: 65.25 KB gzipped (161.77 KB uncompressed) - now in separate file `setup-*.js`
-- Main Bundle (initGlobals): 117.40 KB gzipped (413.99 KB uncompressed)
-- Reduction Achieved When Not Using AI: **65.25 KB gzipped**
-- Percentage of Expected Savings: **65.25% achieved** (65.25 KB out of expected 100 KB)
-- Time Taken: 3.5 hours
-- E2E Test Status: ✅ All 61 tests passing
+- Application Insights Chunk: 65.50 KB gzipped (162.40 KB uncompressed) - now in separate file `setup-*.js`
+- Main Bundle (initGlobals): 116.57 KB gzipped (410.79 KB uncompressed)
+- Reduction Achieved When Not Using AI: **65.50 KB gzipped**
+- Additional Savings from module refactoring: **0.83 KB gzipped** (117.40 → 116.57 KB)
+- Total Reduction: **66.33 KB gzipped** from baseline
+- Percentage of Expected Savings: **66.33% achieved** (66.33 KB out of expected 100 KB)
+- Time Taken: 9 hours (including extensive E2E test debugging and fixes)
+- E2E Test Status: ✅ All tests passing
 - Build Status: ✅ Success
 - Issues Encountered:
   - Application Insights SDK has incomplete TypeScript typings - resolved by adding setup.ts to ESLint ignore list
-  - Router initialization needed special handling for synchronous module loading - resolved with getReactPlugin() wrapper
+  - Router initialization needed special handling for synchronous module loading - resolved with ReactPluginContext
+  - E2E tests needed Application Insights telemetry verification - added comprehensive Cypress tests
+  - Multiple iterations to handle flush() synchronous XHR issues in Cypress environment
+  - Module-level side effect from reactPlugin export - resolved by moving creation inside function
   - Created modular structure with stub plugin for when AI is not configured
 
 **Key Benefits:**
-- When Application Insights is **not configured** (default): 65.25 KB gzipped savings immediately
+- When Application Insights is **not configured** (default): 65.50 KB gzipped savings immediately
 - When Application Insights is **configured**: Full functionality with lazy loading (setup chunk only loaded when needed)
-- Zero breaking changes - all E2E tests passing
+- Zero breaking changes - all E2E tests passing including new telemetry verification tests
+- No module-level side effects - proper React Context for plugin state management
 - Better code organization with modular structure
+- Strict E2E tests validate auto route tracking works correctly
 
 ---
 
@@ -773,7 +782,7 @@ Before marking complete, verify:
 
 ---
 
-**Last Updated:** 2026-01-16
+**Last Updated:** 2026-01-24
 **Next Review:** _TBD_
 
 ---
