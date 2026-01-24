@@ -14,9 +14,9 @@ import type { ApplicationInsightsConfig } from "./types";
 
 const versionString = "v" + (version === "0.0.0" ? (tag ?? lastTag ?? version) : version) + "@" + abbreviatedSha;
 
-export const reactPlugin = new ReactPlugin();
-
 export const setupAppInsights = ({ connectionString, enableClickAnalytics }: ApplicationInsightsConfig) => {
+  // Create the ReactPlugin instance inside the function to avoid module-level side effects
+  const reactPlugin = new ReactPlugin();
   const clickAnalyticsPlugin = new ClickAnalyticsPlugin();
   const appInsights = new ApplicationInsights({
     config: {
