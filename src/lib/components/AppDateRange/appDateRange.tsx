@@ -21,7 +21,7 @@ interface AppDateRangeProps {
 
 export const AppDateRange = (props: AppDateRangeProps) => {
   const { t } = useTranslation();
-  
+
   const {
     label,
     range,
@@ -115,7 +115,9 @@ export const AppDateRange = (props: AppDateRangeProps) => {
               setDate={handleToChange}
               timeZone={timeZone}
               showCalendarButton={false}
-              defaultFocusedValue={minForTo ? parseDate(t('{{val, dateFormat}}', { val: minForTo, format: dateFormat })) : undefined}
+              defaultFocusedValue={
+                minForTo ? parseDate(t("{{val, dateFormat}}", { val: minForTo, format: dateFormat })) : undefined
+              }
               disabled={disabled}
               dateFormat={dateFormat}
               dateDisplayFormat={dateDisplayFormat}
@@ -130,9 +132,9 @@ export const AppDateRange = (props: AppDateRangeProps) => {
         </HStack>
         <HStack mt={"1"} fontSize="xs" color="gray.500" data-test="daterange-display">
           <Text>
-            {from ? t('{{val, dateFormat}}', { val: from, format: dateDisplayFormat }) : ""}
+            {from ? t("{{val, dateFormat}}", { val: from, format: dateDisplayFormat }) : ""}
             {from || toStored ? " - " : ""}
-            {toVisible ? t('{{val, dateFormat}}', { val: toVisible, format: dateDisplayFormat }) : ""}
+            {toVisible ? t("{{val, dateFormat}}", { val: toVisible, format: dateDisplayFormat }) : ""}
           </Text>
         </HStack>
       </Field.Root>

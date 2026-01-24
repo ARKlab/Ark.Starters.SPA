@@ -19,7 +19,7 @@ import AppTagInput from "../../lib/components/AppTagInput/AppTagInput";
 
 export default function ComponentsTestPage() {
   const { t } = useTranslation();
-  
+
   // Pagination states
   const [largePage, setLargePage] = useState(1);
   const [largePageSize, setLargePageSize] = useState(10);
@@ -171,7 +171,7 @@ export default function ComponentsTestPage() {
             setSingleDate(d);
           }}
         />
-        <Text data-test="datepicker-basic-value">{singleDate ? t('{{val, shortDate}}', { val: singleDate }) : ""}</Text>
+        <Text data-test="datepicker-basic-value">{singleDate ? t("{{val, shortDate}}", { val: singleDate }) : ""}</Text>
       </Box>
 
       <Box data-test="datepicker-bounded">
@@ -185,7 +185,9 @@ export default function ComponentsTestPage() {
           minDate={minBound}
           maxDate={maxBound}
         />
-        <Text data-test="datepicker-bounded-value">{boundedDate ? t('{{val, shortDate}}', { val: boundedDate }) : ""}</Text>
+        <Text data-test="datepicker-bounded-value">
+          {boundedDate ? t("{{val, shortDate}}", { val: boundedDate }) : ""}
+        </Text>
       </Box>
 
       <Box data-test="appinput-section">

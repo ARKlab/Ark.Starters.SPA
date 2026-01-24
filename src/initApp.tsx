@@ -12,41 +12,40 @@ import useAsyncEffect from "./lib/useAsyncEffect";
 import Main from "./main";
 
 export function InitApp() {
-    const ref = useRef<boolean>(false);
-    const [loading, setLoading] = useState(true);
+  const ref = useRef<boolean>(false);
+  const [loading, setLoading] = useState(true);
 
-    const dispatch = useAppDispatch();
-    const { context } = useAuthContext();
+  const dispatch = useAppDispatch();
+  const { context } = useAuthContext();
 
-    useAsyncEffect(async () => {
-        if (ref.current) return;
-        ref.current = true; // only once
+  useAsyncEffect(async () => {
+    if (ref.current) return;
+    ref.current = true; // only once
 
-        if (import.meta.env.DEV || import.meta.env.MODE === "e2e") {
-            const { worker } = await import('./lib/mocks/browserWorker');
-            await worker.start({ onUnhandledRequest: "warn" });
+    if (import.meta.env.DEV || import.meta.env.MODE === "e2e") {
+      const { worker } = await import("./lib/mocks/browserWorker");
+      await worker.start({ onUnhandledRequest: "warn" });
+    }
 
-        }
+    if (appSettings.applicationInsights) setupAppInsights(appSettings.applicationInsights);
 
-        if (appSettings.applicationInsights)
-            setupAppInsights(appSettings.applicationInsights);
+    await i18nSetup();
 
-        await i18nSetup();
+    await context.init();
+    await dispatch(DetectLoggedInUser());
 
-        await context.init();
-        await dispatch(DetectLoggedInUser());
+    window.appReady = true;
 
-        window.appReady = true;
+    setLoading(false);
+  }, [dispatch, setLoading]);
 
-        setLoading(false);
-    }, [dispatch, setLoading]);
+  if (loading) return <CenterSpinner />;
 
-    if (loading) return (<CenterSpinner />);
-
-    return (<>
-        <AppInsightsContext.Provider value={reactPlugin}>
-            <Main />
-        </AppInsightsContext.Provider>
+  return (
+    <>
+      <AppInsightsContext.Provider value={reactPlugin}>
+        <Main />
+      </AppInsightsContext.Provider>
     </>
-    );
+  );
 }

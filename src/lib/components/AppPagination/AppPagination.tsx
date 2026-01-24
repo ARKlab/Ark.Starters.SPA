@@ -82,11 +82,11 @@ const AppPagination = ({ count, pageSize, page, onPageChange, onPageSizeChange, 
               value={<LuChevronRight />}
               data-test="pagination-next"
             />
-            <PageItem 
-              display={page < pageMaxSub} 
-              onChange={() => onPageChange(totalPages)} 
+            <PageItem
+              display={page < pageMaxSub}
+              onChange={() => onPageChange(totalPages)}
               title={t("libComponents:appPagination_lastPage")}
-              value={<LuChevronsRight />} 
+              value={<LuChevronsRight />}
             />
           </Stack>
         </>

@@ -16,12 +16,12 @@ export const formatDateToString = (date: Date | null, dateFormat?: string) => {
   dateFormat ??= "yyyy-MM-dd";
 
   if (!date) return "";
-  
+
   // For ISO format, use the standard ECMAScript method
   if (dateFormat === "yyyy-MM-dd") {
     return formatISODate(date);
   }
-  
+
   // For other formats, use the format string helper
   return formatDateString(date, dateFormat);
 };

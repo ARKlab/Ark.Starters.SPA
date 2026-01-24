@@ -5,9 +5,10 @@ This document explains the tooling choices made for this project and the rationa
 ## TypeScript Compilation
 
 ### Development & Testing: tsgo (TypeScript-Native)
+
 - **Package**: `@typescript/native-preview@7.0.0-dev.20260124.1`
 - **Commands**: `npm run typecheck`, `npm run typecheck:cypress`, `npm run typecheck:all`
-- **Use Cases**: 
+- **Use Cases**:
   - Development type-checking (`npm run typecheck`)
   - E2E test type-checking (`npm run typecheck:cypress`)
   - CI parallel type-checking (`npm run typecheck:all`)
@@ -15,9 +16,10 @@ This document explains the tooling choices made for this project and the rationa
 - **Limitations**: Preview/alpha software, rapid iteration
 
 ### Production Builds: TypeScript v5
+
 - **Package**: `typescript@5.9.3`
 - **Command**: `npm run build` (uses `tsc && vite build`)
-- **Rationale**: 
+- **Rationale**:
   - Battle-tested, stable release
   - Maximum ecosystem compatibility
   - Production builds prioritize correctness over speed
@@ -26,6 +28,7 @@ This document explains the tooling choices made for this project and the rationa
 ## Linting & Formatting
 
 ### Linting: oxlint with tsgo support
+
 - **Packages**: `oxlint`, `oxlint-tsgolint`, `vite-plugin-oxlint`
 - **Command**: `npm run lint`
 - **Configuration**: `.oxlintrc.json`
@@ -37,6 +40,7 @@ This document explains the tooling choices made for this project and the rationa
 - **Vite Integration**: Runs automatically during development
 
 ### Formatting: oxfmt
+
 - **Package**: `oxfmt`
 - **Commands**: `npm run format`, `npm run format:check`
 - **Configuration**: `.oxfmtrc.json` (Prettier-compatible)
@@ -56,19 +60,20 @@ The migration to oxlint successfully preserved all project-specific linting rule
 
 ## VS Code Integration
 
-- **Extensions**: 
+- **Extensions**:
   - `oxc.oxc-vscode` - oxlint and oxfmt integration (replaces ESLint and Prettier extensions)
   - `typescriptteam.native-preview` - TypeScript Native Preview for tsgo language server
 - **Configuration**: `.vscode/settings.json`
-- **Features**: 
+- **Features**:
   - Format on save with oxfmt
   - Lint on type with oxlint
   - Type-aware diagnostics with oxlint
   - TypeScript language server powered by tsgo (10x faster IntelliSense)
-  
+
 ### TypeScript Native Preview (tsgo)
 
 The project is configured to use the experimental TypeScript Native Preview extension, which provides:
+
 - **10x faster IntelliSense** - Go-based language server
 - **Faster completions** - Native performance for autocomplete
 - **Faster navigation** - Go-to-definition, find references

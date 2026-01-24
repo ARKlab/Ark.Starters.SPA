@@ -1,12 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ESNext",
-      "WebWorker"
-    ],
+    "lib": ["DOM", "DOM.Iterable", "ESNext", "WebWorker"],
     "types": [
       "vite/client",
       "vite-plugin-pwa/pwa-assets",
@@ -34,24 +29,12 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     },
     "incremental": true,
     "tsBuildInfoFile": "./node_modules/.cache/tsbuildinfo/tsconfig.tsbuildinfo"
   },
-  "include": [
-    "./src"
-  ],
-  "exclude": [
-    "./node_modules",
-    "./build",
-    "./dev-dist",
-    "./cypress"
-  ],
-  "files": [
-    "./vite.config.ts",
-    "./pwa-assets.config.ts"
-  ]
+  "include": ["./src"],
+  "exclude": ["./node_modules", "./build", "./dev-dist", "./cypress"],
+  "files": ["./vite.config.ts", "./pwa-assets.config.ts"]
 }

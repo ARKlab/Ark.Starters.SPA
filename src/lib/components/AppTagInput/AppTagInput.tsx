@@ -13,7 +13,7 @@ interface TagInputProps {
 
 const AppTagInput: React.FC<TagInputProps> = ({ title, disabled = false, onChange, value }) => {
   const { t } = useTranslation();
-  
+
   return (
     <Field.Root disabled={disabled} data-test="taginput-root">
       {title && (

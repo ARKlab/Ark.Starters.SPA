@@ -1,10 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": [
-    "typescript",
-    "import",
-    "jsx-a11y"
-  ],
+  "plugins": ["typescript", "import", "jsx-a11y"],
   "categories": {
     "correctness": "off"
   },
@@ -104,9 +100,7 @@
     "@typescript-eslint/no-duplicate-type-constituents": "error",
     "@typescript-eslint/no-dynamic-delete": "error",
     "@typescript-eslint/no-empty-object-type": "error",
-    "@typescript-eslint/no-explicit-any": [
-      "error"
-    ],
+    "@typescript-eslint/no-explicit-any": ["error"],
     "@typescript-eslint/no-extra-non-null-assertion": "error",
     "@typescript-eslint/no-extraneous-class": "error",
     "@typescript-eslint/no-floating-promises": "error",
@@ -172,10 +166,7 @@
         "allowNullish": true
       }
     ],
-    "@typescript-eslint/return-await": [
-      "error",
-      "error-handling-correctness-only"
-    ],
+    "@typescript-eslint/return-await": ["error", "error-handling-correctness-only"],
     "@typescript-eslint/triple-slash-reference": "error",
     "@typescript-eslint/unbound-method": "error",
     "@typescript-eslint/adjacent-overload-signatures": "error",
@@ -228,54 +219,37 @@
         "paths": [
           {
             "name": "react-redux",
-            "importNames": [
-              "useSelector",
-              "useStore",
-              "useDispatch"
-            ],
+            "importNames": ["useSelector", "useStore", "useDispatch"],
             "message": "Please use pre-typed versions from `src/app/hooks.ts` instead."
           },
           {
             "name": "@reduxjs/toolkit",
-            "importNames": [
-              "createSlice"
-            ],
+            "importNames": ["createSlice"],
             "message": "Please use pre-typed versions from from `src/app/createAppSlice.ts` instead."
           },
           {
             "name": "@reduxjs/toolkit",
-            "importNames": [
-              "createAsyncThunk"
-            ],
+            "importNames": ["createAsyncThunk"],
             "message": "Please use pre-typed versions from `src/app/createAppAsyncThunk.ts` instead."
           },
           {
             "name": "@reduxjs/toolkit/query",
-            "importNames": [
-              "fetchBaseQuery"
-            ],
+            "importNames": ["fetchBaseQuery"],
             "message": "Please use appFetchQuery from `src/app/appFetchQuery.ts` instead."
           },
           {
             "name": "@reduxjs/toolkit/query/react",
-            "importNames": [
-              "fetchBaseQuery"
-            ],
+            "importNames": ["fetchBaseQuery"],
             "message": "Please use appFetchQuery from `src/app/appFetchQuery.ts` instead."
           },
           {
             "name": "@reduxjs/toolkit/query/react",
-            "importNames": [
-              "retry"
-            ],
+            "importNames": ["retry"],
             "message": "Please use retry from `@reduxjs/toolkit/query` instead."
           },
           {
             "name": "date-fns",
-            "importNames": [
-              "format",
-              "formatDate"
-            ],
+            "importNames": ["format", "formatDate"],
             "message": "Please use i18n 't' function for date formatting. Examples: t('date', { val: new Date() }) or use AppDateFormatter component. See src/features/localization/localizationPage.tsx for examples."
           }
         ]
@@ -288,12 +262,7 @@
   },
   "overrides": [
     {
-      "files": [
-        "**/*.ts",
-        "**/*.tsx",
-        "**/*.mts",
-        "**/*.cts"
-      ],
+      "files": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
       "rules": {
         "constructor-super": "off",
         "no-class-assign": "off",
@@ -315,10 +284,7 @@
       }
     },
     {
-      "files": [
-        "cypress/**/*.{ts,tsx,mtsx}",
-        "cypress.config.{ts,tsx,mtsx}"
-      ],
+      "files": ["cypress/**/*.{ts,tsx,mtsx}", "cypress.config.{ts,tsx,mtsx}"],
       "env": {
         "mocha": true
       },
@@ -327,10 +293,7 @@
       }
     },
     {
-      "files": [
-        "cypress/**/*.{ts,tsx,mtsx}",
-        "cypress.config.{ts,tsx,mtsx}"
-      ],
+      "files": ["cypress/**/*.{ts,tsx,mtsx}", "cypress.config.{ts,tsx,mtsx}"],
       "globals": {
         "cy": "readonly",
         "Cypress": "readonly",
@@ -351,31 +314,21 @@
       }
     },
     {
-      "files": [
-        "**/lib/i18n/formatters.ts"
-      ],
+      "files": ["**/lib/i18n/formatters.ts"],
       "rules": {
         "no-restricted-imports": "off"
       }
     },
     {
-      "files": [
-        "**/*.{jsx,mjsx,tsx,mtsx,ts}"
-      ],
+      "files": ["**/*.{jsx,mjsx,tsx,mtsx,ts}"],
       "rules": {
         "react-hooks/rules-of-hooks": "error",
-        "react-hooks/exhaustive-deps": [
-          "error"
-        ]
+        "react-hooks/exhaustive-deps": ["error"]
       },
-      "plugins": [
-        "react"
-      ]
+      "plugins": ["react"]
     },
     {
-      "files": [
-        "**/*.{js,mjs,cjs}"
-      ],
+      "files": ["**/*.{js,mjs,cjs}"],
       "rules": {
         "@typescript-eslint/await-thenable": "off",
         "@typescript-eslint/no-array-delete": "off",

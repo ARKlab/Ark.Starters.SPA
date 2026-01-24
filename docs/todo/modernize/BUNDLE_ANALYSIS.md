@@ -17,6 +17,7 @@ The production build generates a total bundle size of approximately **2.8MB** (b
 5. **common-CipxfGVK.js** - 120KB (34.6KB gzipped)
 
 **Key Findings:**
+
 - Chakra UI is the single largest contributor (~628KB)
 - Application globals bundle is suspiciously large (~576KB)
 - Tree-shaking appears to be working but not optimally
@@ -30,26 +31,30 @@ The production build generates a total bundle size of approximately **2.8MB** (b
 ### 1. Chakra UI Bundle (628KB - TOP CULPRIT)
 
 **Current State:**
+
 - Imports use the main `@chakra-ui/react` package
 - Default theme and config are included
 - All UI components are bundled even if not used
 
 **Issues:**
+
 - The bundle includes the entire Chakra UI ecosystem
 - `defaultConfig` from `@chakra-ui/react` pulls in ALL component recipes
 - Theme tokens for ALL components are included
 - No modular imports being used
 
 **Evidence:**
+
 ```typescript
 // src/theme.ts
 import { createSystem, defaultConfig } from "@chakra-ui/react";
 
 // src/components/ui/provider.tsx
-import { ChakraProvider, defaultSystem } from "@chakra-ui/react"
+import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 ```
 
 **Opportunities:**
+
 - Use `defaultBaseConfig` instead of `defaultConfig` (saves ~100KB)
 - Import only needed component recipes explicitly
 - Consider ejecting theme for maximum control
@@ -61,9 +66,10 @@ import { ChakraProvider, defaultSystem } from "@chakra-ui/react"
 The `initGlobals.tsx` file is deceptively simple but pulls in massive dependencies:
 
 **Major Contributors:**
+
 1. **Redux Store** with ALL API slices loaded eagerly:
    - `configTableApiSlice`
-   - `videoGameApiSlice` 
+   - `videoGameApiSlice`
    - `jsonPlaceholderApi`
    - `moviesApiSlice`
    - `rtkqErrorHandlingApi`
@@ -79,23 +85,26 @@ The `initGlobals.tsx` file is deceptively simple but pulls in massive dependenci
    - `@microsoft/applicationinsights-clickanalytics-js`
 
 4. **MSW (Mock Service Worker)** conditionally loaded (NOT in production):
+
    ```typescript
    // src/initApp.tsx lines 25-28
    if (import.meta.env.DEV || import.meta.env.MODE === "e2e") {
-       const { worker } = await import('./lib/mocks/browserWorker');
-       await worker.start({ onUnhandledRequest: "warn" });
+     const { worker } = await import("./lib/mocks/browserWorker");
+     await worker.start({ onUnhandledRequest: "warn" });
    }
    ```
-   
+
    **Note:** MSW is correctly excluded from production builds via the conditional check above. The dynamic import ensures tree-shaking removes it from production bundles.
 
 **Issues:**
+
 - All Redux API slices are imported synchronously in `configureStore.ts`
 - Both auth providers are bundled even though only one is used at runtime
 - Application Insights is loaded even if not configured
 - MSW infrastructure is imported (though conditionally loaded)
 
 **Opportunities:**
+
 - Lazy load Redux API slices per feature
 - Dynamic import for unused auth provider
 - Conditional Application Insights loading
@@ -104,33 +113,39 @@ The `initGlobals.tsx` file is deceptively simple but pulls in massive dependenci
 ### 3. React & Dependencies
 
 **Current State:**
+
 - React 19.2.3 with React Compiler enabled ✓
 - 32 instances of manual `useMemo`/`useCallback` remain
 - Good use of `React.lazy` for major routes
 
 **Opportunities:**
+
 - Remove manual memoization (React Compiler handles this)
 - Ensure all route-level components use lazy loading
 
 ### 4. Date & Internationalization
 
 **Current State:**
+
 - `date-fns` 4.1.0: Only 4 imports, well tree-shaken ✓
 - `i18next` 25.7.4: Bundle is reasonable at 128KB
 - Using custom i18next formatters (good) ✓
 
 **Opportunities:**
+
 - Already optimized, minimal gains available
 
 ### 5. Other Dependencies
 
 **Findings:**
+
 - `@tanstack/react-table`: Included in common chunk (118KB)
 - `@dnd-kit/*`: Only 4 uses, but all packages imported
 - `react-icons`: Multiple imports from different icon sets (lu, hi)
 - `zod`: Used for form validation, size is acceptable
 
 **Opportunities:**
+
 - Consider reducing TanStack Table usage if only used in a few places
 - Consolidate react-icons to single icon set
 - DnD Kit is minimal, acceptable
@@ -140,12 +155,14 @@ The `initGlobals.tsx` file is deceptively simple but pulls in massive dependenci
 **Current Vite Config:**
 
 ✓ **Good:**
+
 - Manual chunks defined for vendor code splitting
 - `esnext` target for modern browsers
 - Source maps enabled
 - Drop console/debugger in production
 
 ⚠️ **Missing:**
+
 - No `sideEffects: false` in package.json
 - Could optimize chunk splitting strategy
 - Legacy plugin included but may not be needed
@@ -156,22 +173,23 @@ The `initGlobals.tsx` file is deceptively simple but pulls in massive dependenci
 
 ### By Category (Estimated)
 
-| Category | Size (uncompressed) | Gzipped | % of Total |
-|----------|---------------------|---------|------------|
-| Chakra UI | ~628KB | ~176KB | 38% |
-| Application Code | ~576KB | ~189KB | 35% |
-| React Core | ~100KB | ~34KB | 6% |
-| i18n | ~130KB | ~39KB | 8% |
-| Common Utils | ~120KB | ~35KB | 7% |
-| RTK + Redux | ~70KB | ~25KB | 4% |
-| Other | ~40KB | ~15KB | 2% |
-| **Total** | **~1.66MB** | **~513KB** | **100%** |
+| Category         | Size (uncompressed) | Gzipped    | % of Total |
+| ---------------- | ------------------- | ---------- | ---------- |
+| Chakra UI        | ~628KB              | ~176KB     | 38%        |
+| Application Code | ~576KB              | ~189KB     | 35%        |
+| React Core       | ~100KB              | ~34KB      | 6%         |
+| i18n             | ~130KB              | ~39KB      | 8%         |
+| Common Utils     | ~120KB              | ~35KB      | 7%         |
+| RTK + Redux      | ~70KB               | ~25KB      | 4%         |
+| Other            | ~40KB               | ~15KB      | 2%         |
+| **Total**        | **~1.66MB**         | **~513KB** | **100%**   |
 
 ### Critical Path Analysis
 
 **Initial Load Requirements (FCP):**
+
 1. Chakra UI theme + base components: 628KB
-2. App initialization + Redux store: 576KB  
+2. App initialization + Redux store: 576KB
 3. React runtime: 100KB
 4. i18n runtime: 130KB
 
@@ -231,14 +249,14 @@ Based on bundle sizes and typical 3G network (750Kbps):
 
 ### Industry Standards (2024-2025)
 
-| Metric | This Project | Industry Target | Status |
-|--------|--------------|-----------------|--------|
-| Initial Bundle (gzipped) | 513KB | <200KB | ❌ 2.5x over |
-| Largest Chunk | 628KB | <300KB | ❌ 2x over |
-| Time to Interactive | ~7-8s | <3s | ❌ 2.5x over |
-| Code Splitting | ✓ Good | ✓ Required | ✓ Pass |
-| Tree Shaking | Partial | Aggressive | ⚠️ Needs work |
-| Lazy Loading | ✓ Routes | ✓ Routes+Libs | ⚠️ Partial |
+| Metric                   | This Project | Industry Target | Status        |
+| ------------------------ | ------------ | --------------- | ------------- |
+| Initial Bundle (gzipped) | 513KB        | <200KB          | ❌ 2.5x over  |
+| Largest Chunk            | 628KB        | <300KB          | ❌ 2x over    |
+| Time to Interactive      | ~7-8s        | <3s             | ❌ 2.5x over  |
+| Code Splitting           | ✓ Good       | ✓ Required      | ✓ Pass        |
+| Tree Shaking             | Partial      | Aggressive      | ⚠️ Needs work |
+| Lazy Loading             | ✓ Routes     | ✓ Routes+Libs   | ⚠️ Partial    |
 
 ---
 
@@ -310,11 +328,13 @@ Based on bundle sizes and typical 3G network (750Kbps):
 ## Browser Compatibility Considerations
 
 **Current Config:**
+
 - Target: `esnext`
 - Legacy plugin enabled for older browsers
 - Polyfills: ~65KB
 
 **Recommendation:**
+
 - Modern browsers are 95%+ of traffic in 2025
 - Consider dropping legacy support or making it optional
 - Potential savings: ~65KB polyfills + faster parsing

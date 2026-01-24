@@ -1,5 +1,3 @@
- 
-
 import type { QueryReturnValue } from "@reduxjs/toolkit/query";
 import { z } from "zod";
 

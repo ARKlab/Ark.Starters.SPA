@@ -32,7 +32,7 @@ describe("Table Column Drag & Drop", () => {
     cy.get("table thead th").eq(1).should("contain", "Director");
     cy.get("table thead th").eq(2).should("contain", "Genre");
 
-    // Find the drag handle button in the Director column header  
+    // Find the drag handle button in the Director column header
     cy.get("table thead th")
       .eq(1)
       .find("button")
@@ -209,11 +209,7 @@ describe("Table Column Drag & Drop", () => {
 
                 // After reordering, Director column moved to position 2
                 // The data should follow the column
-                cy.get("table tbody tr")
-                  .first()
-                  .find("td")
-                  .eq(2)
-                  .should("contain", directorValue);
+                cy.get("table tbody tr").first().find("td").eq(2).should("contain", directorValue);
               });
           });
       });
@@ -252,4 +248,3 @@ describe("Table Column Drag & Drop", () => {
       });
   });
 });
-

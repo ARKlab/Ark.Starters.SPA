@@ -76,9 +76,9 @@ export const simulatedArkQueryWithParams = (params: ArkPagedQueryParameters) => 
       for (const sort of sorting) {
         const aVal = a[sort.id as keyof Movie];
         const bVal = b[sort.id as keyof Movie];
-        
+
         if (aVal === bVal) continue;
-        
+
         const comparison = aVal > bVal ? 1 : -1;
         return sort.desc ? -comparison : comparison;
       }

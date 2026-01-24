@@ -83,12 +83,7 @@ function DefaultFallback({ error, resetErrorBoundary, featureLabel }: FallbackPr
  * </FeatureErrorBoundary>
  * ```
  */
-export function FeatureErrorBoundary({
-  fallback,
-  onError,
-  children,
-  featureLabel,
-}: FeatureErrorBoundaryProps) {
+export function FeatureErrorBoundary({ fallback, onError, children, featureLabel }: FeatureErrorBoundaryProps) {
   const appInsights = useAppInsightsContext();
 
   const handleError = (error: Error, errorInfo: ErrorInfo) => {

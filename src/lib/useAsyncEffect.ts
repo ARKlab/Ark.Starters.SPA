@@ -24,7 +24,6 @@ function useAsyncEffect(effect: () => Promise<void> | AsyncGenerator<void, void,
         } else {
           await task;
         }
-         
       })().then(_ => {
         /* do nothing */
       }, showBoundary);

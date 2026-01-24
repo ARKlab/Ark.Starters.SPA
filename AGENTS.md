@@ -18,12 +18,14 @@
 ## Quick Start for Agents
 
 ### Before You Begin
+
 1. **Read Critical Rules** section - non-negotiable requirements
 2. **Identify your task type** from Agent Task Workflows
 3. **Follow the specific workflow** for your task
 4. **Run verification procedures** before completing
 
 ### Project Commands
+
 ```bash
 # Development
 npm start              # Start dev server (localhost:3000)
@@ -40,6 +42,7 @@ npm outdated           # Check package versions
 ```
 
 ### Repository Structure
+
 ```
 src/
 ├── app/                    # Routes and page components
@@ -69,6 +72,7 @@ src/
 This is a **React 19.2** Single Page Application starter template with enterprise-grade features.
 
 ### Core Technologies
+
 - **Framework**: React 19.2.3 + TypeScript 5.9.3
 - **Build**: Vite 7.3.0
 - **UI**: Chakra UI 3.30.0 with Emotion
@@ -83,6 +87,7 @@ This is a **React 19.2** Single Page Application starter template with enterpris
 - **DnD**: @dnd-kit/core 6.3.1 + @dnd-kit/sortable 9.0.1
 
 ### Key Features
+
 - **Flexible Authentication**: Pluggable auth providers (Auth0, MSAL)
 - **Full i18n Support**: Auto-detect locale, translation namespaces
 - **PWA Ready**: Service worker, offline support
@@ -97,19 +102,25 @@ This is a **React 19.2** Single Page Application starter template with enterpris
 ### 🔴 MUST Follow (Non-Negotiable)
 
 #### 1. Code Language: English Only
+
 **ALL code must be in English** (except translation files in `src/locales/`)
 
 ```typescript
 // ✅ CORRECT
 const userName = "John";
-function fetchUserData() { /* ... */ }
+function fetchUserData() {
+  /* ... */
+}
 
 // ❌ WRONG - Non-English names
 const nomeUtente = "John";
-function ottieniDatiUtente() { /* ... */ }
+function ottieniDatiUtente() {
+  /* ... */
+}
 ```
 
 **Applies to**:
+
 - Variable names
 - Function names
 - Class/interface names
@@ -121,6 +132,7 @@ function ottieniDatiUtente() { /* ... */ }
 **Exceptions**: Only `src/locales/*/` translation files
 
 #### 2. Translation Keys: All UI Text Must Be Translated
+
 **NEVER** use hardcoded strings in UI components.
 
 ```typescript
@@ -135,6 +147,7 @@ const { t } = useTranslation();
 ```
 
 #### 3. Translation Namespaces: Strict Separation
+
 - **`libComponents` namespace**: Components in `src/lib/components/`
 - **`translation` namespace** (default): Components in `src/components/` or `src/features/`
 
@@ -149,6 +162,7 @@ const title = t("movies_movies"); // No namespace prefix
 ```
 
 #### 4. Semantic Tokens: No Hardcoded Colors
+
 **ALWAYS** use semantic tokens from `theme.ts`. Never use raw color values.
 
 ```typescript
@@ -162,6 +176,7 @@ const title = t("movies_movies"); // No namespace prefix
 ```
 
 Available semantic token categories:
+
 - `bg.*` - Backgrounds (e.g., `bg.info`, `bg.panel`)
 - `border.*` - Borders
 - `brand.*` - Brand colors (solid, contrast, fg, muted, subtle, emphasized, focusRing)
@@ -170,23 +185,26 @@ Available semantic token categories:
 - `code.*` - Code highlighting
 
 #### 5. Date Formatting: Use i18next Formatters
+
 **In React components**, always use `useTranslation()` hook for date formatting.
 
 ```typescript
 // ✅ CORRECT - i18next formatter
 const { t } = useTranslation();
-const formatted = t('{{val, shortDate}}', { val: new Date() });
+const formatted = t("{{val, shortDate}}", { val: new Date() });
 
 // ❌ WRONG - Direct date-fns import
-import { format } from 'date-fns'; // ESLint will block this
+import { format } from "date-fns"; // ESLint will block this
 ```
 
 **In utility functions** (non-React), use helpers from `@/lib/i18n/formatDate`:
+
 ```typescript
 import { formatISODate, formatShortDate } from "@/lib/i18n/formatDate";
 ```
 
 Available formatters:
+
 - `isoDate` - ISO 8601 (YYYY-MM-DD)
 - `shortDate` - Localized short date
 - `longDate` - Localized long date with weekday
@@ -194,6 +212,7 @@ Available formatters:
 - `dateFormat` - Custom format (accepts `format` param)
 
 #### 6. TypeScript: Strict Mode, No `any`
+
 - Strict mode enabled - no exceptions
 - Use `unknown` instead of `any`
 - Prefer type inference over explicit types
@@ -212,6 +231,7 @@ const data: any = await fetch(url);
 ```
 
 #### 7. Z-Index: Use Chakra Predefined Values Only
+
 ```typescript
 // Only these values allowed:
 const zIndices = {
@@ -229,16 +249,22 @@ const zIndices = {
 ```
 
 #### 8. Exports: Prefer Named Exports
+
 ```typescript
 // ✅ CORRECT
-export const MyComponent = () => { /* ... */ };
-export function useCustomHook() { /* ... */ }
+export const MyComponent = () => {
+  /* ... */
+};
+export function useCustomHook() {
+  /* ... */
+}
 
 // ❌ AVOID
 export default MyComponent;
 ```
 
 #### 9. Commit Messages: Conventional Commits
+
 Follow [Conventional Commits](https://www.conventionalcommits.org/) specification.
 
 ```bash
@@ -289,12 +315,13 @@ Is your task about...
    - Reusable library component? → `src/lib/components/`
 
 2. **Set up translation namespace**:
+
    ```typescript
    // For src/lib/components/*
    import { useTranslation } from "react-i18next";
    const { t } = useTranslation();
    const label = t("libComponents:componentName_key");
-   
+
    // For src/components/* or src/features/*
    import { useTranslation } from "react-i18next";
    const { t } = useTranslation();
@@ -302,6 +329,7 @@ Is your task about...
    ```
 
 3. **Use semantic tokens for styling**:
+
    ```typescript
    // Check src/theme.ts for available tokens
    <Box bg="bg.panel" color="fg.default" borderColor="border.subtle">
@@ -333,6 +361,7 @@ Is your task about...
    - [ ] Runs `npm run lint` without errors
 
 **Example Component**:
+
 ```typescript
 // src/components/UserCard/userCard.tsx
 import { Box, Heading, Text } from "@chakra-ui/react";
@@ -345,7 +374,7 @@ interface UserCardProps {
 
 export const UserCard = ({ name, email }: UserCardProps) => {
   const { t } = useTranslation();
-  
+
   return (
     <Box bg="bg.panel" p={4} borderRadius="md" borderColor="border.subtle" borderWidth="1px">
       <Heading size="md" color="fg.emphasized">
@@ -374,9 +403,10 @@ export const UserCard = ({ name, email }: UserCardProps) => {
    - Zod validation errors? → `zodCustom.json`
 
 2. **Choose key naming convention**:
+
    ```
    {featureName}_{componentName}_{elementPurpose}
-   
+
    Examples:
    - movies_movieCard_title
    - movies_movieCard_releaseDate
@@ -386,16 +416,18 @@ export const UserCard = ({ name, email }: UserCardProps) => {
    ```
 
 3. **Add to ALL supported languages**:
+
    ```bash
    # Check src/config/lang.ts for supported languages
    # Default: en, it
-   
+
    # Add key to each:
    src/locales/en/translation.json
    src/locales/it/translation.json
    ```
 
 4. **Example** (adding a new feature):
+
    ```json
    // src/locales/en/translation.json
    {
@@ -403,7 +435,7 @@ export const UserCard = ({ name, email }: UserCardProps) => {
      "movies_addMovie": "Add Movie",
      "movies_searchPlaceholder": "Search movies..."
    }
-   
+
    // src/locales/it/translation.json
    {
      "movies_movies": "Film",
@@ -413,6 +445,7 @@ export const UserCard = ({ name, email }: UserCardProps) => {
    ```
 
 5. **For lib components**:
+
    ```json
    // src/locales/en/libComponents.json
    {
@@ -473,9 +506,10 @@ export const UserCard = ({ name, email }: UserCardProps) => {
    - Document required env vars
 
 5. **Protected routes**:
+
    ```typescript
    import { ProtectedRoute } from "@/lib/authentication/components/protectedRoute";
-   
+
    <ProtectedRoute permission="required.permission">
      <YourComponent />
    </ProtectedRoute>
@@ -503,34 +537,36 @@ export const UserCard = ({ name, email }: UserCardProps) => {
 #### Step-by-Step
 
 1. **Create API slice** in `src/lib/rtk/{feature}Api.ts`:
+
    ```typescript
    import { createAppApi } from "@/lib/rtk/createAppApi";
    import { arkFetchBaseQuery } from "@/lib/rtk/arkFetchBaseQuery";
-   
+
    export const moviesApi = createAppApi({
-     reducerPath: 'moviesApi',
-     baseQuery: arkFetchBaseQuery({ baseUrl: '/api' }),
-     endpoints: (builder) => ({
+     reducerPath: "moviesApi",
+     baseQuery: arkFetchBaseQuery({ baseUrl: "/api" }),
+     endpoints: builder => ({
        getMovies: builder.query({
          query: ({ pageIndex, pageSize, sorting, filters }) => ({
-           url: '/movies',
+           url: "/movies",
            params: { page: pageIndex, limit: pageSize, ...sorting, ...filters },
          }),
        }),
        createMovie: builder.mutation({
-         query: (movie) => ({
-           url: '/movies',
-           method: 'POST',
+         query: movie => ({
+           url: "/movies",
+           method: "POST",
            body: movie,
          }),
        }),
      }),
    });
-   
+
    export const { useGetMoviesQuery, useCreateMovieMutation } = moviesApi;
    ```
 
 2. **Expected API response format** for paginated queries:
+
    ```typescript
    {
      data: T[],      // Array of items
@@ -541,30 +577,31 @@ export const UserCard = ({ name, email }: UserCardProps) => {
    ```
 
 3. **Register API in store** (`src/lib/rtk/store.ts`):
+
    ```typescript
    import { moviesApi } from "@/lib/rtk/moviesApi";
-   
+
    export const store = configureStore({
      reducer: {
        [moviesApi.reducerPath]: moviesApi.reducer,
        // ... other reducers
      },
-     middleware: (getDefaultMiddleware) =>
-       getDefaultMiddleware().concat(moviesApi.middleware),
+     middleware: getDefaultMiddleware => getDefaultMiddleware().concat(moviesApi.middleware),
    });
    ```
 
 4. **Mock API for testing** (optional):
    - Add MSW handler in `src/lib/mocks/handlers.ts`
+
    ```typescript
-   import { http, HttpResponse } from 'msw';
-   
+   import { http, HttpResponse } from "msw";
+
    export const handlers = [
-     http.get('/api/movies', ({ request }) => {
+     http.get("/api/movies", ({ request }) => {
        const url = new URL(request.url);
-       const page = url.searchParams.get('page') || '0';
-       const limit = url.searchParams.get('limit') || '10';
-       
+       const page = url.searchParams.get("page") || "0";
+       const limit = url.searchParams.get("limit") || "10";
+
        return HttpResponse.json({
          data: mockMovies,
          count: mockMovies.length,
@@ -576,9 +613,10 @@ export const UserCard = ({ name, email }: UserCardProps) => {
    ```
 
 5. **Use in component**:
+
    ```typescript
    import { useGetMoviesQuery } from "@/lib/rtk/moviesApi";
-   
+
    const { data, isLoading, error } = useGetMoviesQuery({
      pageIndex: 0,
      pageSize: 10,
@@ -610,9 +648,10 @@ export const UserCard = ({ name, email }: UserCardProps) => {
 #### Step-by-Step
 
 1. **Define Zod schema** with i18n error messages:
+
    ```typescript
    import { z } from "zod";
-   
+
    const movieSchema = z.object({
      title: z.string().min(1), // Uses default zod-i18n error
      year: z.number().min(1900).max(2100),
@@ -621,11 +660,12 @@ export const UserCard = ({ name, email }: UserCardProps) => {
        params: { i18n: { key: "movies_customFieldError" } },
      }),
    });
-   
+
    type MovieFormData = z.infer<typeof movieSchema>;
    ```
 
 2. **Add custom error to `zodCustom.json`**:
+
    ```json
    // src/locales/en/zodCustom.json
    {
@@ -634,10 +674,11 @@ export const UserCard = ({ name, email }: UserCardProps) => {
    ```
 
 3. **Set up React Hook Form**:
+
    ```typescript
    import { useForm } from "react-hook-form";
    import { zod2FormValidator } from "@/lib/i18n/zod2FormValidator";
-   
+
    const {
      register,
      handleSubmit,
@@ -648,27 +689,29 @@ export const UserCard = ({ name, email }: UserCardProps) => {
    ```
 
 4. **Build form with Chakra UI**:
+
    ```typescript
    import { Field } from "@chakra-ui/react";
    import { useTranslation } from "react-i18next";
-   
+
    const { t } = useTranslation();
-   
+
    <form onSubmit={handleSubmit(onSubmit)}>
      <Field.Root invalid={!!errors.title}>
        <Field.Label>{t("movies_titleLabel")}</Field.Label>
        <Input {...register("title")} />
        <Field.ErrorText>{errors.title?.message}</Field.ErrorText>
      </Field.Root>
-     
+
      <Button type="submit">{t("common_submit")}</Button>
    </form>
    ```
 
 5. **Field-level validation** (optional):
+
    ```typescript
    import { zod2FieldValidator } from "@/lib/i18n/zod2FieldValidator";
-   
+
    <Input
      {...register("title", {
        validate: zod2FieldValidator(movieSchema.shape.title),
@@ -699,17 +742,18 @@ export const UserCard = ({ name, email }: UserCardProps) => {
 #### Step-by-Step
 
 1. **Use `PaginatedSortableTable` component**:
+
    ```typescript
    import { PaginatedSortableTable } from "@/lib/components/PaginatedSortableTable";
    import { ColumnDef } from "@tanstack/react-table";
-   
+
    interface Movie {
      id: string;
      title: string;
      year: number;
      rating: number;
    }
-   
+
    const columns: ColumnDef<Movie>[] = [
      {
        accessorKey: "title",
@@ -733,6 +777,7 @@ export const UserCard = ({ name, email }: UserCardProps) => {
 2. **Implement RTK Query hook** (see [API Integration Workflow](#api-integration-workflow))
 
 3. **Use table component**:
+
    ```typescript
    <PaginatedSortableTable<Movie>
      columns={columns}
@@ -744,16 +789,17 @@ export const UserCard = ({ name, email }: UserCardProps) => {
    ```
 
 4. **For external filters** (filters outside table headers):
+
    ```typescript
    const [filters, setFilters] = useState<ColumnFiltersState>([]);
-   
+
    <PaginatedSortableTable<Movie>
      columns={columns}
      useQueryHook={useGetMoviesQuery}
      externalFilters={true}
      externalFiltersState={filters}
    />
-   
+
    {/* Your custom filter UI */}
    <Select onChange={(e) => setFilters([{ id: "genre", value: e.target.value }])}>
      ...
@@ -761,6 +807,7 @@ export const UserCard = ({ name, email }: UserCardProps) => {
    ```
 
 5. **Custom cell rendering**:
+
    ```typescript
    {
      accessorKey: "actions",
@@ -804,6 +851,7 @@ export const UserCard = ({ name, email }: UserCardProps) => {
    - Organized by purpose (bg, border, brand, etc.)
 
 3. **Adding new semantic tokens**:
+
    ```typescript
    // src/theme.ts
    export const theme = createSystem(defaultConfig, {
@@ -813,10 +861,10 @@ export const UserCard = ({ name, email }: UserCardProps) => {
            // Add your custom tokens
            myFeature: {
              bg: {
-               value: { _light: "{colors.gray.50}", _dark: "{colors.gray.900}" }
+               value: { _light: "{colors.gray.50}", _dark: "{colors.gray.900}" },
              },
              border: {
-               value: { _light: "{colors.gray.200}", _dark: "{colors.gray.700}" }
+               value: { _light: "{colors.gray.200}", _dark: "{colors.gray.700}" },
              },
            },
          },
@@ -826,6 +874,7 @@ export const UserCard = ({ name, email }: UserCardProps) => {
    ```
 
 4. **Use in components**:
+
    ```typescript
    <Box bg="myFeature.bg" borderColor="myFeature.border">
    ```
@@ -867,18 +916,19 @@ export const UserCard = ({ name, email }: UserCardProps) => {
 1. **Cypress test location**: `cypress/e2e/`
 
 2. **Use Testing Library selectors**:
+
    ```typescript
    // cypress/e2e/movies.cy.ts
    describe("Movies Feature", () => {
      beforeEach(() => {
        cy.visit("/movies");
      });
-     
+
      it("should display movie list", () => {
        cy.findByRole("heading", { name: /movies/i }).should("exist");
        cy.findAllByRole("row").should("have.length.greaterThan", 1);
      });
-     
+
      it("should filter movies by title", () => {
        cy.findByRole("textbox", { name: /search/i }).type("Inception");
        cy.findByText("Inception").should("exist");
@@ -891,6 +941,7 @@ export const UserCard = ({ name, email }: UserCardProps) => {
    - Use throughout tests
 
 4. **Running tests**:
+
    ```bash
    npm run e2e:start    # Interactive mode (UI)
    npm run e2e:ci       # Headless mode (CI)
@@ -960,10 +1011,12 @@ Use `LazyComponent` for routes, `createLazyComponent` for entry points.
 
 ```typescript
 // Routes (automatic via siteMap.tsx)
-export const siteMap: ArkRoute[] = [{
-  path: "/dashboard",
-  lazy: async () => import("../features/dashboard/dashboardPage"),
-}];
+export const siteMap: ArkRoute[] = [
+  {
+    path: "/dashboard",
+    lazy: async () => import("../features/dashboard/dashboardPage"),
+  },
+];
 
 // Entry points
 import { createLazyComponent } from "@/lib/components/createLazyComponent";
@@ -977,48 +1030,52 @@ const InitGlobals = createLazyComponent(() => import("./initGlobals"));
 All image components support native browser lazy loading for improved performance.
 
 #### Logo Component
+
 ```typescript
 // src/logo.tsx - Always visible (above the fold), eager loading
-<Image 
-  src={imgUrl} 
+<Image
+  src={imgUrl}
   alt="ARK Logo"
   loading="eager"  // Load immediately
 />
 ```
 
 #### Avatar Component
+
 ```typescript
 // Defaults to lazy loading
-<Avatar 
+<Avatar
   src={userImage}
   name="John Doe"
   // loading="lazy" is default, no need to specify
 />
 
 // Override for above-the-fold avatars
-<Avatar 
+<Avatar
   src={userImage}
   loading="eager"
 />
 ```
 
 #### Carousel Component
+
 ```typescript
 // CarouselItem defaults to lazy loading
-<CarouselItem 
+<CarouselItem
   src={imageUrl}
   alt="Product image"
   // loading="lazy" is default
 />
 
 // Override if needed
-<CarouselItem 
+<CarouselItem
   src={imageUrl}
   loading="eager"
 />
 ```
 
 #### General Guidelines
+
 - **Above the fold** (visible on page load): Use `loading="eager"`
 - **Below the fold** (requires scrolling): Use `loading="lazy"` (default)
 - **Images in lists/tables**: Always use `loading="lazy"`
@@ -1027,10 +1084,10 @@ All image components support native browser lazy loading for improved performanc
 
 ---
 
-
 ### React Component Patterns
 
 #### Functional Components with Hooks
+
 ```typescript
 import { useState, useEffect } from "react";
 import { Box, Button } from "@chakra-ui/react";
@@ -1043,11 +1100,11 @@ interface MyComponentProps {
 export const MyComponent = ({ initialCount = 0 }: MyComponentProps) => {
   const { t } = useTranslation();
   const [count, setCount] = useState(initialCount);
-  
+
   useEffect(() => {
     // Side effects here
   }, []);
-  
+
   return (
     <Box>
       <Button onClick={() => setCount(count + 1)}>
@@ -1059,14 +1116,12 @@ export const MyComponent = ({ initialCount = 0 }: MyComponentProps) => {
 ```
 
 #### Custom Hooks
+
 ```typescript
 // src/lib/useAsyncEffect.ts
 import { useEffect } from "react";
 
-export const useAsyncEffect = (
-  effect: () => Promise<void>,
-  deps: React.DependencyList
-) => {
+export const useAsyncEffect = (effect: () => Promise<void>, deps: React.DependencyList) => {
   useEffect(() => {
     effect();
   }, deps);
@@ -1082,6 +1137,7 @@ useAsyncEffect(async () => {
 ```
 
 #### Debouncing
+
 ```typescript
 import { useDebounce } from "@/lib/useDebounce";
 
@@ -1096,6 +1152,7 @@ useEffect(() => {
 ### State Management Patterns
 
 #### Redux Toolkit Slice
+
 ```typescript
 // src/lib/rtk/userSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
@@ -1130,16 +1187,20 @@ export default userSlice.reducer;
 ### Error Handling
 
 #### Error Boundary Strategy
+
 Multi-level error boundaries protect the application:
+
 - **Root** (`src/index.tsx`) - Critical errors, last resort
-- **Router** (`src/lib/router.tsx`) - Navigation and routing errors  
+- **Router** (`src/lib/router.tsx`) - Navigation and routing errors
 - **Layout** (`src/components/layout/layout.tsx`) - Page-level errors
 - **Feature** - Isolate widget/component failures (optional, use sparingly)
 
 #### FeatureErrorBoundary
+
 Use `FeatureErrorBoundary` only for reusable widgets/components embedded within pages, not for entire page views (already protected by Layout).
 
 **Example:**
+
 ```typescript
 import { FeatureErrorBoundary } from "@/lib/components/FeatureErrorBoundary/FeatureErrorBoundary";
 
@@ -1155,6 +1216,7 @@ import { FeatureErrorBoundary } from "@/lib/components/FeatureErrorBoundary/Feat
 ```
 
 **Key points:**
+
 - Use for embedded widgets/cards that could fail independently
 - Don't wrap entire page views (Layout handles this)
 - `featureLabel` must be translated (appears in UI)
@@ -1165,6 +1227,7 @@ import { FeatureErrorBoundary } from "@/lib/components/FeatureErrorBoundary/Feat
 `featureErrorBoundary_errorInFeature`, `featureErrorBoundary_errorOccurred`, `featureErrorBoundary_unexpectedError`, `featureErrorBoundary_tryAgain`
 
 #### Try-Catch for Async Operations
+
 ```typescript
 const handleSubmit = async () => {
   try {
@@ -1180,6 +1243,7 @@ const handleSubmit = async () => {
 ### Styling Patterns
 
 #### Responsive Design
+
 ```typescript
 import { Box } from "@chakra-ui/react";
 
@@ -1193,6 +1257,7 @@ import { Box } from "@chakra-ui/react";
 ```
 
 #### Conditional Styling
+
 ```typescript
 <Box
   bg={isActive ? "brand.solid" : "bg.subtle"}
@@ -1213,26 +1278,33 @@ import { Box } from "@chakra-ui/react";
 Run these checks before committing code:
 
 #### 1. Linting
+
 ```bash
 npm run lint
 ```
+
 **Expected**: No errors, no warnings (max warnings: 0)
 
 #### 2. TypeScript Compilation
+
 ```bash
 npx tsc --noEmit
 ```
+
 **Expected**: No type errors
 
 #### 3. Build
+
 ```bash
 npm run build
 ```
+
 **Expected**: Build succeeds, no errors
 
 #### 4. Manual Testing Checklist
 
 **For UI changes**:
+
 - [ ] Test in light mode
 - [ ] Test in dark mode
 - [ ] Test responsive layouts (mobile, tablet, desktop)
@@ -1240,26 +1312,31 @@ npm run build
 - [ ] Test with screen reader (if applicable)
 
 **For forms**:
+
 - [ ] Validation triggers correctly
 - [ ] Error messages display
 - [ ] Submission works
 - [ ] Success/error feedback shown
 
 **For translations**:
+
 - [ ] Switch languages and verify text changes
 - [ ] Check for missing translation keys (shows key instead of text)
 - [ ] Verify all supported languages have translations
 
 **For API integration**:
+
 - [ ] API calls succeed
 - [ ] Loading states display
 - [ ] Error states display
 - [ ] Data displays correctly
 
 #### 5. E2E Tests (if applicable)
+
 ```bash
 npm test
 ```
+
 **Expected**: All tests pass
 
 ---
@@ -1267,9 +1344,11 @@ npm test
 ## File-Specific Context
 
 ### `src/index.tsx`
+
 **Purpose**: Application entry point, provider setup
 
 **Key responsibilities**:
+
 - Initialize authentication provider
 - Configure Redux store
 - Set up color mode manager
@@ -1277,6 +1356,7 @@ npm test
 - Render App component
 
 **When to modify**:
+
 - Switching auth providers
 - Adding new Redux slices
 - Changing color mode storage key
@@ -1285,15 +1365,18 @@ npm test
 ---
 
 ### `src/theme.ts`
+
 **Purpose**: Chakra UI theme configuration
 
 **Key responsibilities**:
+
 - Define semantic tokens
 - Configure color schemes
 - Set typography scales
 - Define z-index values
 
 **When to modify**:
+
 - Adding new semantic tokens
 - Changing brand colors
 - Updating typography
@@ -1302,28 +1385,34 @@ npm test
 ---
 
 ### `src/config/lang.ts`
+
 **Purpose**: i18n configuration
 
 **Key responsibilities**:
+
 - Define supported languages
 - Set default language
 - Configure language switcher display
 
 **When to modify**:
+
 - Adding new language support
 - Changing default language
 
 ---
 
 ### `src/config/gdpr.ts`
+
 **Purpose**: GDPR/cookie consent configuration
 
 **Key responsibilities**:
+
 - Define cookie categories
 - Configure consent banner
 - Set policy URLs
 
 **When to modify**:
+
 - Adding new cookie categories
 - Changing consent behavior
 - Updating privacy policy links
@@ -1331,14 +1420,17 @@ npm test
 ---
 
 ### `src/lib/rtk/store.ts`
+
 **Purpose**: Redux store configuration
 
 **Key responsibilities**:
+
 - Configure reducers
 - Add middleware
 - Register RTK Query APIs
 
 **When to modify**:
+
 - Adding new slice
 - Adding new RTK Query API
 - Adding custom middleware
@@ -1346,31 +1438,38 @@ npm test
 ---
 
 ### `src/lib/authentication/authProvider.ts`
+
 **Purpose**: Authentication provider interface
 
 **When to modify**:
+
 - Adding methods to auth interface (affects all providers)
 - Changing auth token structure
 
 ---
 
 ### `src/lib/i18n/formatters.ts`
+
 **Purpose**: Custom i18next formatters for dates, currency, etc.
 
 **When to modify**:
+
 - Adding new date/number formatters
 - Changing formatting logic
 
 ---
 
 ### `public/connectionStrings.cjs`
+
 **Purpose**: Serve environment variables to frontend
 
 **Key responsibilities**:
+
 - Read from `.env.local` in development
 - Serve as `window.appSettings`
 
 **When to modify**:
+
 - Adding new environment variables
 - Changing auth provider (requires different env vars)
 
@@ -1381,9 +1480,11 @@ npm test
 ### Build Errors
 
 #### Error: "Module not found"
+
 **Cause**: Missing dependency or incorrect import path
 
 **Fix**:
+
 1. Check package.json for dependency
 2. Run `npm install` if missing
 3. Verify import path uses `@/` alias correctly
@@ -1392,9 +1493,11 @@ npm test
 ---
 
 #### Error: "TypeScript: Type 'X' is not assignable to type 'Y'"
+
 **Cause**: Type mismatch
 
 **Fix**:
+
 1. Check interface/type definitions
 2. Ensure data structure matches expected type
 3. Use type assertion if certain: `data as ExpectedType`
@@ -1405,9 +1508,11 @@ npm test
 ### Runtime Errors
 
 #### Error: "Cannot read property 'X' of undefined"
+
 **Cause**: Accessing property on null/undefined object
 
 **Fix**:
+
 1. Add optional chaining: `object?.property`
 2. Add null check: `if (object) { ... }`
 3. Provide default value: `object ?? defaultValue`
@@ -1416,9 +1521,11 @@ npm test
 ---
 
 #### Error: "Maximum update depth exceeded"
+
 **Cause**: Infinite re-render loop
 
 **Fix**:
+
 1. Check `useEffect` dependencies
 2. Don't update state unconditionally in render
 3. Memoize callbacks with `useCallback`
@@ -1429,9 +1536,11 @@ npm test
 ### Test Failures
 
 #### Error: "Element not found"
+
 **Cause**: Cypress can't find element with selector
 
 **Fix**:
+
 1. Check element exists in DOM
 2. Wait for element to appear: `cy.findByText("text").should("exist")`
 3. Use correct Testing Library query
@@ -1441,9 +1550,11 @@ npm test
 ---
 
 #### Error: "Test is flaky (passes sometimes)"
+
 **Cause**: Race condition or timing issue
 
 **Fix**:
+
 1. Add explicit waits: `cy.wait('@apiCall')`
 2. Use `should` assertions instead of direct commands
 3. Wait for API responses before asserting
@@ -1454,9 +1565,11 @@ npm test
 ### Development Issues
 
 #### Issue: "Changes not reflecting in browser"
+
 **Cause**: Cache or build issue
 
 **Fix**:
+
 1. Hard refresh browser (Ctrl+Shift+R)
 2. Clear browser cache
 3. Restart dev server
@@ -1466,9 +1579,11 @@ npm test
 ---
 
 #### Issue: "Language switch doesn't work"
+
 **Cause**: Translation files not loaded or config issue
 
 **Fix**:
+
 1. Check `src/config/lang.ts` includes language
 2. Verify translation files exist in `src/locales/{lang}/`
 3. Restart dev server to reload translations
@@ -1479,6 +1594,7 @@ npm test
 ## Additional Resources
 
 ### Official Documentation
+
 - [React Documentation](https://react.dev/)
 - [TypeScript Handbook](https://www.typescriptlang.org/docs/)
 - [Chakra UI v3](https://chakra-ui.com/)
@@ -1492,6 +1608,7 @@ npm test
 - [Vite](https://vitejs.dev/)
 
 ### Project-Specific
+
 - [Conventional Commits](https://www.conventionalcommits.org/)
 - [WCAG Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
 - [OWASP Security](https://owasp.org/www-project-top-ten/)
@@ -1503,6 +1620,7 @@ npm test
 Use these checklists to verify your work before completing:
 
 ### UI Component
+
 - [ ] Component uses TypeScript with strict types
 - [ ] All text uses translation keys
 - [ ] Colors use semantic tokens
@@ -1515,6 +1633,7 @@ Use these checklists to verify your work before completing:
 - [ ] **Existing tests pass or updated appropriately**
 
 ### Translation
+
 - [ ] Keys added to ALL supported languages
 - [ ] Keys follow naming convention
 - [ ] Correct namespace used
@@ -1524,6 +1643,7 @@ Use these checklists to verify your work before completing:
 - [ ] **Existing tests pass or updated appropriately**
 
 ### Authentication
+
 - [ ] AuthProvider interface implemented
 - [ ] Login/logout flows work
 - [ ] Token refresh works
@@ -1534,6 +1654,7 @@ Use these checklists to verify your work before completing:
 - [ ] **Existing tests pass or updated appropriately**
 
 ### API Integration
+
 - [ ] RTK Query API created with `createAppApi`
 - [ ] Uses `arkFetchBaseQuery`
 - [ ] Registered in store
@@ -1545,6 +1666,7 @@ Use these checklists to verify your work before completing:
 - [ ] **Existing tests pass or updated appropriately**
 
 ### Form
+
 - [ ] Zod schema defined
 - [ ] Form uses `zod2FormValidator`
 - [ ] Custom errors in `zodCustom.json`
@@ -1556,6 +1678,7 @@ Use these checklists to verify your work before completing:
 - [ ] **Existing tests pass or updated appropriately**
 
 ### Table
+
 - [ ] API returns correct format (data, count, page, limit)
 - [ ] Columns defined with TypeScript types
 - [ ] Headers use translation keys
@@ -1567,6 +1690,7 @@ Use these checklists to verify your work before completing:
 - [ ] **Existing tests pass or updated appropriately**
 
 ### Theme
+
 - [ ] Semantic tokens properly defined
 - [ ] Light and dark values specified
 - [ ] No hardcoded colors in components
@@ -1576,6 +1700,7 @@ Use these checklists to verify your work before completing:
 - [ ] **Existing tests pass or updated appropriately**
 
 ### Testing
+
 - [ ] Tests use Testing Library queries
 - [ ] Tests are descriptive
 - [ ] Tests pass in headless mode

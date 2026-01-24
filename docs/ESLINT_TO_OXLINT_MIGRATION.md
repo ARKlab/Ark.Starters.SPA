@@ -22,19 +22,22 @@ The project used the following ESLint plugins:
 ### ✅ Fully Migrated (Built-in Support)
 
 #### 1. @eslint/js → oxlint core rules
+
 - **Status**: ✅ Complete
 - **Coverage**: All core ESLint rules migrated
 - **Evidence**: Base rules in `.oxlintrc.json` (lines 29-289)
 
 #### 2. typescript-eslint → oxlint typescript plugin
+
 - **Status**: ✅ Complete
 - **Coverage**: Type-aware and stylistic rules
-- **Evidence**: 
+- **Evidence**:
   - Plugin enabled in `.oxlintrc.json` line 4: `"typescript"`
   - 50+ TypeScript rules configured (e.g., `@typescript-eslint/await-thenable`, `@typescript-eslint/no-floating-promises`)
   - Type-aware linting working with `--type-aware` flag
 
 #### 3. eslint-plugin-import → oxlint import plugin
+
 - **Status**: ✅ Complete
 - **Coverage**: Import/export linting
 - **Evidence**:
@@ -43,6 +46,7 @@ The project used the following ESLint plugins:
   - Custom banned imports preserved (lines 226-284)
 
 #### 4. eslint-plugin-jsx-a11y → oxlint jsx-a11y plugin
+
 - **Status**: ✅ Complete
 - **Coverage**: All accessibility rules
 - **Evidence**:
@@ -52,6 +56,7 @@ The project used the following ESLint plugins:
 ### ⚠️ Partially Migrated (Limited Support)
 
 #### 5. eslint-plugin-react → oxlint react plugin
+
 - **Status**: ⚠️ Partial
 - **Coverage**: Basic React rules available in oxlint
 - **Evidence**: Plugin enabled in override (line 373: `"react"`)
@@ -59,9 +64,10 @@ The project used the following ESLint plugins:
 - **Verification Needed**: Check which specific React rules are used
 
 #### 6. eslint-plugin-react-hooks → oxlint react plugin
-- **Status**: ⚠️ Partial  
+
+- **Status**: ⚠️ Partial
 - **Coverage**: Basic hooks rules supported
-- **Evidence**: 
+- **Evidence**:
   - Rules configured in `.oxlintrc.json` lines 367-370:
     - `react-hooks/rules-of-hooks`: "error"
     - `react-hooks/exhaustive-deps`: "error"
@@ -71,6 +77,7 @@ The project used the following ESLint plugins:
 ### ❌ Not Migrated (No oxlint Support)
 
 #### 7. eslint-plugin-react-refresh
+
 - **Status**: ❌ Not supported
 - **Original Purpose**: Ensures React components are compatible with Fast Refresh (Vite HMR)
 - **Impact**: **MEDIUM** - May affect development experience if components break Fast Refresh
@@ -78,6 +85,7 @@ The project used the following ESLint plugins:
 - **Workaround**: Manual testing of Fast Refresh during development
 
 #### 8. eslint-plugin-cypress
+
 - **Status**: ❌ Not supported
 - **Original Purpose**: Cypress-specific best practices (e.g., `no-unnecessary-waiting`, `no-assigning-return-values`)
 - **Impact**: **LOW** - These are mostly code quality suggestions, not critical errors
@@ -85,6 +93,7 @@ The project used the following ESLint plugins:
 - **Recommendation**: Accept the gap; Cypress tests will still run
 
 #### 9. eslint-plugin-mocha
+
 - **Status**: ❌ Not supported
 - **Original Purpose**: Mocha test framework best practices
 - **Impact**: **LOW** - Cypress uses Mocha internally, but linting isn't critical for tests
@@ -92,6 +101,7 @@ The project used the following ESLint plugins:
 - **Recommendation**: Accept the gap
 
 #### 10. eslint-plugin-chai-friendly
+
 - **Status**: ❌ Not supported
 - **Original Purpose**: Allows chai expressions without ESLint errors
 - **Impact**: **LOW** - oxlint handles this differently
@@ -136,7 +146,7 @@ The critical project-specific rules were successfully migrated:
 
 ### Medium Priority (Monitor)
 
-1. **eslint-plugin-react-refresh** 
+1. **eslint-plugin-react-refresh**
    - **Risk**: Components may not be Fast Refresh compatible
    - **Mitigation**: Test HMR during development; failures will be immediately visible
    - **Action**: Document that Fast Refresh compatibility is not enforced by linter
@@ -144,7 +154,7 @@ The critical project-specific rules were successfully migrated:
 ### Low Priority (Accept)
 
 1. **eslint-plugin-cypress** - Test code quality suggestions
-2. **eslint-plugin-mocha** - Test framework best practices  
+2. **eslint-plugin-mocha** - Test framework best practices
 3. **eslint-plugin-chai-friendly** - Mitigated by file-specific overrides
 
 ## Verification Testing
@@ -212,7 +222,8 @@ The migration from ESLint to oxlint is **successful** with acceptable trade-offs
 
 **Performance gain**: ~20-40x faster linting with type-awareness powered by tsgo.
 
-**VS Code Integration**: 
+**VS Code Integration**:
+
 - oxc extension for linting and formatting
 - TypeScript Native Preview extension for 10x faster IntelliSense with tsgo
 - Configuration: `"typescript.experimental.useTsgo": true`

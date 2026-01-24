@@ -18,13 +18,13 @@ export interface ArkBaseQueryApiType<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   E = any,
 > extends Modify<
-    BaseQueryApi,
-    {
-      dispatch: D;
-      getState: () => S;
-      extra: E;
-    }
-  > {}
+  BaseQueryApi,
+  {
+    dispatch: D;
+    getState: () => S;
+    extra: E;
+  }
+> {}
 
 export type ArkBaseQueryFn<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

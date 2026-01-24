@@ -29,7 +29,7 @@ export const sendToAnalytics = (metric: Metric, appInsights?: IApplicationInsigh
   // Send to Application Insights if available
   // The appInsights instance is attached to window after initialization in initApp.tsx
   const ai = appInsights ?? (window as Window & { appInsights?: IApplicationInsights }).appInsights;
-  
+
   if (ai) {
     ai.trackMetric({
       name: metric.name,

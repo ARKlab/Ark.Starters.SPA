@@ -18,11 +18,9 @@ export const AuthenticationCallback = () => {
     await dispatch(HandleRedirect());
   }, [dispatch]);
 
-  if (auth.isError)
-    return ErrorDisplay({ ...auth.error });
+  if (auth.isError) return ErrorDisplay({ ...auth.error });
 
-  if (auth.isLoading)
-    return <CenterSpinner />
+  if (auth.isLoading) return <CenterSpinner />;
 
-  return <></>
+  return <></>;
 };

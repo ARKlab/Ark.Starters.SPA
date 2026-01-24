@@ -4,7 +4,7 @@ import type { StackProps } from "@chakra-ui/react";
 import { Box, Button, Field, FieldLabel, HStack, IconButton, Input, Stack, Text } from "@chakra-ui/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { LuX , LuCalendar, LuCalendarOff , LuChevronLeft, LuChevronRight } from "react-icons/lu";
+import { LuX, LuCalendar, LuCalendarOff, LuChevronLeft, LuChevronRight } from "react-icons/lu";
 
 import "./appDatePicker.css";
 
@@ -84,17 +84,17 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
 
   const min = minDate
     ? parseDate(
-      dateFormat === "yyyy-MM-dd"
-        ? t("{{val, isoDate}}", { val: minDate })
-        : t("{{val, dateFormat}}", { val: minDate, format: dateFormat }),
-    )
+        dateFormat === "yyyy-MM-dd"
+          ? t("{{val, isoDate}}", { val: minDate })
+          : t("{{val, dateFormat}}", { val: minDate, format: dateFormat }),
+      )
     : undefined;
   const max = maxDate
     ? parseDate(
-      dateFormat === "yyyy-MM-dd"
-        ? t("{{val, isoDate}}", { val: maxDate })
-        : t("{{val, dateFormat}}", { val: maxDate, format: dateFormat }),
-    )
+        dateFormat === "yyyy-MM-dd"
+          ? t("{{val, isoDate}}", { val: maxDate })
+          : t("{{val, dateFormat}}", { val: maxDate, format: dateFormat }),
+      )
     : undefined;
 
   const datePicker = useDatePicker({
@@ -157,9 +157,9 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
                   placeholder={
                     parsedValue
                       ? t("{{val, dateFormat}}", {
-                        val: parsedValue.toDate(timeZone ?? "UTC"),
-                        format: dateDisplayFormat,
-                      })
+                          val: parsedValue.toDate(timeZone ?? "UTC"),
+                          format: dateDisplayFormat,
+                        })
                       : ""
                   }
                   border={border}

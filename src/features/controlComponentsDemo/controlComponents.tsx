@@ -15,7 +15,7 @@ enum TestEnum {
 }
 export default function ControlComponentsView() {
   const { t } = useTranslation();
-  
+
   const [textFilterValue, setTextFilterValue] = useState<string>("");
   const [selectValue, setSelectValue] = useState<string | undefined>(undefined);
   const [logs, setLogs] = useState<{ name: string; value: unknown }[]>([]);
@@ -27,10 +27,10 @@ export default function ControlComponentsView() {
   function setDateRangeValue(value: Date[]) {
     setDateRange(value);
     if (value.length >= 1) {
-      handleInputChange("dateRange start", t('{{val, isoDate}}', { val: value[0] }));
+      handleInputChange("dateRange start", t("{{val, isoDate}}", { val: value[0] }));
     }
     if (value.length >= 2) {
-      handleInputChange("dateRange end", t('{{val, isoDate}}', { val: value[1] }));
+      handleInputChange("dateRange end", t("{{val, isoDate}}", { val: value[1] }));
     }
   }
 
