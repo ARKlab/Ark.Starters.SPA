@@ -23,21 +23,15 @@
   },
   "oxc.typeAware": true,
   "typescript.experimental.useTsgo": true,
-  "i18n-ally.localesPaths": [
-    "src/locales"
-  ],
+  "i18n-ally.localesPaths": ["src/locales"],
   "i18n-ally.keystyle": "nested",
   "i18n-ally.namespace": true,
   "i18n-ally.fullReloadOnChanged": true,
   "i18n-ally.pathMatcher": "{locale}/{namespace}.json",
   "i18n-ally.sortKeys": true,
   "i18n-ally.keepFulfilled": true,
-  "i18n-ally.enabledFrameworks": [
-    "react-i18next"
-  ],
-  "i18n-ally.translate.engines": [
-    "google"
-  ],
+  "i18n-ally.enabledFrameworks": ["react-i18next"],
+  "i18n-ally.translate.engines": ["google"],
   "i18n-ally.defaultNamespace": "translation",
   "i18n-ally.extract.autoDetect": true,
   "typescript.tsdk": "node_modules/typescript/lib"
