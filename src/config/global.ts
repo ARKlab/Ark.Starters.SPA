@@ -1,4 +1,4 @@
-import type { ApplicationInsightsConfig } from "../lib/applicationInsights";
+import type { ApplicationInsightsConfig } from "../lib/applicationInsights/types";
 import type { Auth0AuthProviderConfig } from "../lib/authentication/providers/auth0AuthProvider";
 import type { MsalAuthProviderConfig } from "../lib/authentication/providers/msalAuthProvider";
 

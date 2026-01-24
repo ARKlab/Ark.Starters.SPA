@@ -12,7 +12,7 @@ import pluginChaiFriendly from "eslint-plugin-chai-friendly";
 
 export default tseslint.config(
   {
-    ignores: ["src/components/ui/**/*.{ts,tsx}"],
+    ignores: ["src/components/ui/**/*.{ts,tsx}", "src/lib/applicationInsights/setup.ts"],
   },
 
   eslint.configs.recommended,

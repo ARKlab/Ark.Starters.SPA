@@ -28,5 +28,11 @@
     ],
     "i18n-ally.defaultNamespace": "translation",
     "i18n-ally.extract.autoDetect": true,
-    "typescript.tsdk": "node_modules/typescript/lib"
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "chat.tools.terminal.autoApprove": {
+        "/^cross-env-shell NODE_ENV=production CYPRESS_COVERAGE=true \"tsc && vite build --mode e2e\"$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
 }
