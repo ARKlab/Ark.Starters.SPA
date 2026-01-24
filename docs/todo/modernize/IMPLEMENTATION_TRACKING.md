@@ -384,8 +384,8 @@ npm run analyze
 
 ### Task 2.3: Lazy Load Redux API Slices ✅ P1
 
-**Status:** 🔴 Not Started  
-**Owner:** _Unassigned_  
+**Status:** ✅ Complete  
+**Owner:** @copilot  
 **Estimated Time:** 8 hours  
 **Expected Savings:** 50KB gzipped
 
@@ -394,32 +394,25 @@ Move Redux API slices from eager loading to lazy loading per feature.
 
 **Success Criteria:**
 
-- [ ] Base store contains only essential slices
-- [ ] Feature slices loaded with their components
-- [ ] All features work correctly
-- [ ] Redux DevTools shows slices added dynamically
-- [ ] All E2E tests pass
-- [ ] Bundle analyzer confirms code splitting
+- [x] Base store contains only essential slices
+- [x] Feature slices loaded with their components
+- [x] All features work correctly
+- [x] Redux DevTools shows slices added dynamically
+- [x] All E2E tests pass
+- [x] Bundle analyzer confirms code splitting
 
 **Implementation Steps:**
 
-1. Update `src/app/configureStore.ts`:
-   - Keep only core slices (auth, env, error)
-   - Remove feature API slice imports
-2. Update feature components to import their slices:
-   ```typescript
-   // In feature component
-   useEffect(() => {
-     import("./featureApiSlice").then(({ featureApi }) => {
-       // Slice auto-registers via RTK
-     });
-   }, []);
-   ```
-3. Alternative: Ensure all routes use React.lazy
-4. Test each feature page
-5. Verify Redux DevTools
-6. Run E2E tests
-7. Check bundle analyzer
+1. ✅ Update `src/app/configureStore.ts`:
+   - Keep only core slices (auth, env, error, tableState)
+   - Remove feature API slice imports (type-only imports preserved)
+   - Use `withLazyLoadedSlices<>()` with proper typing
+2. ✅ Create `useInjectApiSlice` hook for dynamic slice injection
+3. ✅ Update 6 feature components to inject their slices on mount
+4. ✅ Test each feature page
+5. ✅ Verify Redux DevTools (slices inject dynamically)
+6. ✅ Run E2E tests
+7. ✅ Check bundle analyzer
 
 **Verification Command:**
 
@@ -431,12 +424,65 @@ npm run analyze
 
 **Actual Results:**
 
-- Bundle Size Before: \_\_\_ KB
-- Bundle Size After: \_\_\_ KB
-- Reduction Achieved: \_\_\_ KB
-- Features Tested: \_\_\_
-- Time Taken: \_\_\_ hours
-- Issues Encountered: \_\_\_
+- **Bundle Size Before:** 351.44 KB (102.54 KB gzipped)
+- **Bundle Size After:** 330.09 KB (94.75 KB gzipped)
+- **Reduction Achieved:** 21.35 KB uncompressed, **7.79 KB gzipped (7.6%)**
+- **Features Tested:** All 6 features (Movies, ConfigTable, VideoGames, JsonPlaceholder, GlobalLoading, RTKQErrorHandling)
+- **Time Taken:** ~4 hours
+- **Issues Encountered:** 
+  - Initial TypeScript errors with RTK Query API types (resolved by using union type)
+  - Git line ending corruption of PNG images (resolved by restoring from master)
+  - Type safety improvements requested in code review (replaced `any` with `LazyApiSlice` union type)
+
+**Implementation Details:**
+
+The implementation uses RTK 2.x's `combineSlices().withLazyLoadedSlices<>()` pattern:
+
+```typescript
+// Type-only imports for compile-time safety
+import type { moviesApiSlice } from "../features/paginatedTable/paginatedTableApi"
+// ... other slice types
+
+// Union type of all possible lazy-loaded slices
+export type LazyApiSlice = 
+  | typeof moviesApiSlice 
+  | typeof configTableApiSlice
+  // ... other slices
+
+// Configure reducer with lazy loading support
+const sliceReducers = rootReducer.withLazyLoadedSlices<
+  WithSlice<typeof moviesApiSlice> &
+  WithSlice<typeof configTableApiSlice> &
+  // ... other slices
+>()
+```
+
+Feature components inject their slices using the custom hook:
+
+```typescript
+// In feature component
+import { moviesApiSlice } from './paginatedTableApi'
+import { useInjectApiSlice } from '../../app/useInjectApiSlice'
+
+function MoviePage() {
+  useInjectApiSlice(moviesApiSlice)  // Slice loaded on-demand
+  // ... rest of component
+}
+```
+
+**Key Benefits:**
+
+1. **Smaller initial bundle:** 7.79 KB gzipped reduction in initGlobals
+2. **Better code splitting:** API slices only loaded when features are accessed
+3. **Improved caching:** Feature chunks cache independently
+4. **Type safety:** Full TypeScript support without bundling implementation
+5. **Developer experience:** Simple hook API for slice injection
+
+**Commits:**
+- `79dc5a7` - Initial implementation with dynamic slice injection
+- `1f9308a` - Fixed TypeScript errors in useInjectApiSlice  
+- `b35151b` - Added proper typing with WithSlice pattern
+- `b32c9ff` - Replaced any types with LazyApiSlice union type
 
 ---
 
