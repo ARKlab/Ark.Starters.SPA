@@ -48,13 +48,13 @@ export const simulatedArkQueryWithParams = (params: ArkPagedQueryParameters) => 
         const movieValue = movie[columnFilter.id as keyof Movie];
         if (columnFilter.id === "releaseDate" && Array.isArray(columnFilter.value)) {
           const releaseDate = new Date(movieValue as string);
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           const filterStartDate = columnFilter.value[0]
-            ? new Date(columnFilter.value[0]).toISOString()
+            ? // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+              new Date(columnFilter.value[0]).toISOString()
             : null;
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           const filterEndDate = columnFilter.value[1]
-            ? new Date(columnFilter.value[1]).toISOString()
+            ? // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+              new Date(columnFilter.value[1]).toISOString()
             : null;
 
           if (filterStartDate && filterEndDate) {
