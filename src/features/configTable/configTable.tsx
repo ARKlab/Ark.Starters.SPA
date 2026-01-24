@@ -1,15 +1,16 @@
-import { Button, Heading, HStack, Spinner, Table, VStack } from "@chakra-ui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
-import * as z from "zod";
+import { Button, Heading, HStack, Spinner, Table, VStack } from "@chakra-ui/react"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react"
+import { useFieldArray, useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
+import * as z from "zod"
 
-import { toaster } from "../../components/ui/toaster";
+import { useInjectApiSlice } from "../../app/useInjectApiSlice"
+import { toaster } from "../../components/ui/toaster"
 
-import { useGetConfigQuery, usePostConfigMutation } from "./configTableApi";
-import { TableRow } from "./TableRow";
-import type { Employee } from "./employee";
+import { configTableApiSlice, useGetConfigQuery, usePostConfigMutation } from "./configTableApi"
+import { TableRow } from "./TableRow"
+import type { Employee } from "./employee"
 
 const configTableSchema = z.object({
   table: z
@@ -28,9 +29,9 @@ const configTableSchema = z.object({
     )
     .superRefine((table, ctx) => {
       const names = table.reduce<Record<string, number>>((acc, x) => {
-        acc[x.name] = (acc[x.name] || 0) + 1;
-        return acc;
-      }, {});
+        acc[x.name] = (acc[x.name] || 0) + 1
+        return acc
+      }, {})
 
       table.forEach((t, idx) => {
         if (names[t.name] > 1) {
@@ -38,14 +39,17 @@ const configTableSchema = z.object({
             code: "custom",
             message: "Duplicate names are not allowed",
             path: [idx, "name"],
-          });
+          })
         }
-      });
+      })
     }),
-});
+})
 
 export default function EditableTableExample() {
-  const { t } = useTranslation();
+  // Inject API slice for lazy loading
+  useInjectApiSlice(configTableApiSlice)
+
+  const { t } = useTranslation()
 
   const [postConfig, { isLoading: postConfigIsLoading }] = usePostConfigMutation();
 

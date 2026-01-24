@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-restricted-imports */
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, useStore } from "react-redux"
 
-import type { AppDispatch, AppState } from "./configureStore";
+import type { AppDispatch, AppState, AppStore } from "./configureStore"
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
-export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
-export const useAppSelector = useSelector.withTypes<AppState>();
+export const useAppDispatch = useDispatch.withTypes<AppDispatch>()
+export const useAppSelector = useSelector.withTypes<AppState>()
+export const useAppStore = useStore.withTypes<AppStore>()

@@ -7,30 +7,32 @@ import {
   Text,
   Wrap,
   WrapItem,
-} from "@chakra-ui/react";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { LuX } from "react-icons/lu";
+} from "@chakra-ui/react"
+import { useState } from "react"
+import { useTranslation } from "react-i18next"
+import { LuX } from "react-icons/lu"
 
-import CenterSpinner from "../../components/centerSpinner";
-import CodeBlock from "../../components/codeBlock";
+import { useInjectApiSlice } from "../../app/useInjectApiSlice"
+import CenterSpinner from "../../components/centerSpinner"
+import CodeBlock from "../../components/codeBlock"
 import {
   SelectContent,
   SelectItem,
   SelectRoot,
   SelectTrigger,
   SelectValueText,
-} from "../../components/ui/select";
+} from "../../components/ui/select"
 
 import {
+  rtkqErrorHandlingApi,
   useDownloadMutation,
   useGetQuery,
   usePostMutation,
   type ResultOption,
-} from "./rtkqErrorHandlingApi";
+} from "./rtkqErrorHandlingApi"
 
 const GetResult = ({ option }: { option: ResultOption }) => {
-  const { data, error, isFetching } = useGetQuery(option);
+  const { data, error, isFetching } = useGetQuery(option)
 
   if (isFetching) {
     return <CenterSpinner />;
@@ -111,7 +113,10 @@ const Download = () => {
 };
 
 const RTKQErrorHandlingPage = () => {
-  const { t } = useTranslation();
+  // Inject API slice for lazy loading
+  useInjectApiSlice(rtkqErrorHandlingApi)
+
+  const { t } = useTranslation()
   const [selectQueryValue, setSelectQueryValue] = useState<ResultOption>();
   const [selectMutationValue, setSelectMutationValue] = useState<ResultOption>();
 

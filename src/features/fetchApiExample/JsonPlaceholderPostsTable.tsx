@@ -1,20 +1,24 @@
-import { Heading } from "@chakra-ui/react";
-import { useTranslation } from "react-i18next";
-import { z } from "zod";
+import { Heading } from "@chakra-ui/react"
+import { useTranslation } from "react-i18next"
+import { z } from "zod"
 
-import { AppSimpleNonPaginatedTable } from "../../components/AppSimpleTable/AppSimpleNonPaginatedTable";
+import { useInjectApiSlice } from "../../app/useInjectApiSlice"
+import { AppSimpleNonPaginatedTable } from "../../components/AppSimpleTable/AppSimpleNonPaginatedTable"
 
-import { useFetchPostsQuery } from "./jsonPlaceholderApi";
+import { jsonPlaceholderApi, useFetchPostsQuery } from "./jsonPlaceholderApi"
 
 export const PostDataSchema = z.object({
   id: z.number().nullable(),
   userId: z.number().nullable(),
   title: z.string().nullable(),
   body: z.string().nullable(),
-});
+})
 
-export type PostDataType = z.infer<typeof PostDataSchema>;
+export type PostDataType = z.infer<typeof PostDataSchema>
 const JsonPlaceholderPostsTable = () => {
+  // Inject API slice for lazy loading
+  useInjectApiSlice(jsonPlaceholderApi)
+
   const {
     data,
     isLoading,
@@ -24,8 +28,8 @@ const JsonPlaceholderPostsTable = () => {
     pollingInterval: 30000,
     refetchOnReconnect: true,
     refetchOnMountOrArgChange: true,
-  });
-  const { t } = useTranslation();
+  })
+  const { t } = useTranslation()
 
   return (
     <>
