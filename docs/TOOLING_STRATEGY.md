@@ -56,9 +56,27 @@ The migration to oxlint successfully preserved all project-specific linting rule
 
 ## VS Code Integration
 
-- **Extension**: `oxc.oxc-vscode` (replaces ESLint and Prettier extensions)
+- **Extensions**: 
+  - `oxc.oxc-vscode` - oxlint and oxfmt integration (replaces ESLint and Prettier extensions)
+  - `typescriptteam.native-preview` - TypeScript Native Preview for tsgo language server
 - **Configuration**: `.vscode/settings.json`
-- **Features**: Format on save, lint on type, type-aware diagnostics
+- **Features**: 
+  - Format on save with oxfmt
+  - Lint on type with oxlint
+  - Type-aware diagnostics with oxlint
+  - TypeScript language server powered by tsgo (10x faster IntelliSense)
+  
+### TypeScript Native Preview (tsgo)
+
+The project is configured to use the experimental TypeScript Native Preview extension, which provides:
+- **10x faster IntelliSense** - Go-based language server
+- **Faster completions** - Native performance for autocomplete
+- **Faster navigation** - Go-to-definition, find references
+- **Experimental status** - Preview of TypeScript 7 features
+
+**Configuration**: `"typescript.experimental.useTsgo": true` in `.vscode/settings.json`
+
+**Note**: Some advanced features (auto-imports, certain refactorings) may still be in development. You can disable it by setting the value to `false` or using the Command Palette: "TypeScript Native Preview: Disable".
 
 ## Migration Notes
 

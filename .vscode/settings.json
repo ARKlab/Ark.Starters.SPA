@@ -21,6 +21,7 @@
     "[javascriptreact]": {
         "editor.defaultFormatter": "oxc.oxc-vscode"
     },
+    "typescript.experimental.useTsgo": true,
     "i18n-ally.localesPaths": [
         "src/locales"
     ],
