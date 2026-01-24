@@ -1,4 +1,4 @@
-import type { UnknownAction, Action, ThunkAction, WithSlice } from "@reduxjs/toolkit"
+import type { Action, ThunkAction, WithSlice } from "@reduxjs/toolkit"
 import { configureStore, combineSlices } from "@reduxjs/toolkit"
 import { setupListeners } from "@reduxjs/toolkit/query"
 
@@ -15,6 +15,15 @@ import type { videoGameApiSlice } from "../features/formExample/videoGamesApiSli
 import type { globalLoadingSlice } from "../features/globalLoadingBar/globalLoadingSlice"
 import type { moviesApiSlice } from "../features/paginatedTable/paginatedTableApi"
 import type { rtkqErrorHandlingApi } from "../features/rtkqErrorHandling/rtkqErrorHandlingApi"
+
+// Union type of all possible lazy-loaded API slices
+export type LazyApiSlice =
+  | typeof configTableApiSlice
+  | typeof jsonPlaceholderApi
+  | typeof videoGameApiSlice
+  | typeof globalLoadingSlice
+  | typeof moviesApiSlice
+  | typeof rtkqErrorHandlingApi
 
 // Base store configuration with only core slices
 // Feature-specific API slices are lazy-loaded with their routes
@@ -58,13 +67,10 @@ export function initStore(extra: ExtraType) {
   // Expose slice injection capability
   let currentReducer = sliceReducers
   const storeWithInject = store as typeof store & {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    injectSlice: (slice: any) => void
+    injectSlice: (slice: LazyApiSlice) => void
   }
   
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  storeWithInject.injectSlice = (slice: any) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  storeWithInject.injectSlice = (slice: LazyApiSlice) => {
     currentReducer = currentReducer.inject(slice) as typeof currentReducer
     store.replaceReducer(currentReducer)
   }
@@ -73,9 +79,11 @@ export function initStore(extra: ExtraType) {
 }
 
 // Registry of API reset actions - populated by features as they load
-const apiResetActions: (() => UnknownAction)[] = []
+// Type constrained to the known lazy-loaded API slices
+type ApiResetAction = ReturnType<LazyApiSlice["util"]["resetApiState"]>
+const apiResetActions: (() => ApiResetAction)[] = []
 
-export function registerApiResetAction(resetAction: () => UnknownAction) {
+export function registerApiResetAction(resetAction: () => ApiResetAction) {
   if (!apiResetActions.includes(resetAction)) {
     apiResetActions.push(resetAction)
   }

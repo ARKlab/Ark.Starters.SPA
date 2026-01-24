@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 
 import { useAppStore } from "./hooks"
-import { registerApiResetAction } from "./configureStore"
+import { registerApiResetAction, type LazyApiSlice } from "./configureStore"
 
 /**
  * Hook to inject an RTK Query API slice into the store when a component mounts
@@ -20,8 +20,7 @@ import { registerApiResetAction } from "./configureStore"
  * }
  * ```
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function useInjectApiSlice(api: any) {
+export function useInjectApiSlice(api: LazyApiSlice) {
   const store = useAppStore()
 
   useEffect(() => {
@@ -30,7 +29,6 @@ export function useInjectApiSlice(api: any) {
     ;(store as any).injectSlice(api)
 
     // Register reset action for dev/e2e mode
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
     registerApiResetAction(() => api.util.resetApiState())
   }, [store, api])
 }
