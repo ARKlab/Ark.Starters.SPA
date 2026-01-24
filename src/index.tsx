@@ -1,7 +1,7 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
+import { ErrorBoundary as ReactErrorBoundary, type FallbackProps } from "react-error-boundary";
 
 import { ColorModeProvider } from "./components/ui/color-mode";
 import { createLazyComponent } from "./lib/components/createLazyComponent";
@@ -16,12 +16,13 @@ import theme from "./theme";
  *
  * IMPORTANT: use only basic DOM/Style, UI Toolkit nor ReduxToolkit are available!
  */
-function fallbackRender({ error }: { error: Error }) {
+function fallbackRender({ error }: FallbackProps) {
+  const errorObj = error instanceof Error ? error : new Error(String(error));
   return (
     <div role="alert">
       <p>Fatal error. Reload the Browser (F5)</p>
-      <pre style={{ color: "red" }}>{error.message}</pre>
-      <pre style={{ color: "red" }}>{error.stack}</pre>
+      <pre style={{ color: "red" }}>{errorObj.message}</pre>
+      <pre style={{ color: "red" }}>{errorObj.stack}</pre>
     </div>
   );
 }
