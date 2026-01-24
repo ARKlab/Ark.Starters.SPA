@@ -1,8 +1,7 @@
 import { useEffect } from "react"
-import type { Api } from "@reduxjs/toolkit/query"
 
 import { useAppStore } from "./hooks"
-import { registerApiResetAction, type AppStore } from "./configureStore"
+import { registerApiResetAction } from "./configureStore"
 
 /**
  * Hook to inject an RTK Query API slice into the store when a component mounts
@@ -22,7 +21,7 @@ import { registerApiResetAction, type AppStore } from "./configureStore"
  * ```
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function useInjectApiSlice<T extends Api<any, any, any, any>>(api: T) {
+export function useInjectApiSlice(api: any) {
   const store = useAppStore()
 
   useEffect(() => {
@@ -31,7 +30,7 @@ export function useInjectApiSlice<T extends Api<any, any, any, any>>(api: T) {
     ;(store as any).injectSlice(api)
 
     // Register reset action for dev/e2e mode
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
     registerApiResetAction(() => api.util.resetApiState())
   }, [store, api])
 }
