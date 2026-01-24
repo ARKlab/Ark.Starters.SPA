@@ -9,10 +9,12 @@ export function errorToErrorObject(error: unknown): Error {
   if (error instanceof Error) {
     return error
   }
-  if (error == null) {
+  if (error === null || error === undefined) {
     return new Error("Unknown error")
   }
   // Handle objects (including functions) - try to serialize
+  // Note: JSON.stringify may expose data, but this is acceptable for error boundaries
+  // where the goal is debugging and showing error information to developers
   if (typeof error === "object" || typeof error === "function") {
     try {
       return new Error(JSON.stringify(error))
@@ -21,7 +23,8 @@ export function errorToErrorObject(error: unknown): Error {
     }
   }
   // Handle primitives (string, number, boolean, symbol, bigint)
-  // At this point, error must be a primitive type, safe to convert to string
+  // At this point, error must be a primitive type
+  // TypeScript's type system doesn't narrow this fully, so we disable the lint rules
   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-base-to-string
   return new Error(`${error}`)
 }
