@@ -29,8 +29,10 @@ export default tseslint.config(
     files: ["src/**/*.{ts,tsx,mtsx}", "pwa-assets.config.{ts,tsx,mtsx}", "vite.config.{ts,tsx,mtsx}"],
     languageOptions: {
       parserOptions: {
+        projectService: {
+          allowDefaultProject: ["*.config.ts", "*.config.mjs"],
+        },
         tsconfigRootDir: import.meta.dirname,
-        project: ["./tsconfig.json"],
       },
     },
     settings: {
@@ -54,8 +56,10 @@ export default tseslint.config(
     ],
     languageOptions: {
       parserOptions: {
+        projectService: {
+          allowDefaultProject: ["cypress.config.ts"],
+        },
         tsconfigRootDir: import.meta.dirname,
-        project: ["./cypress/tsconfig.json"],
       },
     },
     settings: {
