@@ -18,6 +18,7 @@ export default defineConfig({
     screenshotOnRunFailure: true,
     experimentalRunAllSpecs: true,
     experimentalMemoryManagement: true,
+    experimentalFastVisibility: true,
 
     defaultCommandTimeout: 15000,
 
