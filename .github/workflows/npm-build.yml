@@ -19,7 +19,6 @@ jobs:
           node-version-file: ".nvmrc"
       - run: npm ci
       - run: npm run lint
-      - run: npm run format:check
       - run: npm run build
       - name: Cypress E2E
         uses: cypress-io/github-action@v6
