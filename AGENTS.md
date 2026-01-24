@@ -28,27 +28,27 @@
 
 ```bash
 # Development
-npm start              # Start dev server (localhost:3000)
-npm run build          # Production build
-npm run preview        # Preview production build
-npm run analyze        # Build with bundle analysis (generates build/stats.html)
+bun start              # Start dev server (localhost:3000)
+bun run build          # Production build
+bun run preview        # Preview production build
+bun run analyze        # Build with bundle analysis (generates build/stats.html)
 
 # Quality
-npm run lint           # oxlint check (type-aware)
-npm run format         # Format code with oxfmt
-npm run format:check   # Check formatting without changes
-npm test               # Run E2E tests (Cypress)
+bun run lint           # oxlint check (type-aware)
+bun run format         # Format code with oxfmt
+bun run format:check   # Check formatting without changes
+bun test               # Run E2E tests (Cypress)
 
 # E2E - interactive loop (UI)
 # Starts the app in e2e mode and opens Cypress UI
-npm run e2e:start
+bun run e2e:start
 
 # E2E - single spec (headless)
 # Requires the app running in e2e mode (see below)
-npm run cypress:run -- --spec cypress/e2e/your-test.e2e.ts
+bun run cypress:run -- --spec cypress/e2e/your-test.e2e.ts
 
 # Utility
-npm outdated           # Check package versions
+bun outdated           # Check package versions
 ```
 
 ### Repository Structure
@@ -300,7 +300,7 @@ test(e2e): add tests for login flow
 
 #### 10. Code Formatting Style
 
-**Automated with oxfmt** - Run `npm run format` before committing.
+**Automated with oxfmt** - Run `bun run format` before committing.
 
 **Key formatting rules optimized for AI code generation:**
 
@@ -431,7 +431,7 @@ Is your task about...
    - [ ] TypeScript types defined
    - [ ] No `any` types
    - [ ] Accessible (test with keyboard)
-   - [ ] Runs `npm run lint` without errors
+   - [ ] Runs `bun run lint` without errors
 
 **Example Component**:
 
@@ -1019,16 +1019,16 @@ export const UserCard = ({ name, email }: UserCardProps) => {
 4. **Running tests**:
 
    ```bash
-   npm run e2e:start    # Interactive mode (UI)
-   npm run e2e:ci       # Headless mode (CI)
-   npm test             # Alias for e2e:ci
+   bun run e2e:start    # Interactive mode (UI)
+   bun run e2e:ci       # Headless mode (CI)
+   bun test             # Alias for e2e:ci
    ```
 
    To run an interactive testing loop for a specific file:
-   `npm run cypress:run -- --spec cypress/e2e/your-test.e2e.ts --headed --no-exit`
+   `bun run cypress:run -- --spec cypress/e2e/your-test.e2e.ts --headed --no-exit`
 
-   **Note**: If you are not using `npm run e2e:start`, run the dev server in E2E mode first:
-   `cross-env VITE_MODE=e2e npm start`
+   **Note**: If you are not using `bun run e2e:start`, run the dev server in E2E mode first:
+   `cross-env VITE_MODE=e2e bun start`
    Ensure the dev server is running and ready before executing the Cypress command.
 
 5. **MSW mocks** (for E2E mode):
@@ -1074,7 +1074,7 @@ export const UserCard = ({ name, email }: UserCardProps) => {
    - Semantic tokens for colors
 
 5. **Test your changes**:
-   - Run `npm run lint`
+   - Run `bun run lint`
    - Test manually in browser
    - Run relevant tests
    - Check both light and dark modes
@@ -1363,7 +1363,7 @@ Run these checks before committing code:
 #### 1. Linting
 
 ```bash
-npm run lint
+bun run lint
 ```
 
 **Expected**: No errors, no warnings (max warnings: 0)
@@ -1371,7 +1371,7 @@ npm run lint
 #### 2. TypeScript Compilation
 
 ```bash
-npx tsc --noEmit
+bunx tsc --noEmit
 ```
 
 **Expected**: No type errors
@@ -1379,7 +1379,7 @@ npx tsc --noEmit
 #### 3. Build
 
 ```bash
-npm run build
+bun run build
 ```
 
 **Expected**: Build succeeds, no errors
@@ -1417,7 +1417,7 @@ npm run build
 #### 5. E2E Tests (if applicable)
 
 ```bash
-npm run test
+bun run test
 ```
 
 **Expected**: All tests pass
@@ -1569,7 +1569,7 @@ npm run test
 **Fix**:
 
 1. Check package.json for dependency
-2. Run `npm install` if missing
+2. Run `bun install` if missing
 3. Verify import path uses `@/` alias correctly
 4. Check file exists at expected path
 

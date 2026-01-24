@@ -8,11 +8,11 @@ In this project, we've curated a collection of UI elements, layouts, and interac
 
 In order to mantain this project with the most updated version of LTS's packages:
 
-Run `npm outdated` to see a table of packages with the current version, wanted version, and latest version.
+Run `bun outdated` to see a table of packages with the current version, wanted version, and latest version.
 
-To update a specific package, you can use `npm update package_name` This will update the package to the 'wanted' version, which is the maximum version that satisfies the versioning range specified in package.json.
+To update a specific package, you can use `bun update package_name` This will update the package to the 'wanted' version, which is the maximum version that satisfies the versioning range specified in package.json.
 
-In order to Update all packages you can also use the command `npx npm-check-updates` that upgrades your package.json dependencies to the latest versions, ignoring specified versions.
+In order to Update all packages you can also use the command `bunx npm-check-updates` that upgrades your package.json dependencies to the latest versions, ignoring specified versions.
 
 ## Features
 
@@ -347,14 +347,14 @@ This starter project include PWA via [vite-plugin-pwa](https://github.com/vite-p
 
 To test the PWA popup, run the preview build.
 
-1. npm run build
-2. npm run preview
+1. bun run build
+2. bun run preview
 3. Ctrl+C to stop the Preview server - leave the page open in the Browser
 4. edit any file
-5. npm run build
-6. npm run preview
+5. bun run build
+6. bun run preview
 7. A wild Popup happears!
-8. **Remember to uninstall the Service Worker** by clearing site data from DevTools before moving back to development via `npm run start`
+8. **Remember to uninstall the Service Worker** by clearing site data from DevTools before moving back to development via `bun run start`
 
 ![image](docs/pwa-uninstall.png)
 

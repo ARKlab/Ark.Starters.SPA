@@ -9,34 +9,34 @@
     "src/initGlobals.tsx"
   ],
   "scripts": {
-    "start": "concurrently --kill-others --success first \"npm:start:*\"",
+    "start": "concurrently --kill-others --success first \"bun:start:*\"",
     "start:connectionStrings": "cross-env NODE_ENV=development PORT=4000 node --watch -- public/connectionStrings.cjs",
     "prestart:app": "wait-on --log --timeout 30000 http-get://localhost:4000",
     "start:app": "vite",
-    "start:chakratheme": "npx @chakra-ui/cli typegen --watch --strict src/theme.ts",
-    "typecheck": "concurrently \"npm:typecheck:*\"",
+    "start:chakratheme": "bunx @chakra-ui/cli typegen --watch --strict src/theme.ts",
+    "typecheck": "concurrently \"bun:typecheck:*\"",
     "typecheck:app": "tsgo --project ./tsconfig.json --noEmit",
     "typecheck:cypress": "tsgo --project ./cypress/tsconfig.json --noEmit",
-    "prebuild": "npx @chakra-ui/cli typegen --clean --strict src/theme.ts",
+    "prebuild": "bunx @chakra-ui/cli typegen --clean --strict src/theme.ts",
     "build": "tsgo --noEmit && vite build",
     "analyze": "vite build --mode analyze",
-    "prepreview": "cross-env npm run build",
-    "preview": "concurrently --kill-others --success first \"npm:preview:*\"",
+    "prepreview": "cross-env bun run build",
+    "preview": "concurrently --kill-others --success first \"bun:preview:*\"",
     "preview:connectionStrings": "cross-env PORT=4000 node -- public/connectionStrings.cjs",
     "prepreview:app": "wait-on --log --timeout 30000 http-get://localhost:4000",
     "preview:app": "cross-env PORT=4321 vite preview",
     "lint": "oxlint --type-aware --type-check",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
-    "test": "concurrently --kill-others --success first \"npm:e2e:ci:*\"",
+    "test": "concurrently --kill-others --success first \"bun:e2e:ci:*\"",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "e2e:start": "cross-env BROWSER=none VITE_MODE=e2e concurrently --kill-others \"npm:start\" \"npm:cypress:open\"",
+    "e2e:start": "cross-env BROWSER=none VITE_MODE=e2e concurrently --kill-others \"bun:start\" \"bun:cypress:open\"",
     "e2e:ci:connectionStrings": "cross-env VITE_MODE=e2e PORT=4000 node -- public/connectionStrings.cjs",
-    "pree2e:ci:app": "cross-env-shell NODE_ENV=production CYPRESS_COVERAGE=true \"npm run typecheck && vite build --mode e2e\"",
+    "pree2e:ci:app": "cross-env-shell NODE_ENV=production CYPRESS_COVERAGE=true \"bun run typecheck && vite build --mode e2e\"",
     "e2e:ci:app": "cross-env NODE_ENV=production BROWSER=none vite preview --mode e2e",
     "pree2e:ci:run": "wait-on --log --timeout 360000 http-get://localhost:4000 http-get://localhost:3000",
-    "e2e:ci:run": "cross-env NODE_ENV=production npm run cypress:run"
+    "e2e:ci:run": "cross-env NODE_ENV=production bun run cypress:run"
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "2.11.2",
@@ -135,7 +135,7 @@
   },
   "engines": {
     "node": "24.x",
-    "npm": ">=10"
+    "bun": ">=1.0.0"
   },
   "engineStrict": true
 }
