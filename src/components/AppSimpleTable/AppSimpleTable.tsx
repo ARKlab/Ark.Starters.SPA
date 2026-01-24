@@ -1,48 +1,48 @@
-import { Box, Spinner, Table } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { Box, Spinner, Table } from "@chakra-ui/react"
+import React, { useState } from "react"
 
-import AppPagination from "../../lib/components/AppPagination/AppPagination";
+import AppPagination from "../../lib/components/AppPagination/AppPagination"
 
 export type Column<T> = {
-  header: string;
-  accessor?: keyof T | string; // Supports direct or nested accessors
-  render?: (row: T) => React.ReactNode; // Custom render function
-};
+  header: string
+  accessor?: keyof T | string // Supports direct or nested accessors
+  render?: (row: T) => React.ReactNode // Custom render function
+}
 
 type AppSimpleTableProps<T> = {
-  data: T[];
-  columns: Column<T>[];
-  pageSize?: number;
-  isLoading?: boolean;
-};
+  data: T[]
+  columns: Column<T>[]
+  pageSize?: number
+  isLoading?: boolean
+}
 
 //eslint-disable-next-line
 const getNestedValue = <T,>(obj: T, path: string, defaultValue: any = null): any => {
-  const keys = path.split(".");
+  const keys = path.split(".")
   //eslint-disable-next-line
-  let result: any = obj;
+  let result: any = obj
 
   for (const key of keys) {
     if (result === null || result === undefined) {
-      return defaultValue;
+      return defaultValue
     }
-    result = result[key];
+    result = result[key]
   }
 
-  return result === undefined ? defaultValue : result;
-};
+  return result === undefined ? defaultValue : result
+}
 
 const AppSimpleTable = <T,>({ data, columns, pageSize = 20, isLoading = false }: AppSimpleTableProps<T>) => {
-  const [pageIndex, setPageIndex] = useState(1);
-  const [itemPerPage, setPageSize] = useState(pageSize);
+  const [pageIndex, setPageIndex] = useState(1)
+  const [itemPerPage, setPageSize] = useState(pageSize)
 
-  const paginatedData = data.slice((pageIndex - 1) * itemPerPage, pageIndex * itemPerPage);
+  const paginatedData = data.slice((pageIndex - 1) * itemPerPage, pageIndex * itemPerPage)
   const onPageChange = (page: number) => {
-    setPageIndex(page);
-  };
+    setPageIndex(page)
+  }
   const onPageSizeChange = (pageSize: number) => {
-    setPageSize(pageSize);
-  };
+    setPageSize(pageSize)
+  }
   return (
     <Box>
       <Table.ScrollArea>
@@ -86,7 +86,7 @@ const AppSimpleTable = <T,>({ data, columns, pageSize = 20, isLoading = false }:
         isLoading={false}
       />
     </Box>
-  );
-};
+  )
+}
 
-export default AppSimpleTable;
+export default AppSimpleTable

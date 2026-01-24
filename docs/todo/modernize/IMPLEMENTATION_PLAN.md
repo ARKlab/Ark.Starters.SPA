@@ -31,15 +31,15 @@
 
 ```typescript
 // ❌ BEFORE (src/theme.ts)
-import { createSystem, defaultConfig } from "@chakra-ui/react";
+import { createSystem, defaultConfig } from "@chakra-ui/react"
 
 const theme = createSystem(defaultConfig, {
   // your customizations
-});
+})
 
 // ✅ AFTER
-import { createSystem, defaultBaseConfig } from "@chakra-ui/react";
-import { buttonRecipe, inputRecipe /* only what you use */ } from "@chakra-ui/react/theme";
+import { createSystem, defaultBaseConfig } from "@chakra-ui/react"
+import { buttonRecipe, inputRecipe /* only what you use */ } from "@chakra-ui/react/theme"
 
 const theme = createSystem(defaultBaseConfig, {
   theme: {
@@ -51,7 +51,7 @@ const theme = createSystem(defaultBaseConfig, {
     },
   },
   // your other customizations
-});
+})
 ```
 
 **Implementation Steps:**
@@ -126,12 +126,12 @@ Remove unnecessary manual memoization:
 
 ```typescript
 // ❌ BEFORE
-const memoizedValue = useMemo(() => computeValue(a, b), [a, b]);
-const memoizedCallback = useCallback(() => doSomething(), []);
+const memoizedValue = useMemo(() => computeValue(a, b), [a, b])
+const memoizedCallback = useCallback(() => doSomething(), [])
 
 // ✅ AFTER (React Compiler handles this)
-const memoizedValue = computeValue(a, b);
-const memoizedCallback = () => doSomething();
+const memoizedValue = computeValue(a, b)
+const memoizedCallback = () => doSomething()
 ```
 
 **Implementation:**
@@ -167,19 +167,19 @@ const memoizedCallback = () => doSomething();
 
 ```typescript
 // ❌ BEFORE (src/config/authProvider.ts)
-import { Auth0Provider } from "./lib/authentication/providers/auth0Provider";
-import { MsalProvider } from "./lib/authentication/providers/msalProvider";
+import { Auth0Provider } from "./lib/authentication/providers/auth0Provider"
+import { MsalProvider } from "./lib/authentication/providers/msalProvider"
 
-export const authProvider = settings.authType === "auth0" ? new Auth0Provider(settings) : new MsalProvider(settings);
+export const authProvider = settings.authType === "auth0" ? new Auth0Provider(settings) : new MsalProvider(settings)
 
 // ✅ AFTER
 export async function getAuthProvider(settings: AppSettings): Promise<AuthProvider> {
   if (settings.authType === "auth0") {
-    const { Auth0Provider } = await import("./lib/authentication/providers/auth0Provider");
-    return new Auth0Provider(settings);
+    const { Auth0Provider } = await import("./lib/authentication/providers/auth0Provider")
+    return new Auth0Provider(settings)
   } else {
-    const { MsalProvider } = await import("./lib/authentication/providers/msalProvider");
-    return new MsalProvider(settings);
+    const { MsalProvider } = await import("./lib/authentication/providers/msalProvider")
+    return new MsalProvider(settings)
   }
 }
 ```
@@ -189,8 +189,8 @@ export async function getAuthProvider(settings: AppSettings): Promise<AuthProvid
 1. Convert `authProvider` to async function
 2. Update `initGlobals.tsx` to await provider initialization:
    ```typescript
-   const authProvider = await getAuthProvider(appSettings);
-   const store = initStore({ authProvider });
+   const authProvider = await getAuthProvider(appSettings)
+   const store = initStore({ authProvider })
    ```
 3. Update `configureStore.ts` to handle async provider
 4. Test both Auth0 and MSAL authentication flows
@@ -208,8 +208,8 @@ export async function getAuthProvider(settings: AppSettings): Promise<AuthProvid
 
 ```typescript
 // ❌ BEFORE (src/app/configureStore.ts)
-import { configTableApiSlice } from "../features/configTable/configTableApi";
-import { jsonPlaceholderApi } from "../features/fetchApiExample/jsonPlaceholderApi";
+import { configTableApiSlice } from "../features/configTable/configTableApi"
+import { jsonPlaceholderApi } from "../features/fetchApiExample/jsonPlaceholderApi"
 // All imported upfront
 
 const sliceReducers = combineSlices(
@@ -218,10 +218,10 @@ const sliceReducers = combineSlices(
   configTableApiSlice,
   jsonPlaceholderApi,
   // ...
-);
+)
 
 // ✅ AFTER - Use reducer injection
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit"
 
 // Base store with only essential slices
 const baseSliceReducers = combineSlices(
@@ -229,25 +229,25 @@ const baseSliceReducers = combineSlices(
   envSlice,
   errorReducer,
   // Only core slices
-);
+)
 
 // In feature components, inject reducers dynamically:
 // src/features/configTable/configTableExample.tsx
-import { useEffect } from "react";
-import { useAppDispatch } from "@/app/hooks";
+import { useEffect } from "react"
+import { useAppDispatch } from "@/app/hooks"
 
 export function ConfigTableExample() {
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     import("./configTableApi").then(({ configTableApiSlice }) => {
       // Inject reducer if not already present
       if (!store.asyncReducers?.configTableApi) {
-        store.injectReducer("configTableApi", configTableApiSlice.reducer);
-        dispatch(configTableApiSlice.middleware);
+        store.injectReducer("configTableApi", configTableApiSlice.reducer)
+        dispatch(configTableApiSlice.middleware)
       }
-    });
-  }, [dispatch]);
+    })
+  }, [dispatch])
 
   // Component logic
 }
@@ -259,8 +259,8 @@ Use React.lazy for feature bundles:
 
 ```typescript
 // src/app/routes.tsx
-const ConfigTablePage = lazy(() => import("@/features/configTable/configTableExample"));
-const MoviesPage = lazy(() => import("@/features/paginatedTable/moviePage"));
+const ConfigTablePage = lazy(() => import("@/features/configTable/configTableExample"))
+const MoviesPage = lazy(() => import("@/features/paginatedTable/moviePage"))
 ```
 
 Each lazy-loaded route component imports its own API slice, automatically code-splitting it.
@@ -451,7 +451,7 @@ export default defineConfig({
       },
     },
   },
-});
+})
 ```
 
 **Implementation:**

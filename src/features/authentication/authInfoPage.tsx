@@ -1,10 +1,10 @@
-import { Box, Code } from "@chakra-ui/react";
+import { Box, Code } from "@chakra-ui/react"
 
-import { useAppSelector } from "../../app/hooks";
-import { authSelector } from "../../lib/authentication/authenticationSlice";
+import { useAppSelector } from "../../app/hooks"
+import { authSelector } from "../../lib/authentication/authenticationSlice"
 
 const AuthInfoPage = () => {
-  const auth = useAppSelector(authSelector);
+  const auth = useAppSelector(authSelector)
 
   return (
     <Box>
@@ -12,7 +12,7 @@ const AuthInfoPage = () => {
         {JSON.stringify(auth, null, 2)}
       </Code>
     </Box>
-  );
-};
+  )
+}
 
-export default AuthInfoPage;
+export default AuthInfoPage

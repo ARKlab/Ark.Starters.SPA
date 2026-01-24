@@ -1,21 +1,21 @@
-import { Box, Button, Separator, Heading, Input, List, Text } from "@chakra-ui/react";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { LuCircleCheck } from "react-icons/lu";
-import { useNavigate } from "react-router";
+import { Box, Button, Separator, Heading, Input, List, Text } from "@chakra-ui/react"
+import { useState } from "react"
+import { useTranslation } from "react-i18next"
+import { LuCircleCheck } from "react-icons/lu"
+import { useNavigate } from "react-router"
 
-import { useAppSelector } from "../../app/hooks";
-import { InputGroup } from "../../components/ui/input-group";
-import { userSelector } from "../../lib/authentication/authenticationSlice";
-import ProtectedComponent from "../../lib/authentication/components/protectedComponent";
+import { useAppSelector } from "../../app/hooks"
+import { InputGroup } from "../../components/ui/input-group"
+import { userSelector } from "../../lib/authentication/authenticationSlice"
+import ProtectedComponent from "../../lib/authentication/components/protectedComponent"
 
 const PlaygroundView = () => {
-  const user = useAppSelector(userSelector);
-  const [requiredPermission, setRequiredPermission] = useState<string>("mega:admin");
-  const [inputValue, setInputValue] = useState<string>(requiredPermission);
-  const permissions: string[] = user?.permissions ?? [];
-  const { t } = useTranslation();
-  const navigate = useNavigate();
+  const user = useAppSelector(userSelector)
+  const [requiredPermission, setRequiredPermission] = useState<string>("mega:admin")
+  const [inputValue, setInputValue] = useState<string>(requiredPermission)
+  const permissions: string[] = user?.permissions ?? []
+  const { t } = useTranslation()
+  const navigate = useNavigate()
   return (
     <Box>
       <Heading> {t("permissionsPlayground_title")}</Heading>
@@ -36,7 +36,7 @@ const PlaygroundView = () => {
                   </List.Indicator>
                   {permission}
                 </List.Item>
-              );
+              )
             })}
           </List.Root>
           {permissions.length === 0 && <Text>{t("permissionsPlayground_noPermissions")}</Text>}
@@ -53,7 +53,7 @@ const PlaygroundView = () => {
                   h="6"
                   size="sm"
                   onClick={() => {
-                    setRequiredPermission(inputValue);
+                    setRequiredPermission(inputValue)
                   }}
                 >
                   {t("permissionsPlayground_setButton")}
@@ -65,7 +65,7 @@ const PlaygroundView = () => {
               placeholder={t("permissionsPlayground_permissionPlaceholder")}
               value={inputValue}
               onChange={event => {
-                setInputValue(event.target.value);
+                setInputValue(event.target.value)
               }}
             />
           </InputGroup>
@@ -86,7 +86,7 @@ const PlaygroundView = () => {
           </Heading>
           <Button
             onClick={async () => {
-              await navigate("/protectedRoute");
+              await navigate("/protectedRoute")
             }}
           >
             Go!
@@ -94,7 +94,7 @@ const PlaygroundView = () => {
         </Box>
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default PlaygroundView;
+export default PlaygroundView

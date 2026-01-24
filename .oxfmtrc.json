@@ -6,7 +6,7 @@
   "lineWidth": 120,
   "singleQuote": false,
   "quoteStyle": "double",
-  "semi": true,
+  "semi": false,
   "arrowParens": "avoid",
   "trailingComma": "all"
 }

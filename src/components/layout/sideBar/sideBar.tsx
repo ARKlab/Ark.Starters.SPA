@@ -1,12 +1,12 @@
 //#region Imports
-import { Box, type BoxProps } from "@chakra-ui/react";
-import { useCallback, useEffect } from "react";
-import { useLocation } from "react-router";
+import { Box, type BoxProps } from "@chakra-ui/react"
+import { useCallback, useEffect } from "react"
+import { useLocation } from "react-router"
 
-import type { ArkSubRoute } from "../../../lib/siteMapTypes";
-import useRouteChanged from "../../../lib/useRouteChanged";
-import { siteMap } from "../../../siteMap/siteMap";
-import { AccordionItem, AccordionItemContent, AccordionItemTrigger, AccordionRoot } from "../../ui/accordion";
+import type { ArkSubRoute } from "../../../lib/siteMapTypes"
+import useRouteChanged from "../../../lib/useRouteChanged"
+import { siteMap } from "../../../siteMap/siteMap"
+import { AccordionItem, AccordionItemContent, AccordionItemTrigger, AccordionRoot } from "../../ui/accordion"
 import {
   DrawerBackdrop,
   DrawerBody,
@@ -14,34 +14,34 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerRoot,
-} from "../../ui/drawer";
-import { useLayoutContext } from "../useLayoutContext";
+} from "../../ui/drawer"
+import { useLayoutContext } from "../useLayoutContext"
 
-import MenuItem from "./menuItem/menuItem";
+import MenuItem from "./menuItem/menuItem"
 
 export default function SimpleSidebar() {
-  const { isDesktop, isMobileSiderOpen, setMobileSiderOpen } = useLayoutContext();
+  const { isDesktop, isMobileSiderOpen, setMobileSiderOpen } = useLayoutContext()
 
   const closeDrawer = useCallback(() => {
-    setMobileSiderOpen(false);
-  }, [setMobileSiderOpen]);
+    setMobileSiderOpen(false)
+  }, [setMobileSiderOpen])
 
   // close drawer after clicking / navigating
-  useRouteChanged(closeDrawer);
+  useRouteChanged(closeDrawer)
 
   // close drawer if screen gets bigger while drawer is open
   useEffect(() => {
-    if (isDesktop) closeDrawer();
-  }, [isDesktop, closeDrawer]);
+    if (isDesktop) closeDrawer()
+  }, [isDesktop, closeDrawer])
 
-  if (isDesktop) return <SidebarContent h={"full"} borderRight="xs" bg={"bg.panel"} />;
+  if (isDesktop) return <SidebarContent h={"full"} borderRight="xs" bg={"bg.panel"} />
   else {
     return (
       <DrawerRoot
         open={isMobileSiderOpen}
         placement="end"
         onOpenChange={e => {
-          setMobileSiderOpen(e.open);
+          setMobileSiderOpen(e.open)
         }}
       >
         <DrawerBackdrop />
@@ -53,12 +53,12 @@ export default function SimpleSidebar() {
           </DrawerBody>
         </DrawerContent>
       </DrawerRoot>
-    );
+    )
   }
 }
 
 const SidebarContent = ({ ...rest }: BoxProps) => {
-  const defaultValue = siteMap[0].label + "accordionItem" + 0;
+  const defaultValue = siteMap[0].label + "accordionItem" + 0
 
   return (
     <Box as={"nav"} {...rest}>
@@ -95,17 +95,15 @@ const SidebarContent = ({ ...rest }: BoxProps) => {
         ))}
       </AccordionRoot>
     </Box>
-  );
-};
+  )
+}
 
 function doINeedAnInnerAccordion(section: ArkSubRoute) {
-  return (
-    section.subsections && section.subsections.length > 0 && section.subsections.filter(x => x.isInMenu).length > 0
-  );
+  return section.subsections && section.subsections.length > 0 && section.subsections.filter(x => x.isInMenu).length > 0
 }
 
 const InnerAccordionSections = (props: { section: ArkSubRoute; parentPath: string }) => {
-  const section = props.section;
+  const section = props.section
   if (section.subsections)
     return (
       <AccordionRoot collapsible multiple my="0" key={section.path + "accordion"} width={"full"} mx={"1"}>
@@ -141,21 +139,21 @@ const InnerAccordionSections = (props: { section: ArkSubRoute; parentPath: strin
           </AccordionItemContent>
         </AccordionItem>
       </AccordionRoot>
-    );
-  else return <></>;
-};
+    )
+  else return <></>
+}
 
 const InnerMenuItems = (props: { section: ArkSubRoute; path: string; index: number }) => {
-  const { section, path, index } = props;
-  const parentPath = [path, section.path].join("/");
-  const location = useLocation();
-  const isActive = location.pathname.startsWith(parentPath);
+  const { section, path, index } = props
+  const parentPath = [path, section.path].join("/")
+  const location = useLocation()
+  const isActive = location.pathname.startsWith(parentPath)
 
-  const key = section.path + "innerAccordionSections" + index;
-  if (!section.isInMenu) return null;
+  const key = section.path + "innerAccordionSections" + index
+  if (!section.isInMenu) return null
 
   if (doINeedAnInnerAccordion(section)) {
-    return <InnerAccordionSections key={key} section={section} parentPath={parentPath} />;
+    return <InnerAccordionSections key={key} section={section} parentPath={parentPath} />
   }
 
   return (
@@ -177,5 +175,5 @@ const InnerMenuItems = (props: { section: ArkSubRoute; path: string; index: numb
         icon={section.icon}
       />
     </Box>
-  );
-};
+  )
+}

@@ -1,20 +1,20 @@
-import { FieldLabel } from "@ark-ui/react";
-import { createListCollection, Portal, Select, Spinner, Text, type SelectValueChangeDetails } from "@chakra-ui/react";
+import { FieldLabel } from "@ark-ui/react"
+import { createListCollection, Portal, Select, Spinner, Text, type SelectValueChangeDetails } from "@chakra-ui/react"
 
 export interface Item {
-  label: string;
-  value: string;
-  disabled?: boolean;
+  label: string
+  value: string
+  disabled?: boolean
 }
 
 interface MultiSelectProps {
-  options: Item[] | null;
-  title?: string;
-  onChange: (value: string[]) => void;
-  value: string[] | null;
-  placeholder?: string;
-  lazyMount?: boolean; // Optional prop to control lazy mounting
-  isLoading?: boolean; // Optional prop to show a loading state
+  options: Item[] | null
+  title?: string
+  onChange: (value: string[]) => void
+  value: string[] | null
+  placeholder?: string
+  lazyMount?: boolean // Optional prop to control lazy mounting
+  isLoading?: boolean // Optional prop to show a loading state
 }
 
 const AppMultiSelect: React.FC<MultiSelectProps> = ({
@@ -26,10 +26,10 @@ const AppMultiSelect: React.FC<MultiSelectProps> = ({
   lazyMount = false, // Default to false if not provided
   isLoading = false, // Default to false if not provided
 }) => {
-  const optionCollection = createListCollection({ items: options ?? [] });
+  const optionCollection = createListCollection({ items: options ?? [] })
 
   function handleValueChange(value: SelectValueChangeDetails<Item>) {
-    onChange(value.items.map(item => item.value));
+    onChange(value.items.map(item => item.value))
   }
 
   return (
@@ -72,7 +72,7 @@ const AppMultiSelect: React.FC<MultiSelectProps> = ({
         </Select.Positioner>
       </Portal>
     </Select.Root>
-  );
-};
+  )
+}
 
-export default AppMultiSelect;
+export default AppMultiSelect

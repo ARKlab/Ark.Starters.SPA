@@ -1,31 +1,31 @@
-import { Box, Container, Flex, Heading, Text, VStack } from "@chakra-ui/react";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { LuX } from "react-icons/lu";
-import { Link } from "react-router";
-import * as StackTrace from "stacktrace-js";
+import { Box, Container, Flex, Heading, Text, VStack } from "@chakra-ui/react"
+import { useState } from "react"
+import { useTranslation } from "react-i18next"
+import { LuX } from "react-icons/lu"
+import { Link } from "react-router"
+import * as StackTrace from "stacktrace-js"
 
-import useAsyncEffect from "../lib/useAsyncEffect";
+import useAsyncEffect from "../lib/useAsyncEffect"
 
-import CodeBlock from "./codeBlock";
+import CodeBlock from "./codeBlock"
 
 export const ParsedStackTrace = ({ stack }: { stack?: string }) => {
-  const [v, s] = useState(stack);
+  const [v, s] = useState(stack)
 
   useAsyncEffect(async () => {
     if (stack) {
-      const res = await StackTrace.fromError({ stack } as Error).catch(_ => undefined);
+      const res = await StackTrace.fromError({ stack } as Error).catch(_ => undefined)
       if (res) {
-        s(res.map(x => x.toString()).join("\n"));
+        s(res.map(x => x.toString()).join("\n"))
       }
     }
-  }, [stack, s]);
+  }, [stack, s])
 
-  return <CodeBlock>{v}</CodeBlock>;
-};
+  return <CodeBlock>{v}</CodeBlock>
+}
 
 export function ErrorDisplay({ name, message, stack }: { name?: string; message?: string; stack?: string }) {
-  const { t } = useTranslation("template");
+  const { t } = useTranslation("template")
   return (
     <Box py="10" px="6">
       <Container>
@@ -57,5 +57,5 @@ export function ErrorDisplay({ name, message, stack }: { name?: string; message?
         </VStack>
       </Container>
     </Box>
-  );
+  )
 }

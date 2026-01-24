@@ -1,18 +1,18 @@
-import type { InputProps } from "@chakra-ui/react";
-import { Checkbox, Field, FieldLabel, Text } from "@chakra-ui/react";
+import type { InputProps } from "@chakra-ui/react"
+import { Checkbox, Field, FieldLabel, Text } from "@chakra-ui/react"
 
 interface CheckBoxProps {
-  setChecked: (checked: boolean) => void;
-  checked: boolean;
-  label?: string;
-  title?: string;
-  disabled?: boolean;
-  fieldErrorText?: string;
-  invalid?: boolean;
+  setChecked: (checked: boolean) => void
+  checked: boolean
+  label?: string
+  title?: string
+  disabled?: boolean
+  fieldErrorText?: string
+  invalid?: boolean
 }
 export interface InputHeaderWithClearProps extends InputProps {
-  value: string | number;
-  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  value: string | number
+  onChange?: React.ChangeEventHandler<HTMLInputElement>
 }
 
 export const AppCheckBox: React.FC<CheckBoxProps> = ({
@@ -36,7 +36,7 @@ export const AppCheckBox: React.FC<CheckBoxProps> = ({
         size={"lg"}
         checked={checked}
         onCheckedChange={e => {
-          setChecked(!!e.checked);
+          setChecked(!!e.checked)
         }}
         data-test="checkbox-control"
       >
@@ -48,5 +48,5 @@ export const AppCheckBox: React.FC<CheckBoxProps> = ({
       </Checkbox.Root>
       {fieldErrorText ? <Field.ErrorText data-test="checkbox-error">{fieldErrorText}</Field.ErrorText> : null}
     </Field.Root>
-  );
-};
+  )
+}

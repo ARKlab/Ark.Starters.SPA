@@ -1,13 +1,13 @@
-var http = require("http");
-var port = process.env.PORT;
+var http = require("http")
+var port = process.env.PORT
 
 require("dotenv").config({
   path: [`.env.${process.env.NODE_ENV}.local`, `.env.${process.env.NODE_ENV}`, ".env.local", ".env"],
-});
+})
 
 http
   .createServer(function (req, res) {
-    res.writeHead(200, { "Content-Type": "text/javascript" });
+    res.writeHead(200, { "Content-Type": "text/javascript" })
 
     const appSettings = {
       msal: process.env["MSAL_ClientId"]
@@ -34,10 +34,10 @@ http
             connectionString: process.env["APPLICATIONINSIGHTS_CONNECTION_STRING"],
           }
         : undefined,
-    };
+    }
 
     res.end(`
       window.appSettings = ${JSON.stringify(appSettings)};
-    `);
+    `)
   })
-  .listen(port);
+  .listen(port)

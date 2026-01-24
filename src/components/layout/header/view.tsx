@@ -10,29 +10,29 @@ import {
   MenuTrigger,
   Spacer,
   WrapItem,
-} from "@chakra-ui/react";
-import { useTranslation } from "react-i18next";
-import { LuMenu } from "react-icons/lu";
-import { Link as ReactRouterLink } from "react-router";
+} from "@chakra-ui/react"
+import { useTranslation } from "react-i18next"
+import { LuMenu } from "react-icons/lu"
+import { Link as ReactRouterLink } from "react-router"
 
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { Login, Logout, authSelector } from "../../../lib/authentication/authenticationSlice";
-import { useAuthContext } from "../../../lib/authentication/components/useAuthContext";
-import { GlobalLoadingBar } from "../../../lib/GlobalLoadingBar";
-import { LocaleSwitcher } from "../../../lib/i18n/localeSwitcher";
-import { Logo } from "../../../logo";
-import { ColorModeButton } from "../../ui/color-mode";
-import { MenuContent, MenuItem, MenuItemGroup, MenuRoot, MenuSeparator } from "../../ui/menu";
-import { useLayoutContext } from "../useLayoutContext";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks"
+import { Login, Logout, authSelector } from "../../../lib/authentication/authenticationSlice"
+import { useAuthContext } from "../../../lib/authentication/components/useAuthContext"
+import { GlobalLoadingBar } from "../../../lib/GlobalLoadingBar"
+import { LocaleSwitcher } from "../../../lib/i18n/localeSwitcher"
+import { Logo } from "../../../logo"
+import { ColorModeButton } from "../../ui/color-mode"
+import { MenuContent, MenuItem, MenuItemGroup, MenuRoot, MenuSeparator } from "../../ui/menu"
+import { useLayoutContext } from "../useLayoutContext"
 
 const UserMenu = () => {
-  const dispatch = useAppDispatch();
-  const { isLogged } = useAuthContext();
+  const dispatch = useAppDispatch()
+  const { isLogged } = useAuthContext()
 
-  const authStore = useAppSelector(authSelector);
-  const user = authStore.data;
+  const authStore = useAppSelector(authSelector)
+  const user = authStore.data
 
-  const { t } = useTranslation("template");
+  const { t } = useTranslation("template")
   return (
     <MenuRoot>
       <MenuTrigger>
@@ -75,12 +75,12 @@ const UserMenu = () => {
         </MenuItemGroup>
       </MenuContent>
     </MenuRoot>
-  );
-};
+  )
+}
 
 const Header = () => {
-  const { t } = useTranslation();
-  const { isDesktop, isMobileSiderOpen, setMobileSiderOpen } = useLayoutContext();
+  const { t } = useTranslation()
+  const { isDesktop, isMobileSiderOpen, setMobileSiderOpen } = useLayoutContext()
   return (
     <Box as="header" shadow={"sm"} bg={"header"}>
       <Flex paddingTop="1" paddingBottom="1">
@@ -109,7 +109,7 @@ const Header = () => {
                 variant="outline"
                 aria-label={t("header_openMenu")}
                 onClick={() => {
-                  setMobileSiderOpen(true);
+                  setMobileSiderOpen(true)
                 }}
               >
                 <LuMenu />
@@ -120,7 +120,7 @@ const Header = () => {
       </Flex>
       <GlobalLoadingBar />
     </Box>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

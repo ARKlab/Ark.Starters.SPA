@@ -1,31 +1,31 @@
-import type { SelectContentProps, SelectRootProps, SelectTriggerProps } from "@chakra-ui/react";
-import { createListCollection, Field, FieldLabel, Spinner, Stack, Text } from "@chakra-ui/react";
+import type { SelectContentProps, SelectRootProps, SelectTriggerProps } from "@chakra-ui/react"
+import { createListCollection, Field, FieldLabel, Spinner, Stack, Text } from "@chakra-ui/react"
 
-import { SelectContent, SelectItem, SelectRoot, SelectTrigger, SelectValueText } from "./baseSelectSnippets";
+import { SelectContent, SelectItem, SelectRoot, SelectTrigger, SelectValueText } from "./baseSelectSnippets"
 
 export interface AppSelectOptionItem {
-  label: string | React.JSX.Element;
-  value: string;
-  disabled?: boolean;
+  label: string | React.JSX.Element
+  value: string
+  disabled?: boolean
 }
 
 interface AppSelectProps {
-  options: AppSelectOptionItem[];
-  title?: string;
-  isLoading?: boolean;
-  onChange: (value: string | undefined) => void;
-  value: string | undefined;
-  triggerBg?: SelectTriggerProps["bg"];
-  bg?: SelectContentProps["bg"];
-  size?: SelectRootProps["size"];
-  placeholder?: string;
-  clearable?: boolean;
-  zIndex?: SelectContentProps["zIndex"];
-  disabled?: boolean;
-  invalid?: boolean;
-  fieldErrorText?: string;
-  border?: SelectTriggerProps["border"];
-  color?: SelectRootProps["color"];
+  options: AppSelectOptionItem[]
+  title?: string
+  isLoading?: boolean
+  onChange: (value: string | undefined) => void
+  value: string | undefined
+  triggerBg?: SelectTriggerProps["bg"]
+  bg?: SelectContentProps["bg"]
+  size?: SelectRootProps["size"]
+  placeholder?: string
+  clearable?: boolean
+  zIndex?: SelectContentProps["zIndex"]
+  disabled?: boolean
+  invalid?: boolean
+  fieldErrorText?: string
+  border?: SelectTriggerProps["border"]
+  color?: SelectRootProps["color"]
 }
 
 //THE SELECT COMPONENT USED FOR THIS SUPPORTS MULTIPLE SELECTION. THIS IMPLEMENTATION ONLY SUPPORTS SINGLE SELECTION
@@ -48,7 +48,7 @@ const AppSelect: React.FC<AppSelectProps> = ({
   border,
   color,
 }) => {
-  const optionCollection = createListCollection({ items: options });
+  const optionCollection = createListCollection({ items: options })
 
   return (
     <Field.Root mr={title ? "0.5" : "0"} p={title ? "inherit" : "0"} m={title ? "inherit" : "0"} invalid={invalid}>
@@ -70,7 +70,7 @@ const AppSelect: React.FC<AppSelectProps> = ({
             collection={optionCollection}
             size={size}
             onValueChange={e => {
-              onChange(e.items[0] ? e.items[0].value : undefined);
+              onChange(e.items[0] ? e.items[0].value : undefined)
             }}
             value={value ? [value] : undefined}
             color={color}
@@ -79,7 +79,7 @@ const AppSelect: React.FC<AppSelectProps> = ({
               data-test="appselect-trigger"
               clearable={clearable}
               onClear={() => {
-                onChange("");
+                onChange("")
               }}
               bg={triggerBg}
               rounded={"md"}
@@ -99,7 +99,7 @@ const AppSelect: React.FC<AppSelectProps> = ({
       </Stack>
       {fieldErrorText ? <Field.ErrorText data-test="appselect-error">{fieldErrorText}</Field.ErrorText> : null}
     </Field.Root>
-  );
-};
+  )
+}
 
-export default AppSelect;
+export default AppSelect

@@ -1,13 +1,13 @@
-import { Box, Flex, Field, Heading, Input, Text, VStack, FieldLabel, StackSeparator } from "@chakra-ui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
-import * as z from "zod";
+import { Box, Flex, Field, Heading, Input, Text, VStack, FieldLabel, StackSeparator } from "@chakra-ui/react"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
+import * as z from "zod"
 
-import { AppDateFormatter } from "../../components/AppDateFormatter/AppDateFormatter";
-import { toaster } from "../../components/ui/toaster";
-import { LocaleSwitcher } from "../../lib/i18n/localeSwitcher";
+import { AppDateFormatter } from "../../components/AppDateFormatter/AppDateFormatter"
+import { toaster } from "../../components/ui/toaster"
+import { LocaleSwitcher } from "../../lib/i18n/localeSwitcher"
 /**
  * This will be used as a Resolver and Validator
  * to convert the form data into a schema
@@ -26,17 +26,17 @@ const FormSchema = z.object({
         i18n: { key: "custom_error" },
       },
     }),
-});
+})
 
 export default function LocalizationPage() {
-  const { t } = useTranslation();
-  const [apples, setApples] = useState(0);
+  const { t } = useTranslation()
+  const [apples, setApples] = useState(0)
 
   function onSubmit() {
     toaster.create({
       title: t("localization-samples.submit"),
       description: t("localization-samples.submit-message"),
-    });
+    })
   }
 
   const {
@@ -46,7 +46,7 @@ export default function LocalizationPage() {
   } = useForm({
     resolver: zodResolver(FormSchema),
     mode: "onChange",
-  });
+  })
 
   return (
     <Box>
@@ -106,7 +106,7 @@ export default function LocalizationPage() {
               type="number"
               value={apples}
               onChange={e => {
-                setApples(Number(e.target.value));
+                setApples(Number(e.target.value))
               }}
             />
           </Field.Root>
@@ -149,5 +149,5 @@ export default function LocalizationPage() {
         </Box>
       </VStack>
     </Box>
-  );
+  )
 }

@@ -1,8 +1,8 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react"
 
-import { appFetchQuery } from "../../app/appFetchQuery";
+import { appFetchQuery } from "../../app/appFetchQuery"
 
-import type { Employee } from "./configTable";
+import type { Employee } from "./configTable"
 
 export const configTableApiSlice = createApi({
   reducerPath: "configTableApi",
@@ -24,6 +24,6 @@ export const configTableApiSlice = createApi({
       invalidatesTags: ["Employee/list"], //each time a post is done the cache is invalidated and the data is fetched again
     }),
   }),
-});
+})
 
-export const { useGetConfigQuery, usePostConfigMutation } = configTableApiSlice;
+export const { useGetConfigQuery, usePostConfigMutation } = configTableApiSlice

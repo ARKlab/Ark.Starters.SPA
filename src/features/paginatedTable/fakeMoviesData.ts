@@ -1,14 +1,14 @@
 export type Movie = {
-  id: number;
-  title: string;
-  releaseDate: string;
-  runtime: number;
-  genre: string;
-  director: string;
-  actors: string;
-  plot: string;
-  rating: number;
-};
+  id: number
+  title: string
+  releaseDate: string
+  runtime: number
+  genre: string
+  director: string
+  actors: string
+  plot: string
+  rating: number
+}
 const baseMovies = [
   "GhostBusters",
   "Star Wars",
@@ -20,7 +20,7 @@ const baseMovies = [
   "Inception",
   "The Dark Knight",
   "Gladiator",
-];
+]
 
 const baseDirectors = [
   "Steven Spielberg",
@@ -33,7 +33,7 @@ const baseDirectors = [
   "Ridley Scott",
   "Akira Kurosawa",
   "Joel Coen",
-];
+]
 
 const baseActors = [
   "Tom Hanks",
@@ -46,7 +46,7 @@ const baseActors = [
   "Denzel Washington",
   "Humphrey Bogart",
   "James Stewart",
-];
+]
 
 const basePlots = [
   "May the Force be with you. - Star Wars",
@@ -59,7 +59,7 @@ const basePlots = [
   "Life is like a box of chocolates, you never know what you're gonna get. - Forrest Gump",
   "You can't handle the truth! - A Few Good Men",
   "I feel the need - the need for speed! - Top Gun",
-];
+]
 
 const moviesData: Movie[] = Array.from({ length: 100 }, (_, i) => ({
   id: i + 1,
@@ -71,6 +71,6 @@ const moviesData: Movie[] = Array.from({ length: 100 }, (_, i) => ({
   actors: `${baseActors[i % baseActors.length]}${i + 1}`,
   plot: basePlots[i % basePlots.length],
   rating: Math.floor(Math.random() * 5) + 1,
-}));
+}))
 
-export default moviesData;
+export default moviesData

@@ -1,26 +1,26 @@
 /* eslint-disable  */
-import { parseDate } from "@ark-ui/react/date-picker";
-import { Box, Field, FieldLabel, HStack, IconButton, Stack, Text } from "@chakra-ui/react";
-import { addDays } from "date-fns";
-import { useEffect, useRef } from "react";
-import { useTranslation } from "react-i18next";
-import { LuX } from "react-icons/lu";
+import { parseDate } from "@ark-ui/react/date-picker"
+import { Box, Field, FieldLabel, HStack, IconButton, Stack, Text } from "@chakra-ui/react"
+import { addDays } from "date-fns"
+import { useEffect, useRef } from "react"
+import { useTranslation } from "react-i18next"
+import { LuX } from "react-icons/lu"
 
-import { AppDatePicker } from "../AppDatePicker/appDatePicker";
+import { AppDatePicker } from "../AppDatePicker/appDatePicker"
 
 interface AppDateRangeProps {
-  label: string;
-  range: Date[];
-  setRange: (range: Date[]) => void;
-  isInclusive?: boolean;
-  timeZone?: string;
-  disabled?: boolean;
-  dateFormat?: string;
-  dateDisplayFormat?: string;
+  label: string
+  range: Date[]
+  setRange: (range: Date[]) => void
+  isInclusive?: boolean
+  timeZone?: string
+  disabled?: boolean
+  dateFormat?: string
+  dateDisplayFormat?: string
 }
 
 export const AppDateRange = (props: AppDateRangeProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   const {
     label,
@@ -31,58 +31,58 @@ export const AppDateRange = (props: AppDateRangeProps) => {
     disabled,
     dateFormat = "yyyy-MM-dd",
     dateDisplayFormat = "dd/MM/yyyy",
-  } = props;
+  } = props
 
-  let from: Date | null = range[0] ?? null;
-  const toStored: Date | null = range[1] ?? null;
-  const toVisible = toStored ? (isInclusive ? toStored : addDays(toStored, -1)) : null;
+  let from: Date | null = range[0] ?? null
+  const toStored: Date | null = range[1] ?? null
+  const toVisible = toStored ? (isInclusive ? toStored : addDays(toStored, -1)) : null
 
   const handleFromChange = (d: Date | undefined) => {
     if (!d) {
-      setRange([]);
-      return;
+      setRange([])
+      return
     }
-    const newFrom = d;
-    const currentTo = toStored;
+    const newFrom = d
+    const currentTo = toStored
     if (currentTo && currentTo < newFrom) {
-      setRange([newFrom, newFrom]);
+      setRange([newFrom, newFrom])
     } else {
-      setRange(currentTo ? [newFrom, currentTo] : [newFrom]);
+      setRange(currentTo ? [newFrom, currentTo] : [newFrom])
     }
-  };
+  }
 
   const handleToChange = (d: Date | undefined) => {
     if (!d) {
-      setRange(from ? [from] : []);
-      return;
+      setRange(from ? [from] : [])
+      return
     }
-    let newTo = d;
-    let currentFrom = from;
+    let newTo = d
+    let currentFrom = from
 
     if (currentFrom != null && newTo < currentFrom) {
-      currentFrom = newTo;
+      currentFrom = newTo
     }
-    const storedTo = isInclusive ? newTo : addDays(newTo, 1);
+    const storedTo = isInclusive ? newTo : addDays(newTo, 1)
 
-    setRange(currentFrom ? [currentFrom, storedTo] : [newTo, storedTo]);
-  };
+    setRange(currentFrom ? [currentFrom, storedTo] : [newTo, storedTo])
+  }
 
   const clear = () => {
-    setRange([]);
-  };
+    setRange([])
+  }
 
-  const effectiveMaxForFrom = toVisible ?? undefined;
-  const minForTo = from ?? undefined;
+  const effectiveMaxForFrom = toVisible ?? undefined
+  const minForTo = from ?? undefined
 
-  const datePickerRef = useRef<HTMLDivElement>(null);
+  const datePickerRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (datePickerRef.current && !datePickerRef.current.contains(event.target as Node)) {
       }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
 
   return (
     <Stack ref={datePickerRef} data-test="daterange">
@@ -139,5 +139,5 @@ export const AppDateRange = (props: AppDateRangeProps) => {
         </HStack>
       </Field.Root>
     </Stack>
-  );
-};
+  )
+}

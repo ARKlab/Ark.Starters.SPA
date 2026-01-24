@@ -1,12 +1,12 @@
-import { Box, Icon, Text, VStack } from "@chakra-ui/react";
-import { useRef, useState } from "react";
-import { LuFile, LuX, LuUpload } from "react-icons/lu";
+import { Box, Icon, Text, VStack } from "@chakra-ui/react"
+import { useRef, useState } from "react"
+import { LuFile, LuX, LuUpload } from "react-icons/lu"
 
 interface FileUploadProps {
-  onFileSelect?: (files: File[]) => void;
-  accept?: string;
-  multiple?: boolean;
-  maxSize?: number;
+  onFileSelect?: (files: File[]) => void
+  accept?: string
+  multiple?: boolean
+  maxSize?: number
 }
 
 export default function AppFileUpload({
@@ -15,66 +15,66 @@ export default function AppFileUpload({
   multiple = false,
   maxSize = 10 * 1024 * 1024,
 }: FileUploadProps) {
-  const [isDragging, setIsDragging] = useState(false);
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isDragging, setIsDragging] = useState(false)
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+  const [error, setError] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const validateFiles = (files: File[]): boolean => {
     for (const file of files) {
       if (file.size > maxSize) {
-        setError(`Il file ${file.name} supera la dimensione massima di ${(maxSize / 1024 / 1024).toFixed(1)}MB`);
-        return false;
+        setError(`Il file ${file.name} supera la dimensione massima di ${(maxSize / 1024 / 1024).toFixed(1)}MB`)
+        return false
       }
     }
-    setError(null);
-    return true;
-  };
+    setError(null)
+    return true
+  }
 
   const handleFiles = (files: FileList | null) => {
-    if (!files || files.length === 0) return;
-    const fileArray = Array.from(files);
-    if (!validateFiles(fileArray)) return;
-    setSelectedFiles(fileArray);
-    onFileSelect?.(fileArray);
-  };
+    if (!files || files.length === 0) return
+    const fileArray = Array.from(files)
+    if (!validateFiles(fileArray)) return
+    setSelectedFiles(fileArray)
+    onFileSelect?.(fileArray)
+  }
 
   const handleDragEnter = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(true);
-  };
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(true)
+  }
   const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-  };
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(false)
+  }
   const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
+    e.preventDefault()
+    e.stopPropagation()
+  }
   const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-    handleFiles(e.dataTransfer.files);
-  };
-  const handleClick = () => fileInputRef.current?.click();
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(false)
+    handleFiles(e.dataTransfer.files)
+  }
+  const handleClick = () => fileInputRef.current?.click()
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    handleFiles(e.target.files);
-  };
+    handleFiles(e.target.files)
+  }
 
   const handleRemoveFile = (index: number) => {
-    const newFiles = selectedFiles.filter((_, i) => i !== index);
-    setSelectedFiles(newFiles);
-    onFileSelect?.(newFiles);
-  };
+    const newFiles = selectedFiles.filter((_, i) => i !== index)
+    setSelectedFiles(newFiles)
+    onFileSelect?.(newFiles)
+  }
 
   const formatFileSize = (bytes: number): string => {
-    if (bytes < 1024) return bytes + " B";
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
-    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
-  };
+    if (bytes < 1024) return bytes + " B"
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB"
+    return (bytes / (1024 * 1024)).toFixed(1) + " MB"
+  }
 
   return (
     <VStack gap={"4"} width="full" alignItems="stretch" data-test="fileupload-root">
@@ -206,8 +206,8 @@ export default function AppFileUpload({
                 borderRadius="md"
                 color="fg.muted"
                 onClick={e => {
-                  e.stopPropagation();
-                  handleRemoveFile(index);
+                  e.stopPropagation()
+                  handleRemoveFile(index)
                 }}
                 data-test="fileupload-remove"
               >
@@ -220,5 +220,5 @@ export default function AppFileUpload({
         </VStack>
       )}
     </VStack>
-  );
+  )
 }

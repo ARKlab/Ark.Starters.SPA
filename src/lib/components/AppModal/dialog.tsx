@@ -1,16 +1,16 @@
-import { Dialog as ChakraDialog, Portal } from "@chakra-ui/react";
-import * as React from "react";
+import { Dialog as ChakraDialog, Portal } from "@chakra-ui/react"
+import * as React from "react"
 
-import { CloseButton } from "../../../components/ui/close-button";
+import { CloseButton } from "../../../components/ui/close-button"
 
 interface DialogContentProps extends ChakraDialog.ContentProps {
-  portalled?: boolean;
-  portalRef?: React.RefObject<HTMLElement>;
-  backdrop?: boolean;
+  portalled?: boolean
+  portalRef?: React.RefObject<HTMLElement>
+  backdrop?: boolean
 }
 
 export const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(function DialogContent(props, ref) {
-  const { children, portalled = true, portalRef, backdrop = true, ...rest } = props;
+  const { children, portalled = true, portalRef, backdrop = true, ...rest } = props
 
   return (
     <Portal disabled={!portalled} container={portalRef}>
@@ -21,8 +21,8 @@ export const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps
         </ChakraDialog.Content>
       </ChakraDialog.Positioner>
     </Portal>
-  );
-});
+  )
+})
 
 export const DialogCloseTrigger = React.forwardRef<HTMLButtonElement, ChakraDialog.CloseTriggerProps>(
   function DialogCloseTrigger(props, ref) {
@@ -32,16 +32,16 @@ export const DialogCloseTrigger = React.forwardRef<HTMLButtonElement, ChakraDial
           {props.children}
         </CloseButton>
       </ChakraDialog.CloseTrigger>
-    );
+    )
   },
-);
+)
 
-export const DialogRoot = ChakraDialog.Root;
-export const DialogFooter = ChakraDialog.Footer;
-export const DialogHeader = ChakraDialog.Header;
-export const DialogBody = ChakraDialog.Body;
-export const DialogBackdrop = ChakraDialog.Backdrop;
-export const DialogTitle = ChakraDialog.Title;
-export const DialogDescription = ChakraDialog.Description;
-export const DialogTrigger = ChakraDialog.Trigger;
-export const DialogActionTrigger = ChakraDialog.ActionTrigger;
+export const DialogRoot = ChakraDialog.Root
+export const DialogFooter = ChakraDialog.Footer
+export const DialogHeader = ChakraDialog.Header
+export const DialogBody = ChakraDialog.Body
+export const DialogBackdrop = ChakraDialog.Backdrop
+export const DialogTitle = ChakraDialog.Title
+export const DialogDescription = ChakraDialog.Description
+export const DialogTrigger = ChakraDialog.Trigger
+export const DialogActionTrigger = ChakraDialog.ActionTrigger

@@ -1,38 +1,38 @@
-import { Button, Stack } from "@chakra-ui/react";
-import type { JSX, MouseEventHandler } from "react";
-import { useTranslation } from "react-i18next";
-import { LuChevronLeft, LuChevronRight, LuChevronsLeft, LuChevronsRight } from "react-icons/lu";
+import { Button, Stack } from "@chakra-ui/react"
+import type { JSX, MouseEventHandler } from "react"
+import { useTranslation } from "react-i18next"
+import { LuChevronLeft, LuChevronRight, LuChevronsLeft, LuChevronsRight } from "react-icons/lu"
 
-import { NativeSelectField, NativeSelectRoot } from "../../../components/ui/native-select";
+import { NativeSelectField, NativeSelectRoot } from "../../../components/ui/native-select"
 
 type AppPaginationProps = {
-  count: number;
-  page: number;
-  pageSize: number;
-  onPageChange: (page: number) => unknown;
-  onPageSizeChange: (pageSize: number) => unknown;
-  isLoading: boolean;
-};
+  count: number
+  page: number
+  pageSize: number
+  onPageChange: (page: number) => unknown
+  onPageSizeChange: (pageSize: number) => unknown
+  isLoading: boolean
+}
 
 const AppPagination = ({ count, pageSize, page, onPageChange, onPageSizeChange, isLoading }: AppPaginationProps) => {
-  const { t } = useTranslation();
-  const totalPages = Math.ceil(count / pageSize);
-  const pageMinRange = 3;
-  const pageMinRangeVal = page > pageMinRange ? Math.min(page - pageMinRange, totalPages - pageMinRange) : 0;
+  const { t } = useTranslation()
+  const totalPages = Math.ceil(count / pageSize)
+  const pageMinRange = 3
+  const pageMinRangeVal = page > pageMinRange ? Math.min(page - pageMinRange, totalPages - pageMinRange) : 0
 
-  const pageMaxRange = 2;
-  const pageMaxSub = totalPages - pageMaxRange;
-  const pageMaxRangeVal = page < pageMaxSub ? page + pageMaxRange : totalPages;
+  const pageMaxRange = 2
+  const pageMaxSub = totalPages - pageMaxRange
+  const pageMaxRangeVal = page < pageMaxSub ? page + pageMaxRange : totalPages
 
   // R.range replacement (exclusive end)
-  const rangeStart = pageMinRangeVal;
-  const rangeEnd = page < 3 ? 5 : pageMaxRangeVal;
-  const pageRange = [];
+  const rangeStart = pageMinRangeVal
+  const rangeEnd = page < 3 ? 5 : pageMaxRangeVal
+  const pageRange = []
   for (let i = rangeStart; i < rangeEnd; i++) {
-    pageRange.push(i);
+    pageRange.push(i)
   }
 
-  if (isLoading) return <></>;
+  if (isLoading) return <></>
   return (
     <div>
       {count > pageSize ? (
@@ -62,7 +62,7 @@ const AppPagination = ({ count, pageSize, page, onPageChange, onPageSizeChange, 
               data-test="pagination-prev"
             />
             {pageRange.map((p: number, i: number) => {
-              const pVal = p + 1;
+              const pVal = p + 1
               return (
                 <PageItem
                   display={(pVal - 1) * pageSize < count}
@@ -73,7 +73,7 @@ const AppPagination = ({ count, pageSize, page, onPageChange, onPageSizeChange, 
                   currentPage={page === pVal}
                   data-test={`pagination-page-${pVal}`}
                 />
-              );
+              )
             })}
             <PageItem
               display={page < totalPages}
@@ -104,19 +104,19 @@ const AppPagination = ({ count, pageSize, page, onPageChange, onPageSizeChange, 
         </Stack>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default AppPagination;
+export default AppPagination
 
 type PageItemsTypes = {
-  display: boolean;
-  onChange: MouseEventHandler<HTMLButtonElement>;
-  title?: string;
-  disable?: boolean;
-  currentPage?: boolean;
-  value: string | number | JSX.Element;
-};
+  display: boolean
+  onChange: MouseEventHandler<HTMLButtonElement>
+  title?: string
+  disable?: boolean
+  currentPage?: boolean
+  value: string | number | JSX.Element
+}
 
 const PageItem = ({ display, onChange, title, disable, currentPage, value }: PageItemsTypes) => {
   if (display) {
@@ -124,7 +124,7 @@ const PageItem = ({ display, onChange, title, disable, currentPage, value }: Pag
       <Button disabled={disable} onClick={onChange} title={title} variant={currentPage ? "outline" : "solid"}>
         {value}
       </Button>
-    );
+    )
   }
-  return <></>;
-};
+  return <></>
+}

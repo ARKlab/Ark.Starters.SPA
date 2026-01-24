@@ -1,12 +1,12 @@
-import { ChakraProvider } from "@chakra-ui/react";
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
+import { ChakraProvider } from "@chakra-ui/react"
+import { StrictMode } from "react"
+import { createRoot } from "react-dom/client"
+import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary"
 
-import { ColorModeProvider } from "./components/ui/color-mode";
-import { createLazyComponent } from "./lib/components/createLazyComponent";
-import reportWebVitals, { sendToAnalytics } from "./reportWebVitals";
-import theme from "./theme";
+import { ColorModeProvider } from "./components/ui/color-mode"
+import { createLazyComponent } from "./lib/components/createLazyComponent"
+import reportWebVitals, { sendToAnalytics } from "./reportWebVitals"
+import theme from "./theme"
 
 /**
  * ReactErrorBoundary at this level renders a Chakra-less/Redux-less context as they failed.
@@ -23,19 +23,19 @@ function fallbackRender({ error }: { error: Error }) {
       <pre style={{ color: "red" }}>{error.message}</pre>
       <pre style={{ color: "red" }}>{error.stack}</pre>
     </div>
-  );
+  )
 }
 
 window.addEventListener("vite:preloadError", () => {
   // reload the App if a dynamic import fails after App has been initialized
   // see https://www.vidbeo.com/blog/reload-nuxt-spa-on-missing-chunk-error/
-  if (window.appReady) window.location.reload();
-});
+  if (window.appReady) window.location.reload()
+})
 
-const rootElement = document.getElementById("root");
-if (rootElement === null) throw new Error("#root not found");
-const root = createRoot(rootElement);
-const InitGlobals = createLazyComponent(async () => import("./initGlobals"));
+const rootElement = document.getElementById("root")
+if (rootElement === null) throw new Error("#root not found")
+const root = createRoot(rootElement)
+const InitGlobals = createLazyComponent(async () => import("./initGlobals"))
 
 // Initialize as little as possible so that we can Render the ErrorBoundary if initStatic throws any error
 // Thus defer 'importing' initStatic via Lazy to avoid any throw in the 'global' scope
@@ -49,7 +49,7 @@ root.render(
       </ChakraProvider>
     </ReactErrorBoundary>
   </StrictMode>,
-);
+)
 
 // Report Web Vitals and send to Application Insights
-reportWebVitals(sendToAnalytics);
+reportWebVitals(sendToAnalytics)

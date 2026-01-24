@@ -1,23 +1,23 @@
-import { Box, Button, Flex, Heading } from "@chakra-ui/react";
-import type { ColumnDef } from "@tanstack/react-table";
-import { createColumnHelper } from "@tanstack/react-table";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { LuFilter } from "react-icons/lu";
+import { Box, Button, Flex, Heading } from "@chakra-ui/react"
+import type { ColumnDef } from "@tanstack/react-table"
+import { createColumnHelper } from "@tanstack/react-table"
+import { useState } from "react"
+import { useTranslation } from "react-i18next"
+import { LuFilter } from "react-icons/lu"
 
-import { useAppDispatch } from "../../app/hooks";
-import { AppFilters } from "../../components/AppFilters/AppFilters";
-import type { FilterDefinition } from "../../components/AppFilters/Filters";
-import { AppArkApiTable } from "../../lib/components/AppArkApiTable/AppArkApiTable";
-import { toColumnFiltersState } from "../../lib/ex";
+import { useAppDispatch } from "../../app/hooks"
+import { AppFilters } from "../../components/AppFilters/AppFilters"
+import type { FilterDefinition } from "../../components/AppFilters/Filters"
+import { AppArkApiTable } from "../../lib/components/AppArkApiTable/AppArkApiTable"
+import { toColumnFiltersState } from "../../lib/ex"
 
-import type { Movie } from "./fakeMoviesData";
-import { useGetMoviesQuery } from "./paginatedTableApi";
+import type { Movie } from "./fakeMoviesData"
+import { useGetMoviesQuery } from "./paginatedTableApi"
 
-const columnHelper = createColumnHelper<Movie>();
+const columnHelper = createColumnHelper<Movie>()
 
 const MovieTableView = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   const columns = [
     columnHelper.accessor(row => row.title, {
@@ -64,12 +64,12 @@ const MovieTableView = () => {
       header: () => <span>{t("movies_release")}</span>,
       meta: { type: "date" },
     }),
-  ] as ColumnDef<Movie>[];
-  const [filters, setFilters] = useState<Partial<Movie>>({});
-  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  ] as ColumnDef<Movie>[]
+  const [filters, setFilters] = useState<Partial<Movie>>({})
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
   const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
+    setIsSidebarOpen(!isSidebarOpen)
+  }
   const filterDefinitions: FilterDefinition<Movie>[] = [
     {
       id: "title",
@@ -78,7 +78,7 @@ const MovieTableView = () => {
       type: "text",
       placeholder: "Search by Title...",
     },
-  ];
+  ]
 
   return (
     <Box>
@@ -114,7 +114,7 @@ const MovieTableView = () => {
         reduxDispatchHook={useAppDispatch()}
       />
     </Box>
-  );
-};
+  )
+}
 
-export default MovieTableView;
+export default MovieTableView

@@ -1,34 +1,34 @@
-import type { DateValue } from "@ark-ui/react/date-picker";
-import { DatePicker, parseDate, useDatePicker } from "@ark-ui/react/date-picker";
-import type { StackProps } from "@chakra-ui/react";
-import { Box, Button, Field, FieldLabel, HStack, IconButton, Input, Stack, Text } from "@chakra-ui/react";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { LuX, LuCalendar, LuCalendarOff, LuChevronLeft, LuChevronRight } from "react-icons/lu";
+import type { DateValue } from "@ark-ui/react/date-picker"
+import { DatePicker, parseDate, useDatePicker } from "@ark-ui/react/date-picker"
+import type { StackProps } from "@chakra-ui/react"
+import { Box, Button, Field, FieldLabel, HStack, IconButton, Input, Stack, Text } from "@chakra-ui/react"
+import { useEffect, useMemo, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
+import { LuX, LuCalendar, LuCalendarOff, LuChevronLeft, LuChevronRight } from "react-icons/lu"
 
-import "./appDatePicker.css";
+import "./appDatePicker.css"
 
 interface AppDatePickerProps extends DatePicker.RootProps {
-  date: Date | null;
-  minDate?: Date;
-  maxDate?: Date;
-  setDate: (date: Date | undefined) => void; // CONSENTE undefined per il clear
-  label?: string;
-  fieldErrorText?: string;
-  invalid?: boolean;
-  w?: StackProps["w"];
-  border?: StackProps["border"];
-  bg?: StackProps["bg"];
-  inputSize?: "sm" | "md" | "lg" | "xl" | "2xl" | "2xs" | "xs" | undefined;
-  timeZone?: string;
-  showCalendarButton?: boolean;
-  defaultFocusedValue?: DateValue;
-  dateFormat?: string;
-  dateDisplayFormat?: string;
-  showClearButton?: boolean;
+  date: Date | null
+  minDate?: Date
+  maxDate?: Date
+  setDate: (date: Date | undefined) => void // CONSENTE undefined per il clear
+  label?: string
+  fieldErrorText?: string
+  invalid?: boolean
+  w?: StackProps["w"]
+  border?: StackProps["border"]
+  bg?: StackProps["bg"]
+  inputSize?: "sm" | "md" | "lg" | "xl" | "2xl" | "2xs" | "xs" | undefined
+  timeZone?: string
+  showCalendarButton?: boolean
+  defaultFocusedValue?: DateValue
+  dateFormat?: string
+  dateDisplayFormat?: string
+  showClearButton?: boolean
 }
 export const AppDatePicker = (props: AppDatePickerProps) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation()
 
   const {
     date,
@@ -48,38 +48,38 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
     dateFormat = "yyyy-MM-dd",
     dateDisplayFormat = "dd/MM/yyyy",
     showClearButton = true,
-  } = props;
+  } = props
 
   const parsedValue = useMemo(() => {
-    if (!date) return undefined;
+    if (!date) return undefined
     try {
       // dateFormat is typically "yyyy-MM-dd" for parseDate
       const formatted =
         dateFormat === "yyyy-MM-dd"
           ? t("{{val, isoDate}}", { val: date })
-          : t("{{val, dateFormat}}", { val: date, format: dateFormat });
-      return parseDate(formatted);
+          : t("{{val, dateFormat}}", { val: date, format: dateFormat })
+      return parseDate(formatted)
     } catch {
-      return undefined;
+      return undefined
     }
-  }, [date, dateFormat, t]);
+  }, [date, dateFormat, t])
 
-  const [open, setOpen] = useState(false);
-  const datePickerRef = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(false)
+  const datePickerRef = useRef<HTMLDivElement>(null)
 
   function onValueChange(details: DatePicker.ValueChangeDetails) {
     if (details.value.length > 0) {
-      const picked = details.value[0];
-      setDate(picked.toDate(timeZone ?? "UTC"));
-      setOpen(false);
+      const picked = details.value[0]
+      setDate(picked.toDate(timeZone ?? "UTC"))
+      setOpen(false)
     } else {
-      setDate(undefined);
+      setDate(undefined)
     }
   }
 
   function getFormat(dv: DateValue) {
-    const d = dv.toDate(timeZone ?? "UTC");
-    return t("{{val, dateFormat}}", { val: d, format: dateDisplayFormat });
+    const d = dv.toDate(timeZone ?? "UTC")
+    return t("{{val, dateFormat}}", { val: d, format: dateDisplayFormat })
   }
 
   const min = minDate
@@ -88,14 +88,14 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
           ? t("{{val, isoDate}}", { val: minDate })
           : t("{{val, dateFormat}}", { val: minDate, format: dateFormat }),
       )
-    : undefined;
+    : undefined
   const max = maxDate
     ? parseDate(
         dateFormat === "yyyy-MM-dd"
           ? t("{{val, isoDate}}", { val: maxDate })
           : t("{{val, dateFormat}}", { val: maxDate, format: dateFormat }),
       )
-    : undefined;
+    : undefined
 
   const datePicker = useDatePicker({
     positioning: { sameWidth: true, placement: "bottom-start", overlap: true, strategy: "fixed" },
@@ -109,25 +109,25 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
     format: getFormat,
     locale: i18n.language,
     onOpenChange: details => {
-      setOpen(details.open);
+      setOpen(details.open)
     },
-  });
+  })
 
   useEffect(() => {
-    if (!date && defaultFocusedValue) datePicker.setFocusedValue(defaultFocusedValue);
-  }, [date, defaultFocusedValue, datePicker]);
+    if (!date && defaultFocusedValue) datePicker.setFocusedValue(defaultFocusedValue)
+  }, [date, defaultFocusedValue, datePicker])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (datePickerRef.current && !datePickerRef.current.contains(event.target as Node)) {
-        setOpen(false);
+        setOpen(false)
       }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
+    }
+    document.addEventListener("mousedown", handleClickOutside)
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [])
 
   return (
     <Stack ref={datePickerRef} w={w ?? undefined} data-test="datepicker">
@@ -142,7 +142,7 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
         <DatePicker.RootProvider
           value={datePicker}
           onKeyDown={e => {
-            if (e.key === "Escape") setOpen(false);
+            if (e.key === "Escape") setOpen(false)
           }}
         >
           <DatePicker.Control data-test="datepicker-control">
@@ -152,7 +152,7 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
                   data-test="datepicker-input"
                   bg={bg}
                   onClick={() => {
-                    setOpen(true);
+                    setOpen(true)
                   }}
                   placeholder={
                     parsedValue
@@ -175,7 +175,7 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
                     size={inputSize ?? "md"}
                     aria-label={t("libComponents:appDatePicker_openDatePicker")}
                     onClick={() => {
-                      setOpen(o => !o);
+                      setOpen(o => !o)
                     }}
                   >
                     {open ? <LuCalendarOff /> : <LuCalendar />}
@@ -188,7 +188,7 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
                   size={inputSize ?? "md"}
                   aria-label={t("libComponents:appDatePicker_clearDatePicker")}
                   onClick={() => {
-                    setDate(undefined);
+                    setDate(undefined)
                   }}
                 >
                   <LuX />
@@ -343,5 +343,5 @@ export const AppDatePicker = (props: AppDatePickerProps) => {
         {fieldErrorText ? <Field.ErrorText data-test="datepicker-error">{fieldErrorText}</Field.ErrorText> : null}
       </Field.Root>
     </Stack>
-  );
-};
+  )
+}

@@ -98,7 +98,7 @@ import {
   selectRecipe,
   modalRecipe,
   // etc.
-} from "@chakra-ui/react/theme";
+} from "@chakra-ui/react/theme"
 
 const theme = createSystem(defaultBaseConfig, {
   theme: {
@@ -112,7 +112,7 @@ const theme = createSystem(defaultBaseConfig, {
     },
   },
   // your customizations
-});
+})
 ```
 
 **Recipe naming pattern:** Component name + "Recipe" (e.g., `Button` → `buttonRecipe`, `Select` → `selectRecipe`)
@@ -218,7 +218,7 @@ For risky changes, use feature flags:
 
 ```typescript
 // Example: Gradual rollout of optimizations
-const useOptimizedChakra = import.meta.env.VITE_OPTIMIZED_CHAKRA === "true";
+const useOptimizedChakra = import.meta.env.VITE_OPTIMIZED_CHAKRA === "true"
 ```
 
 ---
