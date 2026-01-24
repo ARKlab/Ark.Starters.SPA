@@ -6,6 +6,8 @@ import { ErrorBoundary as ReactErrorBoundary, type FallbackProps } from "react-e
 import { useTranslation } from "react-i18next";
 import { LuTriangleAlert } from "react-icons/lu";
 
+import { errorToErrorObject } from "@/lib/errorHandler/errorToErrorObject";
+
 interface FeatureErrorBoundaryProps {
   /**
    * Custom fallback component to render when an error occurs.
@@ -28,15 +30,13 @@ interface FeatureErrorBoundaryProps {
   featureLabel?: string;
 }
 
-interface DefaultFallbackProps {
-  error: unknown;
-  resetErrorBoundary: () => void;
+interface DefaultFallbackProps extends FallbackProps {
   featureLabel?: string;
 }
 
 function DefaultFallback({ error, resetErrorBoundary, featureLabel }: DefaultFallbackProps) {
   const { t } = useTranslation("libComponents");
-  const errorObj = error instanceof Error ? error : new Error(String(error));
+  const errorObj = errorToErrorObject(error);
 
   return (
     <Box p={"4"} bg="error.subtle" borderRadius="md" border="xs" borderColor="error.emphasized">
@@ -93,7 +93,7 @@ export function FeatureErrorBoundary({
   const appInsights = useAppInsightsContext();
 
   const handleError = (error: unknown, errorInfo: ErrorInfo) => {
-    const errorObj = error instanceof Error ? error : new Error(String(error));
+    const errorObj = errorToErrorObject(error);
     // Log to Application Insights
     appInsights.trackException({
       exception: errorObj,

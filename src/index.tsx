@@ -5,6 +5,7 @@ import { ErrorBoundary as ReactErrorBoundary, type FallbackProps } from "react-e
 
 import { ColorModeProvider } from "./components/ui/color-mode";
 import { createLazyComponent } from "./lib/components/createLazyComponent";
+import { errorToErrorObject } from "./lib/errorHandler/errorToErrorObject";
 import reportWebVitals, { sendToAnalytics } from "./reportWebVitals";
 import theme from "./theme";
 
@@ -17,7 +18,7 @@ import theme from "./theme";
  * IMPORTANT: use only basic DOM/Style, UI Toolkit nor ReduxToolkit are available!
  */
 function fallbackRender({ error }: FallbackProps) {
-  const errorObj = error instanceof Error ? error : new Error(String(error));
+  const errorObj = errorToErrorObject(error);
   return (
     <div role="alert">
       <p>Fatal error. Reload the Browser (F5)</p>
