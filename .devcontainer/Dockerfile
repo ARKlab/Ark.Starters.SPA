@@ -1,5 +1,9 @@
 FROM mcr.microsoft.com/vscode/devcontainers/typescript-node:24-bookworm
 
+# Install Bun
+RUN curl -fsSL https://bun.sh/install | bash && \
+    ln -s /root/.bun/bin/bun /usr/local/bin/bun
+
 # https://docs.cypress.io/guides/continuous-integration/introduction#Dependencies
 RUN apt-get update && \
     export DEBIAN_FRONTEND=noninteractive && \
