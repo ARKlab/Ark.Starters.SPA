@@ -9,12 +9,7 @@ import { toaster } from "../../components/ui/toaster";
 
 import { useGetConfigQuery, usePostConfigMutation } from "./configTableApi";
 import { TableRow } from "./TableRow";
-
-export type Employee = {
-  name: string;
-  surName: string;
-  employed: boolean;
-};
+import type { Employee } from "./employee";
 
 const configTableSchema = z.object({
   table: z

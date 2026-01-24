@@ -32,7 +32,7 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "e2e:start": "cross-env BROWSER=none VITE_MODE=e2e concurrently --kill-others \"npm:start\" \"npm:cypress:open\"",
-    "e2e:ci:connectionStrings": "cross-env PORT=4000 node -- public/connectionStrings.cjs",
+    "e2e:ci:connectionStrings": "cross-env VITE_MODE=e2e PORT=4000 node -- public/connectionStrings.cjs",
     "pree2e:ci:app": "cross-env-shell NODE_ENV=production CYPRESS_COVERAGE=true \"npm run typecheck && vite build --mode e2e\"",
     "e2e:ci:app": "cross-env NODE_ENV=production BROWSER=none vite preview --mode e2e",
     "pree2e:ci:run": "wait-on --log --timeout 360000 http-get://localhost:4000 http-get://localhost:3000",

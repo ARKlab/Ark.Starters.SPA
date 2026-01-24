@@ -112,7 +112,7 @@ export default defineConfig(({ mode }) => {
         cypress: true,
         requireEnv: true,
         include: ["src/"],
-        // forceBuildInstrument: true,
+        forceBuildInstrument: mode === "e2e" || mode === "test",
       }),
       // Bundle analyzer - only in analyze mode
       mode === "analyze" &&

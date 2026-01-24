@@ -1,7 +1,7 @@
 import { HttpResponse } from "msw";
 
 import { url } from "../../src/features/configTable/config.mocks";
-import type { Employee } from "../../src/features/configTable/configTable";
+import type { Employee } from "../../src/features/configTable/employee";
 import type { PostDataType } from "../../src/features/fetchApiExample/jsonPlaceholderTypes";
 
 describe("Config Table", () => {

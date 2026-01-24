@@ -39,6 +39,14 @@ npm run format         # Format code with oxfmt
 npm run format:check   # Check formatting without changes
 npm test               # Run E2E tests (Cypress)
 
+# E2E - interactive loop (UI)
+# Starts the app in e2e mode and opens Cypress UI
+npm run e2e:start
+
+# E2E - single spec (headless)
+# Requires the app running in e2e mode (see below)
+npm run cypress:run -- --spec cypress/e2e/your-test.e2e.ts
+
 # Utility
 npm outdated           # Check package versions
 ```
@@ -102,6 +110,12 @@ This is a **React 19.2** Single Page Application starter template with enterpris
 ## Critical Rules
 
 ### 🔴 MUST Follow (Non-Negotiable)
+
+#### 0. Test Verification is Mandatory
+
+**After ANY code change, you MUST run tests to verify the change.**
+At minimum, run the most relevant test command for the change (and include results in your report).
+No exceptions.
 
 #### 1. Code Language: English Only
 
@@ -544,6 +558,7 @@ export const UserCard = ({ name, email }: UserCardProps) => {
 
 3. **For new provider**:
    - Implement `AuthProvider` interface:
+
      ```typescript
      export interface AuthProvider {
        init: () => Promise<void>;
@@ -556,6 +571,7 @@ export const UserCard = ({ name, email }: UserCardProps) => {
        getUserDetail: () => Promise<UserAccountInfo | null>;
      }
      ```
+
    - Create provider class in `src/lib/authentication/providers/{providerName}.ts`
    - Update `src/index.tsx` to support new provider
 
@@ -946,6 +962,7 @@ export const UserCard = ({ name, email }: UserCardProps) => {
 6. **Color mode management**:
    - Chakra stores mode in localStorage
    - Set custom key to avoid conflicts:
+
      ```typescript
      // src/index.tsx
      const colorModeManager = createLocalStorageManager("arkStarters-ColorMode");
@@ -1006,6 +1023,13 @@ export const UserCard = ({ name, email }: UserCardProps) => {
    npm run e2e:ci       # Headless mode (CI)
    npm test             # Alias for e2e:ci
    ```
+
+   To run an interactive testing loop for a specific file:
+   `npm run cypress:run -- --spec cypress/e2e/your-test.e2e.ts --headed --no-exit`
+
+   **Note**: If you are not using `npm run e2e:start`, run the dev server in E2E mode first:
+   `cross-env VITE_MODE=e2e npm start`
+   Ensure the dev server is running and ready before executing the Cypress command.
 
 5. **MSW mocks** (for E2E mode):
    - Mocks enabled when `VITE_MODE=e2e`
@@ -1393,7 +1417,7 @@ npm run build
 #### 5. E2E Tests (if applicable)
 
 ```bash
-npm test
+npm run test
 ```
 
 **Expected**: All tests pass
