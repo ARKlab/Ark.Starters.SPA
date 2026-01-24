@@ -102,7 +102,6 @@ export default defineConfig(({ mode }) => {
       i18nAlly(),
       oxlint({
         path: "src",
-        deny: mode !== "e2e" ? ["correctness"] : [],
       }),
       istanbul({
         cypress: true,
