@@ -60,11 +60,9 @@ export class MsalAuthProvider implements AuthProvider {
         knownAuthorities: config.knownAuthorities.split(","),
         redirectUri: config.redirectUri,
         postLogoutRedirectUri: window.origin,
-        navigateToLoginRequestUrl: true,
       },
       cache: {
         cacheLocation: "localStorage",
-        storeAuthStateInCookie: false, // Set this to "true" if you are having issues on IE11 or Edge
       },
       system: {
         loggerOptions: {
@@ -89,8 +87,6 @@ export class MsalAuthProvider implements AuthProvider {
           },
           piiLoggingEnabled: false,
         },
-        windowHashTimeout: 20000,
-        iframeHashTimeout: 20000,
       },
     };
     this.config = {
@@ -127,7 +123,7 @@ export class MsalAuthProvider implements AuthProvider {
         this.setLoginStatus(LoginStatus.Logged);
       }
 
-      if (event.eventType === EventType.LOGIN_FAILURE && event.payload) {
+      if (event.eventType === EventType.ACQUIRE_TOKEN_FAILURE && event.payload) {
         this.idTokenClaims = null;
         this.setLoginStatus(LoginStatus.Error);
       }
@@ -156,8 +152,6 @@ export class MsalAuthProvider implements AuthProvider {
   }
   public async init(): Promise<void> {
     await this.myMSALObj.initialize();
-
-    this.myMSALObj.enableAccountStorageEvents();
 
     if (!this.myMSALObj.getActiveAccount()) {
       const accounts = this.myMSALObj.getAllAccounts();
