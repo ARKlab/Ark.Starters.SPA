@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "printWidth": 120,
+  "useTabs": false,
+  "indentWidth": 2,
+  "lineWidth": 120,
+  "singleQuote": false,
+  "quoteStyle": "double",
+  "semi": true,
+  "arrowParens": "avoid",
+  "trailingComma": "all"
+}

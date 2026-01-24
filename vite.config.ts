@@ -8,10 +8,10 @@ import copy from "rollup-plugin-copy";
 import { visualizer } from "rollup-plugin-visualizer";
 import Info from "unplugin-info/vite";
 import { defineConfig, loadEnv } from "vite";
-import eslint from "vite-plugin-eslint2";
 import { i18nAlly } from "vite-plugin-i18n-ally";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import istanbul from "vite-plugin-istanbul";
+import oxlint from "vite-plugin-oxlint";
 import { VitePWA } from "vite-plugin-pwa";
 import { reactClickToComponent } from "vite-plugin-react-click-to-component";
 import svgr from "vite-plugin-svgr";
@@ -100,15 +100,9 @@ export default defineConfig(({ mode }) => {
         hook: "buildStart",
       }),
       i18nAlly(),
-      eslint({
-        fix: true,
-        build: true,
-        lintOnStart: mode != "e2e",
-        lintInWorker: mode == "development",
-        cache: true,
-        cacheLocation: "node_modules/.cache/.eslintcache",
-        exclude: ["**/node_modules/**", "**/build/**", "**/public/**", "**/dev-dist/**", "virtual:**"],
-        include: ["./src/**/*.{ts,tsx}"],
+      oxlint({
+        path: "src",
+        deny: mode !== "e2e" ? ["correctness"] : [],
       }),
       istanbul({
         cypress: true,
