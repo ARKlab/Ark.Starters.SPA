@@ -23,8 +23,7 @@
     "coverage/**",
     ".github/**",
     ".swc/**",
-    "dev-dist/**",
-    "eslint.config.mjs"
+    "dev-dist/**"
   ],
   "rules": {
     "constructor-super": "error",
