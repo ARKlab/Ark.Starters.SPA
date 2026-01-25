@@ -150,16 +150,28 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks: {
-            react: ["react", "react-router", "react-dom", "react-error-boundary"],
+            // Core libraries (rarely change) - separate for maximum cache stability
+            react: ["react", "react-dom"],
+            "react-router": ["react-router", "react-error-boundary"],
+
+            // State management (occasional updates)
             rtk: [
               "@reduxjs/toolkit",
               "@reduxjs/toolkit/query",
               "@reduxjs/toolkit/react",
               "react-redux",
             ],
+
+            // UI Framework (occasional updates) - already large, keep separate
             chakra: ["@chakra-ui/react", "@emotion/react"],
+
+            // i18n libraries (rarely change)
             i18n: ["i18next", "react-i18next", "@semihbou/zod-i18n-map"],
-            hookForm: ["react-hook-form", "@hookform/resolvers"],
+
+            // Form libraries (occasional updates)
+            hookForm: ["react-hook-form", "@hookform/resolvers", "zod"],
+
+            // Utility libraries (rarely change)
             common: ["@tanstack/react-table", "date-fns", "@dnd-kit/core", "@dnd-kit/sortable"],
           },
         },
