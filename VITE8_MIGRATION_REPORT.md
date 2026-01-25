@@ -20,16 +20,59 @@ The migration is **technically feasible** but with some **caveats** regarding pe
 | vite-plugin-pwa | 1.2.0 | ^3.1.0 ∥ ... ∥ ^7.0.0 | ✅ Works |
 | vite-plugin-istanbul | 7.2.1 | >=4 <=7 | ⚠️ Warning, works |
 | vite-plugin-react-click-to-component | 4.2.0 | ^7 | ⚠️ Warning, works |
-| vite-tsconfig-paths | 6.0.4 | * | ✅ Works |
+| ~~vite-tsconfig-paths~~ | ~~6.0.4~~ | ~~*~~ | 🔄 **REMOVED** - using native |
 | vite-plugin-svgr | 4.5.0 | >=2.6.0 | ✅ Works |
 | vite-plugin-i18n-ally | 6.1.0 | >=5.0.0 | ✅ Works |
 | vite-plugin-image-optimizer | 2.0.3 | >=5 | ✅ Works |
 | vite-plugin-oxlint | 1.5.1 | >=5.0.0 | ✅ Works |
 | unplugin-info | 1.2.4 | >=3.2.7 | ✅ Works |
 
+**Key Change:** `vite-tsconfig-paths` plugin replaced with native `resolve.tsconfigPaths: true`
+
 ## Configuration Changes Required
 
-### 1. Chunk Splitting API Migration
+### 1. Native TypeScript Paths Support (NEW in Vite 8)
+
+**Before (Vite 7):**
+```typescript
+// package.json
+"devDependencies": {
+  "vite-tsconfig-paths": "6.0.4"
+}
+
+// vite.config.ts
+import tsconfigPaths from "vite-tsconfig-paths";
+
+export default defineConfig({
+  plugins: [
+    tsconfigPaths(),
+    // ...
+  ]
+});
+```
+
+**After (Vite 8):**
+```typescript
+// vite-tsconfig-paths removed from package.json
+
+// vite.config.ts - no import needed
+export default defineConfig({
+  resolve: {
+    tsconfigPaths: true, // Built-in support!
+  },
+  plugins: [
+    // ... no tsconfigPaths plugin needed
+  ]
+});
+```
+
+**Benefits:**
+- ✅ One less dependency
+- ✅ Native integration with Rolldown
+- ✅ Eliminates plugin overhead (was 84% of build time with plugin)
+- ⚠️ Small performance cost (mentioned in docs, but less than plugin)
+
+### 2. Chunk Splitting API Migration
 
 **Before (Vite 7 with Rollup):**
 ```typescript
@@ -68,34 +111,35 @@ This needs further investigation for the final migration path.
 
 ### Build Times
 
-| Metric | Vite 7.3.1 | Vite 8.0.0-beta.10 | Difference |
-|--------|------------|---------------------|------------|
-| Production Build | 1m 33s | 1m 50s | **+17s (+18%)** |
-| E2E Build | ~1m 35s | 2m 17s | **+42s (+44%)** |
+| Metric | Vite 7.3.1 | Vite 8 + plugin | Vite 8 + native | Change |
+|--------|------------|-----------------|-----------------|--------|
+| Production Build | 1m 33s | 1m 50s | 1m 52s | **+19s (+20%)** ❌ |
 
 ### Performance Impact
-❌ **Build is slower** with Vite 8 beta:
-- Production build: 18% slower
-- E2E build: 44% slower
+❌ **Build is slower** with Vite 8 beta even with native tsconfigPaths:
+- With vite-tsconfig-paths plugin: 18% slower
+- With native resolve.tsconfigPaths: 20% slower
 
-This is likely due to:
-1. Beta status - not fully optimized yet
-2. Plugin compatibility overhead (see Plugin Timings warning)
-3. Rolldown still maturing
+This is due to:
+1. Beta status - Rolldown not fully optimized yet
+2. Plugin compatibility overhead
+3. New bottleneck: vite-plugin-i18n-ally dominates build time
 
 ### Plugin Timing Analysis
 
-**Production Build:**
-- vite:build-import-analysis: 32%
-- vite:legacy-post-process: 28%
-- vite-tsconfig-paths: 25%
-- vite:plugin-i18n-ally: 10%
+**With vite-tsconfig-paths plugin:**
+- vite-tsconfig-paths: **84%** (MAJOR BOTTLENECK)
+- vite:plugin-i18n-ally: 9%
+- vite-plugin-svgr: 3%
 
-**E2E Build:**
-- vite-tsconfig-paths: 60% (major bottleneck)
-- vite:istanbul: 15%
-- vite:plugin-i18n-ally: 15%
-- vite-plugin-svgr: 8%
+**With native resolve.tsconfigPaths:**
+- vite:plugin-i18n-ally: **92%** (NEW BOTTLENECK)
+- vite-plugin-svgr: 3%
+
+**Key Insight:** 
+- ✅ Native tsconfigPaths successfully eliminated the 84% bottleneck
+- ⚠️ Build still slower because i18n-ally now dominates (92%)
+- 💡 Overall performance limited by Rolldown beta optimizations
 
 ## Known Issues & Warnings
 

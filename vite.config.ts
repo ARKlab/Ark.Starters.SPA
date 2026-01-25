@@ -175,12 +175,12 @@ export default defineConfig(({ mode }) => {
       outDir: mode == "e2e" ? "cypress/dist" : "build",
       chunkSizeWarningLimit: chunkSizeLimit,
       target: "esnext",
-      rollupOptions: {
+      rolldownOptions: {
         output: {
-          // Vite 8 with Rolldown uses advancedChunks instead of manualChunks
-          // TODO: Migrate to codeSplitting API when stable (advancedChunks is deprecated)
-          // See: https://rolldown.rs/reference/interface.outputoptions
-          advancedChunks: {
+          // Vite 8 with Rolldown uses codeSplitting for manual chunk grouping
+          // Migration: rollupOptions → rolldownOptions, advancedChunks → codeSplitting
+          // See: https://rolldown.rs/in-depth/manual-code-splitting
+          codeSplitting: {
             groups: [
               // Core libraries (rarely change) - separate for maximum cache stability
               {
