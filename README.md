@@ -229,8 +229,7 @@ export const authProvider = new NoopAuthProvider();
 
 #### Provider-Specific Configuration
 
-This project is implemented with a flexible authentication provider that can support multiple providers.
-Now it support **MSAL** and **AUTH0** providers and you can switch between one another easily.
+This project supports **MSAL** and **Auth0** providers and you can switch between one another easily.
 This is how:
 
 1. Go to the **src/config/authProvider.ts** file
