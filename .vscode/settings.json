@@ -34,5 +34,8 @@
   "i18n-ally.translate.engines": ["google"],
   "i18n-ally.defaultNamespace": "translation",
   "i18n-ally.extract.autoDetect": true,
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true
 }
