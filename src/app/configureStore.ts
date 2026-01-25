@@ -38,6 +38,8 @@ const rootReducer = combineSlices(
 )
 
 // Enable lazy-loaded slices to be injected dynamically with proper typing
+// The withLazyLoadedSlices() returns a reducer with an inject() method that handles both
+// the reducer and middleware injection automatically
 const sliceReducers = rootReducer.withLazyLoadedSlices<
   WithSlice<typeof configTableApiSlice> &
   WithSlice<typeof jsonPlaceholderApi> &
@@ -49,6 +51,12 @@ const sliceReducers = rootReducer.withLazyLoadedSlices<
 
 // Infer the `RootState` type from the root reducer
 export type AppState = ReturnType<typeof sliceReducers>
+
+// Store instance holder for injection utility
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let storeInstance: any = null
+// Track the current reducer to maintain proper types through inject calls
+let currentReducer = sliceReducers
 
 export function initStore(extra: ExtraType) {
   const store = configureStore({
@@ -64,18 +72,29 @@ export function initStore(extra: ExtraType) {
 
   setupListeners(store.dispatch)
   
-  // Expose slice injection capability
-  let currentReducer = sliceReducers
-  const storeWithInject = store as typeof store & {
-    injectSlice: (slice: LazyApiSlice) => void
+  // Store reference for injection utility (not extending the store itself)
+  storeInstance = store
+  
+  return store
+}
+
+/**
+ * Inject a lazy-loaded API slice into the store
+ * This handles both reducer and middleware injection via RTK's inject() method
+ * 
+ * @param slice - The API slice to inject
+ */
+export function injectApiSlice(slice: LazyApiSlice) {
+  if (!storeInstance) {
+    throw new Error("Store not initialized. Call initStore() first.")
   }
   
-  storeWithInject.injectSlice = (slice: LazyApiSlice) => {
-    currentReducer = currentReducer.inject(slice) as typeof currentReducer
-    store.replaceReducer(currentReducer)
-  }
+  // Use the reducer's inject method which handles both reducer and middleware
+  currentReducer = currentReducer.inject(slice) as typeof currentReducer
   
-  return storeWithInject
+  // Replace the store's reducer with the updated one that includes the new slice
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+  storeInstance.replaceReducer(currentReducer)
 }
 
 // Registry of API reset actions - populated by features as they load

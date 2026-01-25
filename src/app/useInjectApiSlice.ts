@@ -1,11 +1,16 @@
 import { useEffect } from "react"
 
-import { useAppStore } from "./hooks"
-import { registerApiResetAction, type LazyApiSlice } from "./configureStore"
+import { injectApiSlice, registerApiResetAction, type LazyApiSlice } from "./configureStore"
 
 /**
  * Hook to inject an RTK Query API slice into the store when a component mounts
  * This enables lazy loading of API slices with their feature modules
+ * 
+ * The injection process:
+ * 1. Calls injectApiSlice() which uses RTK's reducer.inject() method
+ * 2. This automatically handles both the reducer AND middleware injection
+ * 3. The store's reducer is replaced with the updated version
+ * 4. RTK Query hooks can now access the slice's data and use its middleware
  * 
  * @param api - The RTK Query API slice to inject
  * 
@@ -21,14 +26,11 @@ import { registerApiResetAction, type LazyApiSlice } from "./configureStore"
  * ```
  */
 export function useInjectApiSlice(api: LazyApiSlice) {
-  const store = useAppStore()
-
   useEffect(() => {
-    // Inject the slice into the store
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    ;(store as any).injectSlice(api)
+    // Inject the slice (both reducer and middleware are handled by RTK's inject method)
+    injectApiSlice(api)
 
     // Register reset action for dev/e2e mode
     registerApiResetAction(() => api.util.resetApiState())
-  }, [store, api])
+  }, [api])
 }

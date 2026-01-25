@@ -117,10 +117,13 @@ export default function MyFeaturePage() {
 2. **Route Navigation**: User navigates to a feature (e.g., `/movies`)
 3. **Component Load**: React.lazy loads the feature component
 4. **Slice Injection**: `useInjectApiSlice` hook:
-   - Calls `store.injectSlice()` to add the reducer
-   - Automatically adds the middleware
+   - Calls `injectApiSlice()` utility function
+   - Uses RTK's `reducer.inject()` method which handles **both reducer and middleware**
+   - The middleware is automatically included when RTK Query slices are injected
    - Registers the reset action for dev/e2e mode
-5. **Feature Ready**: RTK Query hooks work as expected
+5. **Feature Ready**: RTK Query hooks work as expected with full caching and refetching
+
+**Note on Middleware**: RTK Query API slices include middleware for features like automatic refetching, cache invalidation, and polling. The `reducer.inject()` method automatically handles injecting both the reducer and its associated middleware into the store's middleware chain.
 
 ### Development Tools
 
