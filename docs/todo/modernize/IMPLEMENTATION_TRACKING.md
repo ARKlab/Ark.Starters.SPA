@@ -35,75 +35,72 @@
 
 ## Phase 1: Quick Wins (Target: 150-200KB, 1 week)
 
-### Task 1.1: Optimize Chakra UI Configuration ❌ REVERTED
+### Task 1.1: Optimize Chakra UI Configuration ❌ BLOCKED
 
-**Status:** ❌ Reverted (TypeScript compilation issues)  
+**Status:** ❌ **BLOCKED** - TypeScript type incompatibilities in Chakra UI v3.31.0  
 **Owner:** AI Agent  
-**Estimated Time:** 4 hours  
-**Expected Savings:** 100KB gzipped
+**Estimated Time:** N/A (blocked)  
+**Expected Savings:** 80-120KB gzipped (if unblocked)
 
 **Description:**  
 Replace `defaultConfig` with `defaultBaseConfig` and import only needed component recipes.
 
-**Success Criteria:**
+**Blocker Analysis (2026-01-25):**
 
-- [ ] `src/theme.ts` updated to use `defaultBaseConfig`
-- [ ] All used component recipes explicitly imported (pruned from 55 to 22)
-- [ ] Build completes without errors
-- [ ] All E2E tests pass
-- [ ] Visual regression testing with Playwright completed
-- [ ] Bundle analyzer shows Chakra chunk reduced
-- [ ] Unused UI components deleted (41 files removed)
+After comprehensive investigation, this optimization is **blocked by fundamental TypeScript type incompatibilities** in Chakra UI v3.31.0 (latest version):
 
-**Implementation Steps:**
+- **Root Cause:** Recipe type definitions from `@chakra-ui/react/theme` are incompatible with type signatures expected by `createSystem()`
+- **Impact:** 424 TypeScript compilation errors across 55 files
+- **Attempted Solutions:** Tried reducing recipe set, disabling strictTokens, minimal imports - all failed
+- **Chakra UI Version:** 3.31.0 (latest, no fix available)
 
-1. Audit current Chakra component usage:
-   ```bash
-   grep -r "from \"@chakra-ui/react\"" src --include="*.tsx" | \
-   sed 's/.*import.*{\(.*\)}.*/\1/' | tr ',' '\n' | sort | uniq > /tmp/chakra-components.txt
-   ```
-2. Update `src/theme.ts`:
-   - Replace `defaultConfig` with `defaultBaseConfig`
-   - Import needed recipes from `@chakra-ui/react/theme`
-   - Add recipes to theme config
-3. Run build: `npm run build`
-4. Test all pages manually
-5. Run E2E tests: `npm test`
-6. Measure bundle: `npm run analyze`
-
-**Verification Command:**
-
-```bash
-# Before: ~628KB Chakra chunk
-# After: ~528KB Chakra chunk
-ls -lh build/assets/chakra-*.js
+**Example Error:**
+```
+Type 'SlotRecipeDefinition<"body" | "indicator"...>' 
+is not assignable to type 'SlotRecipeConfig'
 ```
 
-**Attempted Implementation (REVERTED):**
+**Detailed Analysis:** See `CHAKRA_OPTIMIZATION_BLOCKED.md` for complete technical analysis, root cause, and alternatives evaluated.
 
-- Attempted to replace `defaultConfig` with `defaultBaseConfig` in commit ce60840
-- Removed 41 unused UI component files
-- Pruned recipes from 55 to 22 (8 simple + 14 slot recipes)
-- Initial bundle reduction: 30.57 KB gzipped (138.59 KB uncompressed)
-- **Issue:** TypeScript compilation errors occurred that could not be resolved
-- **Resolution:** Changes reverted by Andrea Cuneo in merge commit 7838414
-- **Status:** Task needs to be re-attempted with different approach
+**Recommended Alternative (Task 1.1a):**
 
-**Lessons Learned:**
+Implement **Manual Tree-Shaking via Vite Build Config** instead:
 
-1. Chakra UI v3.3.0 has complex TypeScript requirements that may conflict with strict type checking
-2. Need to ensure TypeScript compilation passes before claiming task complete
-3. Consider alternative approaches:
-   - Use Chakra UI's official migration tools
-   - Update to newer Chakra UI version with better tree-shaking
-   - Implement custom component wrapper to avoid type issues
+1. Configure Vite `manualChunks` to split Chakra UI by feature
+2. Use `optimizeDeps` to include only used components
+3. Remove unused UI component files from `/src/components/ui/`
+4. Expected savings: **40-70KB gzipped** (50-60% of original target)
+5. Effort: 4-6 hours
+6. Risk: Low
 
-**Next Steps:**
+**Success Criteria:**
 
-- Investigate root cause of TypeScript compilation errors
-- Consider upgrading Chakra UI to latest version
-- Test alternative tree-shaking approaches
-- Ensure full build/test cycle passes before marking complete
+- [ ] Manual tree-shaking implemented in `vite.config.ts`
+- [ ] Unused components removed
+- [ ] Build completes without errors
+- [ ] Bundle reduced by 40-70KB gzipped
+- [ ] All E2E tests pass
+
+**Long-Term Options:**
+
+1. Monitor Chakra UI v3.32+ for type fixes (Q2 2026)
+2. Consider UI library migration if remains blocked (Q3 2026)
+3. Contribute type fixes to Chakra UI OSS (optional)
+
+**Impact on Overall Goal:**
+
+- Current gap to target: 145 KB reduction needed
+- With manual tree-shaking: 40-70 KB achieved
+- Remaining gap: 75-105 KB (can be addressed through other optimizations)
+- % of target achieved: **73-86%** (acceptable outcome)
+
+**Documentation:**
+
+- Full technical analysis: `docs/todo/modernize/CHAKRA_OPTIMIZATION_BLOCKED.md`
+- Previous attempt: Commit ce60840 (reverted in merge 7838414)
+- Investigation date: 2026-01-25
+
+**Decision:** Proceed with Task 1.1a (Manual Tree-Shaking) as pragmatic alternative
 
 ---
 
