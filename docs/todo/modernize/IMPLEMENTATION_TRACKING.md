@@ -768,15 +768,99 @@ grep -o "msal" build/assets/*.js | wc -l
 
 ---
 
-### Task 3.4: Consider Legacy Support Removal ✅ P2
+### Task 3.4: Consider Legacy Support Removal ✅ P2 (REVISED)
 
 **Status:** ✅ Evaluation Complete - Awaiting Stakeholder Decision  
 **Owner:** AI Agent  
-**Estimated Time:** 2 hours (Actual: 1 hour)  
-**Expected Savings:** 15-25KB gzipped (if approved)
+**Estimated Time:** 2 hours (Actual: 1.5 hours including revision)  
+**Expected Savings:** 15 KB gzipped for 98%+ of users
 
 **Description:**  
-Evaluate dropping legacy browser support to remove polyfills.
+Evaluate browser support strategy and implement three-tier progressive enhancement for optimal performance.
+
+**Success Criteria:**
+
+- [x] Browser analytics reviewed and market share analyzed
+- [x] Business impact assessed with risk matrix
+- [x] Decision framework created for stakeholders
+- [x] Comprehensive evaluation document created
+- [x] **PWA/Service Worker requirements identified** (critical feature previously missed)
+- [x] Recommendation updated to three-tier approach
+- [x] Vite legacy plugin best practices researched
+
+**Decision Factors Analyzed:**
+
+- Current browser usage (2026 market share data)
+- Modern browsers (Chrome 90+, Firefox 88+, Safari 14+) at 98%+ coverage
+- **PWA requirements:** Service Workers need Chrome 45+, Firefox 44+, Safari 11.1+
+- Polyfill bundle: 65.49 KB (24.16 KB gzipped)
+- Legacy browser support: Chrome 63+, Firefox 67+, Safari 11.1+ (covers PWA + dynamic imports)
+- Target audience considerations (starter template vs specific use cases)
+
+**Recommendation:** ✅ **Three-Tier Progressive Enhancement** (REVISED from initial recommendation)
+
+**Why Revised:**
+- Initial recommendation missed critical PWA/Service Worker feature requirements
+- Previous approach would have left legacy users unsupported
+- Vite legacy plugin supports progressive enhancement (modern + legacy chunks)
+- Better approach: Fast for modern users, functional for legacy users
+
+**Proposed Configuration:**
+```typescript
+legacy({
+  // Legacy targets (Chrome 63+, Firefox 67+, Safari 11.1+ for PWA support)
+  targets: ["chrome >= 63", "firefox >= 67", "safari >= 11.1", "edge >= 79", ">0.5%", "not dead"],
+  
+  // Modern targets (no polyfills)
+  modernTargets: ["chrome >= 90", "firefox >= 88", "safari >= 14", "edge >= 90"],
+  
+  modernPolyfills: false,      // Modern browsers: No polyfills (fast!)
+  renderLegacyChunks: true,    // Legacy browsers: Get polyfilled chunks
+})
+```
+
+**Three-Tier Approach:**
+1. **Modern Browsers (98%+ users):** No polyfills → **-15 KB gzipped** (faster experience)
+2. **Legacy Browsers (1-2% users):** Polyfilled chunks → **+65 KB gzipped** (but now functional!)
+3. **Very Old Browsers (<0.5%):** Unsupported (acceptable trade-off)
+
+**Implementation Steps (if approved):**
+
+1. ⏳ Obtain stakeholder approval
+2. ⏳ Update `vite.config.ts` with three-tier configuration
+3. ⏳ Update browser support documentation in README
+4. ⏳ Test on both modern browsers (verify no polyfills) and legacy browsers (verify polyfills load)
+5. ⏳ Measure bundle sizes for both scenarios
+6. ⏳ Update CHANGELOG
+
+**Actual Results:**
+
+- **Browser Analysis:** Complete (98-99% coverage with modern targets, 99%+ with legacy fallback)
+- **PWA Feature Analysis:** ✅ Added (Service Workers, Cache API, Web App Manifest requirements identified)
+- **Risk Assessment:** Very Low (progressive enhancement is backward compatible)
+- **Documentation:** Updated `LEGACY_BROWSER_SUPPORT_EVALUATION.md` with revised approach
+- **Decision Matrix:** Provided for stakeholders with three options
+- **Time Taken:** 1.5 hours (evaluation, revision, and documentation)
+- **Bundle Impact (if approved):** 
+  - Modern users (98%): **-15 KB gzipped** (polyfills removed)
+  - Legacy users (2%): **+65 KB gzipped** (legacy chunks, but now functional)
+  - Net: Faster for majority, accessible for all
+- **Key Innovation:** Three-tier approach better than simple polyfill removal
+- **Expected Savings:** 15 KB gzipped for 98%+ of users
+
+**Stakeholder Decision Options:**
+- **Option A:** Implement progressive enhancement ✅ **Recommended** (faster for 98%, supports legacy)
+- **Option B:** Keep current (status quo, no optimization)
+- **Option C:** Gather project-specific analytics first
+
+**Key Learnings:**
+- PWA/Service Worker support is critical and can't be overlooked
+- Progressive enhancement > simple polyfill removal
+- Vite legacy plugin designed for exactly this use case
+- Modern polyfills hurt performance for majority of users
+- Legacy chunks provide graceful degradation without breaking changes
+
+**Status:** Evaluation complete with revised recommendation, awaiting stakeholder input for implementation
 
 **Success Criteria:**
 
