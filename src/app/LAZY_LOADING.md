@@ -125,6 +125,75 @@ export default function MyFeaturePage() {
 
 **Note on Middleware**: RTK Query API slices include middleware for features like automatic refetching, cache invalidation, and polling. The `reducer.inject()` method automatically handles injecting both the reducer and its associated middleware into the store's middleware chain.
 
+## Automatic Middleware Injection
+
+### Overview
+
+One of the key benefits of using RTK 2.x's `withLazyLoadedSlices()` is **automatic middleware injection**. When you inject an RTK Query API slice, you don't need to manually manage middleware - RTK handles it for you.
+
+### What Gets Injected
+
+Each RTK Query API slice created with `createApi()` includes middleware that provides:
+
+- **Caching**: Stores API response data and manages cache lifetime
+- **Cache Invalidation**: Automatically refetches data when tags are invalidated
+- **Polling**: Manages automatic refetching at specified intervals
+- **Optimistic Updates**: Handles cache updates before server confirmation
+- **Request Deduplication**: Prevents duplicate requests for the same endpoint
+- **Lifecycle Management**: Manages query subscriptions and cleanup
+- **Background Refetching**: Refetches stale data when components remount
+
+### How It Works Internally
+
+When `injectApiSlice(slice)` is called:
+
+```typescript
+// 1. RTK's inject() method is called
+currentReducer = currentReducer.inject(slice)
+
+// 2. RTK internally checks if the slice has middleware
+if (slice.middleware) {
+  // 3. Middleware is automatically added to the store's middleware chain
+  // 4. No manual configuration needed!
+}
+
+// 5. Store's reducer is replaced with the new version
+store.replaceReducer(currentReducer)
+```
+
+**Important**: This all happens in a single call to `inject()`. You don't need to:
+- Call `applyMiddleware()` manually
+- Track which middlewares are loaded
+- Worry about middleware order
+- Configure middleware separately
+
+### Verification
+
+You can verify middleware is working by checking that RTK Query features work correctly:
+
+```typescript
+// Caching works - second call uses cache
+const { data: data1 } = useGetMoviesQuery()
+const { data: data2 } = useGetMoviesQuery() // Uses cached data
+
+// Polling works
+const { data } = useGetMoviesQuery(params, { 
+  pollingInterval: 5000  // Auto-refetch every 5 seconds
+})
+
+// Tag invalidation works
+dispatch(moviesApi.util.invalidateTags(['Movies']))  // Triggers refetch
+```
+
+All of these features require middleware to be properly injected, which happens automatically.
+
+### Technical References
+
+- [RTK combineSlices API](https://redux-toolkit.js.org/api/combineSlices)
+- [RTK Query Code Splitting](https://redux-toolkit.js.org/rtk-query/usage/code-splitting)  
+- [RTK Query Middleware](https://redux-toolkit.js.org/rtk-query/api/createApi#middleware)
+- [Redux Toolkit 2.0 Migration Guide](https://redux-toolkit.js.org/usage/migrating-to-modern-redux#using-combineslidesconfigured)
+
 ### Development Tools
 
 The slice injection system supports Redux DevTools:
