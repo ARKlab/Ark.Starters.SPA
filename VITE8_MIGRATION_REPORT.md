@@ -86,11 +86,11 @@ rollupOptions: {
 }
 ```
 
-**After (Vite 8 with Rolldown):**
+**After (Vite 8 with Rolldown) - CORRECTED:**
 ```typescript
-rollupOptions: {
+rolldownOptions: {  // renamed from rollupOptions
   output: {
-    advancedChunks: {
+    codeSplitting: {  // renamed from advancedChunks
       groups: [
         {
           name: "react",
@@ -103,27 +103,32 @@ rollupOptions: {
 }
 ```
 
-### 2. Deprecation Notice
-⚠️ `advancedChunks` is already deprecated in favor of `codeSplitting` API.
-This needs further investigation for the final migration path.
+**Migration Path:**
+1. `rollupOptions` → `rolldownOptions` (Vite 8 requirement)
+2. `output.manualChunks` → `output.codeSplitting` (Rolldown API)
+3. Object syntax → `groups` array with `test` functions
 
 ## Performance Analysis
 
 ### Build Times
 
-| Metric | Vite 7.3.1 | Vite 8 + plugin | Vite 8 + native | Change |
-|--------|------------|-----------------|-----------------|--------|
-| Production Build | 1m 33s | 1m 50s | 1m 52s | **+19s (+20%)** ❌ |
+| Configuration | Build Time | vs Baseline | Notes |
+|--------------|------------|-------------|-------|
+| **Vite 7.3.1** (baseline) | 1m 33s | - | Rollup bundler |
+| Vite 8 + vite-tsconfig-paths plugin | 1m 50s | +17s (+18%) | Plugin bottleneck |
+| Vite 8 + native tsconfigPaths | 1m 52s | +19s (+20%) | i18n-ally bottleneck |
+| **Vite 8 + native + codeSplitting** | 1m 49s | **+16s (+17%)** | ✅ Proper config |
 
 ### Performance Impact
-❌ **Build is slower** with Vite 8 beta even with native tsconfigPaths:
-- With vite-tsconfig-paths plugin: 18% slower
-- With native resolve.tsconfigPaths: 20% slower
+❌ **Build is 17% slower** with Vite 8 beta (proper configuration):
+- Eliminated vite-tsconfig-paths bottleneck
+- Eliminated deprecation warnings
+- Still slower due to Rolldown beta optimizations pending
 
-This is due to:
-1. Beta status - Rolldown not fully optimized yet
-2. Plugin compatibility overhead
-3. New bottleneck: vite-plugin-i18n-ally dominates build time
+**Root Cause:**
+1. Rolldown beta not fully optimized yet
+2. New bottleneck: vite-plugin-i18n-ally (92% of build time)
+3. Plugin compatibility layer overhead
 
 ### Plugin Timing Analysis
 
@@ -236,16 +241,24 @@ npm error invalid: vite@8.0.0-beta.10 (peer deps not satisfied)
 
 ## Conclusion
 
-**Vite 8 migration is technically feasible but NOT recommended for production** at this time.
+**Vite 8 migration is technically complete and properly configured** but **NOT recommended for production** at this time.
 
 ### Key Takeaways:
-1. ✅ All functionality works
-2. ❌ Performance regression significant
-3. ⚠️ API still evolving (deprecations)
-4. ⏳ Wait for stable release and plugin ecosystem maturity
+1. ✅ All functionality works perfectly
+2. ✅ All APIs properly migrated (no deprecation warnings)
+3. ✅ Native tsconfigPaths eliminates plugin dependency
+4. ❌ 17% performance regression still unacceptable
+5. ⏳ Wait for stable release and optimizations
+
+### Successful Migrations:
+- `vite-tsconfig-paths` plugin → native `resolve.tsconfigPaths`
+- `build.rollupOptions` → `build.rolldownOptions`
+- `output.manualChunks` → `output.codeSplitting`
+- All chunk splitting logic preserved and working
 
 ### Next Steps:
-1. Revert to Vite 7.3.1 for production
-2. Keep this migration branch for testing
-3. Re-test when Vite 8 stable is released
-4. Monitor community feedback and performance improvements
+1. ✅ Configuration is production-ready (use this as reference)
+2. ⏳ Wait for Vite 8 stable release
+3. 🔄 Re-test when Rolldown performance improves
+4. 📊 Monitor community feedback and benchmarks
+5. 🎯 Migrate when build performance matches or exceeds Vite 7
