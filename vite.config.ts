@@ -15,7 +15,6 @@ import oxlint from "vite-plugin-oxlint";
 import { VitePWA } from "vite-plugin-pwa";
 import { reactClickToComponent } from "vite-plugin-react-click-to-component";
 import svgr from "vite-plugin-svgr";
-import tsconfigPaths from "vite-tsconfig-paths";
 
 import { supportedLngs } from "./src/config/lang";
 
@@ -76,7 +75,7 @@ export default defineConfig(({ mode }) => {
           plugins: [["babel-plugin-react-compiler", {}]],
         },
       }),
-      tsconfigPaths(),
+      // NOTE: vite-tsconfig-paths plugin removed - using native resolve.tsconfigPaths instead (Vite 8+)
       reactClickToComponent(),
       VitePWA({
         disable: mode == "e2e", // disable PWA in e2e mode due to conflict with MSW (only 1 ServiceWorker can be registered)
@@ -148,6 +147,11 @@ export default defineConfig(({ mode }) => {
           template: "treemap", // 'sunburst' | 'treemap' | 'network'
         }),
     ],
+    resolve: {
+      // Vite 8+ native support for TypeScript path mappings from tsconfig.json
+      // Replaces vite-tsconfig-paths plugin for better performance
+      tsconfigPaths: true,
+    },
     test: {
       globals: true,
       environment: "jsdom",
@@ -174,6 +178,8 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           // Vite 8 with Rolldown uses advancedChunks instead of manualChunks
+          // TODO: Migrate to codeSplitting API when stable (advancedChunks is deprecated)
+          // See: https://rolldown.rs/reference/interface.outputoptions
           advancedChunks: {
             groups: [
               // Core libraries (rarely change) - separate for maximum cache stability
@@ -188,27 +194,27 @@ export default defineConfig(({ mode }) => {
               // State management (occasional updates)
               {
                 name: "rtk",
-                test: /\/(@reduxjs\/toolkit|react-redux)\//,
+                test: /\/@reduxjs\/toolkit|react-redux/,
               },
               // UI Framework (occasional updates) - already large, keep separate
               {
                 name: "chakra",
-                test: /\/(@chakra-ui\/react|@emotion\/react)\//,
+                test: /\/@chakra-ui\/react|@emotion\/react/,
               },
               // i18n libraries (rarely change)
               {
                 name: "i18n",
-                test: /\/(i18next|react-i18next|@semihbou\/zod-i18n-map)\//,
+                test: /\/i18next|react-i18next|@semihbou\/zod-i18n-map/,
               },
               // Form libraries (occasional updates)
               {
                 name: "hookForm",
-                test: /\/(react-hook-form|@hookform\/resolvers|zod)\//,
+                test: /\/react-hook-form|@hookform\/resolvers|zod/,
               },
               // Utility libraries (rarely change)
               {
                 name: "common",
-                test: /\/(@tanstack\/react-table|date-fns|@dnd-kit\/core|@dnd-kit\/sortable)\//,
+                test: /\/@tanstack\/react-table|date-fns|@dnd-kit\/(core|sortable)/,
               },
             ],
           },
