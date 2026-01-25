@@ -20,18 +20,70 @@ import { supportedLngs } from "./src/config/lang";
 const chunkSizeLimit = 10048;
 
 /**
- * Lightweight Vite plugin for i18n HMR support
- * Triggers i18next resource reload when locale files change
+ * Vite plugin for i18next-http-backend with HMR support
+ * Copies locale files to public directory and enables HMR during development
  */
-function i18nHMR(): Plugin {
+function i18nextBackendHMR(): Plugin {
   return {
-    name: "vite-plugin-i18n-hmr",
+    name: "vite-plugin-i18next-backend-hmr",
+    
+    // Copy locale files to public/locales on build start
+    buildStart() {
+      const fs = require("fs");
+      const path = require("path");
+      
+      const srcLocalesDir = path.resolve(__dirname, "src/locales");
+      const publicLocalesDir = path.resolve(__dirname, "public/locales");
+      
+      // Create public/locales directory if it doesn't exist
+      if (!fs.existsSync(publicLocalesDir)) {
+        fs.mkdirSync(publicLocalesDir, { recursive: true });
+      }
+      
+      // Copy all locale files
+      const languages = fs.readdirSync(srcLocalesDir);
+      for (const lang of languages) {
+        const langSrcDir = path.join(srcLocalesDir, lang);
+        const langPublicDir = path.join(publicLocalesDir, lang);
+        
+        if (fs.statSync(langSrcDir).isDirectory()) {
+          if (!fs.existsSync(langPublicDir)) {
+            fs.mkdirSync(langPublicDir, { recursive: true });
+          }
+          
+          const files = fs.readdirSync(langSrcDir);
+          for (const file of files) {
+            if (file.endsWith(".json")) {
+              fs.copyFileSync(
+                path.join(langSrcDir, file),
+                path.join(langPublicDir, file)
+              );
+            }
+          }
+        }
+      }
+    },
+    
+    // Handle HMR for locale files during development
     handleHotUpdate({ file, server }) {
-      // Check if the changed file is a locale JSON file
       if (file.includes("/locales/") && file.endsWith(".json")) {
-        console.log("[i18n-hmr] Locale file changed:", file);
+        const fs = require("fs");
+        const path = require("path");
+        
+        console.log("[i18next-hmr] Locale file changed:", file);
+        
+        // Copy changed file to public directory
+        const relativePath = path.relative(path.resolve(__dirname, "src/locales"), file);
+        const publicPath = path.resolve(__dirname, "public/locales", relativePath);
+        const publicDir = path.dirname(publicPath);
+        
+        if (!fs.existsSync(publicDir)) {
+          fs.mkdirSync(publicDir, { recursive: true });
+        }
+        
+        fs.copyFileSync(file, publicPath);
+        
         // Trigger full page reload to reload i18next resources
-        // This is simpler and more reliable than selective resource reloading
         server.ws.send({
           type: "full-reload",
           path: "*",
@@ -148,8 +200,8 @@ export default defineConfig(({ mode }) => {
         }),
         hook: "buildStart",
       }),
-      // Lightweight HMR plugin for locale files
-      i18nHMR(),
+      // i18next backend with HMR support
+      i18nextBackendHMR(),
       oxlint({
         path: "src",
       }),
