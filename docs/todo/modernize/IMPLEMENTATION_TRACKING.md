@@ -10,144 +10,114 @@
 
 | Phase     | Status      | Tasks Complete | Bundle Reduction         | Time Spent      |
 | --------- | ----------- | -------------- | ------------------------ | --------------- |
-| Phase 1   | ✅ Complete | 3/3            | 57.90 KB                 | 6.5h            |
+| Phase 1   | 🟡 Partial  | 2/3            | 30.57 KB                 | 4.5h + 8h investigation |
 | Phase 2   | ✅ Complete | 2/4            | 71.75 KB                 | 9.0h            |
 | Phase 3   | ✅ Complete | 4/4            | 60-70 KB + 15 KB         | 7.5h            |
-| **TOTAL** | **✅ 100%** | **11/11**      | **205-215 KB / 263KB**   | **23.0h / 48h** |
+| **TOTAL** | **91%**     | **10/11**      | **177-187 KB / 263KB**   | **29.0h / 48h** |
 
 **Current Bundle:** 
-- Modern browsers (98-99%): **367 KB gzipped** (146 KB reduction, -28%)
-- Legacy browsers (1-2%): **449 KB gzipped** (64 KB reduction, -12%)
+- Modern browsers (98-99%): **395 KB gzipped** (118 KB reduction, -23%)
+- Legacy browsers (1-2%): **477 KB gzipped** (36 KB reduction, -7%)
 
 **Target Bundle:** 250 KB gzipped  
-**Reduction Achieved:** 146 KB for modern users (56% of 263 KB target)  
-**Reduction Needed:** 117 KB (44% more to reach target)  
-**Key Optimizations:** sideEffects declaration, **Chakra UI optimization with defaultBaseConfig** (27.83 KB), react-icons consolidated to Lucide, Application Insights conditionally loaded, Redux API slices lazy loaded, Vite chunk splitting optimized, Progressive enhancement with Web Platform Baseline implemented
+**Reduction Achieved:** 118 KB for modern users (45% of 263 KB target)  
+**Reduction Needed:** 145 KB (55% more to reach target)  
+**Key Optimizations:** sideEffects declaration, react-icons consolidated to Lucide, Application Insights conditionally loaded, Redux API slices lazy loaded, Vite chunk splitting optimized, Progressive enhancement with Web Platform Baseline implemented
 
-**Bundle Metrics (Chakra chunk):**
-
-- Baseline (master): 175.30 KB gzipped (641.99 KB uncompressed)
-- After Task 1.1: 147.47 KB gzipped (517.97 KB uncompressed)
-- **Total Reduction: 27.83 KB gzipped (15.9%)**
+**Note:** Task 1.1 (Chakra UI optimization) was investigated thoroughly (8 hours) but **not implemented** due to tradeoffs. See detailed analysis in documentation.
 
 **Bundle Metrics (initGlobals.js):**
 
 - Baseline (commit 55ac24c): 188.32 KB gzipped
 - After Task 2.4: 183.06 KB gzipped
 - After Task 2.2: 116.57 KB gzipped (Application Insights removed to separate chunk)
-- After Task 1.1: 95.00 KB gzipped (Chakra optimization applied)
-- **Total Reduction from baseline: 93.32 KB gzipped (49.5%)**
+- **Total Reduction from baseline: 71.75 KB gzipped (38.1%)**
 
 ---
 
 ## Phase 1: Quick Wins (Target: 150-200KB, 1 week)
 
-### Task 1.1: Optimize Chakra UI Configuration ✅ COMPLETED
+### Task 1.1: Optimize Chakra UI Configuration ❌ NOT IMPLEMENTED
 
-**Status:** ✅ **COMPLETE** - Successfully implemented with chakra-cli typegen approach  
+**Status:** ❌ **NOT IMPLEMENTED** - Investigated thoroughly but decided not to proceed  
 **Owner:** AI Agent  
-**Estimated Time:** 4 hours (Actual: 2 hours including investigation)  
+**Investigation Time:** 8 hours (across multiple attempts)  
 **Expected Savings:** 80-120KB gzipped  
-**Actual Savings:** 27.83 KB gzipped (23-35% of expected range)
+**Actual Decision:** Maintain current implementation
 
 **Description:**  
-Replace `defaultConfig` with `defaultBaseConfig` and import only needed component recipes.
+Investigated replacing `defaultConfig` with `defaultBaseConfig` and importing only needed component recipes to reduce bundle size.
 
-**Key Insight (2026-01-25):**
+**Investigation Summary (2026-01-25):**
 
-The critical missing step in previous attempts was **regenerating typings with `@chakra-ui/cli typegen`** after modifying `theme.ts`. This is handled automatically by the `prebuild` script in package.json but was overlooked during manual attempts.
+After comprehensive investigation across multiple approaches, the team decided **NOT to implement** this optimization. See detailed analysis in:
+- `TOKEN_TREESHAKING_ANALYSIS.md` - Why selective token imports don't work
+- `TASK_1.1_SUCCESS.md` - Technical investigation findings
+- `CHAKRA_OPTIMIZATION_BLOCKED.md` - Original blocker analysis
 
-**Solution Implemented:**
+**Key Findings:**
 
-1. ✅ Replaced `defaultConfig` with `defaultBaseConfig` in `src/theme.ts`
-2. ✅ Imported only 39 needed recipes (18 simple + 21 slot recipes) from `@chakra-ui/react/theme`
-3. ✅ Added responsive breakpoint conditions (sm, md, lg, xl, 2xl with Down/Only variants)
-4. ✅ Added breakpoint tokens for consistency
-5. ✅ Disabled `strictTokens` (required when using defaultBaseConfig to avoid token conflicts)
-6. ✅ Regenerated Chakra UI typings with `npx @chakra-ui/cli typegen --clean --strict src/theme.ts`
+1. **Bundle Reduction Achieved (in testing):** 27.83 KB gzipped (15.9% of Chakra chunk)
+   - Replaced `defaultConfig` with `defaultBaseConfig`
+   - Imported only 39 needed recipes (vs 73 in defaultConfig)
+   - Manual responsive breakpoint conditions
+
+2. **Critical Tradeoffs Identified:**
+   - Requires `strictTokens: false` (allows arbitrary px values)
+   - Loses access to full Chakra token system
+   - Creates 400+ TypeScript errors if `strictTokens: true` is used
+   - Importing full tokens to fix errors negates ALL bundle savings
+
+3. **Alternative Approaches Evaluated:**
+   - ❌ Selective token imports: Bundlers can't tree-shake object properties
+   - ❌ `strictTokens: true` + full tokens: Zero bundle benefit (0 KB reduction)
+   - ❌ `strictTokens: true` + partial tokens: Not possible (TypeScript incompatibility)
+
+**Decision Rationale:**
+
+While the optimization technically works and achieves ~28 KB savings, the team decided **not to implement** due to:
+
+1. **Maintenance burden:** Requires manual tracking of used recipes
+2. **Developer experience:** `strictTokens: false` allows arbitrary values (e.g., `px` everywhere)
+3. **Token system limitations:** Loses access to full Chakra design system
+4. **Future compatibility:** May break on Chakra UI updates
+5. **Marginal benefit:** 28 KB savings (1.5% of total bundle) vs significant tradeoffs
+
+**Recommendation:**
+
+**ACCEPTED:** Maintain current `defaultConfig` implementation
+- Keep full Chakra UI token system available
+- Maintain `strictTokens: true` enforcement (if desired in future)
+- Focus optimization efforts on higher-impact areas:
+  - Code splitting by route ✅ (already implemented)
+  - Lazy loading heavy components
+  - Image optimization ✅ (already done)
+  - Dependency optimization
 
 **Success Criteria:**
 
-- [x] `src/theme.ts` updated to use `defaultBaseConfig`
-- [x] Only used component recipes explicitly imported (39 vs 73 in defaultConfig)
-- [x] Build completes without errors
-- [x] No new TypeScript errors introduced (same 3 pre-existing as master)
-- [x] Bundle analyzer shows Chakra chunk reduced
-- [x] Typings regenerated with chakra-cli
+- [x] Comprehensive investigation completed
+- [x] Multiple approaches evaluated
+- [x] Tradeoffs clearly documented
+- [x] Decision documented with rationale
+- [x] Alternative optimizations identified
 
-**Implementation Details:**
+**Lessons Learned:**
 
-```typescript
-// Before (defaultConfig)
-import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react"
-const theme = createSystem(defaultConfig, config)
+1. **Typegen is critical:** Always regenerate typings with `@chakra-ui/cli typegen` after theme changes
+2. **Bundler limitations:** Can't tree-shake object properties in JavaScript
+3. **Type system constraints:** `strictTokens: true` incompatible with selective imports
+4. **Optimization tradeoffs:** Not all bundle reductions are worth the maintenance cost
 
-// After (defaultBaseConfig + explicit recipes)
-import { createSystem, defaultBaseConfig, defineConfig } from "@chakra-ui/react"
-import {
-  // Simple recipes (18)
-  badgeRecipe, buttonRecipe, checkmarkRecipe, codeRecipe, containerRecipe,
-  headingRecipe, iconRecipe, inputRecipe, inputAddonRecipe, kbdRecipe,
-  linkRecipe, markRecipe, radiomarkRecipe, separatorRecipe, skeletonRecipe,
-  spinnerRecipe, textareaRecipe,
-  // Slot recipes (21)
-  accordionSlotRecipe, alertSlotRecipe, avatarSlotRecipe, breadcrumbSlotRecipe,
-  cardSlotRecipe, checkboxSlotRecipe, dialogSlotRecipe, drawerSlotRecipe,
-  fieldSlotRecipe, fieldsetSlotRecipe, listSlotRecipe, menuSlotRecipe,
-  nativeSelectSlotRecipe, progressSlotRecipe, selectSlotRecipe, switchSlotRecipe,
-  tableSlotRecipe, tagsInputSlotRecipe, tooltipSlotRecipe,
-} from "@chakra-ui/react/theme"
+**Credits:**
 
-const config = defineConfig({
-  strictTokens: false, // Required for defaultBaseConfig compatibility
-  conditions: {
-    // Responsive breakpoint conditions (15 added)
-    sm, md, lg, xl, "2xl",
-    smDown, mdDown, lgDown, xlDown, "2xlDown",
-    smOnly, mdOnly, lgOnly, xlOnly, "2xlOnly",
-  },
-  // ... rest of config
-})
+Thanks to @AndreaCuneo for guidance on:
+- Importance of typegen regeneration
+- Investigating `strictTokens: true` requirement
+- Evaluating token tree-shaking approaches
+- Making pragmatic decision to not implement
 
-const theme = createSystem(defaultBaseConfig, config)
-```
-
-**Verification Results:**
-
-```bash
-# Bundle size comparison
-# Before (master):
-chakra-Cxnx2iPB.js: 641.99 KB (175.30 KB gzipped)
-
-# After (optimized):
-chakra-DOR0TK-1.js: 517.97 KB (147.47 KB gzipped)
-
-# Savings:
-Uncompressed: -124.02 KB (-19.3%)
-Gzipped: -27.83 KB (-15.9%)
-```
-
-**Why Previous Attempts Failed:**
-
-1. ❌ Didn't regenerate typings with `@chakra-ui/cli typegen` after theme changes
-2. ❌ Didn't add responsive breakpoint conditions (sm, md, lg, etc.)
-3. ❌ Didn't add breakpoint tokens
-4. ❌ Kept `strictTokens: true` (incompatible with defaultBaseConfig)
-5. ❌ Attempted build before typegen, causing TypeScript errors
-
-**Why This Attempt Succeeded:**
-
-1. ✅ Ran `@chakra-ui/cli typegen` after each theme modification
-2. ✅ Added all necessary conditions and tokens
-3. ✅ Disabled strictTokens for compatibility  
-4. ✅ Followed correct sequence: modify theme → regenerate types → build
-
-**TypeScript Status:**
-
-- ✅ No new errors introduced
-- ✅ Same 3 pre-existing errors as master branch:
-  - `toaster.tsx:20` - mdDown property (pre-existing)
-  - `toaster.tsx:22` - md property (pre-existing)
+---
   - `appSelect.tsx:80` - layerStyle property (pre-existing)
 - ✅ All errors exist on master, not caused by this optimization
 
