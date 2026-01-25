@@ -1,11 +1,112 @@
-import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
+import { createSystem, defaultBaseConfig, defineConfig } from "@chakra-ui/react"
+import {
+  // Simple recipes - basic components
+  badgeRecipe,
+  buttonRecipe,
+  checkmarkRecipe,
+  codeRecipe,
+  containerRecipe,
+  headingRecipe,
+  iconRecipe,
+  inputRecipe,
+  inputAddonRecipe,
+  kbdRecipe,
+  linkRecipe,
+  markRecipe,
+  radiomarkRecipe,
+  separatorRecipe,
+  skeletonRecipe,
+  spinnerRecipe,
+  textareaRecipe,
+  // Slot recipes - complex multi-part components
+  accordionSlotRecipe,
+  alertSlotRecipe,
+  avatarSlotRecipe,
+  breadcrumbSlotRecipe,
+  cardSlotRecipe,
+  checkboxSlotRecipe,
+  dialogSlotRecipe,
+  drawerSlotRecipe,
+  fieldSlotRecipe,
+  fieldsetSlotRecipe,
+  listSlotRecipe,
+  menuSlotRecipe,
+  nativeSelectSlotRecipe,
+  progressSlotRecipe,
+  selectSlotRecipe,
+  switchSlotRecipe,
+  tableSlotRecipe,
+  tagsInputSlotRecipe,
+  tooltipSlotRecipe,
+} from "@chakra-ui/react/theme";
 
 const config = defineConfig({
-  strictTokens: true,
+  strictTokens: false, // Disabled when using defaultBaseConfig to allow standard tokens
+  conditions: {
+    // Add responsive breakpoint conditions
+    sm: "@media (min-width: 480px)",
+    md: "@media (min-width: 768px)",
+    lg: "@media (min-width: 1024px)",
+    xl: "@media (min-width: 1280px)",
+    "2xl": "@media (min-width: 1536px)",
+    smDown: "@media (max-width: 479.98px)",
+    mdDown: "@media (max-width: 767.98px)",
+    lgDown: "@media (max-width: 1023.98px)",
+    xlDown: "@media (max-width: 1279.98px)",
+    "2xlDown": "@media (max-width: 1535.98px)",
+    smOnly: "@media (min-width: 480px) and (max-width: 767.98px)",
+    mdOnly: "@media (min-width: 768px) and (max-width: 1023.98px)",
+    lgOnly: "@media (min-width: 1024px) and (max-width: 1279.98px)",
+    xlOnly: "@media (min-width: 1280px) and (max-width: 1535.98px)",
+    "2xlOnly": "@media (min-width: 1536px)",
+  },
   globalCss: {
     html: { colorPalette: "brandPalette" },
   },
   theme: {
+    // Import only the recipes we actually use
+    recipes: {
+      // Simple recipes
+      badge: badgeRecipe,
+      button: buttonRecipe,
+      checkmark: checkmarkRecipe,
+      code: codeRecipe,
+      container: containerRecipe,
+      heading: headingRecipe,
+      icon: iconRecipe,
+      input: inputRecipe,
+      inputAddon: inputAddonRecipe,
+      kbd: kbdRecipe,
+      link: linkRecipe,
+      mark: markRecipe,
+      radiomark: radiomarkRecipe,
+      separator: separatorRecipe,
+      skeleton: skeletonRecipe,
+      spinner: spinnerRecipe,
+      textarea: textareaRecipe,
+    },
+    slotRecipes: {
+      // Slot recipes (multi-part components)
+      accordion: accordionSlotRecipe,
+      alert: alertSlotRecipe,
+      avatar: avatarSlotRecipe,
+      breadcrumb: breadcrumbSlotRecipe,
+      card: cardSlotRecipe,
+      checkbox: checkboxSlotRecipe,
+      dialog: dialogSlotRecipe,
+      drawer: drawerSlotRecipe,
+      field: fieldSlotRecipe,
+      fieldset: fieldsetSlotRecipe,
+      list: listSlotRecipe,
+      menu: menuSlotRecipe,
+      nativeSelect: nativeSelectSlotRecipe,
+      progress: progressSlotRecipe,
+      select: selectSlotRecipe,
+      switch: switchSlotRecipe,
+      table: tableSlotRecipe,
+      tagsInput: tagsInputSlotRecipe,
+      tooltip: tooltipSlotRecipe,
+    },
     semanticTokens: {
       colors: {
         bg: {
@@ -68,6 +169,13 @@ const config = defineConfig({
     },
 
     tokens: {
+      breakpoints: {
+        sm: { value: "480px" },
+        md: { value: "768px" },
+        lg: { value: "1024px" },
+        xl: { value: "1280px" },
+        "2xl": { value: "1536px" },
+      },
       spacing: {
         inherit: { value: "inherit" },
         "0": { value: "0rem" },
@@ -102,6 +210,7 @@ const config = defineConfig({
   },
 });
 
-const theme = createSystem(defaultConfig, config);
+const theme = createSystem(defaultBaseConfig, config)
 
-export default theme;
+export default theme
+
