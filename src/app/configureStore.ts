@@ -57,6 +57,8 @@ export type AppState = ReturnType<typeof sliceReducers>
 let storeInstance: any = null
 // Track the current reducer to maintain proper types through inject calls
 let currentReducer = sliceReducers
+// Track which slices have been injected to make injection idempotent
+const injectedSlices = new Set<string>()
 
 export function initStore(extra: ExtraType) {
   const store = configureStore({
@@ -83,6 +85,8 @@ export function initStore(extra: ExtraType) {
  * 
  * This function handles dynamic injection of RTK Query API slices, which includes
  * both the reducer AND its associated middleware automatically.
+ * 
+ * **Idempotent**: Can be called multiple times with the same slice - only injects once.
  * 
  * ## How Middleware Injection Works
  * 
@@ -140,6 +144,12 @@ export function injectApiSlice(slice: LazyApiSlice) {
     throw new Error("Store not initialized. Call initStore() first.")
   }
   
+  // Check if this slice has already been injected (idempotent)
+  const sliceKey = slice.reducerPath
+  if (injectedSlices.has(sliceKey)) {
+    return  // Already injected, skip
+  }
+  
   // Use the reducer's inject method which handles both reducer and middleware
   // RTK internally detects if the slice has middleware and adds it to the store
   currentReducer = currentReducer.inject(slice) as typeof currentReducer
@@ -148,6 +158,9 @@ export function injectApiSlice(slice: LazyApiSlice) {
   // This single call updates both the reducer tree AND the middleware chain
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
   storeInstance.replaceReducer(currentReducer)
+  
+  // Mark this slice as injected
+  injectedSlices.add(sliceKey)
 }
 
 // Registry of API reset actions - populated by features as they load
