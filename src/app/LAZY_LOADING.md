@@ -117,19 +117,20 @@ export default function MyFeaturePage() {
 2. **Route Navigation**: User navigates to a feature (e.g., `/movies`)
 3. **Component Load**: React.lazy loads the feature component
 4. **Slice Injection**: `useInjectApiSlice` hook:
+   - Gets the store instance from React context
    - Calls `injectApiSlice()` utility function
-   - Uses RTK's `reducer.inject()` method which handles **both reducer and middleware**
-   - The middleware is automatically included when RTK Query slices are injected
+   - Injects the **reducer** using RTK's `combineSlices().inject()` method
+   - Injects the **middleware** using `createDynamicMiddleware().addMiddleware()`
    - Registers the reset action for dev/e2e mode
 5. **Feature Ready**: RTK Query hooks work as expected with full caching and refetching
 
-**Note on Middleware**: RTK Query API slices include middleware for features like automatic refetching, cache invalidation, and polling. The `reducer.inject()` method automatically handles injecting both the reducer and its associated middleware into the store's middleware chain.
+**Critical Discovery**: RTK's `combineSlices().inject()` **only handles reducer injection**, NOT middleware. After examining the RTK source code, we found that middleware must be injected separately using `createDynamicMiddleware`.
 
-## Automatic Middleware Injection
+## Middleware Injection with createDynamicMiddleware
 
 ### Overview
 
-One of the key benefits of using RTK 2.x's `withLazyLoadedSlices()` is **automatic middleware injection**. When you inject an RTK Query API slice, you don't need to manually manage middleware - RTK handles it for you.
+**Important**: Unlike what might be expected, RTK's `combineSlices().inject()` does NOT automatically inject middleware. After reviewing the [RTK source code](https://github.com/reduxjs/redux-toolkit/blob/master/packages/toolkit/src/combineSlices.ts), we discovered that `inject()` only handles the reducer. Middleware injection requires `createDynamicMiddleware`.
 
 ### What Gets Injected
 
@@ -143,29 +144,45 @@ Each RTK Query API slice created with `createApi()` includes middleware that pro
 - **Lifecycle Management**: Manages query subscriptions and cleanup
 - **Background Refetching**: Refetches stale data when components remount
 
-### How It Works Internally
+### How It Works
 
-When `injectApiSlice(slice)` is called:
+The correct implementation uses TWO separate steps:
 
 ```typescript
-// 1. RTK's inject() method is called
-currentReducer = currentReducer.inject(slice)
-
-// 2. RTK internally checks if the slice has middleware
-if (slice.middleware) {
-  // 3. Middleware is automatically added to the store's middleware chain
-  // 4. No manual configuration needed!
+export function injectApiSlice(store: AppStore, slice: LazyApiSlice) {
+  const manager = getStoreManager(store)
+  
+  // Step 1: Inject the REDUCER using combineSlices().inject()
+  manager.currentReducer = manager.currentReducer.inject(slice)
+  store.replaceReducer(manager.currentReducer)
+  
+  // Step 2: Inject the MIDDLEWARE using createDynamicMiddleware
+  // This is critical - combineSlices().inject() does NOT do this
+  manager.dynamicMiddleware.addMiddleware(slice.middleware)
 }
-
-// 5. Store's reducer is replaced with the new version
-store.replaceReducer(currentReducer)
 ```
 
-**Important**: This all happens in a single call to `inject()`. You don't need to:
-- Call `applyMiddleware()` manually
-- Track which middlewares are loaded
-- Worry about middleware order
-- Configure middleware separately
+### Store Setup
+
+The store must be configured with `createDynamicMiddleware`:
+
+```typescript
+import { createDynamicMiddleware, configureStore } from '@reduxjs/toolkit'
+
+// Create the dynamic middleware instance
+const dynamicMiddlewareInstance = createDynamicMiddleware()
+
+const store = configureStore({
+  reducer: sliceReducers,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(dynamicMiddlewareInstance.middleware),
+})
+```
+
+**Important**: This all requires two separate API calls. You need to:
+- Use `combineSlices().inject()` for the reducer
+- Use `createDynamicMiddleware().addMiddleware()` for the middleware
+- Both are necessary for RTK Query to work correctly
 
 ### Verification
 
@@ -185,10 +202,12 @@ const { data } = useGetMoviesQuery(params, {
 dispatch(moviesApi.util.invalidateTags(['Movies']))  // Triggers refetch
 ```
 
-All of these features require middleware to be properly injected, which happens automatically.
+All of these features require middleware to be properly injected using `createDynamicMiddleware`.
 
 ### Technical References
 
+- [RTK createDynamicMiddleware API](https://redux-toolkit.js.org/api/createDynamicMiddleware)
+- [RTK combineSlices source code](https://github.com/reduxjs/redux-toolkit/blob/master/packages/toolkit/src/combineSlices.ts) - Note: `inject()` only handles reducers
 - [RTK combineSlices API](https://redux-toolkit.js.org/api/combineSlices)
 - [RTK Query Code Splitting](https://redux-toolkit.js.org/rtk-query/usage/code-splitting)  
 - [RTK Query Middleware](https://redux-toolkit.js.org/rtk-query/api/createApi#middleware)

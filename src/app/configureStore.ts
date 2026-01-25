@@ -1,5 +1,5 @@
 import type { Action, ThunkAction, WithSlice } from "@reduxjs/toolkit"
-import { configureStore, combineSlices } from "@reduxjs/toolkit"
+import { combineSlices, configureStore, createDynamicMiddleware } from "@reduxjs/toolkit"
 import { setupListeners } from "@reduxjs/toolkit/query"
 
 import { authSlice } from "../lib/authentication/authenticationSlice"
@@ -38,8 +38,6 @@ const rootReducer = combineSlices(
 )
 
 // Enable lazy-loaded slices to be injected dynamically with proper typing
-// The withLazyLoadedSlices() returns a reducer with an inject() method that handles both
-// the reducer and middleware injection automatically
 const sliceReducers = rootReducer.withLazyLoadedSlices<
   WithSlice<typeof configTableApiSlice> &
   WithSlice<typeof jsonPlaceholderApi> &
@@ -52,14 +50,31 @@ const sliceReducers = rootReducer.withLazyLoadedSlices<
 // Infer the `RootState` type from the root reducer
 export type AppState = ReturnType<typeof sliceReducers>
 
-// Store instance holder for injection utility
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let storeInstance: any = null
-// Track the current reducer to maintain proper types through inject calls
-let currentReducer = sliceReducers
-// Track which slices have been injected to make injection idempotent
-const injectedSlices = new Set<string>()
+export type ExtraType = {
+  authProvider: AuthProvider
+}
 
+/**
+ * Store manager that holds references needed for dynamic injection
+ * This is NOT a module-level singleton - it's created during store initialization
+ */
+type StoreManager = {
+  currentReducer: typeof sliceReducers
+  injectedSlices: Set<string>
+  dynamicMiddleware: ReturnType<typeof createDynamicMiddleware>
+  apiResetActions: (() => ReturnType<LazyApiSlice["util"]["resetApiState"]>)[]
+}
+
+// Create the dynamic middleware instance for lazy-loaded API slice middlewares
+// This must be created before the store is configured
+const dynamicMiddlewareInstance = createDynamicMiddleware()
+
+/**
+ * Initialize and configure the Redux store
+ * 
+ * @param extra - Extra arguments for thunks (e.g., authProvider)
+ * @returns Configured Redux store with dynamic slice/middleware injection support
+ */
 export function initStore(extra: ExtraType) {
   const store = configureStore({
     reducer: sliceReducers,
@@ -69,123 +84,135 @@ export function initStore(extra: ExtraType) {
           extraArgument: extra,
           serializableCheck: true,
         },
-      }),
+      }).concat(dynamicMiddlewareInstance.middleware), // Add dynamic middleware to the chain
   })
 
   setupListeners(store.dispatch)
-  
-  // Store reference for injection utility (not extending the store itself)
-  storeInstance = store
-  
+
+  // Create store manager (NOT at module level - created during init)
+  const storeManager: StoreManager = {
+    currentReducer: sliceReducers,
+    injectedSlices: new Set<string>(),
+    dynamicMiddleware: dynamicMiddlewareInstance,
+    apiResetActions: [],
+  }
+
+  // Attach manager to store for access by injection utilities
+  // This avoids module-level side effects
+  ;(store as any).__storeManager = storeManager
+
   return store
+}
+
+export type AppStore = ReturnType<typeof initStore>
+export type AppDispatch = AppStore["dispatch"]
+export type AppThunk<ThunkReturnType = void> = ThunkAction<ThunkReturnType, AppState, ExtraType, Action>
+
+/**
+ * Get the store manager from the store instance
+ * 
+ * @param store - The Redux store instance
+ * @returns Store manager for dynamic injection
+ */
+function getStoreManager(store: AppStore): StoreManager {
+  const manager = (store as any).__storeManager
+  if (!manager) {
+    throw new Error("Store manager not initialized. Ensure initStore() was called.")
+  }
+  return manager
 }
 
 /**
  * Inject a lazy-loaded API slice into the store
  * 
- * This function handles dynamic injection of RTK Query API slices, which includes
- * both the reducer AND its associated middleware automatically.
+ * This function handles dynamic injection of RTK Query API slices:
+ * 
+ * 1. **Reducer Injection**: Uses RTK's `combineSlices().inject()` to add the slice reducer
+ * 2. **Middleware Injection**: Uses `createDynamicMiddleware` to add the API middleware
+ * 
+ * **Important**: `combineSlices().inject()` only handles the REDUCER, not the middleware.
+ * RTK Query API slices need their middleware injected separately for features like:
+ * - Caching
+ * - Cache invalidation
+ * - Polling
+ * - Request deduplication
+ * - Lifecycle management
  * 
  * **Idempotent**: Can be called multiple times with the same slice - only injects once.
  * 
- * ## How Middleware Injection Works
- * 
- * RTK 2.x's `combineSlices().withLazyLoadedSlices()` creates a special reducer that
- * has an `inject()` method. This method is designed to handle both:
- * 
- * 1. **Reducer Injection**: Adds the slice's reducer to the root reducer
- * 2. **Middleware Injection**: Automatically adds the slice's middleware to the store
- * 
- * ## RTK Query Middleware
- * 
- * Each RTK Query API slice created with `createApi()` includes its own middleware that handles:
- * - **Caching**: Stores response data and manages cache lifetime
- * - **Cache Invalidation**: Automatically refetches when tags are invalidated
- * - **Polling**: Manages automatic refetching at intervals
- * - **Optimistic Updates**: Handles optimistic cache updates
- * - **Request Deduplication**: Prevents duplicate requests for the same endpoint
- * - **Lifecycle Management**: Manages subscriptions and cleanup
- * 
- * ## Technical Details
- * 
- * When you call `currentReducer.inject(slice)`:
- * 
- * 1. RTK internally checks if the slice is an API slice (has `middleware` property)
- * 2. If it's an API slice, RTK automatically prepends the middleware to the store's middleware chain
- * 3. The new reducer (with the slice) is returned
- * 4. `store.replaceReducer()` updates the store with both the new reducer AND middleware
- * 
- * This is why we don't need to manually call `store.middleware.push()` or similar - RTK handles
- * it transparently through the `inject()` method.
- * 
  * ## References
  * 
- * - RTK withLazyLoadedSlices: https://redux-toolkit.js.org/api/combineSlices#withlazyloadedslices
+ * - RTK createDynamicMiddleware: https://redux-toolkit.js.org/api/createDynamicMiddleware
+ * - RTK combineSlices: https://redux-toolkit.js.org/api/combineSlices#withlazyloadedslices
  * - RTK Query Code Splitting: https://redux-toolkit.js.org/rtk-query/usage/code-splitting
- * - RTK Query Middleware: https://redux-toolkit.js.org/rtk-query/api/createApi#middleware
  * 
- * @param slice - The RTK Query API slice to inject (must be one of the LazyApiSlice types)
+ * @param store - The Redux store instance
+ * @param slice - The RTK Query API slice to inject
  * 
  * @example
  * ```typescript
  * // In a React component
+ * import { useAppStore } from '../../app/hooks'
  * import { moviesApiSlice } from './paginatedTableApi'
  * import { injectApiSlice } from '../../app/configureStore'
  * 
- * // Inject the slice (both reducer and middleware)
- * injectApiSlice(moviesApiSlice)
- * 
- * // Now RTK Query hooks will work with full middleware support
- * const { data } = useGetMoviesQuery()
+ * function MoviePage() {
+ *   const store = useAppStore()
+ *   
+ *   // Inject the slice (both reducer and middleware)
+ *   injectApiSlice(store, moviesApiSlice)
+ *   
+ *   // Now RTK Query hooks will work with full middleware support
+ *   const { data } = useGetMoviesQuery()
+ * }
  * ```
  */
-export function injectApiSlice(slice: LazyApiSlice) {
-  if (!storeInstance) {
-    throw new Error("Store not initialized. Call initStore() first.")
-  }
-  
+export function injectApiSlice(store: AppStore, slice: LazyApiSlice) {
+  const manager = getStoreManager(store)
+
   // Check if this slice has already been injected (idempotent)
   const sliceKey = slice.reducerPath
-  if (injectedSlices.has(sliceKey)) {
-    return  // Already injected, skip
+  if (manager.injectedSlices.has(sliceKey)) {
+    return // Already injected, skip
   }
-  
-  // Use the reducer's inject method which handles both reducer and middleware
-  // RTK internally detects if the slice has middleware and adds it to the store
-  currentReducer = currentReducer.inject(slice) as typeof currentReducer
-  
-  // Replace the store's reducer with the updated one that includes the new slice
-  // This single call updates both the reducer tree AND the middleware chain
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-  storeInstance.replaceReducer(currentReducer)
-  
+
+  // 1. Inject the REDUCER using combineSlices().inject()
+  manager.currentReducer = manager.currentReducer.inject(slice) as typeof manager.currentReducer
+  store.replaceReducer(manager.currentReducer)
+
+  // 2. Inject the MIDDLEWARE using createDynamicMiddleware
+  // This is critical - combineSlices().inject() does NOT inject middleware
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  manager.dynamicMiddleware.addMiddleware(slice.middleware as any)
+
   // Mark this slice as injected
-  injectedSlices.add(sliceKey)
+  manager.injectedSlices.add(sliceKey)
 }
 
-// Registry of API reset actions - populated by features as they load
-// Type constrained to the known lazy-loaded API slices
-type ApiResetAction = ReturnType<LazyApiSlice["util"]["resetApiState"]>
-const apiResetActions: (() => ApiResetAction)[] = []
-
-export function registerApiResetAction(resetAction: () => ApiResetAction) {
-  if (!apiResetActions.includes(resetAction)) {
-    apiResetActions.push(resetAction)
+/**
+ * Register an API reset action for dev/e2e cache clearing
+ * 
+ * @param store - The Redux store instance
+ * @param resetAction - Function that returns the reset action
+ */
+export function registerApiResetAction(
+  store: AppStore,
+  resetAction: () => ReturnType<LazyApiSlice["util"]["resetApiState"]>,
+) {
+  const manager = getStoreManager(store)
+  if (!manager.apiResetActions.includes(resetAction)) {
+    manager.apiResetActions.push(resetAction)
   }
 }
 
-export const getResetApiActions = () => apiResetActions.map(fn => fn())
-
-export type ExtraType = {
-  authProvider: AuthProvider
+/**
+ * Get all registered API reset actions
+ * Used in dev/e2e mode to clear all API caches
+ * 
+ * @param store - The Redux store instance
+ * @returns Array of reset action creators
+ */
+export function getResetApiActions(store: AppStore) {
+  const manager = getStoreManager(store)
+  return manager.apiResetActions.map(fn => fn())
 }
-
-export type AppStore = ReturnType<typeof initStore>
-// Infer the `AppDispatch` type from the store itself
-export type AppDispatch = AppStore["dispatch"]
-export type AppThunk<ThunkReturnType = void> = ThunkAction<
-  ThunkReturnType,
-  AppState,
-  ExtraType,
-  Action
->
