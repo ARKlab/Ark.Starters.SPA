@@ -29,15 +29,9 @@ export const i18nSetup = async () => {
     .init({
       // Backend configuration for loading translations
       backend: {
-        // Load path for translation files
-        // This will make requests to /locales/{lng}/{ns}.json
         loadPath: "/locales/{{lng}}/{{ns}}.json",
-        
-        // Allow cross-domain requests (needed for dev server)
         crossDomain: false,
-        
-        // Parse data as JSON
-        parse: (data: string) => JSON.parse(data),
+        parse: (data: string) => JSON.parse(data) as Record<string, unknown>,
       },
 
       // Language detection configuration

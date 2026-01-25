@@ -1,6 +1,9 @@
 /// <reference types="vite/client" />
 /// <reference types="vite-plugin-svgr/client" />
 
+import fs from "fs";
+import path from "path";
+
 import msw from "@iodigital/vite-plugin-msw";
 import legacy from "@vitejs/plugin-legacy";
 import react from "@vitejs/plugin-react";
@@ -27,20 +30,14 @@ function i18nextBackendHMR(): Plugin {
   return {
     name: "vite-plugin-i18next-backend-hmr",
     
-    // Copy locale files to public/locales on build start
     buildStart() {
-      const fs = require("fs");
-      const path = require("path");
+      const srcLocalesDir = path.resolve(process.cwd(), "src/locales");
+      const publicLocalesDir = path.resolve(process.cwd(), "public/locales");
       
-      const srcLocalesDir = path.resolve(__dirname, "src/locales");
-      const publicLocalesDir = path.resolve(__dirname, "public/locales");
-      
-      // Create public/locales directory if it doesn't exist
       if (!fs.existsSync(publicLocalesDir)) {
         fs.mkdirSync(publicLocalesDir, { recursive: true });
       }
       
-      // Copy all locale files
       const languages = fs.readdirSync(srcLocalesDir);
       for (const lang of languages) {
         const langSrcDir = path.join(srcLocalesDir, lang);
@@ -66,13 +63,10 @@ function i18nextBackendHMR(): Plugin {
     
     handleHotUpdate({ file, server }) {
       if (file.includes("/locales/") && file.endsWith(".json")) {
-        const fs = require("fs");
-        const path = require("path");
-        
         console.log("[i18next-hmr] Locale file changed:", file);
         
-        const relativePath = path.relative(path.resolve(__dirname, "src/locales"), file);
-        const publicPath = path.resolve(__dirname, "public/locales", relativePath);
+        const relativePath = path.relative(path.resolve(process.cwd(), "src/locales"), file);
+        const publicPath = path.resolve(process.cwd(), "public/locales", relativePath);
         const publicDir = path.dirname(publicPath);
         
         if (!fs.existsSync(publicDir)) {
