@@ -8,6 +8,7 @@ import * as z from "zod";
 import { supportedLngs } from "../../config/lang";
 
 import { addCustomFormatters } from "./formatters";
+import { setupI18nextHMR } from "./hmr";
 
 const langs = import.meta.env.MODE == "e2e" ? { en: "en" } : supportedLngs;
 const fallbackLng = Object.keys(langs)[0];
@@ -102,4 +103,7 @@ export const i18nSetup = async () => {
 
   // Add custom formatters for date formatting
   addCustomFormatters(i18next);
+  
+  // Setup HMR for development
+  setupI18nextHMR();
 };

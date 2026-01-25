@@ -64,7 +64,6 @@ function i18nextBackendHMR(): Plugin {
       }
     },
     
-    // Handle HMR for locale files during development
     handleHotUpdate({ file, server }) {
       if (file.includes("/locales/") && file.endsWith(".json")) {
         const fs = require("fs");
@@ -72,7 +71,6 @@ function i18nextBackendHMR(): Plugin {
         
         console.log("[i18next-hmr] Locale file changed:", file);
         
-        // Copy changed file to public directory
         const relativePath = path.relative(path.resolve(__dirname, "src/locales"), file);
         const publicPath = path.resolve(__dirname, "public/locales", relativePath);
         const publicDir = path.dirname(publicPath);
@@ -83,10 +81,14 @@ function i18nextBackendHMR(): Plugin {
         
         fs.copyFileSync(file, publicPath);
         
-        // Trigger full page reload to reload i18next resources
+        const pathParts = relativePath.split(path.sep);
+        const lng = pathParts[0];
+        const ns = path.basename(pathParts[1], ".json");
+        
         server.ws.send({
-          type: "full-reload",
-          path: "*",
+          type: "custom",
+          event: "i18next-hmr-reload",
+          data: { lng, ns, path: `/locales/${lng}/${ns}.json` },
         });
       }
     },
@@ -148,7 +150,6 @@ export default defineConfig(({ mode }) => {
           plugins: [["babel-plugin-react-compiler", {}]],
         },
       }),
-      // NOTE: vite-tsconfig-paths plugin removed - using native resolve.tsconfigPaths instead (Vite 8+)
       reactClickToComponent(),
       VitePWA({
         disable: mode == "e2e", // disable PWA in e2e mode due to conflict with MSW (only 1 ServiceWorker can be registered)
@@ -222,8 +223,6 @@ export default defineConfig(({ mode }) => {
         }),
     ],
     resolve: {
-      // Vite 8+ native support for TypeScript path mappings from tsconfig.json
-      // Replaces vite-tsconfig-paths plugin for better performance
       tsconfigPaths: true,
     },
     test: {
