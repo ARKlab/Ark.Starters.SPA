@@ -38,9 +38,11 @@ import {
   tableSlotRecipe,
   tagsInputSlotRecipe,
   tooltipSlotRecipe,
-  // Import tokens and semanticTokens from Chakra theme
-  tokens as chakraTokens,
-  semanticTokens as chakraSemanticTokens,
+  // Import tokens and semanticTokens
+  // Note: Selective token imports (e.g., only borders, colors) don't reduce bundle size
+  // because bundlers can't tree-shake object properties. See TOKEN_TREESHAKING_ANALYSIS.md
+  tokens,
+  semanticTokens,
 } from "@chakra-ui/react/theme"
 
 const config = defineConfig({
@@ -95,9 +97,8 @@ const config = defineConfig({
       tooltip: tooltipSlotRecipe as any,
     },
     semanticTokens: {
-      // Merge Chakra's semantic tokens with our custom ones
       colors: {
-        ...chakraSemanticTokens.colors,
+        ...semanticTokens.colors,
         // Custom semantic tokens for this project
         header: {
           value: { base: "{colors.blue.200}", _dark: "{colors.cyan.700}" },
@@ -150,16 +151,15 @@ const config = defineConfig({
           focusRing: { value: { base: "#b5cea8", _dark: "#56b6c2" } },
         },
       },
-      // Merge other semantic token categories from Chakra
-      ...Object.fromEntries(
-        Object.entries(chakraSemanticTokens).filter(([key]) => key !== "colors")
-      ),
+      shadows: semanticTokens.shadows,
+      radii: semanticTokens.radii,
     },
 
     tokens: {
-      // Merge Chakra's tokens with our custom ones
-      ...chakraTokens,
-      // Override/extend with custom tokens
+      // Import all Chakra tokens
+      // Note: Selective imports don't reduce bundle size (see TOKEN_TREESHAKING_ANALYSIS.md)
+      ...tokens,
+      // Override/extend specific categories with custom values
       breakpoints: {
         sm: { value: "480px" },
         md: { value: "768px" },
@@ -168,16 +168,16 @@ const config = defineConfig({
         "2xl": { value: "1536px" },
       },
       spacing: {
-        ...chakraTokens.spacing,
+        ...tokens.spacing,
         inherit: { value: "inherit" },
         "0": { value: "0rem" },
       },
       sizes: {
-        ...chakraTokens.sizes,
+        ...tokens.sizes,
         "0": { value: "0" }, // needed for "flex" for minWidth and minHeight
       },
       colors: {
-        ...chakraTokens.colors,
+        ...tokens.colors,
         brandPalette: {
           100: { value: "#e4f1ff" },
           200: { value: "#7F7A91" },
@@ -196,7 +196,7 @@ const config = defineConfig({
         },
       },
       fonts: {
-        ...chakraTokens.fonts,
+        ...tokens.fonts,
         heading: { value: `'PTSansRegular', sans-serif` },
         body: { value: `'PTSansRegular', sans-serif` },
       },
