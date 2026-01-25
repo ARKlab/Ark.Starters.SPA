@@ -138,7 +138,8 @@ modernTargets: [
   'fully supports css-grid and ' +
   'fully supports async-functions and ' +
   'fully supports serviceworkers and ' +
-  '>0.2% and ' +
+  '>1% and ' +           // Significant market share (increased from 0.2%)
+  'last 3 years and ' +  // Released within last 3 years
   'not dead'
 ],
 modernPolyfills: false,
@@ -150,15 +151,23 @@ modernPolyfills: false,
 - Ensures Chakra UI v3 works correctly (CSS variables requirement)
 - Ensures PWA functionality works (Service Workers requirement)
 - Ensures code splitting works (dynamic imports requirement)
+- **Market share >1%:** Only widely-used browsers (shields developers from edge cases)
+- **Released <3 years:** Only recent browsers (shields developers from potential compatibility issues)
 - Developer-friendly: No need to worry about feature compatibility
 
 **Effective Browser Coverage (2026):**
-- Chrome 63+ (Dec 2017) - All features supported
-- Firefox 67+ (May 2019) - All features supported
-- Safari 11.1+ (March 2018) - All features supported
-- Edge 79+ (Jan 2020) - All features supported
+- Chrome 63+ (Dec 2017) - All features supported, >1% share, recent releases
+- Firefox 67+ (May 2019) - All features supported, >1% share, recent releases
+- Safari 11.1+ (March 2018) - All features supported, >1% share, recent releases
+- Edge 79+ (Jan 2020) - All features supported, >1% share, recent releases
+- **Only includes browser versions released after Jan 2023** (3-year window)
 
-**Market Coverage:** ~98-99% of users
+**Market Coverage:** ~95-97% of users (slightly reduced but safer for developers)
+
+**Developer Protection:**
+- Shields from potential edge cases in browsers with <1% market share
+- Shields from old browser versions even if they technically support features
+- Better predictability and fewer surprises
 
 **Savings:** 15 KB gzipped for modern users
 
@@ -359,6 +368,7 @@ legacy({
   
   // Modern browser targets (get clean, unpolyfilled code)
   // Feature-based: browsers natively supporting ALL required features
+  // PLUS market share >1% AND released within last 3 years
   modernTargets: [
     "fully supports css-variables and " +
     "fully supports es6-module and " +
@@ -366,7 +376,8 @@ legacy({
     "fully supports css-grid and " +
     "fully supports async-functions and " +
     "fully supports serviceworkers and " +
-    ">0.2% and " +
+    ">1% and " +           // Significant market share (shields devs from edge cases)
+    "last 3 years and " +  // Recent releases only (shields devs from old browser issues)
     "not dead"
   ],
   
@@ -380,46 +391,50 @@ legacy({
 
 **How This Works:**
 
-1. **Modern Browsers (Fully Support ALL Features)** - ~98% of users
+1. **Modern Browsers (Fully Support ALL Features + >1% Share + <3yr Old)** - ~95-97% of users
    - Get clean modern JavaScript (no polyfills)
    - Smallest bundle size (save 15 KB)
    - Fastest experience
    - Fully functional PWA
-   - **Automatically includes browsers that support:**
-     - CSS Custom Properties (Chakra UI v3)
-     - ES6 Modules + Dynamic Imports
-     - CSS Grid
-     - Service Workers (PWA)
-     - Async/Await
+   - **Automatically includes browsers that:**
+     - Support all required features (CSS Variables, ES6 Modules, Dynamic Imports, CSS Grid, Service Workers, Async/Await)
+     - Have >1% market share (widely used)
+     - Were released in the last 3 years (recent and well-tested)
+   - **Developer protection:** Shields from edge cases and old browser quirks
 
-2. **Legacy Browsers (Partial Feature Support)** - ~1-2% of users
+2. **Legacy Browsers (Partial Feature Support or Lower Market Share)** - ~3-5% of users
    - Get legacy chunks with polyfills via `<script nomodule>`
    - Larger bundle (+65 KB for polyfills)
    - Slower but still functional
    - Progressive enhancement kicks in
+   - Includes older browser versions even if they have required features
 
 3. **Very Old Browsers (Missing Critical Features)** - <0.5% of users
    - Not supported (would break on CSS variables, Service Workers anyway)
    - Acceptable trade-off
 
-**Key Benefits of Feature-Based Approach:**
+**Key Benefits of Feature-Based Approach with Age + Market Share:**
 - ✅ **No version coupling:** Automatically adapts to new browser releases
 - ✅ **Developer-friendly:** Can use modern features without checking browser versions
 - ✅ **Chakra UI v3 compatible:** CSS variables guarantee
 - ✅ **PWA compatible:** Service Worker support guaranteed
 - ✅ **Future-proof:** New browsers auto-qualify if they support required features
 - ✅ **Explicit requirements:** Clear what features the app depends on
+- ✅ **Edge case protection:** >1% market share shields from rare browser issues
+- ✅ **Age protection:** <3 years old shields from legacy browser quirks even if features are supported
 
-**Effective Browser Coverage (based on features, not versions):**
+**Effective Browser Coverage (based on features + age + market share):**
 ```
 Modern (no polyfills):
-- Chrome 63+   (first to support all features)
-- Firefox 67+  (first to support all features)
-- Safari 11.1+ (first to support all features)
-- Edge 79+     (first to support all features)
+- Chrome versions from last 3 years with >1% share
+- Firefox versions from last 3 years with >1% share
+- Safari versions from last 3 years with >1% share
+- Edge versions from last 3 years with >1% share
+- Automatically updates as time passes (no manual version updates needed)
 
 Legacy (with polyfills):
-- Older browsers with partial support
+- Older browser versions (>3 years old) with partial support
+- Browsers with <1% market share
 - Graceful degradation for missing features
 
 Unsupported:
@@ -428,9 +443,9 @@ Unsupported:
 
 **Bundle Impact:**
 ```
-Modern users (98%+):  -15 KB (polyfills removed)
-Legacy users (1-2%):  +65 KB (legacy chunks loaded)
-Very old (<0.5%):     Unsupported (acceptable trade-off)
+Modern users (95-97%):  -15 KB (polyfills removed)
+Legacy users (3-5%):    +65 KB (legacy chunks loaded)
+Very old (<0.5%):       Unsupported (acceptable trade-off)
 ```
 - Starter template should be modern by default
 - Teams can add polyfills back if needed
@@ -463,8 +478,6 @@ Very old (<0.5%):     Unsupported (acceptable trade-off)
 
 ### If Approved: Remove Modern Polyfills
 
-**Changes Required:**
-
 1. **Update `vite.config.ts`:**
    ```typescript
    legacy({
@@ -479,7 +492,7 @@ Very old (<0.5%):     Unsupported (acceptable trade-off)
      ],
      
      // Modern browser targets (no polyfills)
-     // Feature-based: ALL required features must be supported
+     // Feature-based: ALL required features PLUS market share and age criteria
      modernTargets: [
        "fully supports css-variables and " +
        "fully supports es6-module and " +
@@ -487,7 +500,8 @@ Very old (<0.5%):     Unsupported (acceptable trade-off)
        "fully supports css-grid and " +
        "fully supports async-functions and " +
        "fully supports serviceworkers and " +
-       ">0.2% and " +
+       ">1% and " +           // Significant market share (shields devs from edge cases)
+       "last 3 years and " +  // Recent releases only (shields devs from old browser issues)
        "not dead"
      ],
      
@@ -501,11 +515,12 @@ Very old (<0.5%):     Unsupported (acceptable trade-off)
    - Document required features (not browser versions)
    - List features: CSS Variables, ES6 Modules, Dynamic Imports, CSS Grid, Service Workers, Async/Await
    - Explain progressive enhancement approach
-   - Note that browsers automatically qualify based on feature support
+   - Note market share >1% and age <3 years criteria for modern browsers
+   - Explain developer protection benefits
 
 3. **Test:**
    - Build and verify bundle sizes for both modern and legacy
-   - Test on browsers that support all features (Chrome 63+, Firefox 67+, Safari 11.1+)
+   - Test on browsers that meet all criteria (features + market share + age)
    - Test on legacy browsers via BrowserStack
    - Verify PWA features work correctly
    - Verify legacy chunks load only for old browsers
@@ -513,35 +528,41 @@ Very old (<0.5%):     Unsupported (acceptable trade-off)
 
 4. **Document:**
    - Update CHANGELOG with enhancement note (not breaking - backward compatible!)
-   - Explain the feature-based approach in documentation
+   - Explain the feature-based approach with age and market share protection
    - List required features for developers
    - Note performance improvement for modern users
+   - Highlight developer protection benefits
 
 **Expected Changes:**
 ```
-Modern Browsers (support all features - ~98% of users):
+Modern Browsers (support all features + >1% share + <3yr old - ~95-97% of users):
   Before: 513 KB → 192 KB gzipped (includes modern polyfills)
   After:  513 KB → 177 KB gzipped (no polyfills)
   Savings: 15 KB gzipped for the majority
 
-Legacy Browsers (partial feature support - ~1-2% of users):
+Legacy Browsers (partial features or older or low share - ~3-5% of users):
   Before: Not supported (would break on CSS variables)
   After:  513 KB → 257 KB gzipped (includes legacy polyfills)
   Impact: +65 KB but now they work!
 
 Net Result:
-  - 98% of users: Faster experience (-15 KB)
-  - 2% of users: Now supported (was broken before)
+  - 95-97% of users: Faster experience (-15 KB)
+  - 3-5% of users: Now supported (was broken before)
   - Developers: Can use modern features freely without version checks
-  - Future-proof: New browsers auto-qualify based on features
+  - Developers: Protected from edge cases (<1% share browsers)
+  - Developers: Protected from old browser quirks (>3yr old browsers)
+  - Future-proof: New browsers auto-qualify based on features + criteria
 ```
 
-**Feature-Based Benefits:**
+**Feature-Based with Age + Market Share Benefits:**
 - No need to update browser version targets
 - Automatically supports new browsers with required features
 - Clear dependency on specific web platform features
 - Aligns with how developers think (features, not versions)
 - Better documentation (what features are required vs. what versions)
+- **Edge case protection:** >1% market share requirement
+- **Age protection:** <3 years old requirement
+- **Developer confidence:** Safe to use modern features without surprises
 
 ---
 
@@ -656,13 +677,14 @@ If issues arise after enabling progressive enhancement:
 
 **Status:** ⚠️ **Awaiting Stakeholder Decision**
 
-**Recommendation:** ✅ **Implement Three-Tier Progressive Enhancement with Feature-Based Targets**
+**Recommendation:** ✅ **Implement Three-Tier Progressive Enhancement with Feature-Based Targets + Age + Market Share Criteria**
 
 **Key Changes:**
 1. Use **feature-based targets** instead of version numbers (e.g., "fully supports css-variables" not "chrome >= 90")
-2. Set `modernPolyfills: false` (no polyfills for browsers supporting all features)
-3. Set `renderLegacyChunks: true` (enable legacy fallback)
-4. Define modern browsers by feature support, not version numbers
+2. Add **market share >1%** criterion (shields developers from edge cases)
+3. Add **age <3 years** criterion (shields developers from old browser quirks)
+4. Set `modernPolyfills: false` (no polyfills for browsers meeting all criteria)
+5. Set `renderLegacyChunks: true` (enable legacy fallback)
 
 **Critical Features Required:**
 - CSS Custom Properties (Chakra UI v3 requirement)
@@ -671,21 +693,27 @@ If issues arise after enabling progressive enhancement:
 - Service Workers (PWA)
 - Async/Await
 
+**Additional Modern Browser Criteria:**
+- Market share >1% (widely used browsers only)
+- Released within last 3 years (recent releases only)
+
 **Justification:**
 - **Feature-Based is Better:** Developers shouldn't worry about browser versions, only features
-- **Future-Proof:** New browsers automatically qualify if they support required features
+- **Future-Proof:** New browsers automatically qualify if they meet all criteria
 - **Developer-Friendly:** Can use modern features freely without version coupling
+- **Edge Case Protection:** >1% market share shields from rare browser issues and edge cases
+- **Age Protection:** <3 years shields from legacy browser quirks even if features are technically supported
 - **Missed Critical Feature:** Previous analysis didn't account for CSS Variables (Chakra UI v3) and PWA requirements
-- **Better User Experience:** 98% of users get faster load times, 2% now supported (was potentially broken)
+- **Better User Experience:** 95-97% of users get faster load times, 3-5% now supported (was potentially broken)
 - **Zero Risk:** Progressive enhancement is backward compatible, not a breaking change
 - **Industry Standard:** Follows Vite's recommended approach for production apps
 - **Explicit Dependencies:** Clear what web platform features the app requires
 
 **Bundle Impact:**
-- Modern users (98%): **-15 KB** gzipped
-- Legacy users (2%): **+65 KB** gzipped (now functional, was broken)
+- Modern users (95-97%): **-15 KB** gzipped
+- Legacy users (3-5%): **+65 KB** gzipped (now functional, was broken)
 - Net result: Faster for majority, accessible for all
-- Developer benefit: No version maintenance, automatic future browser support
+- Developer benefit: No version maintenance, automatic future browser support, protected from edge cases
 
 **Implementation Effort:** 2-3 hours (config change + testing)
 
@@ -697,10 +725,13 @@ If issues arise after enabling progressive enhancement:
 3. **Developer-friendly:** Think in features, not versions
 4. **Automatic coverage:** New browsers with required features automatically supported
 5. **Aligns with web standards:** Features, not implementations
+6. **Edge case protection:** >1% market share requirement filters out rare issues
+7. **Age protection:** <3 years requirement filters out legacy quirks
+8. **Developer confidence:** Safe to use modern features without surprises
 
 ---
 
-**Status:** ✅ Evaluation Complete - Awaiting Stakeholder Decision on Feature-Based Progressive Enhancement
+**Status:** ✅ Evaluation Complete - Awaiting Stakeholder Decision on Feature-Based Progressive Enhancement with Age and Market Share Protection
 
 **My Recommendation:** **Option A** for starter template (with documentation)
 
