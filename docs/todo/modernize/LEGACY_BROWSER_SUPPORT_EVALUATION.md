@@ -121,6 +121,8 @@ Based on analysis of the project's dependencies and code:
    
 4. **CSS Grid** - Used extensively in Chakra UI components
    - Chrome 57+, Firefox 52+, Safari 10.1+, Edge 16+
+   - ⚠️ **Critical:** CSS Grid polyfills cause rendering problems
+   - Must be natively supported (no polyfill fallback)
    
 5. **Service Workers** - Required for PWA functionality
    - Chrome 45+, Firefox 44+, Safari 11.1+, Edge 17+
@@ -368,9 +370,11 @@ modernPolyfills: true,
 legacy({
   // Legacy browser targets (browsers that need polyfills)
   // Feature-based for browsers lacking modern features
+  // CSS Grid polyfills cause rendering problems, so require native support
   targets: [
     "supports es6-module",           // Basic module support
     "supports css-variables",         // Chakra UI v3 requirement
+    "supports css-grid",              // Layouts (polyfills cause issues)
     "supports serviceworkers",        // PWA requirement
     ">0.5%",                          // Market share threshold
     "not dead",                       // Still maintained

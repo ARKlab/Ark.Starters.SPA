@@ -819,9 +819,11 @@ Implement three-tier progressive enhancement using Web Platform Baseline for opt
 ```typescript
 legacy({
   // Legacy targets (browsers needing polyfills)
+  // CSS Grid polyfills cause rendering problems, so require native support
   targets: [
     "supports es6-module",
     "supports css-variables",
+    "supports css-grid",           // Layouts (polyfills cause issues)
     "supports serviceworkers",
     ">0.5%",
     "not dead",

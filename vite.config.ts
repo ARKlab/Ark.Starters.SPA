@@ -32,9 +32,11 @@ export default defineConfig(({ mode }) => {
       legacy({
         // Legacy browser targets (browsers that need polyfills)
         // Feature-based for browsers lacking modern features
+        // CSS Grid polyfills cause rendering problems, so require native support
         targets: [
           "supports es6-module",        // Basic module support
           "supports css-variables",      // Chakra UI v3 requirement
+          "supports css-grid",           // Layouts (polyfills cause issues)
           "supports serviceworkers",     // PWA requirement
           ">0.5%",                       // Market share threshold
           "not dead",                    // Still maintained
