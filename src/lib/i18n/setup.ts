@@ -1,7 +1,7 @@
 import { makeZodI18nMap } from "@semihbou/zod-i18n-map";
-import i18next, { getFixedT, use as i18nUse } from "i18next";
+import i18next, { getFixedT } from "i18next";
+import resourcesToBackend from "i18next-resources-to-backend";
 import { initReactI18next } from "react-i18next";
-import { I18nAllyClient } from "vite-plugin-i18n-ally/client";
 import * as z from "zod";
 
 import { supportedLngs } from "../../config/lang";
@@ -12,109 +12,119 @@ const langs = import.meta.env.MODE == "e2e" ? { en: "en" } : supportedLngs;
 const fallbackLng = Object.keys(langs)[0];
 const lookupTarget = "lang";
 
+/**
+ * Detects the user's preferred language using multiple strategies
+ * Order: query string -> localStorage -> browser language -> HTML tag
+ */
+function detectLanguage(): string {
+  // 1. Check query string (?lang=en)
+  const params = new URLSearchParams(window.location.search);
+  const langFromQuery = params.get(lookupTarget);
+  if (langFromQuery && Object.keys(langs).includes(langFromQuery)) {
+    return langFromQuery;
+  }
+
+  // 2. Check localStorage
+  const savedLang = localStorage.getItem(`i18next_${lookupTarget}`);
+  if (savedLang && Object.keys(langs).includes(savedLang)) {
+    return savedLang;
+  }
+
+  // 3. Check browser language
+  const browserLang = navigator.language?.split("-")[0];
+  if (browserLang && Object.keys(langs).includes(browserLang)) {
+    return browserLang;
+  }
+
+  // 4. Check HTML tag lang attribute
+  const htmlLang = document.documentElement.lang?.split("-")[0];
+  if (htmlLang && Object.keys(langs).includes(htmlLang)) {
+    return htmlLang;
+  }
+
+  // 5. Fallback to default
+  return fallbackLng;
+}
+
 export const i18nSetup = async () => {
   if (i18next.isInitialized) return;
+
   const zodNs = ["zodCustom", "zod"];
-  i18nUse(initReactI18next);
-  await new Promise<void>(resolve => {
-    const i18 = new I18nAllyClient({
-      async onBeforeInit({ lng, ns }) {
-        await i18next
-          .use(initReactI18next)
-          // Initialize the i18next instance.
-          .init({
-            // Config options
-            load: "languageOnly",
-            ns: ns,
-            // Specifies the default language (locale) used
-            // when a user visits our site for the first time.
-            // We use English here, but feel free to use
-            // whichever locale you want.
-            // disabled: conflict with LanguageDetector
-            lng: lng,
+  const detectedLang = detectLanguage();
 
-            // Fallback locale used when a translation is
-            // missing in the active locale. Again, use your
-            // preferred locale here.
-            fallbackLng: fallbackLng,
-            supportedLngs: Object.keys(supportedLngs),
+  // All available namespaces
+  const namespaces = ["translation", "libComponents", "gdpr", "zodCustom", "template"];
 
-            // Enables useful output in the browser’s
-            // dev console.
-            debug: import.meta.env.DEV,
-            appendNamespaceToCIMode: true,
-            appendNamespaceToMissingKey: true,
-            returnNull: false,
-            // if a key is empty, returns the key
-            returnEmptyString: false,
+  await i18next
+    .use(initReactI18next)
+    .use(
+      resourcesToBackend((language: string, namespace: string) => {
+        // Dynamic import for lazy loading with HMR support
+        // Vite will bundle these per language automatically
+        return import(`../../locales/${language}/${namespace}.json`);
+      })
+    )
+    .init({
+      // Config options
+      load: "languageOnly",
+      ns: namespaces,
+      defaultNS: "translation",
 
-            // Normally, we want `escapeValue: true` as it
-            // ensures that i18next escapes any code in
-            // translation messages, safeguarding against
-            // XSS (cross-site scripting) attacks. However,
-            // React does this escaping itself, so we turn
-            // it off in i18next.
-            interpolation: {
-              escapeValue: false,
-            },
+      // Specifies the default language (locale) used
+      // Detected from query string, localStorage, browser, or HTML tag
+      lng: detectedLang,
 
-            nsSeparator: ":",
+      // Fallback locale used when a translation is
+      // missing in the active locale
+      fallbackLng: fallbackLng,
+      supportedLngs: Object.keys(langs),
 
-            react: {
-              useSuspense: true,
-            },
+      // Enables useful output in the browser's dev console
+      debug: import.meta.env.DEV,
+      appendNamespaceToCIMode: true,
+      appendNamespaceToMissingKey: true,
+      returnNull: false,
+      // if a key is empty, returns the key
+      returnEmptyString: false,
 
-            // empty resources to avoid startup warning
-            resources: {},
-
-            nonExplicitSupportedLngs: true,
-            cleanCode: true,
-            lowerCaseLng: true,
-          });
+      // Normally, we want `escapeValue: true` as it
+      // ensures that i18next escapes any code in
+      // translation messages, safeguarding against
+      // XSS (cross-site scripting) attacks. However,
+      // React does this escaping itself, so we turn
+      // it off in i18next.
+      interpolation: {
+        escapeValue: false,
       },
-      onInited() {
-        const t = getFixedT(null, zodNs);
 
-        z.config({
-          customError: makeZodI18nMap({ t, ns: zodNs, handlePath: { keyPrefix: "paths" } }),
-        });
+      nsSeparator: ":",
 
-        // Add custom formatters for date formatting
-        addCustomFormatters(i18next);
-
-        resolve();
+      react: {
+        useSuspense: true,
       },
-      onResourceLoaded: (resources, { lng, ns }) => {
-        i18next.addResourceBundle(lng, ns ?? "translation", resources);
-      },
-      fallbackLng,
-      detection: [
-        {
-          detect: "querystring",
-          lookup: lookupTarget,
-          cache: false,
-        },
-        {
-          detect: "localStorage",
-          cache: true,
-          lookup: lookupTarget,
-        },
-        {
-          detect: "navigator",
-        },
-        {
-          detect: "htmlTag",
-        },
-      ],
+
+      nonExplicitSupportedLngs: true,
+      cleanCode: true,
+      lowerCaseLng: true,
     });
 
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    const _changeLanguage = i18next.changeLanguage;
-    i18next.changeLanguage = async (lang: string, ...args) => {
-      // Load resources before language change
-
-      await (i18.asyncLoadResource as (lang: string) => Promise<void>)(lang);
-      return _changeLanguage(lang, ...args);
-    };
+  // Configure Zod with i18next translations
+  const t = getFixedT(null, zodNs);
+  z.config({
+    customError: makeZodI18nMap({ t, ns: zodNs, handlePath: { keyPrefix: "paths" } }),
   });
+
+  // Add custom formatters for date formatting
+  addCustomFormatters(i18next);
+
+  // Save detected language to localStorage for persistence
+  localStorage.setItem(`i18next_${lookupTarget}`, detectedLang);
+
+  // Override changeLanguage to save to localStorage
+  const originalChangeLanguage = i18next.changeLanguage.bind(i18next);
+  i18next.changeLanguage = async (lang: string, ...args) => {
+    const result = await originalChangeLanguage(lang, ...args);
+    localStorage.setItem(`i18next_${lookupTarget}`, lang);
+    return result;
+  };
 };

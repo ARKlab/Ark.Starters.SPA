@@ -7,8 +7,7 @@ import react from "@vitejs/plugin-react";
 import copy from "rollup-plugin-copy";
 import { visualizer } from "rollup-plugin-visualizer";
 import Info from "unplugin-info/vite";
-import { defineConfig, loadEnv } from "vite";
-import { i18nAlly } from "vite-plugin-i18n-ally";
+import { defineConfig, loadEnv, type Plugin } from "vite";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import istanbul from "vite-plugin-istanbul";
 import oxlint from "vite-plugin-oxlint";
@@ -19,6 +18,28 @@ import svgr from "vite-plugin-svgr";
 import { supportedLngs } from "./src/config/lang";
 
 const chunkSizeLimit = 10048;
+
+/**
+ * Lightweight Vite plugin for i18n HMR support
+ * Triggers i18next resource reload when locale files change
+ */
+function i18nHMR(): Plugin {
+  return {
+    name: "vite-plugin-i18n-hmr",
+    handleHotUpdate({ file, server }) {
+      // Check if the changed file is a locale JSON file
+      if (file.includes("/locales/") && file.endsWith(".json")) {
+        console.log("[i18n-hmr] Locale file changed:", file);
+        // Trigger full page reload to reload i18next resources
+        // This is simpler and more reliable than selective resource reloading
+        server.ws.send({
+          type: "full-reload",
+          path: "*",
+        });
+      }
+    },
+  };
+}
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -127,7 +148,8 @@ export default defineConfig(({ mode }) => {
         }),
         hook: "buildStart",
       }),
-      i18nAlly(),
+      // Lightweight HMR plugin for locale files
+      i18nHMR(),
       oxlint({
         path: "src",
       }),
