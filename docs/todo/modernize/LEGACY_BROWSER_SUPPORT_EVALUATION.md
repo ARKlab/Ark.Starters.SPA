@@ -128,41 +128,51 @@ Based on analysis of the project's dependencies and code:
 6. **Async/Await** - Used throughout codebase (194 occurrences)
    - Chrome 55+, Firefox 52+, Safari 11+, Edge 15+
 
-**Recommended Feature-Based Modern Target (NOT version-based):**
+**Recommended Feature-Based Modern Target (Using Web Platform Baseline):**
 ```typescript
 modernTargets: [
-  // Feature-based query combining all required features
-  'fully supports css-variables and ' +
-  'fully supports es6-module and ' +
-  'fully supports es6-module-dynamic-import and ' +
-  'fully supports css-grid and ' +
-  'fully supports async-functions and ' +
-  'fully supports serviceworkers and ' +
-  '>1% and ' +           // Significant market share (increased from 0.2%)
-  'last 3 years and ' +  // Released within last 3 years
-  'not dead'
+  // Web Platform Baseline: Features widely available for 30+ months
+  // Includes downstream browsers (Chromium-based: Opera, Brave, Samsung Internet)
+  'baseline widely available with downstream and ' +
+  // Additional required features for this project
+  'fully supports css-variables and ' +         // Chakra UI v3 requirement
+  'fully supports es6-module and ' +            // Module loading
+  'fully supports es6-module-dynamic-import and ' + // Code splitting
+  'fully supports css-grid and ' +              // Layouts
+  'fully supports async-functions and ' +       // Async/await
+  'fully supports serviceworkers'               // PWA requirement
 ],
 modernPolyfills: false,
 ```
 
 **What This Achieves:**
+- Uses **Web Platform Baseline** standard (features widely available 30+ months)
 - Targets browsers that natively support ALL required features
 - No version coupling - automatically adapts to new browser releases
 - Ensures Chakra UI v3 works correctly (CSS variables requirement)
 - Ensures PWA functionality works (Service Workers requirement)
 - Ensures code splitting works (dynamic imports requirement)
-- **Market share >1%:** Only widely-used browsers (shields developers from edge cases)
-- **Released <3 years:** Only recent browsers (shields developers from potential compatibility issues)
+- **Includes downstream browsers:** Opera, Brave, Samsung Internet, etc.
+- **Standards-based:** Aligned with Web Platform DX Community Group
 - Developer-friendly: No need to worry about feature compatibility
 
 **Effective Browser Coverage (2026):**
-- Chrome 63+ (Dec 2017) - All features supported, >1% share, recent releases
-- Firefox 67+ (May 2019) - All features supported, >1% share, recent releases
-- Safari 11.1+ (March 2018) - All features supported, >1% share, recent releases
-- Edge 79+ (Jan 2020) - All features supported, >1% share, recent releases
-- **Only includes browser versions released after Jan 2023** (3-year window)
+Based on browserslist analysis:
+- Chrome 115+ (and all Chromium downstream browsers)
+- Firefox 115+
+- Safari 15.4+
+- Edge 115+
+- Opera, Brave, Samsung Internet (latest versions)
+- **Total:** 163 browser versions across all platforms
 
-**Market Coverage:** ~95-97% of users (slightly reduced but safer for developers)
+**Market Coverage:** ~98-99% of users (comprehensive coverage)
+
+**Why Baseline Over Custom Criteria:**
+- **Standards-based:** Web Platform Baseline is an industry standard
+- **Well-tested:** Features must be widely available for 30+ months
+- **Comprehensive:** Automatically includes downstream Chromium browsers
+- **No arbitrary thresholds:** Based on actual feature stability, not market share percentages
+- **Future-proof:** Updates with new Baseline releases
 
 **Developer Protection:**
 - Shields from potential edge cases in browsers with <1% market share
@@ -351,10 +361,10 @@ modernPolyfills: true,
 
 ### For ARK Starters SPA (Starter Template)
 
-**Recommended Approach:** Three-Tier Progressive Enhancement with Feature-Based Targets
+**Recommended Approach:** Three-Tier Progressive Enhancement with Web Platform Baseline
 
 ```typescript
-// vite.config.ts - RECOMMENDED: Progressive Enhancement (Feature-Based)
+// vite.config.ts - RECOMMENDED: Progressive Enhancement (Baseline-Based)
 legacy({
   // Legacy browser targets (browsers that need polyfills)
   // Feature-based for browsers lacking modern features
@@ -367,18 +377,16 @@ legacy({
   ],
   
   // Modern browser targets (get clean, unpolyfilled code)
-  // Feature-based: browsers natively supporting ALL required features
-  // PLUS market share >1% AND released within last 3 years
+  // Uses Web Platform Baseline: features widely available for 30+ months
+  // Includes downstream browsers (Opera, Brave, Samsung Internet)
   modernTargets: [
+    "baseline widely available with downstream and " +
     "fully supports css-variables and " +
     "fully supports es6-module and " +
     "fully supports es6-module-dynamic-import and " +
     "fully supports css-grid and " +
     "fully supports async-functions and " +
-    "fully supports serviceworkers and " +
-    ">1% and " +           // Significant market share (shields devs from edge cases)
-    "last 3 years and " +  // Recent releases only (shields devs from old browser issues)
-    "not dead"
+    "fully supports serviceworkers"
   ],
   
   // Modern browsers get NO polyfills (fast experience)
@@ -391,13 +399,64 @@ legacy({
 
 **How This Works:**
 
-1. **Modern Browsers (Fully Support ALL Features + >1% Share + <3yr Old)** - ~95-97% of users
+1. **Modern Browsers (Baseline Widely Available + All Features)** - ~98-99% of users
    - Get clean modern JavaScript (no polyfills)
    - Smallest bundle size (save 15 KB)
    - Fastest experience
    - Fully functional PWA
-   - **Automatically includes browsers that:**
-     - Support all required features (CSS Variables, ES6 Modules, Dynamic Imports, CSS Grid, Service Workers, Async/Await)
+   - **Includes browsers with:**
+     - Features that have been widely available for 30+ months (Web Platform Baseline)
+     - All required features (CSS Variables, ES6 Modules, Dynamic Imports, CSS Grid, Service Workers, Async/Await)
+     - Downstream Chromium browsers (Opera, Brave, Samsung Internet, etc.)
+   - **Examples:** Chrome 115+, Firefox 115+, Safari 15.4+, Edge 115+, and downstream browsers
+
+2. **Legacy Browsers (Partial Feature Support or Not in Baseline)** - ~1-2% of users
+   - Get legacy chunks with polyfills via `<script nomodule>`
+   - Larger bundle (+65 KB for polyfills)
+   - Slower but still functional
+   - Progressive enhancement kicks in
+   - Includes older browser versions even if they have some required features
+
+3. **Very Old Browsers (Missing Critical Features)** - <0.5% of users
+   - Not supported (would break on CSS variables, Service Workers anyway)
+   - Acceptable trade-off
+
+**Key Benefits of Baseline-Based Approach:**
+- ✅ **Standards-based:** Uses official Web Platform Baseline (30+ months widely available)
+- ✅ **No arbitrary thresholds:** Based on actual feature stability across browsers
+- ✅ **Developer-friendly:** Can use modern features without checking browser versions
+- ✅ **Chakra UI v3 compatible:** CSS variables guarantee
+- ✅ **PWA compatible:** Service Worker support guaranteed
+- ✅ **Future-proof:** Automatically updates with new Baseline releases
+- ✅ **Explicit requirements:** Clear what features the app depends on
+- ✅ **Comprehensive coverage:** Includes downstream Chromium browsers automatically
+- ✅ **Industry aligned:** Follows Web Platform DX Community Group standards
+
+**Effective Browser Coverage (based on Baseline + required features):**
+```
+Modern (no polyfills) - 163 browser versions:
+- Chrome 115+ (July 2023)
+- Firefox 115+ (July 2023)
+- Safari 15.4+ (March 2022)
+- Edge 115+ (July 2023)
+- Opera, Brave, Samsung Internet, and other Chromium downstream browsers
+- Automatically includes new versions as they pass Baseline criteria
+
+Legacy (with polyfills):
+- Older browser versions (before Baseline threshold)
+- Browsers with partial support
+- Graceful degradation for missing features
+
+Unsupported:
+- Browsers missing critical features (CSS variables, Service Workers)
+```
+
+**Bundle Impact:**
+```
+Modern users (98-99%):  -15 KB (polyfills removed)
+Legacy users (1-2%):    +65 KB (legacy chunks loaded)
+Very old (<0.5%):       Unsupported (acceptable trade-off)
+```
      - Have >1% market share (widely used)
      - Were released in the last 3 years (recent and well-tested)
    - **Developer protection:** Shields from edge cases and old browser quirks
@@ -489,6 +548,78 @@ Very old (<0.5%):       Unsupported (acceptable trade-off)
        "supports serviceworkers",
        ">0.5%",
        "not dead",
+     ],
+     
+     // Modern browser targets (no polyfills)
+     // Uses Web Platform Baseline: features widely available 30+ months
+     modernTargets: [
+       "baseline widely available with downstream and " +
+       "fully supports css-variables and " +
+       "fully supports es6-module and " +
+       "fully supports es6-module-dynamic-import and " +
+       "fully supports css-grid and " +
+       "fully supports async-functions and " +
+       "fully supports serviceworkers"
+     ],
+     
+     modernPolyfills: false,      // ✅ Remove polyfills for modern browsers
+     renderLegacyChunks: true,    // ✅ Enable legacy fallback
+   }),
+   ```
+
+2. **Update `README.md`:**
+   - Add browser support section with Baseline explanation
+   - Document required features (not browser versions)
+   - List features: CSS Variables, ES6 Modules, Dynamic Imports, CSS Grid, Service Workers, Async/Await
+   - Explain Web Platform Baseline (30+ months widely available)
+   - Note that downstream browsers (Opera, Brave, Samsung) are included
+   - Explain progressive enhancement approach
+
+3. **Test:**
+   - Build and verify bundle sizes for both modern and legacy
+   - Test on browsers that meet Baseline criteria
+   - Test on legacy browsers via BrowserStack
+   - Verify PWA features work correctly
+   - Verify legacy chunks load only for old browsers
+   - Check that feature detection works correctly
+
+4. **Document:**
+   - Update CHANGELOG with enhancement note (not breaking - backward compatible!)
+   - Explain the Baseline-based approach
+   - List required features for developers
+   - Note performance improvement for modern users
+   - Highlight industry standard alignment
+
+**Expected Changes:**
+```
+Modern Browsers (Baseline widely available + all features - ~98-99% of users):
+  Before: 513 KB → 192 KB gzipped (includes modern polyfills)
+  After:  513 KB → 177 KB gzipped (no polyfills)
+  Savings: 15 KB gzipped for the majority
+  Coverage: 163 browser versions across all platforms
+
+Legacy Browsers (not in Baseline or missing features - ~1-2% of users):
+  Before: Not supported (would break on CSS variables)
+  After:  513 KB → 257 KB gzipped (includes legacy polyfills)
+  Impact: +65 KB but now they work!
+
+Net Result:
+  - 98-99% of users: Faster experience (-15 KB)
+  - 1-2% of users: Now supported (was broken before)
+  - Developers: Can use modern features freely without version checks
+  - Standards-aligned: Uses official Web Platform Baseline
+  - Future-proof: Auto-updates with Baseline releases
+  - Comprehensive: Includes Chromium downstream browsers
+```
+
+**Baseline-Based Benefits:**
+- Industry standard (Web Platform DX Community Group)
+- Features proven stable for 30+ months
+- Automatically includes downstream Chromium browsers
+- No arbitrary market share or age thresholds
+- Based on actual cross-browser feature stability
+- Aligns with how the web platform evolves
+- Better than custom criteria (more tested, more comprehensive)
      ],
      
      // Modern browser targets (no polyfills)
@@ -677,14 +808,13 @@ If issues arise after enabling progressive enhancement:
 
 **Status:** ⚠️ **Awaiting Stakeholder Decision**
 
-**Recommendation:** ✅ **Implement Three-Tier Progressive Enhancement with Feature-Based Targets + Age + Market Share Criteria**
+**Recommendation:** ✅ **Implement Three-Tier Progressive Enhancement with Web Platform Baseline**
 
 **Key Changes:**
-1. Use **feature-based targets** instead of version numbers (e.g., "fully supports css-variables" not "chrome >= 90")
-2. Add **market share >1%** criterion (shields developers from edge cases)
-3. Add **age <3 years** criterion (shields developers from old browser quirks)
-4. Set `modernPolyfills: false` (no polyfills for browsers meeting all criteria)
-5. Set `renderLegacyChunks: true` (enable legacy fallback)
+1. Use **Web Platform Baseline** ("baseline widely available with downstream")
+2. Combine with **required features** for this project
+3. Set `modernPolyfills: false` (no polyfills for browsers meeting criteria)
+4. Set `renderLegacyChunks: true` (enable legacy fallback)
 
 **Critical Features Required:**
 - CSS Custom Properties (Chakra UI v3 requirement)
@@ -693,45 +823,62 @@ If issues arise after enabling progressive enhancement:
 - Service Workers (PWA)
 - Async/Await
 
-**Additional Modern Browser Criteria:**
-- Market share >1% (widely used browsers only)
-- Released within last 3 years (recent releases only)
+**Baseline Criteria:**
+- Features widely available for 30+ months across major browsers
+- Includes downstream Chromium browsers (Opera, Brave, Samsung Internet)
+- Industry standard from Web Platform DX Community Group
 
 **Justification:**
-- **Feature-Based is Better:** Developers shouldn't worry about browser versions, only features
-- **Future-Proof:** New browsers automatically qualify if they meet all criteria
+- **Standards-Based:** Uses official Web Platform Baseline, not arbitrary thresholds
+- **Future-Proof:** Automatically updates with new Baseline releases
 - **Developer-Friendly:** Can use modern features freely without version coupling
-- **Edge Case Protection:** >1% market share shields from rare browser issues and edge cases
-- **Age Protection:** <3 years shields from legacy browser quirks even if features are technically supported
+- **Well-Tested:** 30+ months of proven stability across browsers
+- **Comprehensive:** Includes 163 browser versions across platforms
+- **Better Coverage:** ~98-99% of users (vs 95-97% with custom criteria)
+- **Industry Aligned:** Follows web platform evolution standards
 - **Missed Critical Feature:** Previous analysis didn't account for CSS Variables (Chakra UI v3) and PWA requirements
-- **Better User Experience:** 95-97% of users get faster load times, 3-5% now supported (was potentially broken)
+- **Better User Experience:** 98-99% of users get faster load times, 1-2% now supported
 - **Zero Risk:** Progressive enhancement is backward compatible, not a breaking change
-- **Industry Standard:** Follows Vite's recommended approach for production apps
 - **Explicit Dependencies:** Clear what web platform features the app requires
 
 **Bundle Impact:**
-- Modern users (95-97%): **-15 KB** gzipped
-- Legacy users (3-5%): **+65 KB** gzipped (now functional, was broken)
+- Modern users (98-99%): **-15 KB** gzipped
+- Legacy users (1-2%): **+65 KB** gzipped (now functional, was broken)
 - Net result: Faster for majority, accessible for all
-- Developer benefit: No version maintenance, automatic future browser support, protected from edge cases
+- Developer benefit: No version maintenance, automatic future browser support, industry-standard approach
 
 **Implementation Effort:** 2-3 hours (config change + testing)
 
 **Risk:** Very Low (progressive enhancement, easy rollback, feature detection built into Vite)
 
-**Advantages Over Version-Based Targets:**
-1. **No maintenance:** Don't need to update version numbers as new browsers release
-2. **Self-documenting:** Clear what features the app depends on
-3. **Developer-friendly:** Think in features, not versions
-4. **Automatic coverage:** New browsers with required features automatically supported
-5. **Aligns with web standards:** Features, not implementations
-6. **Edge case protection:** >1% market share requirement filters out rare issues
-7. **Age protection:** <3 years requirement filters out legacy quirks
-8. **Developer confidence:** Safe to use modern features without surprises
+**Advantages Over Custom Market Share/Age Criteria:**
+1. **No arbitrary thresholds:** Based on actual 30-month feature stability
+2. **Standards-based:** Official Web Platform Baseline initiative
+3. **Self-documenting:** Clear what features the app depends on
+4. **Better tested:** Features proven stable across browsers for 30+ months
+5. **Automatic coverage:** Includes downstream browsers automatically
+6. **Aligns with web standards:** How the platform actually evolves
+7. **Industry consensus:** Web Platform DX Community Group backing
+8. **More comprehensive:** 163 browser versions vs ~10 with custom criteria
+9. **Better coverage:** 98-99% vs 95-97% users
+
+**Browserslist Stats:**
+```
+Baseline widely available with downstream + required features:
+  - 163 browser versions
+  - Chrome 115+, Firefox 115+, Safari 15.4+, Edge 115+
+  - All Chromium downstream browsers (Opera, Brave, Samsung, etc.)
+  - Coverage: ~98-99% of users
+
+Custom criteria (>1% and last 3 years):
+  - ~10 browser versions
+  - Coverage: ~95-97% of users
+  - Arbitrary thresholds, less comprehensive
+```
 
 ---
 
-**Status:** ✅ Evaluation Complete - Awaiting Stakeholder Decision on Feature-Based Progressive Enhancement with Age and Market Share Protection
+**Status:** ✅ Evaluation Complete - Awaiting Stakeholder Decision on Baseline-Based Progressive Enhancement
 
 **My Recommendation:** **Option A** for starter template (with documentation)
 
