@@ -99,9 +99,10 @@ export function initStore(extra: ExtraType) {
 
   // Attach manager to store for access by injection utilities
   // This avoids module-level side effects
-  ;(store as any).__storeManager = storeManager
+  const storeWithManager = store as typeof store & { __storeManager: StoreManager }
+  storeWithManager.__storeManager = storeManager
 
-  return store
+  return storeWithManager
 }
 
 export type AppStore = ReturnType<typeof initStore>
@@ -115,7 +116,7 @@ export type AppThunk<ThunkReturnType = void> = ThunkAction<ThunkReturnType, AppS
  * @returns Store manager for dynamic injection
  */
 function getStoreManager(store: AppStore): StoreManager {
-  const manager = (store as any).__storeManager
+  const manager = store.__storeManager
   if (!manager) {
     throw new Error("Store manager not initialized. Ensure initStore() was called.")
   }
@@ -178,12 +179,17 @@ export function injectApiSlice(store: AppStore, slice: LazyApiSlice) {
 
   // 1. Inject the REDUCER using combineSlices().inject()
   manager.currentReducer = manager.currentReducer.inject(slice) as typeof manager.currentReducer
-  store.replaceReducer(manager.currentReducer)
+  // Replace the reducer - we need to cast to any because the types are complex but compatible
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  store.replaceReducer(manager.currentReducer as any)
 
   // 2. Inject the MIDDLEWARE using createDynamicMiddleware
   // This is critical - combineSlices().inject() does NOT inject middleware
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  manager.dynamicMiddleware.addMiddleware(slice.middleware as any)
+  // We need to cast because RTK Query middleware type is slightly different from
+  // what createDynamicMiddleware expects, but they're compatible at runtime
+  manager.dynamicMiddleware.addMiddleware(
+    slice.middleware as Parameters<typeof manager.dynamicMiddleware.addMiddleware>[0]
+  )
 
   // Mark this slice as injected
   manager.injectedSlices.add(sliceKey)
