@@ -1,4 +1,4 @@
-import { createSystem, defaultBaseConfig, defineConfig } from "@chakra-ui/react"
+import { createSystem, defaultBaseConfig, defaultConfig, defineConfig } from "@chakra-ui/react"
 import {
   // Simple recipes - basic components
   badgeRecipe,
@@ -38,83 +38,67 @@ import {
   tableSlotRecipe,
   tagsInputSlotRecipe,
   tooltipSlotRecipe,
-} from "@chakra-ui/react/theme";
+  // Import tokens and semanticTokens from Chakra theme
+  tokens as chakraTokens,
+  semanticTokens as chakraSemanticTokens,
+} from "@chakra-ui/react/theme"
 
 const config = defineConfig({
-  strictTokens: false, // Disabled when using defaultBaseConfig to allow standard tokens
-  conditions: {
-    // Add responsive breakpoint conditions
-    sm: "@media (min-width: 480px)",
-    md: "@media (min-width: 768px)",
-    lg: "@media (min-width: 1024px)",
-    xl: "@media (min-width: 1280px)",
-    "2xl": "@media (min-width: 1536px)",
-    smDown: "@media (max-width: 479.98px)",
-    mdDown: "@media (max-width: 767.98px)",
-    lgDown: "@media (max-width: 1023.98px)",
-    xlDown: "@media (max-width: 1279.98px)",
-    "2xlDown": "@media (max-width: 1535.98px)",
-    smOnly: "@media (min-width: 480px) and (max-width: 767.98px)",
-    mdOnly: "@media (min-width: 768px) and (max-width: 1023.98px)",
-    lgOnly: "@media (min-width: 1024px) and (max-width: 1279.98px)",
-    xlOnly: "@media (min-width: 1280px) and (max-width: 1535.98px)",
-    "2xlOnly": "@media (min-width: 1536px)",
-  },
+  strictTokens: true, // Keep strict to prevent arbitrary values like px everywhere
+  conditions: defaultConfig.conditions, // Import all conditions from defaultConfig
   globalCss: {
     html: { colorPalette: "brandPalette" },
   },
   theme: {
     // Import only the recipes we actually use
+    // Type assertions needed due to strictTokens: true compatibility
     recipes: {
       // Simple recipes
-      badge: badgeRecipe,
-      button: buttonRecipe,
-      checkmark: checkmarkRecipe,
-      code: codeRecipe,
-      container: containerRecipe,
-      heading: headingRecipe,
-      icon: iconRecipe,
-      input: inputRecipe,
-      inputAddon: inputAddonRecipe,
-      kbd: kbdRecipe,
-      link: linkRecipe,
-      mark: markRecipe,
-      radiomark: radiomarkRecipe,
-      separator: separatorRecipe,
-      skeleton: skeletonRecipe,
-      spinner: spinnerRecipe,
-      textarea: textareaRecipe,
+      badge: badgeRecipe as any,
+      button: buttonRecipe as any,
+      checkmark: checkmarkRecipe as any,
+      code: codeRecipe as any,
+      container: containerRecipe as any,
+      heading: headingRecipe as any,
+      icon: iconRecipe as any,
+      input: inputRecipe as any,
+      inputAddon: inputAddonRecipe as any,
+      kbd: kbdRecipe as any,
+      link: linkRecipe as any,
+      mark: markRecipe as any,
+      radiomark: radiomarkRecipe as any,
+      separator: separatorRecipe as any,
+      skeleton: skeletonRecipe as any,
+      spinner: spinnerRecipe as any,
+      textarea: textareaRecipe as any,
     },
     slotRecipes: {
       // Slot recipes (multi-part components)
-      accordion: accordionSlotRecipe,
-      alert: alertSlotRecipe,
-      avatar: avatarSlotRecipe,
-      breadcrumb: breadcrumbSlotRecipe,
-      card: cardSlotRecipe,
-      checkbox: checkboxSlotRecipe,
-      dialog: dialogSlotRecipe,
-      drawer: drawerSlotRecipe,
-      field: fieldSlotRecipe,
-      fieldset: fieldsetSlotRecipe,
-      list: listSlotRecipe,
-      menu: menuSlotRecipe,
-      nativeSelect: nativeSelectSlotRecipe,
-      progress: progressSlotRecipe,
-      select: selectSlotRecipe,
-      switch: switchSlotRecipe,
-      table: tableSlotRecipe,
-      tagsInput: tagsInputSlotRecipe,
-      tooltip: tooltipSlotRecipe,
+      accordion: accordionSlotRecipe as any,
+      alert: alertSlotRecipe as any,
+      avatar: avatarSlotRecipe as any,
+      breadcrumb: breadcrumbSlotRecipe as any,
+      card: cardSlotRecipe as any,
+      checkbox: checkboxSlotRecipe as any,
+      dialog: dialogSlotRecipe as any,
+      drawer: drawerSlotRecipe as any,
+      field: fieldSlotRecipe as any,
+      fieldset: fieldsetSlotRecipe as any,
+      list: listSlotRecipe as any,
+      menu: menuSlotRecipe as any,
+      nativeSelect: nativeSelectSlotRecipe as any,
+      progress: progressSlotRecipe as any,
+      select: selectSlotRecipe as any,
+      switch: switchSlotRecipe as any,
+      table: tableSlotRecipe as any,
+      tagsInput: tagsInputSlotRecipe as any,
+      tooltip: tooltipSlotRecipe as any,
     },
     semanticTokens: {
+      // Merge Chakra's semantic tokens with our custom ones
       colors: {
-        bg: {
-          info: { value: { _light: "{colors.brand.primary}", _dark: "{colors.cyan.700}" } },
-        },
-        border: {
-          value: { _light: "{colors.gray.300}", _dark: "white" },
-        },
+        ...chakraSemanticTokens.colors,
+        // Custom semantic tokens for this project
         header: {
           value: { base: "{colors.blue.200}", _dark: "{colors.cyan.700}" },
         },
@@ -166,9 +150,16 @@ const config = defineConfig({
           focusRing: { value: { base: "#b5cea8", _dark: "#56b6c2" } },
         },
       },
+      // Merge other semantic token categories from Chakra
+      ...Object.fromEntries(
+        Object.entries(chakraSemanticTokens).filter(([key]) => key !== "colors")
+      ),
     },
 
     tokens: {
+      // Merge Chakra's tokens with our custom ones
+      ...chakraTokens,
+      // Override/extend with custom tokens
       breakpoints: {
         sm: { value: "480px" },
         md: { value: "768px" },
@@ -177,13 +168,16 @@ const config = defineConfig({
         "2xl": { value: "1536px" },
       },
       spacing: {
+        ...chakraTokens.spacing,
         inherit: { value: "inherit" },
         "0": { value: "0rem" },
       },
       sizes: {
+        ...chakraTokens.sizes,
         "0": { value: "0" }, // needed for "flex" for minWidth and minHeight
       },
       colors: {
+        ...chakraTokens.colors,
         brandPalette: {
           100: { value: "#e4f1ff" },
           200: { value: "#7F7A91" },
@@ -194,21 +188,21 @@ const config = defineConfig({
           800: { value: "#E4572E" },
           900: { value: "#ffffff" },
         },
-
         brand: {
           primary: { value: "#4094d0" },
           dark: { value: "#194069" },
           errorBackGround: { value: "#ff6565" },
           errorText: { value: "#460e0e" },
         },
-        fonts: {
-          heading: { value: `'PTSansRegular', sans-serif` },
-          body: { value: `'PTSansRegular', sans-serif` },
-        },
+      },
+      fonts: {
+        ...chakraTokens.fonts,
+        heading: { value: `'PTSansRegular', sans-serif` },
+        body: { value: `'PTSansRegular', sans-serif` },
       },
     },
   },
-});
+})
 
 const theme = createSystem(defaultBaseConfig, config)
 
