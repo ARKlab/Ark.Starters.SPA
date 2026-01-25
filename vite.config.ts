@@ -173,30 +173,44 @@ export default defineConfig(({ mode }) => {
       target: "esnext",
       rollupOptions: {
         output: {
-          manualChunks: {
-            // Core libraries (rarely change) - separate for maximum cache stability
-            react: ["react", "react-dom"],
-            "react-router": ["react-router", "react-error-boundary"],
-
-            // State management (occasional updates)
-            rtk: [
-              "@reduxjs/toolkit",
-              "@reduxjs/toolkit/query",
-              "@reduxjs/toolkit/react",
-              "react-redux",
+          // Vite 8 with Rolldown uses advancedChunks instead of manualChunks
+          advancedChunks: {
+            groups: [
+              // Core libraries (rarely change) - separate for maximum cache stability
+              {
+                name: "react",
+                test: /\/(react|react-dom)\//,
+              },
+              {
+                name: "react-router",
+                test: /\/(react-router|react-error-boundary)\//,
+              },
+              // State management (occasional updates)
+              {
+                name: "rtk",
+                test: /\/(@reduxjs\/toolkit|react-redux)\//,
+              },
+              // UI Framework (occasional updates) - already large, keep separate
+              {
+                name: "chakra",
+                test: /\/(@chakra-ui\/react|@emotion\/react)\//,
+              },
+              // i18n libraries (rarely change)
+              {
+                name: "i18n",
+                test: /\/(i18next|react-i18next|@semihbou\/zod-i18n-map)\//,
+              },
+              // Form libraries (occasional updates)
+              {
+                name: "hookForm",
+                test: /\/(react-hook-form|@hookform\/resolvers|zod)\//,
+              },
+              // Utility libraries (rarely change)
+              {
+                name: "common",
+                test: /\/(@tanstack\/react-table|date-fns|@dnd-kit\/core|@dnd-kit\/sortable)\//,
+              },
             ],
-
-            // UI Framework (occasional updates) - already large, keep separate
-            chakra: ["@chakra-ui/react", "@emotion/react"],
-
-            // i18n libraries (rarely change)
-            i18n: ["i18next", "react-i18next", "@semihbou/zod-i18n-map"],
-
-            // Form libraries (occasional updates)
-            hookForm: ["react-hook-form", "@hookform/resolvers", "zod"],
-
-            // Utility libraries (rarely change)
-            common: ["@tanstack/react-table", "date-fns", "@dnd-kit/core", "@dnd-kit/sortable"],
           },
         },
       },
