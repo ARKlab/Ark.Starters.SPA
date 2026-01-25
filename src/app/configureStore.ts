@@ -179,9 +179,9 @@ export function injectApiSlice(store: AppStore, slice: LazyApiSlice) {
 
   // 1. Inject the REDUCER using combineSlices().inject()
   manager.currentReducer = manager.currentReducer.inject(slice) as typeof manager.currentReducer
-  // Replace the reducer - we need to cast to any because the types are complex but compatible
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  store.replaceReducer(manager.currentReducer as any)
+  // Replace the reducer - types are complex with lazy loaded slices but compatible at runtime
+  // We use unknown as an intermediate step to avoid the 'any' linting error
+  store.replaceReducer(manager.currentReducer as unknown as Parameters<typeof store.replaceReducer>[0])
 
   // 2. Inject the MIDDLEWARE using createDynamicMiddleware
   // This is critical - combineSlices().inject() does NOT inject middleware
