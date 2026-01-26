@@ -51,7 +51,7 @@ jobs:
           git diff --staged --quiet || git commit -m "chore: generate bun.lock for deterministic builds"
           
       - name: Push changes
-        uses: ad-m/github-push-action@master
+        uses: ad-m/github-push-action@v0.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.head_ref || github.ref }}

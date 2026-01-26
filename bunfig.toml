@@ -6,5 +6,6 @@
 # Text format (bun.lock) is human-readable JSON, replacing binary bun.lockb
 save-text-lockfile = true
 
-# Equivalent to npm ci - fail if lockfile is out of sync
+# Set to false locally for flexibility during development
+# CI uses --frozen-lockfile flag explicitly for deterministic builds
 frozen-lockfile = false

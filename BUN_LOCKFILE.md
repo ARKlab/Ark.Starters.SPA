@@ -23,7 +23,7 @@ bun install
 
 # Commit the generated lockfile
 git add bun.lock
-git commit -m "chore: add bun.lock for deterministic builds"
+git commit -m "chore: generate bun.lock locally for deterministic builds"
 git push
 ```
 
