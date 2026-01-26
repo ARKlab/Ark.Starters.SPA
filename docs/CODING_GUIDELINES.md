@@ -76,3 +76,90 @@ toast: 1700, tooltip: 1800
 - **MUST** run `npm run lint` before committing
 - **MUST** run `npm run build` to verify build success
 - **MUST** run `npm test` for E2E tests when modifying functionality
+
+## Bundle Optimization & Performance
+
+> **Lessons from modernization effort** - Follow these practices to maintain optimal bundle size and performance.
+
+### Imports and Tree-Shaking
+
+- **MUST** use named imports from libraries for better tree-shaking
+  ```typescript
+  // ✅ GOOD
+  import { format, parseISO } from "date-fns";
+  
+  // ❌ BAD
+  import * as dateFns from "date-fns";
+  ```
+- **MUST** declare `sideEffects` appropriately when creating packages
+- **MUST** verify tree-shaking effectiveness with bundle analyzer before assuming it works
+
+### React Best Practices
+
+- **SHOULD** trust React Compiler for optimization instead of manual `useMemo`/`useCallback`
+- **MUST** keep manual memoization only for:
+  - Third-party library compatibility (e.g., TanStack Table columns)
+  - Expensive computations in performance-critical paths
+  - Referential equality requirements in dependency arrays
+- **MUST** profile before optimizing - measure, don't guess
+
+### Conditional Features
+
+- **MUST** use lazy loading for optional features (analytics, monitoring)
+  ```typescript
+  // ✅ GOOD - Conditional lazy loading
+  if (settings.appInsights) {
+    const { setupAppInsights } = await import("./lib/applicationInsights");
+    setupAppInsights(settings.appInsights);
+  }
+  ```
+- **MUST NOT** use dynamic imports in critical initialization paths
+- **MUST** maintain synchronous initialization for E2E test compatibility
+
+### Build-Time vs Runtime Optimization
+
+- **MUST** prefer build-time configuration over runtime for starter templates
+  - Use commenting or environment variables for one-time configuration
+  - Ensures better tree-shaking and test compatibility
+- **SHOULD** use runtime dynamic loading only for:
+  - Multi-tenant applications with variable configuration
+  - Feature flags in production environments
+  - Non-critical optional features
+
+### Type Safety Trade-offs
+
+- **MUST NOT** sacrifice type safety for minor bundle size improvements
+- **MUST NOT** use `as any`, `@ts-ignore`, or disable strict checks for optimization
+- **MUST** reject optimizations that create high maintenance burden relative to savings
+- **SHOULD** maintain strict TypeScript configuration as primary goal
+
+### Browser Support
+
+- **MUST** use feature detection over browser version numbers
+  ```typescript
+  // ✅ GOOD - Feature-based targeting
+  modernTargets: [
+    'baseline widely available with downstream and ' +
+    'fully supports css-variables and ' +
+    'fully supports serviceworkers'
+  ]
+  
+  // ❌ BAD - Version-based targeting
+  modernTargets: ['chrome>=90', 'firefox>=88']
+  ```
+- **MUST** document required features and their rationale
+- **SHOULD** use Web Platform Baseline for modern browser definition
+
+### Decision Documentation
+
+- **MUST** document optimization decisions with clear rationale
+- **MUST** record failed approaches to prevent repeated attempts
+- **SHOULD** create evaluation documents for significant trade-off decisions
+- **SHOULD** update documentation as understanding evolves
+
+### Verification
+
+- **MUST** run E2E tests after any optimization changes
+- **MUST** verify bundle impact with `npm run analyze`
+- **MUST** compare before/after measurements
+- **SHOULD** monitor bundle size in CI/CD to prevent regressions
