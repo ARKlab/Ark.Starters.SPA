@@ -27,9 +27,6 @@
 ### Project Commands
 
 ```bash
-# Setup (first time only)
-bun install             # Install dependencies (generates bun.lock text-based lockfile)
-
 # Development
 bun start              # Start dev server (localhost:3000)
 bun run build          # Production build
@@ -53,8 +50,6 @@ bun run cypress:run -- --spec cypress/e2e/your-test.e2e.ts
 # Utility
 bun outdated           # Check package versions
 ```
-
-**Important:** This project uses Bun's text-based `bun.lock` lockfile (not the legacy binary `bun.lockb`). Always commit `bun.lock` to ensure reproducible builds across environments.
 
 ### Repository Structure
 
