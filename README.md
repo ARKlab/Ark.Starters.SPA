@@ -48,7 +48,7 @@ irm bun.sh/install.ps1 | iex
 ### Installation
 
 ```bash
-# Install dependencies
+# Install dependencies (generates bun.lock on first install)
 bun install
 
 # Start the development server
@@ -56,6 +56,8 @@ bun start
 ```
 
 The application will be available at `http://localhost:3000`.
+
+**Note:** On first `bun install`, a `bun.lock` file will be generated. This is a text-based (JSON) lockfile that should be committed to version control for reproducible builds. Bun uses the text format (not the legacy binary `bun.lockb`) for better git diffs and merge conflict resolution.
 
 ### Available Commands
 

@@ -1,0 +1,57 @@
+name: Generate Bun Lockfile
+
+# This workflow can be manually triggered to generate bun.lock
+# Run this if bun.lock is missing or needs to be regenerated
+on:
+  workflow_dispatch:
+
+jobs:
+  generate-lockfile:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.head_ref || github.ref }}
+          
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: ".nvmrc"
+          
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.6
+          
+      - name: Generate bun.lock
+        run: |
+          # Remove existing lockfile if present
+          rm -f bun.lock bun.lockb
+          
+          # Install dependencies to generate text-based bun.lock
+          bun install
+          
+      - name: Check if bun.lock was generated
+        run: |
+          if [ ! -f bun.lock ]; then
+            echo "Error: bun.lock was not generated"
+            exit 1
+          fi
+          echo "✅ bun.lock generated successfully"
+          
+      - name: Commit bun.lock
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add bun.lock
+          git diff --staged --quiet || git commit -m "chore: generate bun.lock for deterministic builds"
+          
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.head_ref || github.ref }}

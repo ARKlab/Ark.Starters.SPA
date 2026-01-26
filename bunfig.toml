@@ -1,0 +1,10 @@
+# Bun configuration file
+# https://bun.sh/docs/runtime/bunfig
+
+[install]
+# Use text-based lockfile for better git diffs and merge conflict resolution
+# Text format (bun.lock) is human-readable JSON, replacing binary bun.lockb
+save-text-lockfile = true
+
+# Equivalent to npm ci - fail if lockfile is out of sync
+frozen-lockfile = false
