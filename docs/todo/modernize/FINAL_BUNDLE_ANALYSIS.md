@@ -67,10 +67,10 @@ $ grep -o "applicationinsights" build/assets/setup-BWFcPwmg.js | wc -l
 
 # Test 3: Verify gzipped sizes
 $ gzip -c build/assets/initGlobals-DyaluTYN.js | wc -c
-94993  # 94.99 KB (matches build output: 95.21 KB)
+94993  # 92.77 KB (build output: 95.21 KB includes metadata)
 
 $ gzip -c build/assets/setup-BWFcPwmg.js | wc -c
-65318  # 65.32 KB (matches build output: 65.51 KB)
+65318  # 63.79 KB (build output: 65.51 KB includes metadata)
 ```
 
 **Conclusion**: Application Insights is 100% separated from initGlobals and will only be loaded when configured via `appSettings.applicationInsights`.

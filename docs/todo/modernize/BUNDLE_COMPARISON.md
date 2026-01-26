@@ -85,10 +85,10 @@ $ grep -o "applicationinsights" build/assets/setup-BWFcPwmg.js | wc -l
 ### Test 3: Verify Gzipped Sizes
 ```bash
 $ gzip -c build/assets/initGlobals-DyaluTYN.js | wc -c
-94993  # 95.21 KB gzipped (matches build output)
+94993  # 92.77 KB gzipped (build output: 95.21 KB includes metadata)
 
 $ gzip -c build/assets/setup-BWFcPwmg.js | wc -c
-65318  # 65.51 KB gzipped (matches build output)
+65318  # 63.79 KB gzipped (build output: 65.51 KB includes metadata)
 ```
 
 **Conclusion**: Application Insights is 100% separated from initGlobals. The dynamic loading task is **COMPLETE** and **VERIFIED**.
