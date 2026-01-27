@@ -182,10 +182,10 @@ const InnerMenuItems = (props: { section: ArkSubRoute; path: string; index: numb
     <Box
       key={section.path + "menuItemBox" + index}
       _hover={{
-        background: isActive ? "brand.muted" : "bg.info",
+        background: isActive ? "brand.emphasized" : "bg.info",
         color: "fg",
       }}
-      background={isActive ? "brand.muted" : undefined}
+      background={isActive ? "brand.emphasized" : undefined}
       px="4"
       py="0"
     >

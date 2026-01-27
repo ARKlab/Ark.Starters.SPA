@@ -18,7 +18,7 @@ export function ActiveFiltersBar(props: ActiveFiltersBarProps) {
   if (filters.length === 0) return null;
 
   return (
-    <Box p="4" bg="bg.panel" borderRadius="lg" border="xs" borderColor="brand.muted">
+    <Box p="4" bg="bg.panel" borderRadius="lg" border="xs" borderColor="brand.emphasized">
       <HStack justify="space-between" mb="3">
         <Text fontWeight="semibold" fontSize="sm" color="fg.muted">
           {t("filters.active_filters")} ({filters.length})

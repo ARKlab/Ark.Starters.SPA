@@ -30,22 +30,22 @@ const config = defineConfig({
         // Background semantic tokens
         bg: {
           DEFAULT: {
-            value: { _light: "white", _dark: "{colors.gray.950}" },
+            value: { _light: "white", _dark: "{colors.brand.950}" },
           },
           subtle: {
-            value: { _light: "{colors.gray.50}", _dark: "{colors.gray.900}" },
-          },
-          muted: {
-            value: { _light: "{colors.gray.100}", _dark: "{colors.gray.800}" },
-          },
-          emphasized: {
             value: { _light: "{colors.brand.50}", _dark: "{colors.brand.900}" },
           },
+          muted: {
+            value: { _light: "{colors.brand.100}", _dark: "{colors.brand.800}" },
+          },
+          emphasized: {
+            value: { _light: "{colors.brand.200}", _dark: "{colors.brand.700}" },
+          },
           inverted: {
-            value: { _light: "{colors.gray.900}", _dark: "{colors.gray.50}" },
+            value: { _light: "{colors.brand.900}", _dark: "{colors.brand.50}" },
           },
           panel: {
-            value: { _light: "white", _dark: "{colors.gray.950}" },
+            value: { _light: "white", _dark: "{colors.brand.950}" },
           },
           error: {
             value: { _light: "{colors.red.50}", _dark: "{colors.red.950}" },
@@ -57,23 +57,23 @@ const config = defineConfig({
             value: { _light: "{colors.green.50}", _dark: "{colors.green.950}" },
           },
           info: {
-            value: { _light: "{colors.brand.50}", _dark: "{colors.brand.950}" },
+            value: { _light: "{colors.brand.50}", _dark: "{colors.brand.900}" },
           },
         },
 
         // Foreground (text) semantic tokens
         fg: {
           DEFAULT: {
-            value: { _light: "{colors.gray.900}", _dark: "{colors.gray.50}" },
+            value: { _light: "{colors.brand.900}", _dark: "{colors.brand.50}" },
           },
           muted: {
-            value: { _light: "{colors.gray.600}", _dark: "{colors.gray.400}" },
+            value: { _light: "{colors.brand.600}", _dark: "{colors.brand.400}" },
           },
           subtle: {
-            value: { _light: "{colors.gray.500}", _dark: "{colors.gray.500}" },
+            value: { _light: "{colors.brand.500}", _dark: "{colors.brand.500}" },
           },
           inverted: {
-            value: { _light: "white", _dark: "{colors.gray.900}" },
+            value: { _light: "white", _dark: "{colors.brand.900}" },
           },
           error: {
             value: { _light: "{colors.red.600}", _dark: "{colors.red.400}" },
@@ -92,19 +92,19 @@ const config = defineConfig({
         // Border semantic tokens
         border: {
           DEFAULT: {
-            value: { _light: "{colors.gray.200}", _dark: "{colors.gray.800}" },
+            value: { _light: "{colors.brand.200}", _dark: "{colors.brand.800}" },
           },
           muted: {
-            value: { _light: "{colors.gray.100}", _dark: "{colors.gray.900}" },
+            value: { _light: "{colors.brand.100}", _dark: "{colors.brand.900}" },
           },
           subtle: {
-            value: { _light: "{colors.gray.50}", _dark: "{colors.gray.950}" },
+            value: { _light: "{colors.brand.50}", _dark: "{colors.brand.950}" },
           },
           emphasized: {
-            value: { _light: "{colors.gray.300}", _dark: "{colors.gray.700}" },
+            value: { _light: "{colors.brand.300}", _dark: "{colors.brand.700}" },
           },
           inverted: {
-            value: { _light: "{colors.gray.800}", _dark: "{colors.gray.200}" },
+            value: { _light: "{colors.brand.800}", _dark: "{colors.brand.200}" },
           },
           error: {
             value: { _light: "{colors.red.500}", _dark: "{colors.red.400}" },

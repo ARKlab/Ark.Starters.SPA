@@ -52,26 +52,26 @@ The theme uses a graded color palette from 50 (lightest) to 950 (darkest), follo
 
 ### Semantic Tokens
 
-All UI colors derive from semantic tokens that automatically adapt to color modes:
+All UI colors derive from semantic tokens that automatically adapt to color modes and use brand colors:
 
-- **`bg.*`** - Background colors
-  - `bg` - Default background (white/dark)
-  - `bg.subtle` - Subtle background
-  - `bg.muted` - Muted background
-  - `bg.emphasized` - Emphasized background (uses brand colors)
-  - `bg.panel` - Panel background
+- **`bg.*`** - Background colors (uses brand palette)
+  - `bg` - Default background (white/brand.950)
+  - `bg.subtle` - Subtle background (brand.50/brand.900)
+  - `bg.muted` - Muted background (brand.100/brand.800)
+  - `bg.emphasized` - Emphasized background (brand.200/brand.700)
+  - `bg.panel` - Panel background (white/brand.950)
   - `bg.info`, `bg.error`, `bg.warning`, `bg.success` - Status backgrounds
 
-- **`fg.*`** - Foreground (text) colors
-  - `fg` - Default text color
-  - `fg.muted` - Muted text
-  - `fg.subtle` - Subtle text
+- **`fg.*`** - Foreground (text) colors (uses brand palette)
+  - `fg` - Default text color (brand.900/brand.50)
+  - `fg.muted` - Muted text (brand.600/brand.400)
+  - `fg.subtle` - Subtle text (brand.500)
   - `fg.info`, `fg.error`, `fg.warning`, `fg.success` - Status text
 
-- **`border.*`** - Border colors
-  - `border` - Default border
-  - `border.muted` - Muted border
-  - `border.emphasized` - Emphasized border
+- **`border.*`** - Border colors (uses brand palette)
+  - `border` - Default border (brand.200/brand.800)
+  - `border.muted` - Muted border (brand.100/brand.900)
+  - `border.emphasized` - Emphasized border (brand.300/brand.700)
   - `border.info`, `border.error`, `border.warning`, `border.success` - Status borders
 
 ### Brand Palette Tokens
@@ -89,36 +89,46 @@ Components using `colorPalette="brand"` automatically get access to:
 
 ## Usage in Components
 
-### ✅ Correct - Using Semantic Tokens
+### ✅ Correct - Using Semantic Tokens and Variants
 
 ```tsx
-// Use semantic tokens
+// Use semantic tokens - colorPalette is already set globally to "brand"
 <Box bg="bg.emphasized" color="fg">
-  <Button colorPalette="brand">Submit</Button>
+  <Button>Submit</Button>
 </Box>
 
-// Components automatically use the brand palette
-<Table.Row _hover={{ bg: "brand.muted" }}>
+// Components automatically use the brand palette through variants
+<Table.Row _hover={{ bg: "brand.emphasized" }}>
 ```
 
-### ❌ Incorrect - Hardcoded Colors
+### ❌ Incorrect - Hardcoded Colors or Explicit Palette
 
 ```tsx
 // Don't use hardcoded colors
 <Box bg="#4094d0" color="black">
   <Button bg="blue.500">Submit</Button>
 </Box>
+
+// Don't set colorPalette on individual components - it's already global
+<Button colorPalette="brand">Submit</Button>
 ```
 
-## Component Variants
+## Component Variants and Recipes
 
-Many components support the `colorPalette` prop:
+Components automatically use the global brand palette through Chakra's recipe system. No need to set `colorPalette` on individual components:
+
+## Component Variants and Recipes
+
+Components automatically use the global brand palette through Chakra's recipe system. No need to set `colorPalette` on individual components:
 
 ```tsx
-<Button colorPalette="brand">Primary Action</Button>
-<Switch colorPalette="brand" />
-<Checkbox colorPalette="brand" />
+// ✅ Correct - Just use the component, it uses brand colors automatically
+<Button>Primary Action</Button>
+<Switch />
+<Checkbox />
 ```
+
+The global `colorPalette: "brand"` setting in `theme.ts` ensures all components use brand colors by default through their variants and recipes.
 
 ## Light and Dark Mode
 
@@ -154,8 +164,9 @@ The new theme replaces:
 - `header` → `bg.emphasized`
 - `page` → `bg`
 - `brand.primary` → `brand.solid`
-- `brand.selected` → `brand.muted`
-- `colorPalette="primary"` → `colorPalette="brand"`
+- `brand.selected` → `brand.emphasized`
+- `colorPalette="primary"` → removed (global default is "brand")
+- `colorPalette="brand"` → removed (no longer needed - it's global)
 
 ## Resources
 

@@ -198,7 +198,7 @@ function VideoGamesForm() {
 
                   <Spacer height="5" />
 
-                  <Button mt="4" colorPalette="brand" loading={isSubmitting} type="submit">
+                  <Button mt="4" loading={isSubmitting} type="submit">
                     {t("games_save_button")}
                   </Button>
                 </Box>
