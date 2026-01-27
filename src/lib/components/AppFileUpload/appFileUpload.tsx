@@ -86,7 +86,7 @@ export default function AppFileUpload({
         width="full"
         minHeight="3xs"
         border="xs"
-        borderColor={isDragging ? "brand.primary" : error ? "error.fg" : "border"}
+        borderColor={isDragging ? "brand.border" : error ? "error.border" : "border"}
         borderRadius="xl"
         bg={isDragging ? "brand.subtle" : "bg"}
         cursor="checkbox"
@@ -110,8 +110,8 @@ export default function AppFileUpload({
           <Box
             p={"4"}
             borderRadius="full"
-            bg={isDragging ? "brand.primary" : "brand.muted"}
-            color={isDragging ? "fg" : "brand.primary"}
+            bg={isDragging ? "brand.solid" : "brand.muted"}
+            color={isDragging ? "brand.contrast" : "brand.fg"}
             transition="all"
             transitionDuration="fast"
             data-test="fileupload-icon-wrapper"
@@ -148,13 +148,13 @@ export default function AppFileUpload({
       {error && (
         <Box
           p="3"
-          bg="red.100"
+          colorPalette="error"
+          layerStyle="fill.subtle"
           borderRadius="md"
           borderLeft="xs"
-          borderLeftColor="error.solid"
           data-test="fileupload-error"
         >
-          <Text fontSize="sm" color="error.fg">
+          <Text fontSize="sm">
             {error}
           </Text>
         </Box>
@@ -184,7 +184,7 @@ export default function AppFileUpload({
                   p={"2"}
                   borderRadius="md"
                   bg="brand.muted"
-                  color="brand.primary"
+                  color="brand.fg"
                   flexShrink={0}
                 >
                   <Icon size={"md"} data-test="fileupload-file-icon">

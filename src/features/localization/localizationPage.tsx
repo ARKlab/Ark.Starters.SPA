@@ -64,14 +64,14 @@ export default function LocalizationPage() {
         {t("localization-samples.title")} <LocaleSwitcher />
       </Heading>
       <VStack separator={<StackSeparator borderColor="border" />} gap="4" align="stretch">
-        <Box my="1" borderRadius={"md"} p={"5"} bg={"header"}>
+        <Box my="1" borderRadius={"md"} p={"5"} bg={"bg.emphasized"}>
           <Heading lineClamp={1} size="md">
             <strong>{t("localization_simple_text")}</strong>
           </Heading>
           <Text>{t("hello_world")}</Text>
         </Box>
 
-        <Box my="1" borderRadius={"md"} p={"5"} bg={"header"}>
+        <Box my="1" borderRadius={"md"} p={"5"} bg={"bg.emphasized"}>
           <Heading size={"md"}>
             <strong>{t("form_error")}:</strong>
           </Heading>
@@ -109,7 +109,7 @@ export default function LocalizationPage() {
             </Field.Root>
           </Flex>
         </Box>
-        <Box my="1" borderRadius={"md"} p={"5"} bg={"header"}>
+        <Box my="1" borderRadius={"md"} p={"5"} bg={"bg.emphasized"}>
           <Heading lineClamp={1} size="md">
             <strong>{t("localization_dynamic_text")}</strong>
           </Heading>
@@ -131,7 +131,7 @@ export default function LocalizationPage() {
           <Text my="3">{t("localization_example_1", { number: apples })}</Text>
         </Box>
 
-        <Box my="1" borderRadius={"md"} p={"5"} bg={"header"}>
+        <Box my="1" borderRadius={"md"} p={"5"} bg={"bg.emphasized"}>
           <Heading lineClamp={1} size="md">
             <strong>{t("localization_date")}</strong>
           </Heading>
@@ -151,7 +151,7 @@ export default function LocalizationPage() {
           </Text>
         </Box>
 
-        <Box my="1" borderRadius={"md"} p={"5"} bg={"header"}>
+        <Box my="1" borderRadius={"md"} p={"5"} bg={"bg.emphasized"}>
           <Heading lineClamp={1} size="md">
             <strong>{t("localization_currencies")}</strong>
           </Heading>

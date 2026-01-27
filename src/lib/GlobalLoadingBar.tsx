@@ -31,7 +31,7 @@ export const GlobalLoadingBar = () => {
   const debounced = useDebounce(loading, 500);
   return (
     <Progress.Root size={"xs"} value={debounced ? null : 0} variant="subtle">
-      <Progress.Track bg={"header"}>
+      <Progress.Track bg={"bg.emphasized"}>
         <Progress.Range />
       </Progress.Track>
     </Progress.Root>
