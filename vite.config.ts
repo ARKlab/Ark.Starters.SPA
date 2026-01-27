@@ -206,14 +206,14 @@ export default defineConfig(({ mode }) => {
       port: parseInt(process.env.PORT ?? "", 10) || 3000,
       open: true,
       proxy: {
-        "/connectionStrings.cjs": `http://localhost:${process.env.CONNECTIONSTRINGS_PORT || "4000"}`,
+        "/connectionStrings.cjs": `http://localhost:${process.env.CONNECTIONSTRINGS_PORT ?? "4000"}`,
       },
     },
     preview: {
       port: parseInt(process.env.PORT ?? "", 10) || 3000,
       open: true,
       proxy: {
-        "/connectionStrings.cjs": `http://localhost:${process.env.CONNECTIONSTRINGS_PORT || "4000"}`,
+        "/connectionStrings.cjs": `http://localhost:${process.env.CONNECTIONSTRINGS_PORT ?? "4000"}`,
       },
     },
     esbuild: {
