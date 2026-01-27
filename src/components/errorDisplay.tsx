@@ -43,7 +43,7 @@ export function ErrorDisplay({
               flexDirection="column"
               justifyContent="center"
               alignItems="center"
-              bg={"colorPalette.subtle"}
+              layerStyle="fill.subtle"
               rounded="xl"
               w="16"
               h="16"

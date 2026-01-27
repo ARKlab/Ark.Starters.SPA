@@ -23,7 +23,7 @@ export function ActiveFiltersBar(props: ActiveFiltersBarProps) {
         <Text fontWeight="semibold" fontSize="sm" color="fg.muted">
           {t("filters.active_filters")} ({filters.length})
         </Text>
-        <Button variant="ghost" size="xs" colorPalette="red" onClick={onClearAll}>
+        <Button variant="ghost" size="xs" colorPalette="error" onClick={onClearAll}>
           {t("filters.clear_all")}
         </Button>
       </HStack>

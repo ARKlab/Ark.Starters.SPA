@@ -39,7 +39,7 @@ function DefaultFallback({ error, resetErrorBoundary, featureLabel }: DefaultFal
   const errorObj = errorToErrorObject(error);
 
   return (
-    <Box p={"4"} colorPalette="error" bg="colorPalette.subtle" borderRadius="md" border="xs" borderColor="colorPalette.border">
+    <Box p={"4"} colorPalette="error" layerStyle="outline.solid" borderRadius="md">
       <VStack align="start" gap={"3"}>
         <HStack gap={"2"}>
           <LuTriangleAlert size={"20"} />

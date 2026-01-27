@@ -149,10 +149,9 @@ export default function AppFileUpload({
         <Box
           p="3"
           colorPalette="error"
-          bg="colorPalette.subtle"
+          layerStyle="fill.subtle"
           borderRadius="md"
           borderLeft="xs"
-          borderLeftColor="colorPalette.border"
           data-test="fileupload-error"
         >
           <Text fontSize="sm">

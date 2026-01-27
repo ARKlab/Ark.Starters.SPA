@@ -89,24 +89,34 @@ Components using `colorPalette="brand"` automatically get access to:
 
 ### Error, Warning, Success States
 
-Use the `error` colorPalette for error states. The `colorPalette` prop is inherited by children, so you don't need to repeat it:
+Use the `error` colorPalette with layerStyles for error states. The `colorPalette` prop and `layerStyle` work together and inherit to children:
 
 ```tsx
-// ✅ Correct - Use error palette with inheritance
-<Box colorPalette="error" bg="colorPalette.subtle" borderColor="colorPalette.border">
+// ✅ Correct - Use error palette with layerStyle
+<Box colorPalette="error" layerStyle="outline.solid">
   <Heading>Error occurred</Heading> {/* Inherits error palette */}
   <Text>Error message</Text> {/* Inherits error palette */}
   <Button>Retry</Button> {/* Inherits error palette */}
 </Box>
 
+// ✅ Correct - Use fill.subtle layerStyle for subtle backgrounds
+<Box colorPalette="error" layerStyle="fill.subtle">
+  <Text>Subtle error message</Text>
+</Box>
+
 // ✅ Correct - Use error palette for buttons
 <Button colorPalette="error">Delete</Button>
 
-// ❌ Wrong - Using direct semantic tokens instead of palette
-<Box bg="bg.error" borderColor="border.error">
-  <Text color="fg.error">Error message</Text>
+// ❌ Wrong - Manually setting bg and borderColor instead of using layerStyle
+<Box colorPalette="error" bg="colorPalette.subtle" borderColor="colorPalette.border">
+  <Text>Error message</Text>
 </Box>
 ```
+
+**Available layerStyles** (from Chakra UI):
+- `fill.subtle`, `fill.muted`, `fill.surface`, `fill.solid` - Background + text color combinations
+- `outline.subtle`, `outline.solid` - Border + text color combinations  
+- `indicator.bottom`, `indicator.top`, `indicator.start`, `indicator.end` - Indicator lines
 
 The `error` palette automatically provides contextual semantic tokens:
 - `colorPalette.solid` - Solid error background
@@ -115,7 +125,7 @@ The `error` palette automatically provides contextual semantic tokens:
 - `colorPalette.border` - Error border color
 - `colorPalette.muted`, `colorPalette.emphasized`, `colorPalette.contrast`, `colorPalette.focusRing`
 
-These work the same way as the brand palette tokens and are inherited by children.
+These work with layerStyles and are inherited by children.
 
 ## Usage in Components
 
@@ -163,16 +173,22 @@ Components automatically use the global brand palette through Chakra's recipe sy
 
 The global `colorPalette: "brand"` setting in `theme.ts` ensures all components use brand colors by default through their variants and recipes.
 
-**Color Palette Inheritance**: The `colorPalette` prop is inherited by all children, so you only need to set it once on a parent container. For example:
+**Color Palette Inheritance**: The `colorPalette` prop is inherited by all children. Use `layerStyle` for common styling patterns instead of manually setting colors:
 
 ```tsx
-// colorPalette is set once and inherited by all children
-<Box colorPalette="error">
+// colorPalette and layerStyle are set once and inherited by all children
+<Box colorPalette="error" layerStyle="fill.subtle">
   <Heading>Error</Heading> {/* Uses error palette */}
   <Text>Message</Text> {/* Uses error palette */}
   <Button>Action</Button> {/* Uses error palette */}
 </Box>
 ```
+
+**Using LayerStyles**: Chakra provides pre-defined layerStyles that work with colorPalette:
+- `fill.subtle` - Subtle background with appropriate text color
+- `fill.solid` - Solid background with contrast text
+- `outline.solid` - Border with appropriate text color
+- `outline.subtle` - Subtle border with text color
 
 ## Light and Dark Mode
 
@@ -211,10 +227,10 @@ The new theme replaces:
 - `brand.selected` → `brand.emphasized`
 - `colorPalette="primary"` → removed (global default is "brand")
 - `colorPalette="brand"` → removed (global, only use for exceptions)
-- Direct color tokens → colorPalette with contextual tokens:
-  - `bg="bg.error"` → `colorPalette="error" bg="colorPalette.subtle"`
-  - `color="fg.error"` → `colorPalette="error"` (text inherits palette)
-  - `borderColor="border.error"` → `colorPalette="error" borderColor="colorPalette.border"`
+- Direct color tokens → colorPalette with layerStyle:
+  - `bg="bg.error" borderColor="border.error"` → `colorPalette="error" layerStyle="outline.solid"`
+  - `bg="bg.error"` → `colorPalette="error" layerStyle="fill.subtle"`
+  - `color="fg.error"` → `colorPalette="error"` (text inherits palette automatically)
 
 ## Resources
 
