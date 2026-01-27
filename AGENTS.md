@@ -39,13 +39,55 @@ npm run format         # Format code with oxfmt
 npm run format:check   # Check formatting without changes
 npm test               # Run E2E tests (Cypress)
 
-# E2E - interactive loop (UI)
-# Starts the app in e2e mode and opens Cypress UI
-npm run e2e:start
+# E2E Testing
 
-# E2E - single spec (headless)
-# Requires the app running in e2e mode (see below)
-npm run cypress:run -- --spec cypress/e2e/your-test.e2e.ts
+## Full Test Suite (CI/Production Mode)
+npm test               # Run all E2E tests against production build (recommended for CI)
+
+## Development Mode Testing
+
+### Interactive UI Mode (Best for Writing Tests)
+npm run e2e:start      # Starts dev server + opens Cypress UI
+
+### Running Specific Specs Against Dev Server (For AI Agents)
+
+**Important**: Dev server must be running in background before executing specs.
+
+#### Step 1: Start Dev Server in Background
+```bash
+# Start dev server on default ports (3000 app, 4000 connectionStrings)
+npm start &
+
+# Wait for server to be ready
+npx wait-on http-get://localhost:3000 http-get://localhost:4000
+```
+
+#### Step 2: Run Specific Spec File
+```bash
+# Run a single spec file against the dev server
+npx cypress run --spec cypress/e2e/your-test.e2e.ts
+
+# Example: Test the appInput component
+npx cypress run --spec cypress/e2e/appInput.e2e.ts
+```
+
+#### For AI Agents: Complete Workflow
+```bash
+# 1. Start dev server in background (async mode)
+npm start &
+
+# 2. Wait for server to be ready
+npx wait-on --timeout 60000 http-get://localhost:3000 http-get://localhost:4000
+
+# 3. Run specific test
+npx cypress run --spec cypress/e2e/appInput.e2e.ts
+
+# 4. Stop dev server when done
+pkill -f "vite"
+pkill -f "connectionStrings"
+```
+
+**Note**: For full CI test runs, always use `npm test` which builds and serves the optimized production version for best performance.
 
 # Utility
 npm outdated           # Check package versions

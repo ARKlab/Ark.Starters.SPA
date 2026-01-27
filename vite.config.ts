@@ -168,7 +168,7 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       emptyOutDir: true,
-      outDir: "build",
+      outDir: mode == "e2e" ? "cypress/dist" : "build",
       chunkSizeWarningLimit: chunkSizeLimit,
       target: "esnext",
       rollupOptions: {
