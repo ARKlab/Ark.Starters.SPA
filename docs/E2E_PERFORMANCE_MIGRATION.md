@@ -74,26 +74,28 @@ cypress/dist
 
 ### Before (Build + Preview)
 ```
-Total time: ~2m+ per test run
-├─ Build step: ~1m 46s
-│  ├─ TypeScript compilation
-│  ├─ Vite bundle creation
+Server startup time: ~2m per test run
+├─ TypeScript compilation: ~10s (part of build)
+├─ Vite build: ~1m 36s
+│  ├─ Bundle creation
 │  ├─ Code instrumentation for coverage
 │  └─ Asset optimization
-└─ Test execution: ~variable
+└─ Preview server startup: ~5s
 ```
 
 ### After (Dev Server)
 ```
-Total time: ~1m faster
-├─ Dev server start: ~10-15s
+Server startup time: ~1-2s per test run
+├─ Dev server start: ~1-2s
 │  ├─ No bundling required
 │  ├─ On-demand compilation
-│  └─ Faster instrumentation
-└─ Test execution: ~same (actual test time unchanged)
+│  └─ Istanbul instrumentation enabled
+└─ No build step needed
 ```
 
-**Expected improvement: ~1m 30s faster per test run**
+**Expected improvement: ~2 minutes faster server startup per test run**
+
+Note: The actual test execution time (Cypress running tests) is the same for both approaches. The improvement is entirely in the server startup phase.
 
 ## How to Measure Performance
 
@@ -130,26 +132,28 @@ time npm run test
 ### 3. Compare Results
 
 Note the following metrics:
-- **Total execution time**: From start to finish
-- **Time to first test**: How long until Cypress starts executing tests
-- **Build time**: Old version only (look for "vite build" in output)
-- **Server startup time**: New version (look for "Local: http://localhost:3001")
+- **Server startup time**: Time until servers are ready for tests
+- **Test execution time**: Time for Cypress to run actual tests
+- **Total time**: Server startup + test execution
 
 Example output format:
 ```
 OLD (Build + Preview):
-- Build time: 1m 46s
-- Server startup: 5s
+- TypeCheck + Build: 1m 46s
+- Preview server startup: 5s
 - Test execution: 30s
 - Total: 2m 21s
 
 NEW (Dev Server):
-- Server startup: 12s
-- Test execution: 30s
-- Total: 42s
+- Dev server startup: 1-2s
+- Test execution: 30s  
+- Total: ~32s
 
-Improvement: 1m 39s faster (69% reduction)
+Server startup improvement: ~1m 49s faster (from 1m 51s to 2s)
+Total improvement: ~1m 49s faster (from 2m 21s to 32s) = 77% reduction
 ```
+
+Note: Test execution time remains the same; the improvement is in server startup.
 
 ## Benefits
 

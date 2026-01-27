@@ -70,7 +70,7 @@ This opens the Cypress UI for interactive test running and debugging.
 #### Performance Notes
 
 E2E tests now use the Vite development server instead of building the application, which provides:
-- **~90s faster** test execution (no build step required)
+- **Significantly faster** test execution (no build step required - server ready in ~1s vs ~2min build)
 - Better debugging with source maps
 - Faster feedback loop during development
 

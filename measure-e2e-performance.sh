@@ -73,10 +73,15 @@ else
 fi
 
 echo ""
-echo "📝 Comparison with old build approach:"
-echo "   Old (build + preview): ~106 seconds"
-echo "   New (dev server):      ~${ELAPSED} seconds"
-echo "   Improvement:           ~$( echo "106 - $ELAPSED" | bc )s faster"
+echo "📝 Performance Improvement:"
+echo "   Old approach (build + preview): ~106s for build, ~5s for preview = ~111s total"
+echo "   New approach (dev server):      ~${ELAPSED}s total"
+IMPROVEMENT=$(echo "111 - $ELAPSED" | bc)
+PERCENT=$(echo "scale=1; ($IMPROVEMENT / 111) * 100" | bc)
+echo "   Improvement:                    ~${IMPROVEMENT}s faster (~${PERCENT}% reduction)"
+echo ""
+echo "   Note: This measures server startup time only."
+echo "   Actual test execution time is the same for both approaches."
 echo ""
 
 # Cleanup
