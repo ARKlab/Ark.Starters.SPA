@@ -39,17 +39,17 @@ function DefaultFallback({ error, resetErrorBoundary, featureLabel }: DefaultFal
   const errorObj = errorToErrorObject(error);
 
   return (
-    <Box p={"4"} bg="bg.error" borderRadius="md" border="xs" borderColor="border.error">
+    <Box p={"4"} colorPalette="error" bg="colorPalette.subtle" borderRadius="md" border="xs" borderColor="colorPalette.border">
       <VStack align="start" gap={"3"}>
         <HStack gap={"2"}>
-          <LuTriangleAlert size={"20"} color="var(--chakra-colors-fg-error)" />
-          <Heading as="h3" size="sm" color="fg.error">
+          <LuTriangleAlert size={"20"} />
+          <Heading as="h3" size="sm">
             {featureLabel
               ? t("featureErrorBoundary_errorInFeature", { feature: featureLabel })
               : t("featureErrorBoundary_errorOccurred")}
           </Heading>
         </HStack>
-        <Text fontSize="sm" color="fg.error">
+        <Text fontSize="sm">
           {errorObj.message ? errorObj.message : t("featureErrorBoundary_unexpectedError")}
         </Text>
         <Button onClick={resetErrorBoundary} size="sm" variant="outline">

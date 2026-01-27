@@ -38,18 +38,18 @@ export function ErrorDisplay({
     <Box py="10" px="6">
       <Container>
         <VStack w="full">
-          <Box display="inline-block">
+          <Box display="inline-block" colorPalette="error">
             <Flex
               flexDirection="column"
               justifyContent="center"
               alignItems="center"
-              bg={"bg.error"}
+              bg={"colorPalette.subtle"}
               rounded="xl"
               w="16"
               h="16"
               textAlign="center"
             >
-              <LuX color={"fg.error"} />
+              <LuX />
             </Flex>
           </Box>
           <Heading asChild size="md" mt="6" mb="2">

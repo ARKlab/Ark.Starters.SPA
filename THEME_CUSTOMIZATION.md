@@ -89,29 +89,33 @@ Components using `colorPalette="brand"` automatically get access to:
 
 ### Error, Warning, Success States
 
-**Important**: Don't use `colorPalette="error"`. Instead, use semantic tokens or Chakra's built-in `red` palette:
+Use the `error` colorPalette for error states. The `colorPalette` prop is inherited by children, so you don't need to repeat it:
 
 ```tsx
-// ✅ Correct - Use semantic tokens for error states
+// ✅ Correct - Use error palette with inheritance
+<Box colorPalette="error" bg="colorPalette.subtle" borderColor="colorPalette.border">
+  <Heading>Error occurred</Heading> {/* Inherits error palette */}
+  <Text>Error message</Text> {/* Inherits error palette */}
+  <Button>Retry</Button> {/* Inherits error palette */}
+</Box>
+
+// ✅ Correct - Use error palette for buttons
+<Button colorPalette="error">Delete</Button>
+
+// ❌ Wrong - Using direct semantic tokens instead of palette
 <Box bg="bg.error" borderColor="border.error">
   <Text color="fg.error">Error message</Text>
 </Box>
-
-// ✅ Correct - Use red palette for error buttons
-<Button colorPalette="red">Delete</Button>
-
-// ❌ Wrong - No "error" palette exists
-<Button colorPalette="error">Delete</Button>
 ```
 
-Chakra components with `status` variants (like Alert) use the correct palette automatically:
+The `error` palette automatically provides contextual semantic tokens:
+- `colorPalette.solid` - Solid error background
+- `colorPalette.subtle` - Subtle error background  
+- `colorPalette.fg` - Error text color
+- `colorPalette.border` - Error border color
+- `colorPalette.muted`, `colorPalette.emphasized`, `colorPalette.contrast`, `colorPalette.focusRing`
 
-```tsx
-// Alert with error status uses red palette internally
-<Alert.Root status="error">
-  <Alert.Title>Error occurred</Alert.Title>
-</Alert.Root>
-```
+These work the same way as the brand palette tokens and are inherited by children.
 
 ## Usage in Components
 
@@ -159,7 +163,16 @@ Components automatically use the global brand palette through Chakra's recipe sy
 
 The global `colorPalette: "brand"` setting in `theme.ts` ensures all components use brand colors by default through their variants and recipes.
 
-**Note on error states**: Use `colorPalette="red"` for error/destructive actions (not `"error"`), or use semantic tokens like `bg.error`, `fg.error`, `border.error` for custom error styling.
+**Color Palette Inheritance**: The `colorPalette` prop is inherited by all children, so you only need to set it once on a parent container. For example:
+
+```tsx
+// colorPalette is set once and inherited by all children
+<Box colorPalette="error">
+  <Heading>Error</Heading> {/* Uses error palette */}
+  <Text>Message</Text> {/* Uses error palette */}
+  <Button>Action</Button> {/* Uses error palette */}
+</Box>
+```
 
 ## Light and Dark Mode
 
@@ -197,7 +210,11 @@ The new theme replaces:
 - `brand.primary` → `brand.solid`
 - `brand.selected` → `brand.emphasized`
 - `colorPalette="primary"` → removed (global default is "brand")
-- `colorPalette="brand"` → removed (no longer needed - it's global)
+- `colorPalette="brand"` → removed (global, only use for exceptions)
+- Direct color tokens → colorPalette with contextual tokens:
+  - `bg="bg.error"` → `colorPalette="error" bg="colorPalette.subtle"`
+  - `color="fg.error"` → `colorPalette="error"` (text inherits palette)
+  - `borderColor="border.error"` → `colorPalette="error" borderColor="colorPalette.border"`
 
 ## Resources
 

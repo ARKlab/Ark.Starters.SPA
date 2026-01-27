@@ -149,6 +149,35 @@ const config = defineConfig({
           },
         },
 
+        // Error color palette semantic tokens
+        // These work with colorPalette="error" on components
+        error: {
+          contrast: {
+            value: { _light: "white", _dark: "white" },
+          },
+          fg: {
+            value: { _light: "{colors.red.700}", _dark: "{colors.red.300}" },
+          },
+          subtle: {
+            value: { _light: "{colors.red.100}", _dark: "{colors.red.900}" },
+          },
+          muted: {
+            value: { _light: "{colors.red.200}", _dark: "{colors.red.800}" },
+          },
+          emphasized: {
+            value: { _light: "{colors.red.300}", _dark: "{colors.red.700}" },
+          },
+          solid: {
+            value: { _light: "{colors.red.600}", _dark: "{colors.red.600}" },
+          },
+          focusRing: {
+            value: { _light: "{colors.red.500}", _dark: "{colors.red.500}" },
+          },
+          border: {
+            value: { _light: "{colors.red.500}", _dark: "{colors.red.400}" },
+          },
+        },
+
         // Code syntax highlighting tokens
         code: {
           solid: {

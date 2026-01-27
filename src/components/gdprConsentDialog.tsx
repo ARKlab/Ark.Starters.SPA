@@ -134,7 +134,7 @@ export const GdprConsentDialog = () => {
                 {t("reject")}
               </Button>
               <Button
-                colorPalette="red"
+                colorPalette="error"
                 onClick={() => {
                   actions.acceptAll();
                   onClose();
@@ -224,7 +224,7 @@ export const GdprConsentDialog = () => {
             </Box>
             <Spacer />
             <ButtonGroup gap={"1"}>
-              <Button colorPalette="red" type="submit">
+              <Button colorPalette="error" type="submit">
                 {t("accept")}
               </Button>
             </ButtonGroup>

@@ -86,7 +86,7 @@ export default function AppFileUpload({
         width="full"
         minHeight="3xs"
         border="xs"
-        borderColor={isDragging ? "brand.border" : error ? "border.error" : "border"}
+        borderColor={isDragging ? "brand.border" : error ? "error.border" : "border"}
         borderRadius="xl"
         bg={isDragging ? "brand.subtle" : "bg"}
         cursor="checkbox"
@@ -148,13 +148,14 @@ export default function AppFileUpload({
       {error && (
         <Box
           p="3"
-          bg="bg.error"
+          colorPalette="error"
+          bg="colorPalette.subtle"
           borderRadius="md"
           borderLeft="xs"
-          borderLeftColor="border.error"
+          borderLeftColor="colorPalette.border"
           data-test="fileupload-error"
         >
-          <Text fontSize="sm" color="fg.error">
+          <Text fontSize="sm">
             {error}
           </Text>
         </Box>

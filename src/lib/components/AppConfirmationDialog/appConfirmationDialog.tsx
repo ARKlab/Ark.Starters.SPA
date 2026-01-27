@@ -41,7 +41,7 @@ export const AppConfirmationDialog = (props: {
             </DialogCloseTrigger>
             {props.onConfirm !== undefined ? (
               <Button
-                colorPalette="red"
+                colorPalette="error"
                 onClick={() => {
                   props.onConfirm?.();
                   props.onOpenChange?.(false);

@@ -45,7 +45,7 @@ export const AppModal = (props: {
   if (props.footerCloseButton) {
     footerCloseButton = (
       <Button
-        colorPalette="red"
+        colorPalette="error"
         mr={"3"}
         onClick={props.onClose}
         data-test="appmodal-footer-close"
