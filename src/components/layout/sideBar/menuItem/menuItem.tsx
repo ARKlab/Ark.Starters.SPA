@@ -24,7 +24,7 @@ export default function MenuItem(props: MenuItemProps) {
                 ml="1"
                 fontSize="md"
                 _groupHover={{
-                  color: "brandPalette.900",
+                  color: "fg",
                 }}
                 as={icon}
               />

@@ -83,7 +83,7 @@ const Download = () => {
       <Wrap gap={"1"} my={"5"}>
         <WrapItem>
           <Button
-            colorPalette={"primary"}
+            colorPalette={"brand"}
             loading={isLoading}
             disabled={isLoading}
             onClick={async () => download("Success")}

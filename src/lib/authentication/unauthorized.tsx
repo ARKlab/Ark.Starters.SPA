@@ -22,7 +22,7 @@ const Unauthorized = () => {
           <Text fontSize="lg" mt={"4"}>
             You need to be logged in to view this page.
           </Text>
-          <Button colorPalette="primary" variant="outline" mt={"4"} onClick={login}>
+          <Button colorPalette="brand" variant="outline" mt={"4"} onClick={login}>
             Login
           </Button>
         </>
