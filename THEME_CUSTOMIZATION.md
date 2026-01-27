@@ -87,6 +87,32 @@ Components using `colorPalette="brand"` automatically get access to:
 - `brand.border` - Brand border color
 - `brand.focusRing` - Focus ring color
 
+### Error, Warning, Success States
+
+**Important**: Don't use `colorPalette="error"`. Instead, use semantic tokens or Chakra's built-in `red` palette:
+
+```tsx
+// ✅ Correct - Use semantic tokens for error states
+<Box bg="bg.error" borderColor="border.error">
+  <Text color="fg.error">Error message</Text>
+</Box>
+
+// ✅ Correct - Use red palette for error buttons
+<Button colorPalette="red">Delete</Button>
+
+// ❌ Wrong - No "error" palette exists
+<Button colorPalette="error">Delete</Button>
+```
+
+Chakra components with `status` variants (like Alert) use the correct palette automatically:
+
+```tsx
+// Alert with error status uses red palette internally
+<Alert.Root status="error">
+  <Alert.Title>Error occurred</Alert.Title>
+</Alert.Root>
+```
+
 ## Usage in Components
 
 ### ✅ Correct - Using Semantic Tokens and Variants
@@ -126,9 +152,14 @@ Components automatically use the global brand palette through Chakra's recipe sy
 <Button>Primary Action</Button>
 <Switch />
 <Checkbox />
+
+// ✅ Correct - Use specific palettes when needed (e.g., for destructive actions)
+<Button colorPalette="red">Delete</Button>
 ```
 
 The global `colorPalette: "brand"` setting in `theme.ts` ensures all components use brand colors by default through their variants and recipes.
+
+**Note on error states**: Use `colorPalette="red"` for error/destructive actions (not `"error"`), or use semantic tokens like `bg.error`, `fg.error`, `border.error` for custom error styling.
 
 ## Light and Dark Mode
 

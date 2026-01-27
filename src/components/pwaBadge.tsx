@@ -50,7 +50,7 @@ export const PWABadge = () => {
           <>
             <Text>{t("pwaBadge.newVersion.body")}</Text>
             <Button
-              colorPalette="error"
+              colorPalette="red"
               size={"sm"}
               onClick={async () => updateServiceWorker(true)}
             >

@@ -94,7 +94,7 @@ const Download = () => {
         </WrapItem>
         <WrapItem>
           <Button
-            colorPalette={"error"}
+            colorPalette={"red"}
             loading={isLoading}
             disabled={isLoading}
             onClick={async () => download("Failure")}
