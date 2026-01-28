@@ -205,15 +205,20 @@ export default defineConfig(({ mode }) => {
     server: {
       port: parseInt(process.env.PORT ?? "", 10) || 3000,
       open: true,
+      watch: {
+        // Ignore coverage directories to prevent file watcher from triggering reloads
+        // when coverage files are generated during e2e tests
+        ignored: ["**/coverage/**", "**/.nyc_output/**"],
+      },
       proxy: {
-        "/connectionStrings.cjs": "http://localhost:4000",
+        "/connectionStrings.cjs": `http://localhost:${process.env.CONNECTIONSTRINGS_PORT ?? "4000"}`,
       },
     },
     preview: {
       port: parseInt(process.env.PORT ?? "", 10) || 3000,
       open: true,
       proxy: {
-        "/connectionStrings.cjs": "http://localhost:4000",
+        "/connectionStrings.cjs": `http://localhost:${process.env.CONNECTIONSTRINGS_PORT ?? "4000"}`,
       },
     },
     esbuild: {

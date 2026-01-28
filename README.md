@@ -26,6 +26,69 @@ In order to Update all packages you can also use the command `npx npm-check-upda
 
 TODO: this section would provide examples on how to run the template and how to use it
 
+### Running and Testing
+
+#### Development Server
+
+To start the development server:
+
+```bash
+npm start
+```
+
+This will:
+- Start the connectionStrings server on port 4000
+- Start the Vite dev server on port 3000
+- Open your browser automatically
+
+#### E2E Tests
+
+To run end-to-end tests:
+
+```bash
+npm run test
+```
+
+This will:
+- Build the application in production mode with coverage instrumentation
+- Start the connectionStrings server on port 4000
+- Start the Vite preview server on port 3000
+- Run Cypress tests in headless mode
+- Generate coverage reports
+
+**Note:** Tests use production build for optimal performance. For development testing, see below.
+
+#### Interactive E2E Testing
+
+For interactive test development:
+
+```bash
+npm run e2e:start
+```
+
+This opens the Cypress UI for interactive test running and debugging against the dev server.
+
+#### Running Specific Tests During Development
+
+To run specific test files during development without a full build:
+
+```bash
+# Start dev server
+npm start
+
+# In another terminal, run a specific test
+npx cypress run --spec cypress/e2e/your-test.e2e.ts
+```
+
+#### Performance Notes
+
+E2E tests use the production build (`vite build` + `vite preview`) for optimal performance:
+- Production builds are pre-bundled and optimized (fewer network requests)
+- Tests execute faster compared to dev server (which serves unbundled modules)
+- CI/CD pipelines benefit from consistent, reliable performance
+
+For detailed information about the e2e test performance migration, see [E2E Performance Migration](docs/E2E_PERFORMANCE_MIGRATION.md).
+
 ### Design Guidelines
 
 When styling components, we follow these guidelines:

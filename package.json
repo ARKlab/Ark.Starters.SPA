@@ -36,7 +36,8 @@
     "pree2e:ci:app": "cross-env-shell NODE_ENV=production CYPRESS_COVERAGE=true \"npm run typecheck && vite build --mode e2e\"",
     "e2e:ci:app": "cross-env NODE_ENV=production BROWSER=none vite preview --mode e2e",
     "pree2e:ci:run": "wait-on --log --timeout 360000 http-get://localhost:4000 http-get://localhost:3000",
-    "e2e:ci:run": "cross-env NODE_ENV=production npm run cypress:run"
+    "e2e:ci:run": "cross-env NODE_ENV=production npm run cypress:run",
+    "e2e:dev": "cross-env BROWSER=none VITE_MODE=e2e concurrently --kill-others \"npm:start\" \"npm:cypress:run\""
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "2.11.3",
