@@ -1,9 +1,0 @@
-{
-  "custom_error": "Questo è un messaggio custom.",
-  "password_complexity": "La password deve contenere almeno 6 caratteri.",
-  "custom_error_with_path": "'{{- path}}' non va bene. Questo è un messaggio custom.",
-  "paths": {
-    "customErrorInline": "Il Nome Del Field Tradotto"
-  },
-  "playground": "PlayGround in italiano"
-}

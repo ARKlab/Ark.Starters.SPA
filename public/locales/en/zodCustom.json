@@ -1,8 +1,0 @@
-{
-  "custom_error": "This is a custom error.",
-  "password_complexity": "password needs to be at least 6 characters long",
-  "custom_error_with_path": "'{{- path}}' is not valid. This is a custom error.",
-  "paths": {
-    "customErrorInline": "The Translated Field Name"
-  }
-}
