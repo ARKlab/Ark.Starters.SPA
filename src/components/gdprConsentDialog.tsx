@@ -58,7 +58,6 @@ function Option(props: OptionProps) {
           render={({ field }) => (
             <Switch
               {...field}
-              colorPalette="primary"
               size="lg"
               checked={field.value}
               readOnly={required}

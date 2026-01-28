@@ -40,7 +40,7 @@ const Layout = () => {
           <SimpleSidebar />
         </GridItem>
 
-        <GridItem area={"content"} as={"main"} p="4" overflow={"auto"} bg={"page"}>
+        <GridItem area={"content"} as={"main"} p="4" overflow={"auto"} bg={"bg"}>
           <ErrorBoundary>
             <Suspense fallback={<CenterSpinner />}>
               <Outlet />
