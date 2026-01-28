@@ -34,30 +34,30 @@ export default defineConfig(({ mode }) => {
         // Feature-based for browsers lacking modern features
         // CSS Grid polyfills cause rendering problems, so require native support
         targets: [
-          "supports es6-module",        // Basic module support
-          "supports css-variables",      // Chakra UI v3 requirement
-          "supports css-grid",           // Layouts (polyfills cause issues)
-          "supports serviceworkers",     // PWA requirement
-          ">0.5%",                       // Market share threshold
-          "not dead",                    // Still maintained
+          "supports es6-module", // Basic module support
+          "supports css-variables", // Chakra UI v3 requirement
+          "supports css-grid", // Layouts (polyfills cause issues)
+          "supports serviceworkers", // PWA requirement
+          ">0.5%", // Market share threshold
+          "not dead", // Still maintained
         ],
-        
+
         // Modern browser targets (get clean, unpolyfilled code)
         // Uses Web Platform Baseline: features widely available for 30+ months
         // Includes downstream browsers (Opera, Brave, Samsung Internet)
         modernTargets: [
           "baseline widely available with downstream and " +
-          "fully supports css-variables and " +
-          "fully supports es6-module and " +
-          "fully supports es6-module-dynamic-import and " +
-          "fully supports css-grid and " +
-          "fully supports async-functions and " +
-          "fully supports serviceworkers"
+            "fully supports css-variables and " +
+            "fully supports es6-module and " +
+            "fully supports es6-module-dynamic-import and " +
+            "fully supports css-grid and " +
+            "fully supports async-functions and " +
+            "fully supports serviceworkers",
         ],
-        
+
         // Modern browsers get NO polyfills (fast experience)
         modernPolyfills: false,
-        
+
         // Legacy browsers get polyfilled chunks (degraded but functional)
         renderLegacyChunks: true,
       }),

@@ -79,6 +79,7 @@ npm start
 ```
 
 This will:
+
 - Start the connectionStrings server on port 4000
 - Start the Vite dev server on port 3000
 - Open your browser automatically
@@ -92,6 +93,7 @@ npm run test
 ```
 
 This will:
+
 - Build the application in production mode with coverage instrumentation
 - Start the connectionStrings server on port 4000
 - Start the Vite preview server on port 3000
@@ -125,6 +127,7 @@ npx cypress run --spec cypress/e2e/your-test.e2e.ts
 #### Performance Notes
 
 E2E tests use the production build (`vite build` + `vite preview`) for optimal performance:
+
 - Production builds are pre-bundled and optimized (fewer network requests)
 - Tests execute faster compared to dev server (which serves unbundled modules)
 - CI/CD pipelines benefit from consistent, reliable performance
@@ -267,8 +270,9 @@ This will be used as globals configuration and can be implemented to support mor
 ### Authentication
 
 This project supports multiple authentication providers through a flexible interface:
+
 - **MSAL** (Microsoft Authentication Library) for Azure AD B2C
-- **Auth0** for Auth0 authentication  
+- **Auth0** for Auth0 authentication
 - **NoopAuthProvider** for development/testing without authentication
 
 #### Selecting Your Authentication Provider
@@ -281,9 +285,13 @@ This project supports multiple authentication providers through a flexible inter
 2. Choose ONE of the following configurations by commenting/uncommenting the appropriate sections:
 
 **Option 1: MSAL (Azure AD B2C) - Default**
+
 ```typescript
 // MSAL - ACTIVE
-import { NoopAuthProvider, AuthProvider } from "../lib/authentication/providers/authProviderInterface";
+import {
+  NoopAuthProvider,
+  AuthProvider,
+} from "../lib/authentication/providers/authProviderInterface";
 import { MsalAuthProvider } from "../lib/authentication/providers/msalAuthProvider";
 import { appSettings } from "./env";
 
@@ -302,6 +310,7 @@ import { Auth0AuthProvider } from "../lib/authentication/providers/auth0AuthProv
 ```
 
 **Option 2: Auth0**
+
 ```typescript
 // MSAL - COMMENTED OUT
 /*
@@ -322,12 +331,14 @@ export const authProvider: AuthProvider = new Auth0AuthProvider({
 ```
 
 **Option 3: No Authentication (Development)**
+
 ```typescript
 import { NoopAuthProvider } from "../lib/authentication/providers/authProviderInterface";
 export const authProvider = new NoopAuthProvider();
 ```
 
 **Bundle Size Impact:**
+
 - **Active provider only:** ~60-70 KB gzipped (MSAL or Auth0)
 - **Unused providers:** 0 KB (automatically excluded by tree-shaking)
 - **Total savings:** ~60-70 KB by ensuring unused providers are commented out

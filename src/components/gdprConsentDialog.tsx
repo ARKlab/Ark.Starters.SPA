@@ -56,12 +56,7 @@ function Option(props: OptionProps) {
           name={name}
           control={control}
           render={({ field }) => (
-            <Switch
-              {...field}
-              size="lg"
-              checked={field.value}
-              readOnly={required}
-            />
+            <Switch {...field} size="lg" checked={field.value} readOnly={required} />
           )}
         />
       </Flex>

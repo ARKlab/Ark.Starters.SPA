@@ -26,7 +26,7 @@
 
 ### Project Commands
 
-```bash
+````bash
 # Development
 bun start              # Start dev server (localhost:3000)
 bun run build          # Production build
@@ -60,9 +60,10 @@ bun start &
 
 # Wait for server to be ready
 bunx wait-on http-get://localhost:3000 http-get://localhost:4000
-```
+````
 
 #### Step 2: Run Specific Spec File
+
 ```bash
 # Run a single spec file against the dev server
 bunx cypress run --spec cypress/e2e/your-test.e2e.ts
@@ -72,6 +73,7 @@ bunx cypress run --spec cypress/e2e/appInput.e2e.ts
 ```
 
 #### For AI Agents: Complete Workflow
+
 ```bash
 # 1. Start dev server in background (async mode)
 bun start &
@@ -90,32 +92,36 @@ pkill -f "connectionStrings"
 **Note**: For full CI test runs, always use `bun test` which builds and serves the optimized production version for best performance.
 
 # Utility
-bun outdated           # Check package versions
+
+bun outdated # Check package versions
+
 ```
 
 ### Repository Structure
 
 ```
+
 src/
-├── app/                    # Routes and page components
-├── components/             # Shared UI components (use 'translation' namespace)
-├── config/                 # Configuration (lang.ts, gdpr.ts)
-├── features/              # Feature modules (use 'translation' namespace)
-├── lib/                   # Shared utilities and libraries
-│   ├── authentication/    # Auth providers (Auth0, MSAL)
-│   ├── components/        # Reusable lib components (use 'libComponents' namespace)
-│   ├── errorHandler/      # Error handling utilities
-│   ├── i18n/             # Internationalization utilities
-│   ├── mocks/            # MSW mock handlers
-│   └── rtk/              # Redux Toolkit slices and APIs
-├── locales/              # Translation files (en/, it/, etc.)
-│   └── {lang}/
-│       ├── translation.json       # Default namespace
-│       ├── libComponents.json     # For lib components
-│       ├── gdpr.json             # GDPR/cookie consent
-│       └── zodCustom.json        # Form validation errors
-└── siteMap/              # Site navigation structure
-```
+├── app/ # Routes and page components
+├── components/ # Shared UI components (use 'translation' namespace)
+├── config/ # Configuration (lang.ts, gdpr.ts)
+├── features/ # Feature modules (use 'translation' namespace)
+├── lib/ # Shared utilities and libraries
+│ ├── authentication/ # Auth providers (Auth0, MSAL)
+│ ├── components/ # Reusable lib components (use 'libComponents' namespace)
+│ ├── errorHandler/ # Error handling utilities
+│ ├── i18n/ # Internationalization utilities
+│ ├── mocks/ # MSW mock handlers
+│ └── rtk/ # Redux Toolkit slices and APIs
+├── locales/ # Translation files (en/, it/, etc.)
+│ └── {lang}/
+│ ├── translation.json # Default namespace
+│ ├── libComponents.json # For lib components
+│ ├── gdpr.json # GDPR/cookie consent
+│ └── zodCustom.json # Form validation errors
+└── siteMap/ # Site navigation structure
+
+````
 
 ---
 
@@ -175,7 +181,7 @@ const nomeUtente = "John";
 function ottieniDatiUtente() {
   /* ... */
 }
-```
+````
 
 **Applies to**:
 

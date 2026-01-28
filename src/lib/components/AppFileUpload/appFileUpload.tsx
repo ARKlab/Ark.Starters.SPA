@@ -154,9 +154,7 @@ export default function AppFileUpload({
           borderLeft="xs"
           data-test="fileupload-error"
         >
-          <Text fontSize="sm">
-            {error}
-          </Text>
+          <Text fontSize="sm">{error}</Text>
         </Box>
       )}
 
@@ -180,13 +178,7 @@ export default function AppFileUpload({
               data-name={file.name}
             >
               <Box display="flex" alignItems="center" gap={"3"} flex={"1"} minWidth={"0"}>
-                <Box
-                  p={"2"}
-                  borderRadius="md"
-                  bg="brand.muted"
-                  color="brand.fg"
-                  flexShrink={0}
-                >
+                <Box p={"2"} borderRadius="md" bg="brand.muted" color="brand.fg" flexShrink={0}>
                   <Icon size={"md"} data-test="fileupload-file-icon">
                     <LuFile />
                   </Icon>
