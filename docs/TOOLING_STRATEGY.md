@@ -7,18 +7,18 @@ This document explains the tooling choices made for this project and the rationa
 ### Development & Testing: tsgo (TypeScript-Native)
 
 - **Package**: `@typescript/native-preview@7.0.0-dev.20260124.1`
-- **Commands**: `npm run typecheck`, `npm run typecheck:cypress`, `npm run typecheck:all`
+- **Commands**: `bun run typecheck`, `bun run typecheck:cypress`, `bun run typecheck:all`
 - **Use Cases**:
-  - Development type-checking (`npm run typecheck`)
-  - E2E test type-checking (`npm run typecheck:cypress`)
-  - CI parallel type-checking (`npm run typecheck:all`)
+  - Development type-checking (`bun run typecheck`)
+  - E2E test type-checking (`bun run typecheck:cypress`)
+  - CI parallel type-checking (`bun run typecheck:all`)
 - **Benefits**: ~10x faster type-checking due to Go-based native implementation
 - **Limitations**: Preview/alpha software, rapid iteration
 
 ### Production Builds: TypeScript v5
 
 - **Package**: `typescript@5.9.3`
-- **Command**: `npm run build` (uses `tsc && vite build`)
+- **Command**: `bun run build` (uses `tsc && vite build`)
 - **Rationale**:
   - Battle-tested, stable release
   - Maximum ecosystem compatibility
@@ -30,7 +30,7 @@ This document explains the tooling choices made for this project and the rationa
 ### Linting: oxlint with tsgo support
 
 - **Packages**: `oxlint`, `oxlint-tsgolint`, `vite-plugin-oxlint`
-- **Command**: `npm run lint`
+- **Command**: `bun run lint`
 - **Configuration**: `.oxlintrc.json`
 - **Benefits**:
   - 20-40x faster than ESLint
@@ -42,7 +42,7 @@ This document explains the tooling choices made for this project and the rationa
 ### Formatting: oxfmt
 
 - **Package**: `oxfmt`
-- **Commands**: `npm run format`, `npm run format:check`
+- **Commands**: `bun run format`, `bun run format:check`
 - **Configuration**: `.oxfmtrc.json` (Prettier-compatible)
 - **Benefits**:
   - Faster than Prettier

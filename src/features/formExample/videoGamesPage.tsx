@@ -1,24 +1,28 @@
-import { Box, Heading } from "@chakra-ui/react"
-import type { ColumnDef } from "@tanstack/react-table"
-import { createColumnHelper } from "@tanstack/react-table"
-import { useTranslation } from "react-i18next"
+import { Box, Heading } from "@chakra-ui/react";
+import type { ColumnDef } from "@tanstack/react-table";
+import { createColumnHelper } from "@tanstack/react-table";
+import { useTranslation } from "react-i18next";
 
-import { useAppDispatch } from "../../app/hooks"
-import { useInjectApiSlice } from "../../app/useInjectApiSlice"
-import { AppArkApiTable } from "../../lib/components/AppArkApiTable/AppArkApiTable"
+import { useAppDispatch } from "../../app/hooks";
+import { useInjectApiSlice } from "../../app/useInjectApiSlice";
+import { AppArkApiTable } from "../../lib/components/AppArkApiTable/AppArkApiTable";
 
-import { videoGameApiSlice, useGetVideoGamesGenresQuery, useGetVideoGamesQuery } from "./videoGamesApiSlice"
-import VideoGamesForm from "./videoGamesForm"
-import type { VideoGame } from "./videoGamesSampleDataAndTypes"
+import {
+  videoGameApiSlice,
+  useGetVideoGamesGenresQuery,
+  useGetVideoGamesQuery,
+} from "./videoGamesApiSlice";
+import VideoGamesForm from "./videoGamesForm";
+import type { VideoGame } from "./videoGamesSampleDataAndTypes";
 
-const columnHelper = createColumnHelper<VideoGame>()
+const columnHelper = createColumnHelper<VideoGame>();
 
 const VideoGamesTableView = () => {
   // Inject API slice for lazy loading
-  useInjectApiSlice(videoGameApiSlice)
+  useInjectApiSlice(videoGameApiSlice);
 
-  const { data: genres } = useGetVideoGamesGenresQuery()
-  const { t } = useTranslation()
+  const { data: genres } = useGetVideoGamesGenresQuery();
+  const { t } = useTranslation();
   const columns = [
     columnHelper.accessor(row => row.title, {
       id: "title",

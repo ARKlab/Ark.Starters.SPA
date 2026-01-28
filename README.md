@@ -6,13 +6,13 @@ In this project, we've curated a collection of UI elements, layouts, and interac
 
 ### Packages
 
-In order to mantain this project with the most updated version of LTS's packages:
+In order to maintain this project with the most updated version of LTS's packages:
 
-Run `npm outdated` to see a table of packages with the current version, wanted version, and latest version.
+Run `bun outdated` to see a table of packages with the current version, wanted version, and latest version.
 
-To update a specific package, you can use `npm update package_name` This will update the package to the 'wanted' version, which is the maximum version that satisfies the versioning range specified in package.json.
+To update a specific package, you can use `bun update package_name` This will update the package to the 'wanted' version, which is the maximum version that satisfies the versioning range specified in package.json.
 
-In order to Update all packages you can also use the command `npx npm-check-updates` that upgrades your package.json dependencies to the latest versions, ignoring specified versions.
+In order to Update all packages you can also use the command `bunx npm-check-updates` that upgrades your package.json dependencies to the latest versions, ignoring specified versions.
 
 ## Features
 
@@ -24,7 +24,49 @@ In order to Update all packages you can also use the command `npx npm-check-upda
 
 ## Getting Started
 
-TODO: this section would provide examples on how to run the template and how to use it
+### Prerequisites
+
+This project uses [Bun](https://bun.sh) as the package manager and task runner. You'll need to install it first:
+
+```bash
+# Install Bun
+curl -fsSL https://bun.sh/install | bash
+```
+
+Or using npm/npx:
+
+```bash
+npm install -g bun
+```
+
+For Windows, use PowerShell:
+
+```powershell
+irm bun.sh/install.ps1 | iex
+```
+
+### Installation
+
+```bash
+# Install dependencies
+bun install
+
+# Start the development server
+bun start
+```
+
+The application will be available at `http://localhost:3000`.
+
+### Available Commands
+
+- `bun start` - Start development server
+- `bun run build` - Build for production
+- `bun run preview` - Preview production build
+- `bun run lint` - Run linter
+- `bun run format` - Format code
+- `bun test` - Run E2E tests
+
+For more commands, see the `scripts` section in `package.json`.
 
 ### Running and Testing
 
@@ -37,6 +79,7 @@ npm start
 ```
 
 This will:
+
 - Start the connectionStrings server on port 4000
 - Start the Vite dev server on port 3000
 - Open your browser automatically
@@ -50,6 +93,7 @@ npm run test
 ```
 
 This will:
+
 - Build the application in production mode with coverage instrumentation
 - Start the connectionStrings server on port 4000
 - Start the Vite preview server on port 3000
@@ -83,6 +127,7 @@ npx cypress run --spec cypress/e2e/your-test.e2e.ts
 #### Performance Notes
 
 E2E tests use the production build (`vite build` + `vite preview`) for optimal performance:
+
 - Production builds are pre-bundled and optimized (fewer network requests)
 - Tests execute faster compared to dev server (which serves unbundled modules)
 - CI/CD pipelines benefit from consistent, reliable performance
@@ -225,8 +270,9 @@ This will be used as globals configuration and can be implemented to support mor
 ### Authentication
 
 This project supports multiple authentication providers through a flexible interface:
+
 - **MSAL** (Microsoft Authentication Library) for Azure AD B2C
-- **Auth0** for Auth0 authentication  
+- **Auth0** for Auth0 authentication
 - **NoopAuthProvider** for development/testing without authentication
 
 #### Selecting Your Authentication Provider
@@ -239,9 +285,13 @@ This project supports multiple authentication providers through a flexible inter
 2. Choose ONE of the following configurations by commenting/uncommenting the appropriate sections:
 
 **Option 1: MSAL (Azure AD B2C) - Default**
+
 ```typescript
 // MSAL - ACTIVE
-import { NoopAuthProvider, AuthProvider } from "../lib/authentication/providers/authProviderInterface";
+import {
+  NoopAuthProvider,
+  AuthProvider,
+} from "../lib/authentication/providers/authProviderInterface";
 import { MsalAuthProvider } from "../lib/authentication/providers/msalAuthProvider";
 import { appSettings } from "./env";
 
@@ -260,6 +310,7 @@ import { Auth0AuthProvider } from "../lib/authentication/providers/auth0AuthProv
 ```
 
 **Option 2: Auth0**
+
 ```typescript
 // MSAL - COMMENTED OUT
 /*
@@ -280,12 +331,14 @@ export const authProvider: AuthProvider = new Auth0AuthProvider({
 ```
 
 **Option 3: No Authentication (Development)**
+
 ```typescript
 import { NoopAuthProvider } from "../lib/authentication/providers/authProviderInterface";
 export const authProvider = new NoopAuthProvider();
 ```
 
 **Bundle Size Impact:**
+
 - **Active provider only:** ~60-70 KB gzipped (MSAL or Auth0)
 - **Unused providers:** 0 KB (automatically excluded by tree-shaking)
 - **Total savings:** ~60-70 KB by ensuring unused providers are commented out
@@ -473,14 +526,14 @@ This starter project include PWA via [vite-plugin-pwa](https://github.com/vite-p
 
 To test the PWA popup, run the preview build.
 
-1. npm run build
-2. npm run preview
+1. bun run build
+2. bun run preview
 3. Ctrl+C to stop the Preview server - leave the page open in the Browser
 4. edit any file
-5. npm run build
-6. npm run preview
+5. bun run build
+6. bun run preview
 7. A wild Popup happears!
-8. **Remember to uninstall the Service Worker** by clearing site data from DevTools before moving back to development via `npm run start`
+8. **Remember to uninstall the Service Worker** by clearing site data from DevTools before moving back to development via `bun run start`
 
 ![image](docs/pwa-uninstall.png)
 
