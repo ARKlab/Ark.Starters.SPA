@@ -124,7 +124,7 @@
     "vite-plugin-react-click-to-component": "4.2.0",
     "vite-plugin-static-copy": "3.1.6",
     "vite-plugin-svgr": "4.5.0",
-    "vite-tsconfig-paths": "6.0.4",
+    "vite-tsconfig-paths": "6.0.5",
     "wait-on": "9.0.3",
     "web-vitals": "5.1.0"
   },
