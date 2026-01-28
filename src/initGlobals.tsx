@@ -11,7 +11,7 @@ const store = initStore({ authProvider });
 if (import.meta.env.DEV || import.meta.env.MODE === "e2e") {
   window.rtkq = {
     resetCache: () => {
-      for (const x of getResetApiActions()) store.dispatch(x);
+      for (const x of getResetApiActions(store)) store.dispatch(x);
     },
   };
 }

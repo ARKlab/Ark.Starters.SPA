@@ -68,6 +68,69 @@ The application will be available at `http://localhost:3000`.
 
 For more commands, see the `scripts` section in `package.json`.
 
+### Running and Testing
+
+#### Development Server
+
+To start the development server:
+
+```bash
+npm start
+```
+
+This will:
+- Start the connectionStrings server on port 4000
+- Start the Vite dev server on port 3000
+- Open your browser automatically
+
+#### E2E Tests
+
+To run end-to-end tests:
+
+```bash
+npm run test
+```
+
+This will:
+- Build the application in production mode with coverage instrumentation
+- Start the connectionStrings server on port 4000
+- Start the Vite preview server on port 3000
+- Run Cypress tests in headless mode
+- Generate coverage reports
+
+**Note:** Tests use production build for optimal performance. For development testing, see below.
+
+#### Interactive E2E Testing
+
+For interactive test development:
+
+```bash
+npm run e2e:start
+```
+
+This opens the Cypress UI for interactive test running and debugging against the dev server.
+
+#### Running Specific Tests During Development
+
+To run specific test files during development without a full build:
+
+```bash
+# Start dev server
+npm start
+
+# In another terminal, run a specific test
+npx cypress run --spec cypress/e2e/your-test.e2e.ts
+```
+
+#### Performance Notes
+
+E2E tests use the production build (`vite build` + `vite preview`) for optimal performance:
+- Production builds are pre-bundled and optimized (fewer network requests)
+- Tests execute faster compared to dev server (which serves unbundled modules)
+- CI/CD pipelines benefit from consistent, reliable performance
+
+For detailed information about the e2e test performance migration, see [E2E Performance Migration](docs/E2E_PERFORMANCE_MIGRATION.md).
+
 ### Design Guidelines
 
 When styling components, we follow these guidelines:
@@ -203,21 +266,84 @@ This will be used as globals configuration and can be implemented to support mor
 
 ### Authentication
 
-This project is implemented with a flexible authentication provider that can support multiple providers.
-Now it support **MSAL** and **AUTH0** providers and you can switch between one another easily.
-This is how:
+This project supports multiple authentication providers through a flexible interface:
+- **MSAL** (Microsoft Authentication Library) for Azure AD B2C
+- **Auth0** for Auth0 authentication  
+- **NoopAuthProvider** for development/testing without authentication
 
-1. Go to the **index.tsx** file
-2. Instantiate the implementation of your choice of AuthProvider interface
+#### Selecting Your Authentication Provider
 
-```Typescript
-const  authProvider  =  new  Auth0AuthProvider(env);
+**Important for Bundle Size Optimization:** Only ONE auth provider should be active to minimize bundle size. The inactive provider will be automatically excluded by tree-shaking.
+
+**To select your authentication provider:**
+
+1. Open `src/config/authProvider.ts`
+2. Choose ONE of the following configurations by commenting/uncommenting the appropriate sections:
+
+**Option 1: MSAL (Azure AD B2C) - Default**
+```typescript
+// MSAL - ACTIVE
+import { NoopAuthProvider, AuthProvider } from "../lib/authentication/providers/authProviderInterface";
+import { MsalAuthProvider } from "../lib/authentication/providers/msalAuthProvider";
+import { appSettings } from "./env";
+
+export const authProvider: AuthProvider = appSettings.msal
+  ? new MsalAuthProvider({
+      ...appSettings.msal,
+      permissionsClaims: ["extension_Scope"],
+    })
+  : new NoopAuthProvider();
+
+// Auth0 - COMMENTED OUT
+/*
+import { Auth0AuthProvider } from "../lib/authentication/providers/auth0AuthProvider";
+...
+*/
 ```
 
-in this case we choose the **Auth0** implementation.
-_env_ is the enviroment and it must contains all the data needed to authenticate with the provider(all details in the specific implementations below).
-For this reason make sure that the **connectionStrings.js** file is aligned with the deploy environments you are using.
-In order to make this works locally you must create a **.env.local** file in the root of your project with all the env variables needed by connectionStrings.js and your AuthProvider implementation.
+**Option 2: Auth0**
+```typescript
+// MSAL - COMMENTED OUT
+/*
+import { MsalAuthProvider } from "../lib/authentication/providers/msalAuthProvider";
+...
+*/
+
+// Auth0 - ACTIVE
+const claimsUrl = "http://ark-energy.eu/claims/";
+import { Auth0AuthProvider } from "../lib/authentication/providers/auth0AuthProvider";
+import type { AuthProvider } from "../lib/authentication/providers/authProviderInterface";
+import { appSettings } from "./env";
+
+export const authProvider: AuthProvider = new Auth0AuthProvider({
+  ...appSettings,
+  permissionsClaims: [claimsUrl + "permissions", claimsUrl + "groups"],
+});
+```
+
+**Option 3: No Authentication (Development)**
+```typescript
+import { NoopAuthProvider } from "../lib/authentication/providers/authProviderInterface";
+export const authProvider = new NoopAuthProvider();
+```
+
+**Bundle Size Impact:**
+- **Active provider only:** ~60-70 KB gzipped (MSAL or Auth0)
+- **Unused providers:** 0 KB (automatically excluded by tree-shaking)
+- **Total savings:** ~60-70 KB by ensuring unused providers are commented out
+
+#### Provider-Specific Configuration
+
+This project supports **MSAL** and **Auth0** providers and you can switch between one another easily.
+This is how:
+
+1. Go to the **src/config/authProvider.ts** file
+2. Comment out the unused provider and uncomment your chosen provider
+3. Configure environment variables for your chosen provider
+
+_env_ is the environment and it must contain all the data needed to authenticate with the provider (all details in the specific implementations below).
+For this reason make sure that the **connectionStrings.cjs** file (or **public/connectionStrings.cjs**) is aligned with the deploy environments you are using.
+In order to make this work locally you must create a **.env.local** file in the root of your project with all the env variables needed by connectionStrings.cjs and your AuthProvider implementation.
 
 #### Auth0
 

@@ -18,7 +18,7 @@ export const ColumnSorter = <T,>({ column }: { column: Column<T> }) => {
       size="xs"
       onClick={column.getToggleSortingHandler()}
       variant={sorted ? "plain" : "ghost"}
-      color={"brand.primary"}
+      color={"brand.fg"}
     >
       <ColumnSorterIcon sorted={sorted} />
     </IconButton>

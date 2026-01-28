@@ -2,9 +2,11 @@ import { Box, Button, HStack, Heading, Text, VStack } from "@chakra-ui/react";
 import { useAppInsightsContext } from "@microsoft/applicationinsights-react-js";
 import { SeverityLevel } from "@microsoft/applicationinsights-web";
 import type { ErrorInfo, ReactNode } from "react";
-import { ErrorBoundary as ReactErrorBoundary } from "react-error-boundary";
+import { ErrorBoundary as ReactErrorBoundary, type FallbackProps } from "react-error-boundary";
 import { useTranslation } from "react-i18next";
 import { LuTriangleAlert } from "react-icons/lu";
+
+import { errorToErrorObject } from "@/lib/errorHandler/errorToErrorObject";
 
 interface FeatureErrorBoundaryProps {
   /**
@@ -16,7 +18,7 @@ interface FeatureErrorBoundaryProps {
    * Optional callback function to handle errors.
    * The error is automatically logged to Application Insights.
    */
-  onError?: (error: Error, errorInfo: ErrorInfo) => void;
+  onError?: (error: unknown, errorInfo: ErrorInfo) => void;
   /**
    * The child components to render within the error boundary.
    */
@@ -28,30 +30,29 @@ interface FeatureErrorBoundaryProps {
   featureLabel?: string;
 }
 
-interface FallbackProps {
-  error: Error;
-  resetErrorBoundary: () => void;
+interface DefaultFallbackProps extends FallbackProps {
   featureLabel?: string;
 }
 
-function DefaultFallback({ error, resetErrorBoundary, featureLabel }: FallbackProps) {
+function DefaultFallback({ error, resetErrorBoundary, featureLabel }: DefaultFallbackProps) {
   const { t } = useTranslation("libComponents");
+  const errorObj = errorToErrorObject(error);
 
   return (
-    <Box p={"4"} bg="error.subtle" borderRadius="md" border="xs" borderColor="error.emphasized">
+    <Box p={"4"} colorPalette="error" layerStyle="outline.solid" borderRadius="md">
       <VStack align="start" gap={"3"}>
         <HStack gap={"2"}>
-          <LuTriangleAlert size={"20"} color="var(--chakra-colors-error-fg)" />
-          <Heading as="h3" size="sm" color="error.fg">
+          <LuTriangleAlert size={"20"} />
+          <Heading as="h3" size="sm">
             {featureLabel
               ? t("featureErrorBoundary_errorInFeature", { feature: featureLabel })
               : t("featureErrorBoundary_errorOccurred")}
           </Heading>
         </HStack>
-        <Text fontSize="sm" color="error.fg">
-          {error.message ? error.message : t("featureErrorBoundary_unexpectedError")}
+        <Text fontSize="sm">
+          {errorObj.message ? errorObj.message : t("featureErrorBoundary_unexpectedError")}
         </Text>
-        <Button onClick={resetErrorBoundary} size="sm" colorPalette="error" variant="outline">
+        <Button onClick={resetErrorBoundary} size="sm" variant="outline">
           {t("featureErrorBoundary_tryAgain")}
         </Button>
       </VStack>
@@ -91,10 +92,11 @@ export function FeatureErrorBoundary({
 }: FeatureErrorBoundaryProps) {
   const appInsights = useAppInsightsContext();
 
-  const handleError = (error: Error, errorInfo: ErrorInfo) => {
+  const handleError = (error: unknown, errorInfo: ErrorInfo) => {
+    const errorObj = errorToErrorObject(error);
     // Log to Application Insights
     appInsights.trackException({
-      exception: error,
+      exception: errorObj,
       severityLevel: SeverityLevel.Error,
       properties: {
         componentStack: errorInfo.componentStack,
@@ -109,13 +111,7 @@ export function FeatureErrorBoundary({
     }
   };
 
-  const renderFallback = ({
-    error,
-    resetErrorBoundary,
-  }: {
-    error: Error;
-    resetErrorBoundary: () => void;
-  }): ReactNode =>
+  const renderFallback = ({ error, resetErrorBoundary }: FallbackProps): ReactNode =>
     fallback ?? (
       <DefaultFallback
         error={error}

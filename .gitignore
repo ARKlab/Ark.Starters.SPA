@@ -28,6 +28,7 @@ src/locales/**/zod.json
 cypress/screenshots
 cypress/videos
 cypress/downloads
+cypress/dist
 
 .nyc_output/
 debug.log

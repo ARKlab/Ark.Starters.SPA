@@ -82,7 +82,7 @@ const Header = () => {
   const { t } = useTranslation();
   const { isDesktop, isMobileSiderOpen, setMobileSiderOpen } = useLayoutContext();
   return (
-    <Box as="header" shadow={"sm"} bg={"header"}>
+    <Box as="header" shadow={"sm"} bg={"bg.emphasized"}>
       <Flex paddingTop="1" paddingBottom="1">
         <HStack gap="2" pl="2">
           <LinkBox>

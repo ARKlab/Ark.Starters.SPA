@@ -135,8 +135,8 @@ const InnerAccordionSections = (props: { section: ArkSubRoute; parentPath: strin
               borderRadius="none"
               key={section.path + "AccordionButtonInner"}
               _hover={{
-                background: "brand.primary",
-                color: "brandPalette.900",
+                background: "brand.solid",
+                color: "brand.contrast",
               }}
             >
               <Box as="span" flex="1" textAlign="left">
@@ -182,10 +182,10 @@ const InnerMenuItems = (props: { section: ArkSubRoute; path: string; index: numb
     <Box
       key={section.path + "menuItemBox" + index}
       _hover={{
-        background: isActive ? "brand.selected" : "bg.info",
-        color: "brandPalette.900",
+        background: isActive ? "brand.emphasized" : "bg.info",
+        color: "fg",
       }}
-      background={isActive ? "brand.selected" : undefined}
+      background={isActive ? "brand.emphasized" : undefined}
       px="4"
       py="0"
     >

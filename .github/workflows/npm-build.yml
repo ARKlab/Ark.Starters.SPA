@@ -24,7 +24,7 @@ jobs:
       - run: bun run format:check
       - run: bun run build
       - name: Cypress E2E
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@v7
         env:
           VITE_MODE: e2e
           NODE_ENV: production

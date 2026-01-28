@@ -39,13 +39,55 @@ bun run format         # Format code with oxfmt
 bun run format:check   # Check formatting without changes
 bun test               # Run E2E tests (Cypress)
 
-# E2E - interactive loop (UI)
-# Starts the app in e2e mode and opens Cypress UI
-bun run e2e:start
+# E2E Testing
 
-# E2E - single spec (headless)
-# Requires the app running in e2e mode (see below)
-bun run cypress:run -- --spec cypress/e2e/your-test.e2e.ts
+## Full Test Suite (CI/Production Mode)
+bun test               # Run all E2E tests against production build (recommended for CI)
+
+## Development Mode Testing
+
+### Interactive UI Mode (Best for Writing Tests)
+bun run e2e:start      # Starts dev server + opens Cypress UI
+
+### Running Specific Specs Against Dev Server (For AI Agents)
+
+**Important**: Dev server must be running in background before executing specs.
+
+#### Step 1: Start Dev Server in Background
+```bash
+# Start dev server on default ports (3000 app, 4000 connectionStrings)
+bun start &
+
+# Wait for server to be ready
+bunx wait-on http-get://localhost:3000 http-get://localhost:4000
+```
+
+#### Step 2: Run Specific Spec File
+```bash
+# Run a single spec file against the dev server
+bunx cypress run --spec cypress/e2e/your-test.e2e.ts
+
+# Example: Test the appInput component
+bunx cypress run --spec cypress/e2e/appInput.e2e.ts
+```
+
+#### For AI Agents: Complete Workflow
+```bash
+# 1. Start dev server in background (async mode)
+bun start &
+
+# 2. Wait for server to be ready
+bunx wait-on --timeout 60000 http-get://localhost:3000 http-get://localhost:4000
+
+# 3. Run specific test
+bunx cypress run --spec cypress/e2e/appInput.e2e.ts
+
+# 4. Stop dev server when done
+pkill -f "vite"
+pkill -f "connectionStrings"
+```
+
+**Note**: For full CI test runs, always use `bun test` which builds and serves the optimized production version for best performance.
 
 # Utility
 bun outdated           # Check package versions

@@ -30,12 +30,36 @@ export default defineConfig(({ mode }) => {
       Info(),
       msw({ mode: "browser", handlers: [], build: mode == "e2e" }),
       legacy({
-        targets: ["defaults"],
-        modernTargets: [
-          "fully supports es6-module and fully supports css-grid and fully supports es6-module-dynamic-import and >0.5%, not dead",
+        // Legacy browser targets (browsers that need polyfills)
+        // Feature-based for browsers lacking modern features
+        // CSS Grid polyfills cause rendering problems, so require native support
+        targets: [
+          "supports es6-module",        // Basic module support
+          "supports css-variables",      // Chakra UI v3 requirement
+          "supports css-grid",           // Layouts (polyfills cause issues)
+          "supports serviceworkers",     // PWA requirement
+          ">0.5%",                       // Market share threshold
+          "not dead",                    // Still maintained
         ],
-        modernPolyfills: true,
-        renderLegacyChunks: false,
+        
+        // Modern browser targets (get clean, unpolyfilled code)
+        // Uses Web Platform Baseline: features widely available for 30+ months
+        // Includes downstream browsers (Opera, Brave, Samsung Internet)
+        modernTargets: [
+          "baseline widely available with downstream and " +
+          "fully supports css-variables and " +
+          "fully supports es6-module and " +
+          "fully supports es6-module-dynamic-import and " +
+          "fully supports css-grid and " +
+          "fully supports async-functions and " +
+          "fully supports serviceworkers"
+        ],
+        
+        // Modern browsers get NO polyfills (fast experience)
+        modernPolyfills: false,
+        
+        // Legacy browsers get polyfilled chunks (degraded but functional)
+        renderLegacyChunks: true,
       }),
       svgr({
         svgrOptions: {
@@ -150,16 +174,28 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks: {
-            react: ["react", "react-router", "react-dom", "react-error-boundary"],
+            // Core libraries (rarely change) - separate for maximum cache stability
+            react: ["react", "react-dom"],
+            "react-router": ["react-router", "react-error-boundary"],
+
+            // State management (occasional updates)
             rtk: [
               "@reduxjs/toolkit",
               "@reduxjs/toolkit/query",
               "@reduxjs/toolkit/react",
               "react-redux",
             ],
+
+            // UI Framework (occasional updates) - already large, keep separate
             chakra: ["@chakra-ui/react", "@emotion/react"],
+
+            // i18n libraries (rarely change)
             i18n: ["i18next", "react-i18next", "@semihbou/zod-i18n-map"],
-            hookForm: ["react-hook-form", "@hookform/resolvers"],
+
+            // Form libraries (occasional updates)
+            hookForm: ["react-hook-form", "@hookform/resolvers", "zod"],
+
+            // Utility libraries (rarely change)
             common: ["@tanstack/react-table", "date-fns", "@dnd-kit/core", "@dnd-kit/sortable"],
           },
         },
@@ -169,15 +205,20 @@ export default defineConfig(({ mode }) => {
     server: {
       port: parseInt(process.env.PORT ?? "", 10) || 3000,
       open: true,
+      watch: {
+        // Ignore coverage directories to prevent file watcher from triggering reloads
+        // when coverage files are generated during e2e tests
+        ignored: ["**/coverage/**", "**/.nyc_output/**"],
+      },
       proxy: {
-        "/connectionStrings.cjs": "http://localhost:4000",
+        "/connectionStrings.cjs": `http://localhost:${process.env.CONNECTIONSTRINGS_PORT ?? "4000"}`,
       },
     },
     preview: {
       port: parseInt(process.env.PORT ?? "", 10) || 3000,
       open: true,
       proxy: {
-        "/connectionStrings.cjs": "http://localhost:4000",
+        "/connectionStrings.cjs": `http://localhost:${process.env.CONNECTIONSTRINGS_PORT ?? "4000"}`,
       },
     },
     esbuild: {

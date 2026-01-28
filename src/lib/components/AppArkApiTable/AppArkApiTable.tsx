@@ -325,7 +325,7 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
                 </Table.Row>
               ) : table.getRowModel().rows.length > 0 ? (
                 table.getRowModel().rows.map(row => (
-                  <Table.Row key={row.id} _hover={{ bg: "brand.selected" }}>
+                  <Table.Row key={row.id} _hover={{ bg: "brand.emphasized" }}>
                     {row.getVisibleCells().map(cell => (
                       <Table.Cell py={"1"} key={cell.id}>
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}

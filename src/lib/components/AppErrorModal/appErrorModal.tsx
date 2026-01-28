@@ -76,7 +76,7 @@ const ModalBody = (props: { problem: ErrorDetailsType | null }) => {
         </AccordionRoot>
         <Flex justifyContent={"right"}>
           <Button
-            colorPalette={"error"}
+            colorPalette="error"
             onClick={async () => {
               await navigate(0);
             }}
