@@ -1,17 +1,17 @@
 export type VideoGame = {
-  title: string;
-  releaseYear: number;
-  developer: string;
-  rating: number;
-  platform: string;
-  salesMillions: number;
-  genre: number;
-};
+  title: string
+  releaseYear: number
+  developer: string
+  rating: number
+  platform: string
+  salesMillions: number
+  genre: number
+}
 
 export type VideoGameGenre = {
-  id: number;
-  name: string;
-};
+  id: number
+  name: string
+}
 
 export const videoGamesSampleData: VideoGame[] = [
   {
@@ -194,7 +194,7 @@ export const videoGamesSampleData: VideoGame[] = [
     salesMillions: 12,
     genre: 5, // Adventure
   },
-];
+]
 export const gameGenres: VideoGameGenre[] = [
   { id: 1, name: "RPG" },
   { id: 2, name: "FPS" },
@@ -206,4 +206,4 @@ export const gameGenres: VideoGameGenre[] = [
   { id: 8, name: "Horror" },
   { id: 9, name: "Action" },
   { id: 10, name: "Indie" },
-];
+]

@@ -1,42 +1,42 @@
-import { Box, Button, HStack, Heading, Text, VStack } from "@chakra-ui/react";
-import { useAppInsightsContext } from "@microsoft/applicationinsights-react-js";
-import { SeverityLevel } from "@microsoft/applicationinsights-web";
-import type { ErrorInfo, ReactNode } from "react";
-import { ErrorBoundary as ReactErrorBoundary, type FallbackProps } from "react-error-boundary";
-import { useTranslation } from "react-i18next";
-import { LuTriangleAlert } from "react-icons/lu";
+import { Box, Button, HStack, Heading, Text, VStack } from "@chakra-ui/react"
+import { useAppInsightsContext } from "@microsoft/applicationinsights-react-js"
+import { SeverityLevel } from "@microsoft/applicationinsights-web"
+import type { ErrorInfo, ReactNode } from "react"
+import { ErrorBoundary as ReactErrorBoundary, type FallbackProps } from "react-error-boundary"
+import { useTranslation } from "react-i18next"
+import { LuTriangleAlert } from "react-icons/lu"
 
-import { errorToErrorObject } from "@/lib/errorHandler/errorToErrorObject";
+import { errorToErrorObject } from "@/lib/errorHandler/errorToErrorObject"
 
 interface FeatureErrorBoundaryProps {
   /**
    * Custom fallback component to render when an error occurs.
    * If not provided, a default fallback UI will be displayed.
    */
-  fallback?: ReactNode;
+  fallback?: ReactNode
   /**
    * Optional callback function to handle errors.
    * The error is automatically logged to Application Insights.
    */
-  onError?: (error: unknown, errorInfo: ErrorInfo) => void;
+  onError?: (error: unknown, errorInfo: ErrorInfo) => void
   /**
    * The child components to render within the error boundary.
    */
-  children: ReactNode;
+  children: ReactNode
   /**
    * Optional label to identify this error boundary in logs and UI.
    * Useful for debugging which feature failed.
    */
-  featureLabel?: string;
+  featureLabel?: string
 }
 
 interface DefaultFallbackProps extends FallbackProps {
-  featureLabel?: string;
+  featureLabel?: string
 }
 
 function DefaultFallback({ error, resetErrorBoundary, featureLabel }: DefaultFallbackProps) {
-  const { t } = useTranslation("libComponents");
-  const errorObj = errorToErrorObject(error);
+  const { t } = useTranslation("libComponents")
+  const errorObj = errorToErrorObject(error)
 
   return (
     <Box p={"4"} colorPalette="error" layerStyle="outline.solid" borderRadius="md">
@@ -57,7 +57,7 @@ function DefaultFallback({ error, resetErrorBoundary, featureLabel }: DefaultFal
         </Button>
       </VStack>
     </Box>
-  );
+  )
 }
 
 /**
@@ -90,10 +90,10 @@ export function FeatureErrorBoundary({
   children,
   featureLabel,
 }: FeatureErrorBoundaryProps) {
-  const appInsights = useAppInsightsContext();
+  const appInsights = useAppInsightsContext()
 
   const handleError = (error: unknown, errorInfo: ErrorInfo) => {
-    const errorObj = errorToErrorObject(error);
+    const errorObj = errorToErrorObject(error)
     // Log to Application Insights
     appInsights.trackException({
       exception: errorObj,
@@ -103,13 +103,13 @@ export function FeatureErrorBoundary({
         featureLabel: featureLabel ?? "Unknown Feature",
         errorBoundaryType: "FeatureErrorBoundary",
       },
-    });
+    })
 
     // Call custom error handler if provided
     if (onError) {
-      onError(error, errorInfo);
+      onError(error, errorInfo)
     }
-  };
+  }
 
   const renderFallback = ({ error, resetErrorBoundary }: FallbackProps): ReactNode =>
     fallback ?? (
@@ -118,11 +118,11 @@ export function FeatureErrorBoundary({
         resetErrorBoundary={resetErrorBoundary}
         featureLabel={featureLabel}
       />
-    );
+    )
 
   return (
     <ReactErrorBoundary fallbackRender={renderFallback} onError={handleError}>
       {children}
     </ReactErrorBoundary>
-  );
+  )
 }

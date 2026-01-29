@@ -1,22 +1,22 @@
-import type { InputProps } from "@chakra-ui/react";
-import { Field, FieldLabel, Input, Stack, Text } from "@chakra-ui/react";
-import { LuX } from "react-icons/lu";
+import type { InputProps } from "@chakra-ui/react"
+import { Field, FieldLabel, Input, Stack, Text } from "@chakra-ui/react"
+import { LuX } from "react-icons/lu"
 
-import { InputGroup } from "../../../components/ui/input-group";
+import { InputGroup } from "../../../components/ui/input-group"
 
 interface InputWithClearProps {
-  value: string | null;
-  onChange: (v: string) => void;
-  title: string;
-  disabled?: boolean;
-  isRequired?: boolean;
-  fieldErrorText?: string;
-  invalid?: boolean;
-  placeholder?: string;
+  value: string | null
+  onChange: (v: string) => void
+  title: string
+  disabled?: boolean
+  isRequired?: boolean
+  fieldErrorText?: string
+  invalid?: boolean
+  placeholder?: string
 }
 export interface InputHeaderWithClearProps extends InputProps {
-  value: string | number;
-  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  value: string | number
+  onChange?: React.ChangeEventHandler<HTMLInputElement>
 }
 
 export const AppInput: React.FC<InputWithClearProps> = ({
@@ -30,8 +30,8 @@ export const AppInput: React.FC<InputWithClearProps> = ({
   placeholder,
 }) => {
   const handleClear = () => {
-    onChange("");
-  };
+    onChange("")
+  }
 
   return (
     <Field.Root invalid={invalid} data-test="appinput-root">
@@ -49,7 +49,7 @@ export const AppInput: React.FC<InputWithClearProps> = ({
             data-test="appinput-input"
             value={value ?? ""}
             onChange={e => {
-              onChange(e.target.value);
+              onChange(e.target.value)
             }}
             disabled={disabled ?? false}
             required={isRequired ?? false}
@@ -61,5 +61,5 @@ export const AppInput: React.FC<InputWithClearProps> = ({
         <Field.ErrorText data-test="appinput-error">{fieldErrorText}</Field.ErrorText>
       ) : null}
     </Field.Root>
-  );
-};
+  )
+}

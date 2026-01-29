@@ -1,13 +1,13 @@
-import { Text, Button } from "@chakra-ui/react";
-import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import { Text, Button } from "@chakra-ui/react"
+import { useEffect } from "react"
+import { useTranslation } from "react-i18next"
 // eslint-disable-next-line import/no-unresolved
-import { useRegisterSW } from "virtual:pwa-register/react";
+import { useRegisterSW } from "virtual:pwa-register/react"
 
-import { toaster } from "./ui/toaster";
+import { toaster } from "./ui/toaster"
 
 export const PWABadge = () => {
-  const period = 1000 * 60 * 2; //ms
+  const period = 1000 * 60 * 2 //ms
 
   const {
     offlineReady: [offlineReady, setOfflineReady],
@@ -15,32 +15,32 @@ export const PWABadge = () => {
     updateServiceWorker,
   } = useRegisterSW({
     onRegisteredSW(swUrl, r) {
-      if (period <= 0) return;
+      if (period <= 0) return
       if (r?.active?.state === "activated") {
-        registerPeriodicSync(period, swUrl, r);
+        registerPeriodicSync(period, swUrl, r)
       } else if (r?.installing) {
         r.installing.addEventListener("statechange", e => {
-          const sw = e.target as ServiceWorker;
-          if (sw.state === "activated") registerPeriodicSync(period, swUrl, r);
-        });
+          const sw = e.target as ServiceWorker
+          if (sw.state === "activated") registerPeriodicSync(period, swUrl, r)
+        })
       }
     },
-  });
+  })
 
-  const { t } = useTranslation("template");
+  const { t } = useTranslation("template")
   useEffect(() => {
     if (offlineReady) {
       toaster.create({
         type: "info",
         title: t("pwaBadge.offlineReady.title"),
         description: t("pwaBadge.offlineReady.body"),
-      });
-      setOfflineReady(false);
+      })
+      setOfflineReady(false)
     }
-  }, [offlineReady, setOfflineReady, t]);
+  }, [offlineReady, setOfflineReady, t])
 
   useEffect(() => {
-    const id = "pwa.needRefresh";
+    const id = "pwa.needRefresh"
     if (needRefresh) {
       toaster.create({
         id: id,
@@ -59,23 +59,23 @@ export const PWABadge = () => {
           </>
         ),
         duration: 9999999,
-      });
+      })
     }
-  }, [needRefresh, setNeedRefresh, t, updateServiceWorker]);
+  }, [needRefresh, setNeedRefresh, t, updateServiceWorker])
 
-  return <></>;
-};
+  return <></>
+}
 
 /**
  * This function will register a periodic sync check every hour, you can modify the interval as needed.
  */
 function registerPeriodicSync(period: number, swUrl: string, r: ServiceWorkerRegistration) {
-  if (period <= 0) return;
+  if (period <= 0) return
 
   const f = async () => {
-    if (r.installing) return;
+    if (r.installing) return
 
-    if ("connection" in navigator && !navigator.onLine) return;
+    if ("connection" in navigator && !navigator.onLine) return
     const resp = await fetch(swUrl, {
       cache: "no-store",
       headers: {
@@ -83,13 +83,13 @@ function registerPeriodicSync(period: number, swUrl: string, r: ServiceWorkerReg
         "cache-control": "no-cache",
       },
     }).catch(_ => {
-      return null;
-    });
+      return null
+    })
 
-    if (resp?.status === 200) await r.update();
-  };
+    if (resp?.status === 200) await r.update()
+  }
 
   f()
     .then(_ => setInterval(f, period))
-    .catch(_ => null);
+    .catch(_ => null)
 }

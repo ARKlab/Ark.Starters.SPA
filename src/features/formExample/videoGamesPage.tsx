@@ -7,7 +7,11 @@ import { useAppDispatch } from "../../app/hooks"
 import { useInjectApiSlice } from "../../app/useInjectApiSlice"
 import { AppArkApiTable } from "../../lib/components/AppArkApiTable/AppArkApiTable"
 
-import { videoGameApiSlice, useGetVideoGamesGenresQuery, useGetVideoGamesQuery } from "./videoGamesApiSlice"
+import {
+  videoGameApiSlice,
+  useGetVideoGamesGenresQuery,
+  useGetVideoGamesQuery,
+} from "./videoGamesApiSlice"
 import VideoGamesForm from "./videoGamesForm"
 import type { VideoGame } from "./videoGamesSampleDataAndTypes"
 
@@ -65,16 +69,16 @@ const VideoGamesTableView = () => {
     columnHelper.accessor(row => row.genre, {
       id: "genre",
       cell: info => {
-        const genreId = info.getValue();
-        const matchingGenre = genres?.find(x => x.id === genreId);
+        const genreId = info.getValue()
+        const matchingGenre = genres?.find(x => x.id === genreId)
 
-        return matchingGenre?.name ?? t("games_unknown_genre");
+        return matchingGenre?.name ?? t("games_unknown_genre")
       },
       header: () => <span>{t("games_genre")}</span>,
       meta: { type: "number" },
       enableColumnFilter: false,
     }),
-  ] as ColumnDef<VideoGame>[];
+  ] as ColumnDef<VideoGame>[]
 
   return (
     <Box>
@@ -89,7 +93,7 @@ const VideoGamesTableView = () => {
         reduxDispatchHook={useAppDispatch()}
       />
     </Box>
-  );
-};
+  )
+}
 
-export default VideoGamesTableView;
+export default VideoGamesTableView

@@ -1,9 +1,9 @@
-import type { BaseQueryArg, QueryReturnValue } from "@reduxjs/toolkit/query";
-import i18next from "i18next";
+import type { BaseQueryArg, QueryReturnValue } from "@reduxjs/toolkit/query"
+import i18next from "i18next"
 
-import { toaster } from "../../components/ui/toaster";
-import type { ErrorDetailsType } from "../errorHandler/errorHandler";
-import { setError } from "../errorHandler/errorHandler";
+import { toaster } from "../../components/ui/toaster"
+import type { ErrorDetailsType } from "../errorHandler/errorHandler"
+import { setError } from "../errorHandler/errorHandler"
 
 import type {
   ArkBaseQueryError,
@@ -12,16 +12,16 @@ import type {
   ArkBaseQueryFn,
   ArkBaseQueryExtraOptions,
   ArkBaseQueryApi,
-} from "./arkBaseQuery";
+} from "./arkBaseQuery"
 
 export type withToasterType = <BaseQuery extends ArkBaseQueryFn>(
   baseQuery: BaseQuery,
   config?: {
     toDetails: (props: {
-      error: ArkBaseQueryError<BaseQuery>;
-      meta: ArkBaseQueryMeta<BaseQuery>;
-      extra?: NonNullable<ArkBaseQueryExtraOptions<BaseQuery>> & { disableAutoToast?: boolean };
-    }) => ErrorDetailsType;
+      error: ArkBaseQueryError<BaseQuery>
+      meta: ArkBaseQueryMeta<BaseQuery>
+      extra?: NonNullable<ArkBaseQueryExtraOptions<BaseQuery>> & { disableAutoToast?: boolean }
+    }) => ErrorDetailsType
   },
 ) => ArkBaseQueryFn<
   BaseQueryArg<BaseQuery>,
@@ -30,7 +30,7 @@ export type withToasterType = <BaseQuery extends ArkBaseQueryFn>(
   ArkBaseQueryExtraOptions<BaseQuery> & { disableAutoToast?: boolean },
   NonNullable<ArkBaseQueryMeta<BaseQuery>>,
   ArkBaseQueryApi<BaseQuery>
->;
+>
 
 /**
  * HOF that wraps a base query function with additional functionality for data validation using zod
@@ -45,13 +45,13 @@ export const withToaster: withToasterType =
         ArkBaseQueryResult<typeof baseQuery>,
         ArkBaseQueryError<typeof baseQuery>,
         ArkBaseQueryMeta<typeof baseQuery>
-      >;
+      >
     }
 
-    const id = crypto.randomUUID();
+    const id = crypto.randomUUID()
 
     if (api.type === "mutation") {
-      toaster.loading({ id: id, title: i18next.t("errorHandler.submitting", { ns: "template" }) });
+      toaster.loading({ id: id, title: i18next.t("errorHandler.submitting", { ns: "template" }) })
     }
 
     // Call the original baseQuery function with the provided arguments
@@ -59,7 +59,7 @@ export const withToaster: withToasterType =
       ArkBaseQueryResult<typeof baseQuery>,
       ArkBaseQueryError<typeof baseQuery>,
       ArkBaseQueryMeta<typeof baseQuery>
-    >;
+    >
 
     config ??= {
       toDetails: ({ error }) => {
@@ -67,14 +67,14 @@ export const withToaster: withToasterType =
           title: i18next.t("errorHandler.error", { ns: "template" }),
           message: "",
           details: JSON.stringify(error, null, 2),
-        };
+        }
       },
-    };
+    }
 
     if (returnValue.error) {
-      const { error, meta } = returnValue;
+      const { error, meta } = returnValue
 
-      const details = config.toDetails({ error, meta, extra: extraOptions });
+      const details = config.toDetails({ error, meta, extra: extraOptions })
 
       toaster.error({
         id: id,
@@ -85,16 +85,16 @@ export const withToaster: withToasterType =
             ? {
                 label: i18next.t("errorHandler.actionLabel", { ns: "template" }),
                 onClick: () => {
-                  api.dispatch(setError({ error: true, details }));
-                  toaster.dismiss(id);
+                  api.dispatch(setError({ error: true, details }))
+                  toaster.dismiss(id)
                 },
               }
             : undefined,
         duration: 15 * 1000,
-      });
+      })
     } else if (api.type === "mutation") {
-      toaster.success({ id: id, title: i18next.t("errorHandler.success", { ns: "template" }) });
+      toaster.success({ id: id, title: i18next.t("errorHandler.success", { ns: "template" }) })
     }
 
-    return returnValue;
-  };
+    return returnValue
+  }

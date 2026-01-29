@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { ComponentType, ComponentProps } from "react";
-import { lazy, Suspense, useMemo } from "react";
+import type { ComponentType, ComponentProps } from "react"
+import { lazy, Suspense, useMemo } from "react"
 
-import CenterSpinner from "../../components/centerSpinner";
+import CenterSpinner from "../../components/centerSpinner"
 
 /**
  * Props for the LazyComponent
@@ -11,13 +11,13 @@ type LazyComponentProps<C extends ComponentType<any>> = {
   /**
    * Function that returns a promise resolving to a module with a default export
    */
-  loader: () => Promise<{ default: C }>;
+  loader: () => Promise<{ default: C }>
   /**
    * Optional custom fallback to show while loading
    * @default CenterSpinner
    */
-  fallback?: React.ReactNode;
-} & Omit<ComponentProps<C>, "ref">;
+  fallback?: React.ReactNode
+} & Omit<ComponentProps<C>, "ref">
 
 /**
  * LazyComponent - Component-based approach for dynamic lazy loading
@@ -56,11 +56,11 @@ export function LazyComponent<C extends ComponentType<any>>({
   fallback = <CenterSpinner />,
   ...rest
 }: LazyComponentProps<C>) {
-  const Component = useMemo(() => lazy(loader), [loader]);
+  const Component = useMemo(() => lazy(loader), [loader])
 
   return (
     <Suspense fallback={fallback}>
       <Component {...(rest as ComponentProps<C>)} />
     </Suspense>
-  );
+  )
 }

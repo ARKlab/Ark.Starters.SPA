@@ -33,20 +33,18 @@ The implementation maintains full TypeScript type safety using type-only imports
 import type { moviesApiSlice } from "../features/paginatedTable/paginatedTableApi"
 
 // Union type for compile-time safety
-export type LazyApiSlice = 
-  | typeof moviesApiSlice
-  | typeof configTableApiSlice
-  // ... other slices
+export type LazyApiSlice = typeof moviesApiSlice | typeof configTableApiSlice
+// ... other slices
 
 // Typed reducer with lazy loading support
 const sliceReducers = rootReducer.withLazyLoadedSlices<
-  WithSlice<typeof moviesApiSlice> &
-  WithSlice<typeof configTableApiSlice>
+  WithSlice<typeof moviesApiSlice> & WithSlice<typeof configTableApiSlice>
   // ... other slices
 >()
 ```
 
 This provides:
+
 - Full IDE autocomplete and type checking
 - Compile-time verification of slice types
 - No runtime overhead from type information
@@ -65,7 +63,7 @@ import { appFetchQuery } from "../../app/appFetchQuery"
 export const myFeatureApiSlice = createApi({
   reducerPath: "myFeatureApi",
   baseQuery: appFetchQuery({ baseUrl: "/api" }),
-  endpoints: (builder) => ({
+  endpoints: builder => ({
     // Your endpoints here
   }),
 })
@@ -80,7 +78,7 @@ export const { useGetDataQuery } = myFeatureApiSlice
 import type { myFeatureApiSlice } from "../features/myFeature/myFeatureApi"
 
 // Add to LazyApiSlice union
-export type LazyApiSlice = 
+export type LazyApiSlice =
   | typeof moviesApiSlice
   | typeof myFeatureApiSlice  // Add your slice
   // ... other slices
@@ -103,10 +101,10 @@ import { useInjectApiSlice } from '../../app/useInjectApiSlice'
 export default function MyFeaturePage() {
   // Inject the slice when component mounts
   useInjectApiSlice(myFeatureApiSlice)
-  
+
   // Use RTK Query hooks as normal
   const { data, isLoading } = useGetDataQuery()
-  
+
   return <div>{/* Your UI */}</div>
 }
 ```
@@ -151,11 +149,11 @@ The correct implementation uses TWO separate steps:
 ```typescript
 export function injectApiSlice(store: AppStore, slice: LazyApiSlice) {
   const manager = getStoreManager(store)
-  
+
   // Step 1: Inject the REDUCER using combineSlices().inject()
   manager.currentReducer = manager.currentReducer.inject(slice)
   store.replaceReducer(manager.currentReducer)
-  
+
   // Step 2: Inject the MIDDLEWARE using createDynamicMiddleware
   // This is critical - combineSlices().inject() does NOT do this
   manager.dynamicMiddleware.addMiddleware(slice.middleware)
@@ -167,19 +165,20 @@ export function injectApiSlice(store: AppStore, slice: LazyApiSlice) {
 The store must be configured with `createDynamicMiddleware`:
 
 ```typescript
-import { createDynamicMiddleware, configureStore } from '@reduxjs/toolkit'
+import { createDynamicMiddleware, configureStore } from "@reduxjs/toolkit"
 
 // Create the dynamic middleware instance
 const dynamicMiddlewareInstance = createDynamicMiddleware()
 
 const store = configureStore({
   reducer: sliceReducers,
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware().concat(dynamicMiddlewareInstance.middleware),
 })
 ```
 
 **Important**: This all requires two separate API calls. You need to:
+
 - Use `combineSlices().inject()` for the reducer
 - Use `createDynamicMiddleware().addMiddleware()` for the middleware
 - Both are necessary for RTK Query to work correctly
@@ -194,12 +193,12 @@ const { data: data1 } = useGetMoviesQuery()
 const { data: data2 } = useGetMoviesQuery() // Uses cached data
 
 // Polling works
-const { data } = useGetMoviesQuery(params, { 
-  pollingInterval: 5000  // Auto-refetch every 5 seconds
+const { data } = useGetMoviesQuery(params, {
+  pollingInterval: 5000, // Auto-refetch every 5 seconds
 })
 
 // Tag invalidation works
-dispatch(moviesApi.util.invalidateTags(['Movies']))  // Triggers refetch
+dispatch(moviesApi.util.invalidateTags(["Movies"])) // Triggers refetch
 ```
 
 All of these features require middleware to be properly injected using `createDynamicMiddleware`.
@@ -209,7 +208,7 @@ All of these features require middleware to be properly injected using `createDy
 - [RTK createDynamicMiddleware API](https://redux-toolkit.js.org/api/createDynamicMiddleware)
 - [RTK combineSlices source code](https://github.com/reduxjs/redux-toolkit/blob/master/packages/toolkit/src/combineSlices.ts) - Note: `inject()` only handles reducers
 - [RTK combineSlices API](https://redux-toolkit.js.org/api/combineSlices)
-- [RTK Query Code Splitting](https://redux-toolkit.js.org/rtk-query/usage/code-splitting)  
+- [RTK Query Code Splitting](https://redux-toolkit.js.org/rtk-query/usage/code-splitting)
 - [RTK Query Middleware](https://redux-toolkit.js.org/rtk-query/api/createApi#middleware)
 - [Redux Toolkit 2.0 Migration Guide](https://redux-toolkit.js.org/usage/migrating-to-modern-redux#using-combineslidesconfigured)
 
@@ -233,17 +232,21 @@ if (import.meta.env.DEV || import.meta.env.MODE === "e2e") {
 ## Bundle Impact
 
 ### Before Lazy Loading
+
 - `initGlobals.js`: 351.44 KB (102.54 KB gzipped)
 - All API slices bundled in initial load
 - Users download code for features they never use
 
 ### After Lazy Loading
+
 - `initGlobals.js`: 330.09 KB (94.75 KB gzipped)
 - API slices split into feature chunks (2-13 KB each)
 - **Savings: 7.79 KB gzipped (7.6%)**
 
 ### Feature Chunks
+
 Each feature now has its own chunk with its API slice:
+
 - `moviePage-*.js`: 11 KB (includes moviesApiSlice)
 - `videoGamesPage-*.js`: 13 KB (includes videoGameApiSlice)
 - `configTableExample-*.js`: 6.9 KB (includes configTableApiSlice)
@@ -252,12 +255,14 @@ Each feature now has its own chunk with its API slice:
 ## Best Practices
 
 ### Do's ✅
+
 - Use `useInjectApiSlice` in the top-level feature component
 - Use type-only imports in `configureStore.ts`
 - Keep core slices minimal (auth, env, error handling)
 - Test that features work after navigation
 
 ### Don'ts ❌
+
 - Don't import API slices directly in `configureStore.ts` (use `import type`)
 - Don't inject the same slice multiple times (it's idempotent but wasteful)
 - Don't put feature-specific logic in core slices
@@ -273,8 +278,8 @@ Each feature now has its own chunk with its API slice:
 
 ```typescript
 function MyComponent() {
-  useInjectApiSlice(myApiSlice)  // ✅ First
-  const { data } = useGetDataQuery()  // ✅ After injection
+  useInjectApiSlice(myApiSlice) // ✅ First
+  const { data } = useGetDataQuery() // ✅ After injection
   // ...
 }
 ```
@@ -286,9 +291,7 @@ function MyComponent() {
 **Solution**: Add slice to `LazyApiSlice` union in `configureStore.ts`:
 
 ```typescript
-export type LazyApiSlice = 
-  | typeof existingSlice
-  | typeof yourNewSlice  // Add this
+export type LazyApiSlice = typeof existingSlice | typeof yourNewSlice // Add this
 ```
 
 ### Bundle still large after adding lazy loading

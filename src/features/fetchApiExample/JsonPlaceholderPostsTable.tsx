@@ -44,7 +44,7 @@ const JsonPlaceholderPostsTable = () => {
         schema={PostDataSchema}
       />
     </>
-  );
-};
+  )
+}
 
-export default JsonPlaceholderPostsTable;
+export default JsonPlaceholderPostsTable
