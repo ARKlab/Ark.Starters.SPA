@@ -13,7 +13,7 @@ import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react"
  * To customize:
  * 1. Update the brand color palette below (50-950 scale)
  * 2. Semantic tokens will automatically adapt
- * 3. Run: npx @chakra-ui/cli typegen --strict src/theme.ts
+ * 3. Run: npx chakra-ui-cli typegen --strict src/theme.ts
  */
 
 const config = defineConfig({
