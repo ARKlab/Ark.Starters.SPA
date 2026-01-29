@@ -105,7 +105,7 @@
     "esbuild": "0.27.2",
     "jiti": "2.6.1",
     "msw": "2.12.7",
-    "oxfmt": "0.26.0",
+    "oxfmt": "0.27.0",
     "oxlint": "1.41.0",
     "oxlint-tsgolint": "0.11.2",
     "rollup-plugin-copy": "3.5.0",
