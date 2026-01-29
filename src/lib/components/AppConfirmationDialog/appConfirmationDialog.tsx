@@ -1,7 +1,7 @@
-import { Button } from "@chakra-ui/react";
-import type { ReactNode } from "react";
-import { useRef } from "react";
-import { useTranslation } from "react-i18next";
+import { Button } from "@chakra-ui/react"
+import type { ReactNode } from "react"
+import { useRef } from "react"
+import { useTranslation } from "react-i18next"
 
 import {
   DialogBody,
@@ -10,17 +10,17 @@ import {
   DialogFooter,
   DialogHeader,
   DialogRoot,
-} from "../../../components/ui/dialog";
+} from "../../../components/ui/dialog"
 
 export const AppConfirmationDialog = (props: {
-  title: ReactNode;
-  body: ReactNode;
-  open: boolean;
-  onConfirm?: () => void;
-  onOpenChange?: (open: boolean) => void;
+  title: ReactNode
+  body: ReactNode
+  open: boolean
+  onConfirm?: () => void
+  onOpenChange?: (open: boolean) => void
 }) => {
-  const closeRef = useRef<HTMLButtonElement>(null);
-  const { t } = useTranslation("template");
+  const closeRef = useRef<HTMLButtonElement>(null)
+  const { t } = useTranslation("template")
 
   return (
     <>
@@ -43,8 +43,8 @@ export const AppConfirmationDialog = (props: {
               <Button
                 colorPalette="error"
                 onClick={() => {
-                  props.onConfirm?.();
-                  props.onOpenChange?.(false);
+                  props.onConfirm?.()
+                  props.onOpenChange?.(false)
                 }}
                 ml={"3"}
                 data-test="appconfirmationdialog-confirm"
@@ -56,5 +56,5 @@ export const AppConfirmationDialog = (props: {
         </DialogContent>
       </DialogRoot>
     </>
-  );
-};
+  )
+}

@@ -13,6 +13,7 @@ This document provides comprehensive guidance on E2E testing, including best pra
 Production build provides optimal performance for E2E testing.
 
 **How it works:**
+
 1. Builds application with `vite build --mode e2e` (includes coverage)
 2. Outputs to `cypress/dist` directory
 3. Serves via `vite preview` on port 3000
@@ -43,6 +44,7 @@ npx cypress run --spec cypress/e2e/appInput.e2e.ts
 ## Why Production Build for CI?
 
 Production builds are faster for E2E testing because:
+
 - Pre-bundled (fewer network requests)
 - Optimized and minified
 - Quick, predictable page loads

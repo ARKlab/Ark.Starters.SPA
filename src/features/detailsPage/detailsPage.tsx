@@ -1,12 +1,12 @@
-import { Box, Heading } from "@chakra-ui/react";
-import { useTranslation } from "react-i18next";
-import { useParams } from "react-router";
+import { Box, Heading } from "@chakra-ui/react"
+import { useTranslation } from "react-i18next"
+import { useParams } from "react-router"
 
-import BackButton from "../../components/backButton";
+import BackButton from "../../components/backButton"
 
 const DetailsPage = () => {
-  const { t } = useTranslation();
-  const { id } = useParams();
+  const { t } = useTranslation()
+  const { id } = useParams()
 
   return (
     <Box>
@@ -19,7 +19,7 @@ const DetailsPage = () => {
         </Heading>
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default DetailsPage;
+export default DetailsPage

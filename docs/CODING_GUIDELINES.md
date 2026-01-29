@@ -61,7 +61,7 @@ toast: 1700, tooltip: 1800
 
 - **MUST** set a custom localStorage key for color mode to avoid conflicts:
   ```typescript
-  const colorModeManager = createLocalStorageManager("appName-ColorMode");
+  const colorModeManager = createLocalStorageManager("appName-ColorMode")
   ```
 
 ## Commit Messages
@@ -84,13 +84,15 @@ toast: 1700, tooltip: 1800
 ### Imports and Tree-Shaking
 
 - **MUST** use named imports from libraries for better tree-shaking
+
   ```typescript
   // ✅ GOOD
-  import { format, parseISO } from "date-fns";
-  
+  import { format, parseISO } from "date-fns"
+
   // ❌ BAD
-  import * as dateFns from "date-fns";
+  import * as dateFns from "date-fns"
   ```
+
 - **MUST** declare `sideEffects` appropriately when creating packages
 - **MUST** verify tree-shaking effectiveness with bundle analyzer before assuming it works
 
@@ -109,8 +111,8 @@ toast: 1700, tooltip: 1800
   ```typescript
   // ✅ GOOD - Conditional lazy loading
   if (settings.appInsights) {
-    const { setupAppInsights } = await import("./lib/applicationInsights");
-    setupAppInsights(settings.appInsights);
+    const { setupAppInsights } = await import("./lib/applicationInsights")
+    setupAppInsights(settings.appInsights)
   }
   ```
 - **MUST NOT** use dynamic imports in critical initialization paths
@@ -136,17 +138,19 @@ toast: 1700, tooltip: 1800
 ### Browser Support
 
 - **MUST** use feature detection over browser version numbers
+
   ```typescript
   // ✅ GOOD - Feature-based targeting
   modernTargets: [
-    'baseline widely available with downstream and ' +
-    'fully supports css-variables and ' +
-    'fully supports serviceworkers'
+    "baseline widely available with downstream and " +
+      "fully supports css-variables and " +
+      "fully supports serviceworkers",
   ]
-  
+
   // ❌ BAD - Version-based targeting
-  modernTargets: ['chrome>=90', 'firefox>=88']
+  modernTargets: ["chrome>=90", "firefox>=88"]
   ```
+
 - **MUST** document required features and their rationale
 - **SHOULD** use Web Platform Baseline for modern browser definition
 

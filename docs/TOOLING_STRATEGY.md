@@ -7,11 +7,10 @@ This document explains the tooling choices made for this project and the rationa
 ### Development & Testing: tsgo (TypeScript-Native)
 
 - **Package**: `@typescript/native-preview@7.0.0-dev.20260124.1`
-- **Commands**: `npm run typecheck`, `npm run typecheck:cypress`, `npm run typecheck:all`
+- **Commands**: Integrated into `npm run lint`
 - **Use Cases**:
-  - Development type-checking (`npm run typecheck`)
-  - E2E test type-checking (`npm run typecheck:cypress`)
-  - CI parallel type-checking (`npm run typecheck:all`)
+  - Development type-checking (via `npm run lint`)
+  - CI type-checking (via `npm run lint`)
 - **Benefits**: ~10x faster type-checking due to Go-based native implementation
 - **Limitations**: Preview/alpha software, rapid iteration
 
@@ -30,13 +29,14 @@ This document explains the tooling choices made for this project and the rationa
 ### Linting: oxlint with tsgo support
 
 - **Packages**: `oxlint`, `oxlint-tsgolint`, `vite-plugin-oxlint`
-- **Command**: `npm run lint`
+- **Command**: `npm run lint` (runs both oxlint and type-checking)
 - **Configuration**: `.oxlintrc.json`
 - **Benefits**:
   - 20-40x faster than ESLint
   - Type-aware linting powered by tsgo
   - Rust-based for maximum performance
   - Preserves all custom banned import rules
+  - Integrated type-checking for comprehensive validation
 - **Vite Integration**: Runs automatically during development
 
 ### Formatting: oxfmt
@@ -44,10 +44,15 @@ This document explains the tooling choices made for this project and the rationa
 - **Package**: `oxfmt`
 - **Commands**: `npm run format`, `npm run format:check`
 - **Configuration**: `.oxfmtrc.json` (Prettier-compatible)
+- **Settings**:
+  - `semi: false` - No semicolons (ASI preferred by AI agents)
+  - `arrowParens: "avoid"` - Cleaner arrow functions
+  - `trailingComma: "all"` - Better git diffs
 - **Benefits**:
   - Faster than Prettier
   - Rust-based implementation
   - Drop-in Prettier replacement
+  - Optimized for AI code generation
 
 ## Custom Rules Preserved
 

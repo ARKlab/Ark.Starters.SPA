@@ -1,5 +1,5 @@
-import codeCoverageTask from "@cypress/code-coverage/task";
-import { defineConfig } from "cypress";
+import codeCoverageTask from "@cypress/code-coverage/task"
+import { defineConfig } from "cypress"
 
 export default defineConfig({
   env: {
@@ -27,7 +27,7 @@ export default defineConfig({
     specPattern: "**/*.e2e.{ts,tsx}",
 
     setupNodeEvents(on, config) {
-      codeCoverageTask(on, config);
+      codeCoverageTask(on, config)
 
       /*
       on(
@@ -38,7 +38,7 @@ export default defineConfig({
       );
       */
 
-      return config;
+      return config
     },
   },
-});
+})

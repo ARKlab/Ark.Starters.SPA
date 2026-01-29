@@ -1,11 +1,11 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react"
 
-import { appFetchQuery } from "../../app/appFetchQuery";
-import type { ArkPagedQueryParameters, ListResponse } from "../../lib/apiTypes";
-import { delay } from "../../lib/helper";
+import { appFetchQuery } from "../../app/appFetchQuery"
+import type { ArkPagedQueryParameters, ListResponse } from "../../lib/apiTypes"
+import { delay } from "../../lib/helper"
 
-import type { Movie } from "./fakeMoviesData";
-import moviesData from "./fakeMoviesData";
+import type { Movie } from "./fakeMoviesData"
+import moviesData from "./fakeMoviesData"
 
 export const moviesApiSlice = createApi({
   reducerPath: "moviesApi",
@@ -16,9 +16,9 @@ export const moviesApiSlice = createApi({
   endpoints: builder => ({
     getMovies: builder.query<ListResponse<Movie>, ArkPagedQueryParameters>({
       queryFn: async (params: ArkPagedQueryParameters) => {
-        await delay(500);
-        const { pageIndex: page = 1, pageSize = 10 } = params;
-        const retData = simulatedArkQueryWithParams(params);
+        await delay(500)
+        const { pageIndex: page = 1, pageSize = 10 } = params
+        const retData = simulatedArkQueryWithParams(params)
         return {
           data: {
             data: retData.data,
@@ -26,78 +26,78 @@ export const moviesApiSlice = createApi({
             page: page,
             limit: pageSize,
           },
-        };
+        }
       },
       providesTags: ["Movies", "Page"],
     }),
   }),
-});
+})
 
-export const { useGetMoviesQuery } = moviesApiSlice;
+export const { useGetMoviesQuery } = moviesApiSlice
 
 export const simulatedArkQueryWithParams = (params: ArkPagedQueryParameters) => {
-  const { pageIndex: page = 1, pageSize = 10, filters, sorting } = params;
-  const skip = (page - 1) * pageSize;
-  const limit = pageSize;
+  const { pageIndex: page = 1, pageSize = 10, filters, sorting } = params
+  const skip = (page - 1) * pageSize
+  const limit = pageSize
 
-  let filteredMovies = moviesData;
+  let filteredMovies = moviesData
 
   if (filters && filters.length > 0) {
     filteredMovies = filteredMovies.filter(movie => {
       return filters.every(columnFilter => {
-        const movieValue = movie[columnFilter.id as keyof Movie];
+        const movieValue = movie[columnFilter.id as keyof Movie]
         if (columnFilter.id === "releaseDate" && Array.isArray(columnFilter.value)) {
-          const releaseDate = new Date(movieValue as string);
+          const releaseDate = new Date(movieValue as string)
           const filterStartDate = columnFilter.value[0]
             ? // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
               new Date(columnFilter.value[0]).toISOString()
-            : null;
+            : null
           const filterEndDate = columnFilter.value[1]
             ? // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
               new Date(columnFilter.value[1]).toISOString()
-            : null;
+            : null
 
           if (filterStartDate && filterEndDate) {
             // Both dates are specified, check if release date is within the range
             return (
               releaseDate.toISOString() >= filterStartDate &&
               releaseDate.toISOString() <= filterEndDate
-            );
+            )
           } else if (filterStartDate) {
             // If only the filter start date is specified, check if the release date is greater than or equal to it
-            return releaseDate.toISOString() >= filterStartDate;
+            return releaseDate.toISOString() >= filterStartDate
           } else if (filterEndDate) {
             // If only the filter end date is specified, check if the release date is less than or equal to it
-            return releaseDate.toISOString() <= filterEndDate;
-          } else return true;
+            return releaseDate.toISOString() <= filterEndDate
+          } else return true
         } else if (typeof movieValue === "string" && typeof columnFilter.value === "string") {
-          return movieValue.includes(columnFilter.value);
+          return movieValue.includes(columnFilter.value)
         }
-        return movieValue === columnFilter.value;
-      });
-    });
+        return movieValue === columnFilter.value
+      })
+    })
   }
 
   if (sorting && sorting.length > 0) {
     filteredMovies = [...filteredMovies].sort((a, b) => {
       for (const sort of sorting) {
-        const aVal = a[sort.id as keyof Movie];
-        const bVal = b[sort.id as keyof Movie];
+        const aVal = a[sort.id as keyof Movie]
+        const bVal = b[sort.id as keyof Movie]
 
-        if (aVal === bVal) continue;
+        if (aVal === bVal) continue
 
-        const comparison = aVal > bVal ? 1 : -1;
-        return sort.desc ? -comparison : comparison;
+        const comparison = aVal > bVal ? 1 : -1
+        return sort.desc ? -comparison : comparison
       }
-      return 0;
-    });
+      return 0
+    })
   }
-  const count = filteredMovies.length;
-  let data = filteredMovies.slice(skip, skip + limit);
+  const count = filteredMovies.length
+  let data = filteredMovies.slice(skip, skip + limit)
   data = data.map(movie => ({
     ...movie,
     releaseDate: movie.releaseDate,
-  }));
+  }))
 
-  return { data, count };
-};
+  return { data, count }
+}

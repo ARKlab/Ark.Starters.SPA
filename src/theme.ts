@@ -2,18 +2,18 @@ import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react"
 
 /**
  * Chakra UI Theme Configuration
- * 
+ *
  * This theme follows Chakra UI v3 best practices:
  * - Uses a graded color palette (50-950) for the brand
  * - Overrides semantic tokens (bg, fg, border) to use brand colors
  * - Sets global colorPalette to "brand"
  * - Enables strictTokens for type safety
  * - Supports both light and dark modes
- * 
+ *
  * To customize:
  * 1. Update the brand color palette below (50-950 scale)
  * 2. Semantic tokens will automatically adapt
- * 3. Run: npx @chakra-ui/cli typegen --strict src/theme.ts
+ * 3. Run: npx chakra typegen --strict src/theme.ts
  */
 
 const config = defineConfig({
@@ -220,17 +220,17 @@ const config = defineConfig({
         // Brand color palette - Graded scale from 50 (lightest) to 950 (darkest)
         // Based on primary brand color #4094D0 (blue)
         brand: {
-          50: { value: "#e8f4fc" },   // Very light blue
-          100: { value: "#d1e9f9" },  // Light blue
-          200: { value: "#a3d3f3" },  // Light medium blue
-          300: { value: "#75bded" },  // Medium blue
-          400: { value: "#5aabde" },  // Medium-dark blue
-          500: { value: "#4094d0" },  // Primary brand blue
-          600: { value: "#3376a8" },  // Dark blue
-          700: { value: "#265980" },  // Darker blue
-          800: { value: "#1a3b58" },  // Very dark blue
-          900: { value: "#0d1e30" },  // Almost black blue
-          950: { value: "#070f18" },  // Darkest blue
+          50: { value: "#e8f4fc" }, // Very light blue
+          100: { value: "#d1e9f9" }, // Light blue
+          200: { value: "#a3d3f3" }, // Light medium blue
+          300: { value: "#75bded" }, // Medium blue
+          400: { value: "#5aabde" }, // Medium-dark blue
+          500: { value: "#4094d0" }, // Primary brand blue
+          600: { value: "#3376a8" }, // Dark blue
+          700: { value: "#265980" }, // Darker blue
+          800: { value: "#1a3b58" }, // Very dark blue
+          900: { value: "#0d1e30" }, // Almost black blue
+          950: { value: "#070f18" }, // Darkest blue
         },
         fonts: {
           heading: { value: `'PTSansRegular', sans-serif` },

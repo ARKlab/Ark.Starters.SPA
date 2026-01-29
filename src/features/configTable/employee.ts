@@ -1,5 +1,5 @@
 export type Employee = {
-  name: string;
-  surName: string;
-  employed: boolean;
-};
+  name: string
+  surName: string
+  employed: boolean
+}

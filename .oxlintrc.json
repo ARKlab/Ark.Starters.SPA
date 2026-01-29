@@ -1,6 +1,15 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["typescript", "import", "jsx-a11y"],
+  "plugins": [
+    "typescript",
+    "import",
+    "jsx-a11y",
+    "react",
+    "react-perf",
+    "promise",
+    "jsdoc",
+    "unicorn"
+  ],
   "categories": {
     "correctness": "warn"
   },
@@ -360,6 +369,18 @@
         "@typescript-eslint/strict-boolean-expressions": "off",
         "@typescript-eslint/switch-exhaustiveness-check": "off",
         "@typescript-eslint/unbound-method": "off"
+      }
+    },
+    {
+      "files": ["**/lib/i18n/*.ts", "**/lib/rtk/withToaster.ts"],
+      "rules": {
+        "import/no-named-as-default-member": "off"
+      }
+    },
+    {
+      "files": ["**/lib/zod2FormValidator.ts"],
+      "rules": {
+        "import/no-named-as-default": "off"
       }
     }
   ]

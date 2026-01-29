@@ -1,6 +1,6 @@
-import type { DialogContentProps } from "@chakra-ui/react";
-import { Box, Button, DialogHeader, Flex, Heading } from "@chakra-ui/react";
-import type { JSX } from "react";
+import type { DialogContentProps } from "@chakra-ui/react"
+import { Box, Button, DialogHeader, Flex, Heading } from "@chakra-ui/react"
+import type { JSX } from "react"
 
 import {
   DialogBackdrop,
@@ -9,39 +9,39 @@ import {
   DialogContent,
   DialogFooter,
   DialogRoot,
-} from "./dialog";
+} from "./dialog"
 
 export const AppModal = (props: {
-  open: boolean;
-  onClose?: () => void;
-  onSubmit?: () => void;
-  submitButton?: boolean;
-  footerCloseButton?: boolean;
-  submitButtonText?: string;
-  title: string;
-  body: JSX.Element;
-  blurredOverlay?: boolean;
-  size: "xs" | "sm" | "md" | "lg" | "xl" | "cover" | "full";
-  h?: DialogContentProps["h"];
+  open: boolean
+  onClose?: () => void
+  onSubmit?: () => void
+  submitButton?: boolean
+  footerCloseButton?: boolean
+  submitButtonText?: string
+  title: string
+  body: JSX.Element
+  blurredOverlay?: boolean
+  size: "xs" | "sm" | "md" | "lg" | "xl" | "cover" | "full"
+  h?: DialogContentProps["h"]
 }) => {
   const executeSubmit = () => {
-    if (props.onSubmit) props.onSubmit();
-    if (props.onClose) props.onClose();
-  };
-  let submitSegment = <></>;
-  let footerCloseButton = <></>;
+    if (props.onSubmit) props.onSubmit()
+    if (props.onClose) props.onClose()
+  }
+  let submitSegment = <></>
+  let footerCloseButton = <></>
   if (props.submitButton)
     submitSegment = (
       <Button
         data-test="appmodal-submit"
         mr={"3"}
         onClick={() => {
-          executeSubmit();
+          executeSubmit()
         }}
       >
         {props.submitButtonText}
       </Button>
-    );
+    )
   if (props.footerCloseButton) {
     footerCloseButton = (
       <Button
@@ -52,7 +52,7 @@ export const AppModal = (props: {
       >
         Close
       </Button>
-    );
+    )
   }
 
   return (
@@ -78,5 +78,5 @@ export const AppModal = (props: {
         </DialogContent>
       </DialogRoot>
     </>
-  );
-};
+  )
+}

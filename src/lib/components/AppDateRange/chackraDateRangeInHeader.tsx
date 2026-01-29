@@ -1,4 +1,4 @@
-import { Text, Stack } from "@chakra-ui/react";
+import { Text, Stack } from "@chakra-ui/react"
 
 export const ChackraDateRangeInHeader = () => {
   return (
@@ -7,5 +7,5 @@ export const ChackraDateRangeInHeader = () => {
         Not Implemented{" "}
       </Text>
     </Stack>
-  );
-};
+  )
+}

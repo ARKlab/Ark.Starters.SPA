@@ -1,11 +1,11 @@
-import { Box, Heading, Stack } from "@chakra-ui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useTranslation } from "react-i18next";
-import * as z from "zod";
+import { Box, Heading, Stack } from "@chakra-ui/react"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useTranslation } from "react-i18next"
+import * as z from "zod"
 
-import { CheckboxControl, InputControl } from "../../components/formControls";
-import { Wizard, WizardPage } from "../../components/wizard/wizard";
-import { delay } from "../../lib/helper";
+import { CheckboxControl, InputControl } from "../../components/formControls"
+import { Wizard, WizardPage } from "../../components/wizard/wizard"
+import { delay } from "../../lib/helper"
 
 const _wizardSchema = z.object({
   firstName: z.string().min(6),
@@ -23,16 +23,16 @@ const _wizardSchema = z.object({
   newsletter: z.boolean(),
   specialOffers: z.boolean(),
   smsNotifications: z.boolean(),
-});
-type Schema = z.infer<typeof _wizardSchema>;
+})
+type Schema = z.infer<typeof _wizardSchema>
 
 export default function WizardFormView() {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   const onSubmit = async (values: Schema) => {
-    await delay(300);
-    window.alert(JSON.stringify(values, null, 2));
-  };
+    await delay(300)
+    window.alert(JSON.stringify(values, null, 2))
+  }
 
   return (
     <Box>
@@ -101,5 +101,5 @@ export default function WizardFormView() {
         </Wizard>
       </Box>
     </Box>
-  );
+  )
 }
