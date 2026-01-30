@@ -1,20 +1,20 @@
-import type { Action, ThunkAction, WithSlice } from "@reduxjs/toolkit";
-import { combineSlices, configureStore, createDynamicMiddleware } from "@reduxjs/toolkit";
-import { setupListeners } from "@reduxjs/toolkit/query";
+import type { Action, ThunkAction, WithSlice } from "@reduxjs/toolkit"
+import { combineSlices, configureStore, createDynamicMiddleware } from "@reduxjs/toolkit"
+import { setupListeners } from "@reduxjs/toolkit/query"
 
-import { authSlice } from "../lib/authentication/authenticationSlice";
-import { envSlice } from "../lib/authentication/envSlice";
-import type { AuthProvider } from "../lib/authentication/providers/authProviderInterface";
-import { tableStateSlice } from "../lib/components/AppArkApiTable/tableStateSlice";
-import errorReducer from "../lib/errorHandler/errorHandler";
+import { authSlice } from "../lib/authentication/authenticationSlice"
+import { envSlice } from "../lib/authentication/envSlice"
+import type { AuthProvider } from "../lib/authentication/providers/authProviderInterface"
+import { tableStateSlice } from "../lib/components/AppArkApiTable/tableStateSlice"
+import errorReducer from "../lib/errorHandler/errorHandler"
 
 // Import types of lazy-loaded API slices for proper TypeScript typing
-import type { configTableApiSlice } from "../features/configTable/configTableApi";
-import type { jsonPlaceholderApi } from "../features/fetchApiExample/jsonPlaceholderApi";
-import type { videoGameApiSlice } from "../features/formExample/videoGamesApiSlice";
-import type { globalLoadingSlice } from "../features/globalLoadingBar/globalLoadingSlice";
-import type { moviesApiSlice } from "../features/paginatedTable/paginatedTableApi";
-import type { rtkqErrorHandlingApi } from "../features/rtkqErrorHandling/rtkqErrorHandlingApi";
+import type { configTableApiSlice } from "../features/configTable/configTableApi"
+import type { jsonPlaceholderApi } from "../features/fetchApiExample/jsonPlaceholderApi"
+import type { videoGameApiSlice } from "../features/formExample/videoGamesApiSlice"
+import type { globalLoadingSlice } from "../features/globalLoadingBar/globalLoadingSlice"
+import type { moviesApiSlice } from "../features/paginatedTable/paginatedTableApi"
+import type { rtkqErrorHandlingApi } from "../features/rtkqErrorHandling/rtkqErrorHandlingApi"
 
 // Union type of all possible lazy-loaded API slices
 export type LazyApiSlice =
@@ -23,14 +23,14 @@ export type LazyApiSlice =
   | typeof videoGameApiSlice
   | typeof globalLoadingSlice
   | typeof moviesApiSlice
-  | typeof rtkqErrorHandlingApi;
+  | typeof rtkqErrorHandlingApi
 
 // Base store configuration with only core slices
 // Feature-specific API slices are lazy-loaded with their routes
 const rootReducer = combineSlices(authSlice, envSlice, tableStateSlice, {
   errorHandler: errorReducer,
   table: tableStateSlice.reducer,
-});
+})
 
 // Enable lazy-loaded slices to be injected dynamically with proper typing
 const sliceReducers = rootReducer.withLazyLoadedSlices<
@@ -40,29 +40,29 @@ const sliceReducers = rootReducer.withLazyLoadedSlices<
     WithSlice<typeof globalLoadingSlice> &
     WithSlice<typeof moviesApiSlice> &
     WithSlice<typeof rtkqErrorHandlingApi>
->();
+>()
 
 // Infer the `RootState` type from the root reducer
-export type AppState = ReturnType<typeof sliceReducers>;
+export type AppState = ReturnType<typeof sliceReducers>
 
 export type ExtraType = {
-  authProvider: AuthProvider;
-};
+  authProvider: AuthProvider
+}
 
 /**
  * Store manager that holds references needed for dynamic injection
  * This is NOT a module-level singleton - it's created during store initialization
  */
 type StoreManager = {
-  currentReducer: typeof sliceReducers;
-  injectedSlices: Set<string>;
-  dynamicMiddleware: ReturnType<typeof createDynamicMiddleware>;
-  apiResetActions: (() => ReturnType<LazyApiSlice["util"]["resetApiState"]>)[];
-};
+  currentReducer: typeof sliceReducers
+  injectedSlices: Set<string>
+  dynamicMiddleware: ReturnType<typeof createDynamicMiddleware>
+  apiResetActions: (() => ReturnType<LazyApiSlice["util"]["resetApiState"]>)[]
+}
 
 // Create the dynamic middleware instance for lazy-loaded API slice middlewares
 // This must be created before the store is configured
-const dynamicMiddlewareInstance = createDynamicMiddleware();
+const dynamicMiddlewareInstance = createDynamicMiddleware()
 
 /**
  * Initialize and configure the Redux store
@@ -80,9 +80,9 @@ export function initStore(extra: ExtraType) {
           serializableCheck: true,
         },
       }).concat(dynamicMiddlewareInstance.middleware), // Add dynamic middleware to the chain
-  });
+  })
 
-  setupListeners(store.dispatch);
+  setupListeners(store.dispatch)
 
   // Create store manager (NOT at module level - created during init)
   const storeManager: StoreManager = {
@@ -90,24 +90,24 @@ export function initStore(extra: ExtraType) {
     injectedSlices: new Set<string>(),
     dynamicMiddleware: dynamicMiddlewareInstance,
     apiResetActions: [],
-  };
+  }
 
   // Attach manager to store for access by injection utilities
   // This avoids module-level side effects
-  const storeWithManager = store as typeof store & { __storeManager: StoreManager };
-  storeWithManager.__storeManager = storeManager;
+  const storeWithManager = store as typeof store & { __storeManager: StoreManager }
+  storeWithManager.__storeManager = storeManager
 
-  return storeWithManager;
+  return storeWithManager
 }
 
-export type AppStore = ReturnType<typeof initStore>;
-export type AppDispatch = AppStore["dispatch"];
+export type AppStore = ReturnType<typeof initStore>
+export type AppDispatch = AppStore["dispatch"]
 export type AppThunk<ThunkReturnType = void> = ThunkAction<
   ThunkReturnType,
   AppState,
   ExtraType,
   Action
->;
+>
 
 /**
  * Get the store manager from the store instance
@@ -116,11 +116,11 @@ export type AppThunk<ThunkReturnType = void> = ThunkAction<
  * @returns Store manager for dynamic injection
  */
 function getStoreManager(store: AppStore): StoreManager {
-  const manager = store.__storeManager;
+  const manager = store.__storeManager
   if (!manager) {
-    throw new Error("Store manager not initialized. Ensure initStore() was called.");
+    throw new Error("Store manager not initialized. Ensure initStore() was called.")
   }
-  return manager;
+  return manager
 }
 
 /**
@@ -169,21 +169,21 @@ function getStoreManager(store: AppStore): StoreManager {
  * ```
  */
 export function injectApiSlice(store: AppStore, slice: LazyApiSlice) {
-  const manager = getStoreManager(store);
+  const manager = getStoreManager(store)
 
   // Check if this slice has already been injected (idempotent)
-  const sliceKey = slice.reducerPath;
+  const sliceKey = slice.reducerPath
   if (manager.injectedSlices.has(sliceKey)) {
-    return; // Already injected, skip
+    return // Already injected, skip
   }
 
   // 1. Inject the REDUCER using combineSlices().inject()
-  manager.currentReducer = manager.currentReducer.inject(slice) as typeof manager.currentReducer;
+  manager.currentReducer = manager.currentReducer.inject(slice) as typeof manager.currentReducer
   // Replace the reducer - types are complex with lazy loaded slices but compatible at runtime
   // We use unknown as an intermediate step to avoid the 'any' linting error
   store.replaceReducer(
     manager.currentReducer as unknown as Parameters<typeof store.replaceReducer>[0],
-  );
+  )
 
   // 2. Inject the MIDDLEWARE using createDynamicMiddleware
   // This is critical - combineSlices().inject() does NOT inject middleware
@@ -191,10 +191,10 @@ export function injectApiSlice(store: AppStore, slice: LazyApiSlice) {
   // what createDynamicMiddleware expects, but they're compatible at runtime
   manager.dynamicMiddleware.addMiddleware(
     slice.middleware as Parameters<typeof manager.dynamicMiddleware.addMiddleware>[0],
-  );
+  )
 
   // Mark this slice as injected
-  manager.injectedSlices.add(sliceKey);
+  manager.injectedSlices.add(sliceKey)
 }
 
 /**
@@ -207,9 +207,9 @@ export function registerApiResetAction(
   store: AppStore,
   resetAction: () => ReturnType<LazyApiSlice["util"]["resetApiState"]>,
 ) {
-  const manager = getStoreManager(store);
+  const manager = getStoreManager(store)
   if (!manager.apiResetActions.includes(resetAction)) {
-    manager.apiResetActions.push(resetAction);
+    manager.apiResetActions.push(resetAction)
   }
 }
 
@@ -221,6 +221,6 @@ export function registerApiResetAction(
  * @returns Array of reset action creators
  */
 export function getResetApiActions(store: AppStore) {
-  const manager = getStoreManager(store);
-  return manager.apiResetActions.map(fn => fn());
+  const manager = getStoreManager(store)
+  return manager.apiResetActions.map(fn => fn())
 }

@@ -1,20 +1,20 @@
-import { Box, Button, Heading, Text, Wrap, WrapItem } from "@chakra-ui/react";
-import { useTranslation } from "react-i18next";
+import { Box, Button, Heading, Text, Wrap, WrapItem } from "@chakra-ui/react"
+import { useTranslation } from "react-i18next"
 
-import { useInjectApiSlice } from "../../app/useInjectApiSlice";
+import { useInjectApiSlice } from "../../app/useInjectApiSlice"
 
 import {
   globalLoadingSlice,
   useSlowGetQuery,
   useFastMutationMutation,
   useSlowMutationMutation,
-} from "./globalLoadingSlice";
+} from "./globalLoadingSlice"
 
 const GlobalLoadingBarPage = () => {
   // Inject API slice for lazy loading
-  useInjectApiSlice(globalLoadingSlice);
+  useInjectApiSlice(globalLoadingSlice)
 
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   const get = useSlowGetQuery()
 

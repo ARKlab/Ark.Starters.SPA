@@ -209,9 +209,9 @@ bg: {
 Toggle color mode programmatically:
 
 ```tsx
-import { useColorMode } from "@chakra-ui/react";
+import { useColorMode } from "@chakra-ui/react"
 
-const { colorMode, toggleColorMode } = useColorMode();
+const { colorMode, toggleColorMode } = useColorMode()
 ```
 
 ## Strict Tokens Mode

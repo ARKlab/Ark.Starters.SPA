@@ -30,7 +30,7 @@ The implementation maintains full TypeScript type safety using type-only imports
 
 ```typescript
 // Type-only imports don't bundle the implementation
-import type { moviesApiSlice } from "../features/paginatedTable/paginatedTableApi";
+import type { moviesApiSlice } from "../features/paginatedTable/paginatedTableApi"
 
 // Union type for compile-time safety
 export type LazyApiSlice = typeof moviesApiSlice | typeof configTableApiSlice
@@ -40,7 +40,7 @@ export type LazyApiSlice = typeof moviesApiSlice | typeof configTableApiSlice
 const sliceReducers = rootReducer.withLazyLoadedSlices<
   WithSlice<typeof moviesApiSlice> & WithSlice<typeof configTableApiSlice>
   // ... other slices
->();
+>()
 ```
 
 This provides:
@@ -57,8 +57,8 @@ This provides:
 
 ```typescript
 // src/features/myFeature/myFeatureApi.ts
-import { createApi } from "@reduxjs/toolkit/query/react";
-import { appFetchQuery } from "../../app/appFetchQuery";
+import { createApi } from "@reduxjs/toolkit/query/react"
+import { appFetchQuery } from "../../app/appFetchQuery"
 
 export const myFeatureApiSlice = createApi({
   reducerPath: "myFeatureApi",
@@ -66,9 +66,9 @@ export const myFeatureApiSlice = createApi({
   endpoints: builder => ({
     // Your endpoints here
   }),
-});
+})
 
-export const { useGetDataQuery } = myFeatureApiSlice;
+export const { useGetDataQuery } = myFeatureApiSlice
 ```
 
 2. **Add the slice type** to `configureStore.ts`:
@@ -156,7 +156,7 @@ export function injectApiSlice(store: AppStore, slice: LazyApiSlice) {
 
   // Step 2: Inject the MIDDLEWARE using createDynamicMiddleware
   // This is critical - combineSlices().inject() does NOT do this
-  manager.dynamicMiddleware.addMiddleware(slice.middleware);
+  manager.dynamicMiddleware.addMiddleware(slice.middleware)
 }
 ```
 
@@ -168,13 +168,13 @@ The store must be configured with `createDynamicMiddleware`:
 import { createDynamicMiddleware, configureStore } from "@reduxjs/toolkit"
 
 // Create the dynamic middleware instance
-const dynamicMiddlewareInstance = createDynamicMiddleware();
+const dynamicMiddlewareInstance = createDynamicMiddleware()
 
 const store = configureStore({
   reducer: sliceReducers,
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware().concat(dynamicMiddlewareInstance.middleware),
-});
+})
 ```
 
 **Important**: This all requires two separate API calls. You need to:
@@ -189,8 +189,8 @@ You can verify middleware is working by checking that RTK Query features work co
 
 ```typescript
 // Caching works - second call uses cache
-const { data: data1 } = useGetMoviesQuery();
-const { data: data2 } = useGetMoviesQuery(); // Uses cached data
+const { data: data1 } = useGetMoviesQuery()
+const { data: data2 } = useGetMoviesQuery() // Uses cached data
 
 // Polling works
 const { data } = useGetMoviesQuery(params, {
@@ -222,10 +222,10 @@ if (import.meta.env.DEV || import.meta.env.MODE === "e2e") {
   window.rtkq = {
     resetCache: () => {
       for (const action of getResetApiActions()) {
-        store.dispatch(action);
+        store.dispatch(action)
       }
     },
-  };
+  }
 }
 ```
 
@@ -302,10 +302,10 @@ export type LazyApiSlice = typeof existingSlice | typeof yourNewSlice // Add thi
 
 ```typescript
 // ❌ Wrong - bundles the implementation
-import { myApiSlice } from "../features/myFeature/myFeatureApi";
+import { myApiSlice } from "../features/myFeature/myFeatureApi"
 
 // ✅ Correct - only imports the type
-import type { myApiSlice } from "../features/myFeature/myFeatureApi";
+import type { myApiSlice } from "../features/myFeature/myFeatureApi"
 ```
 
 ## References

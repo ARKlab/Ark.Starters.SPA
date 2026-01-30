@@ -1,7 +1,7 @@
-import { useRef } from "react";
+import { useRef } from "react"
 
-import { injectApiSlice, registerApiResetAction, type LazyApiSlice } from "./configureStore";
-import { useAppStore } from "./hooks";
+import { injectApiSlice, registerApiResetAction, type LazyApiSlice } from "./configureStore"
+import { useAppStore } from "./hooks"
 
 /**
  * Hook to inject an RTK Query API slice into the store when a component renders
@@ -45,20 +45,20 @@ import { useAppStore } from "./hooks";
  * ```
  */
 export function useInjectApiSlice(api: LazyApiSlice) {
-  const store = useAppStore();
+  const store = useAppStore()
 
   // Use a ref to track if we've already injected this slice
-  const injectedRef = useRef(false);
+  const injectedRef = useRef(false)
 
   // Inject synchronously during render (before any hooks execute)
   // This ensures the slice is available when RTK Query hooks are called
   if (!injectedRef.current) {
     // Inject the slice - handles both reducer AND middleware
-    injectApiSlice(store, api);
+    injectApiSlice(store, api)
 
     // Register reset action for dev/e2e mode
-    registerApiResetAction(store, () => api.util.resetApiState());
+    registerApiResetAction(store, () => api.util.resetApiState())
 
-    injectedRef.current = true;
+    injectedRef.current = true
   }
 }
