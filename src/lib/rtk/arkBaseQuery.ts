@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-import type { ThunkDispatch } from "@reduxjs/toolkit";
+import type { ThunkDispatch } from "@reduxjs/toolkit"
 import {
   retry,
   type BaseQueryApi,
   type BaseQueryArg,
   type QueryReturnValue,
   type RetryOptions,
-} from "@reduxjs/toolkit/query";
+} from "@reduxjs/toolkit/query"
 
-import type { MaybePromise, Modify, UnwrapPromise } from "../types";
+import type { MaybePromise, Modify, UnwrapPromise } from "../types"
 
 export interface ArkBaseQueryApiType<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -20,9 +20,9 @@ export interface ArkBaseQueryApiType<
 > extends Modify<
   BaseQueryApi,
   {
-    dispatch: D;
-    getState: () => S;
-    extra: E;
+    dispatch: D
+    getState: () => S
+    extra: E
   }
 > {}
 
@@ -38,39 +38,39 @@ export type ArkBaseQueryFn<
   args: Args,
   api: Api,
   extraOptions?: DefinitionExtraOptions,
-) => MaybePromise<QueryReturnValue<Result, Error, Meta>>;
+) => MaybePromise<QueryReturnValue<Result, Error, Meta>>
 
 export type ArkBaseQueryResult<BaseQuery extends ArkBaseQueryFn> =
   UnwrapPromise<ReturnType<BaseQuery>> extends infer Unwrapped
     ? Unwrapped extends {
-        data: unknown;
+        data: unknown
       }
       ? Unwrapped["data"]
       : never
-    : never;
+    : never
 
 export type ArkBaseQueryError<BaseQuery extends ArkBaseQueryFn> = Exclude<
   UnwrapPromise<ReturnType<BaseQuery>>,
   {
-    error?: undefined;
+    error?: undefined
   }
->["error"];
+>["error"]
 
 export type ArkBaseQueryMeta<BaseQuery extends ArkBaseQueryFn> = UnwrapPromise<
   ReturnType<BaseQuery>
->["meta"];
+>["meta"]
 
 export type ArkBaseQueryExtraOptions<BaseQuery extends ArkBaseQueryFn> = NonNullable<
   Parameters<BaseQuery>[2]
->;
+>
 
-export type ArkBaseQueryApi<BaseQuery extends ArkBaseQueryFn> = Parameters<BaseQuery>[1];
+export type ArkBaseQueryApi<BaseQuery extends ArkBaseQueryFn> = Parameters<BaseQuery>[1]
 
 // Helper types to avoid redundant type constituents
 type IntersectIfNotUnknown<Base, Additional> = [Additional] extends [unknown]
   ? Base
-  : Base & Additional;
-type UnionIfObject<Base, Additional> = [Additional] extends [object] ? Base | Additional : Base;
+  : Base & Additional
+type UnionIfObject<Base, Additional> = [Additional] extends [object] ? Base | Additional : Base
 
 export type ArkBaseQueryEnhancer<
   AdditionalArgs = unknown,
@@ -88,17 +88,17 @@ export type ArkBaseQueryEnhancer<
   ArkBaseQueryExtraOptions<BaseQuery> & AdditionalDefinitionExtraOptions,
   NonNullable<ArkBaseQueryMeta<BaseQuery>>,
   ArkBaseQueryApi<BaseQuery>
->;
+>
 
 export const arkRetry: ArkBaseQueryEnhancer<unknown, RetryOptions, RetryOptions> = (
   baseQuery,
   retryConfig,
 ) => {
-  const retryFn = retry(baseQuery, retryConfig);
+  const retryFn = retry(baseQuery, retryConfig)
   return (args, api, extraOptions) =>
     retryFn(
       args,
       api,
       extraOptions ?? ({} as ArkBaseQueryExtraOptions<typeof baseQuery> & RetryOptions),
-    );
-};
+    )
+}

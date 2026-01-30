@@ -1,81 +1,81 @@
-import { Box, Button, Heading, Text, useDisclosure } from "@chakra-ui/react";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { Box, Button, Heading, Text, useDisclosure } from "@chakra-ui/react"
+import { useState } from "react"
+import { useTranslation } from "react-i18next"
 
-import { AppCheckBox } from "../../lib/components/AppCheckBox/appCheckBox";
-import { AppConfirmationDialog } from "../../lib/components/AppConfirmationDialog/appConfirmationDialog";
-import { AppCopyToClipBoard } from "../../lib/components/AppCopyToClipBoard/appCopyToClipBoard";
-import { AppDatePicker } from "../../lib/components/AppDatePicker/appDatePicker";
-import AppFileUpload from "../../lib/components/AppFileUpload/appFileUpload";
-import { AppInput } from "../../lib/components/AppInput/appInput";
-import { AppModal } from "../../lib/components/AppModal/appModal";
-import type { Item as MultiItem } from "../../lib/components/AppMultiSelect/appMultiSelect";
-import AppMultiSelect from "../../lib/components/AppMultiSelect/appMultiSelect";
-import { AppNumberInput } from "../../lib/components/AppNumberInput/AppNumberInput";
-import AppPagination from "../../lib/components/AppPagination/AppPagination";
-import type { AppSelectOptionItem } from "../../lib/components/AppSelect/appSelect";
-import AppSelect from "../../lib/components/AppSelect/appSelect";
-import AppTagInput from "../../lib/components/AppTagInput/AppTagInput";
+import { AppCheckBox } from "../../lib/components/AppCheckBox/appCheckBox"
+import { AppConfirmationDialog } from "../../lib/components/AppConfirmationDialog/appConfirmationDialog"
+import { AppCopyToClipBoard } from "../../lib/components/AppCopyToClipBoard/appCopyToClipBoard"
+import { AppDatePicker } from "../../lib/components/AppDatePicker/appDatePicker"
+import AppFileUpload from "../../lib/components/AppFileUpload/appFileUpload"
+import { AppInput } from "../../lib/components/AppInput/appInput"
+import { AppModal } from "../../lib/components/AppModal/appModal"
+import type { Item as MultiItem } from "../../lib/components/AppMultiSelect/appMultiSelect"
+import AppMultiSelect from "../../lib/components/AppMultiSelect/appMultiSelect"
+import { AppNumberInput } from "../../lib/components/AppNumberInput/AppNumberInput"
+import AppPagination from "../../lib/components/AppPagination/AppPagination"
+import type { AppSelectOptionItem } from "../../lib/components/AppSelect/appSelect"
+import AppSelect from "../../lib/components/AppSelect/appSelect"
+import AppTagInput from "../../lib/components/AppTagInput/AppTagInput"
 
 export default function ComponentsTestPage() {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   // Pagination states
-  const [largePage, setLargePage] = useState(1);
-  const [largePageSize, setLargePageSize] = useState(10);
-  const [smallPage] = useState(1);
-  const [smallPageSize] = useState(10);
+  const [largePage, setLargePage] = useState(1)
+  const [largePageSize, setLargePageSize] = useState(10)
+  const [smallPage] = useState(1)
+  const [smallPageSize] = useState(10)
   // DatePicker states
-  const [singleDate, setSingleDate] = useState<Date | undefined>(undefined);
-  const [boundedDate, setBoundedDate] = useState<Date | undefined>(undefined);
-  const minBound = new Date(2025, 0, 10); // 10 Jan 2025
-  const maxBound = new Date(2025, 0, 15); // 15 Jan 2025
+  const [singleDate, setSingleDate] = useState<Date | undefined>(undefined)
+  const [boundedDate, setBoundedDate] = useState<Date | undefined>(undefined)
+  const minBound = new Date(2025, 0, 10) // 10 Jan 2025
+  const maxBound = new Date(2025, 0, 15) // 15 Jan 2025
   // AppInput state
-  const [inputValue, setInputValue] = useState<string>("");
+  const [inputValue, setInputValue] = useState<string>("")
   // AppModal states
-  const [modalOpen, setModalOpen] = useState(false);
-  const [submitCount, setSubmitCount] = useState(0);
+  const [modalOpen, setModalOpen] = useState(false)
+  const [submitCount, setSubmitCount] = useState(0)
   //AppSelect states
-  const [selectValue, setSelectValue] = useState<string | undefined>();
-  const [disabledSelectValue, setDisabledSelectValue] = useState<string | undefined>("b");
-  const [loadingSelect] = useState(false);
+  const [selectValue, setSelectValue] = useState<string | undefined>()
+  const [disabledSelectValue, setDisabledSelectValue] = useState<string | undefined>("b")
+  const [loadingSelect] = useState(false)
   const selectOptions: AppSelectOptionItem[] = [
     { label: "Alpha", value: "a" },
     { label: "Bravo", value: "b" },
     { label: "Charlie", value: "c", disabled: true },
     { label: "Delta", value: "d" },
-  ];
+  ]
   //AppMultiSelect states
   const multiOptions: MultiItem[] = [
     { label: "Alpha", value: "a" },
     { label: "Bravo", value: "b" },
     { label: "Charlie", value: "c" },
     { label: "Delta", value: "d" },
-  ];
-  const [multiValue, setMultiValue] = useState<string[]>([]);
-  const [multiLoadingValue, setMultiLoadingValue] = useState<string[]>([]);
+  ]
+  const [multiValue, setMultiValue] = useState<string[]>([])
+  const [multiLoadingValue, setMultiLoadingValue] = useState<string[]>([])
   //App Number Input states
-  const [numberValue, setNumberValue] = useState<number | undefined>(undefined);
-  const [invalidNumberValue, setInvalidNumberValue] = useState<number | undefined>(5);
+  const [numberValue, setNumberValue] = useState<number | undefined>(undefined)
+  const [invalidNumberValue, setInvalidNumberValue] = useState<number | undefined>(5)
   // App Tag Input states
-  const [tagsBasic, setTagsBasic] = useState<string[]>([]);
+  const [tagsBasic, setTagsBasic] = useState<string[]>([])
 
-  const [tagsDisabled] = useState<string[]>(["fixed"]);
+  const [tagsDisabled] = useState<string[]>(["fixed"])
   // FileUpload states
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [selectedMultipleFiles, setSelectedMultipleFiles] = useState<File[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+  const [selectedMultipleFiles, setSelectedMultipleFiles] = useState<File[]>([])
   // AppCheckBox states
-  const [checkboxBasic, setCheckboxBasic] = useState(false);
-  const [checkboxWithTitle, setCheckboxWithTitle] = useState(true);
-  const [checkboxDisabled] = useState(false);
-  const [checkboxInvalid, setCheckboxInvalid] = useState(false);
+  const [checkboxBasic, setCheckboxBasic] = useState(false)
+  const [checkboxWithTitle, setCheckboxWithTitle] = useState(true)
+  const [checkboxDisabled] = useState(false)
+  const [checkboxInvalid, setCheckboxInvalid] = useState(false)
   // AppConfirmationDialog state
   const {
     open: isConfirmationOpen,
     onOpen: openConfirmation,
     onClose: closeConfirmation,
-  } = useDisclosure();
-  const [confirmationCount, setConfirmationCount] = useState(0);
+  } = useDisclosure()
+  const [confirmationCount, setConfirmationCount] = useState(0)
 
   return (
     <Box as="main" p="4">
@@ -172,7 +172,7 @@ export default function ComponentsTestPage() {
           label="Basic"
           date={singleDate ?? null}
           setDate={d => {
-            setSingleDate(d);
+            setSingleDate(d)
           }}
         />
         <Text data-test="datepicker-basic-value">
@@ -186,7 +186,7 @@ export default function ComponentsTestPage() {
           label="Bounded"
           date={boundedDate ?? null}
           setDate={d => {
-            setBoundedDate(d);
+            setBoundedDate(d)
           }}
           minDate={minBound}
           maxDate={maxBound}
@@ -224,7 +224,7 @@ export default function ComponentsTestPage() {
         <Button
           data-test="open-appmodal-btn"
           onClick={() => {
-            setModalOpen(true);
+            setModalOpen(true)
           }}
           mb={"2"}
         >
@@ -236,10 +236,10 @@ export default function ComponentsTestPage() {
         <AppModal
           open={modalOpen}
           onClose={() => {
-            setModalOpen(false);
+            setModalOpen(false)
           }}
           onSubmit={() => {
-            setSubmitCount(c => c + 1);
+            setSubmitCount(c => c + 1)
           }}
           submitButton
           footerCloseButton
@@ -425,16 +425,16 @@ export default function ComponentsTestPage() {
         <AppConfirmationDialog
           open={isConfirmationOpen}
           onOpenChange={open => {
-            if (!open) closeConfirmation();
+            if (!open) closeConfirmation()
           }}
           onConfirm={() => {
-            setConfirmationCount(c => c + 1);
-            closeConfirmation();
+            setConfirmationCount(c => c + 1)
+            closeConfirmation()
           }}
           title="Delete record?"
           body={<Box>Are you sure you want to proceed?</Box>}
         />
       </Box>
     </Box>
-  );
+  )
 }

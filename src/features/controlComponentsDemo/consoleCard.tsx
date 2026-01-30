@@ -1,9 +1,9 @@
-import { Box, Button, Flex, Text } from "@chakra-ui/react";
-import React from "react";
+import { Box, Button, Flex, Text } from "@chakra-ui/react"
+import React from "react"
 
 interface ConsoleCardProps {
-  logs: { name: string; value: unknown }[];
-  setLogs: React.Dispatch<React.SetStateAction<{ name: string; value: unknown }[]>>;
+  logs: { name: string; value: unknown }[]
+  setLogs: React.Dispatch<React.SetStateAction<{ name: string; value: unknown }[]>>
 }
 
 const ConsoleCard: React.FC<ConsoleCardProps> = ({ logs, setLogs }) => {
@@ -13,7 +13,7 @@ const ConsoleCard: React.FC<ConsoleCardProps> = ({ logs, setLogs }) => {
         <Text fontWeight="bold">Console</Text>
         <Button
           onClick={() => {
-            setLogs([]);
+            setLogs([])
           }}
           size={"xs"}
         >
@@ -24,7 +24,7 @@ const ConsoleCard: React.FC<ConsoleCardProps> = ({ logs, setLogs }) => {
         <Text key={index}>{`${log.name}: ${JSON.stringify(log.value)}`}</Text>
       ))}
     </Box>
-  );
-};
+  )
+}
 
-export default ConsoleCard;
+export default ConsoleCard

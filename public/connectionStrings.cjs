@@ -1,16 +1,16 @@
-var http = require("http");
-var port = process.env.PORT;
+var http = require("http")
+var port = process.env.PORT
 
 // Load environment files based on both NODE_ENV and VITE_MODE
 // This ensures we load the correct .env file for both Vite builds and standalone server
-const mode = process.env.VITE_MODE || process.env.NODE_ENV;
-const envFiles = [`.env.${mode}.local`, `.env.${mode}`, `.env.local`, ".env"];
+const mode = process.env.VITE_MODE || process.env.NODE_ENV
+const envFiles = [`.env.${mode}.local`, `.env.${mode}`, `.env.local`, ".env"]
 
-require("dotenv").config({ path: envFiles });
+require("dotenv").config({ path: envFiles })
 
 http
   .createServer(function (req, res) {
-    res.writeHead(200, { "Content-Type": "text/javascript" });
+    res.writeHead(200, { "Content-Type": "text/javascript" })
 
     const appSettings = {
       msal: process.env["MSAL_ClientId"]
@@ -37,10 +37,10 @@ http
             connectionString: process.env["APPLICATIONINSIGHTS_CONNECTION_STRING"],
           }
         : undefined,
-    };
+    }
 
     res.end(`
       window.appSettings = ${JSON.stringify(appSettings)};
-    `);
+    `)
   })
-  .listen(port);
+  .listen(port)

@@ -1,15 +1,15 @@
-import type { HeadingProps } from "@chakra-ui/react";
-import { Button, Heading, HStack } from "@chakra-ui/react";
-import { LuChevronLeft } from "react-icons/lu";
-import { useNavigate } from "react-router";
+import type { HeadingProps } from "@chakra-ui/react"
+import { Button, Heading, HStack } from "@chakra-ui/react"
+import { LuChevronLeft } from "react-icons/lu"
+import { useNavigate } from "react-router"
 
 export function PageTitle(props: { pageTitle: string; backBtn?: boolean } & HeadingProps) {
-  const { pageTitle, backBtn = true, ...rest } = props;
+  const { pageTitle, backBtn = true, ...rest } = props
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   async function goBack() {
-    await navigate(-1);
+    await navigate(-1)
   }
 
   return (
@@ -24,5 +24,5 @@ export function PageTitle(props: { pageTitle: string; backBtn?: boolean } & Head
         {pageTitle}
       </Heading>
     </HStack>
-  );
+  )
 }

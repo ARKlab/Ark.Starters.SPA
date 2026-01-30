@@ -37,6 +37,7 @@ npm start
 ```
 
 This will:
+
 - Start the connectionStrings server on port 4000
 - Start the Vite dev server on port 3000
 - Open your browser automatically
@@ -50,6 +51,7 @@ npm run test
 ```
 
 This will:
+
 - Build the application in production mode with coverage instrumentation
 - Start the connectionStrings server on port 4000
 - Start the Vite preview server on port 3000
@@ -83,6 +85,7 @@ npx cypress run --spec cypress/e2e/your-test.e2e.ts
 #### Performance Notes
 
 E2E tests use the production build (`vite build` + `vite preview`) for optimal performance:
+
 - Production builds are pre-bundled and optimized (fewer network requests)
 - Tests execute faster compared to dev server (which serves unbundled modules)
 - CI/CD pipelines benefit from consistent, reliable performance
@@ -101,7 +104,7 @@ On a deployed environment this do not rapresent any problem but, locally, having
 To avoid this ensure to set a custom name to this variable in the **index.tsx** file:
 
 ```typescript
-const colorModeManager = createLocalStorageManager("appName-ColorMode");
+const colorModeManager = createLocalStorageManager("appName-ColorMode")
 ```
 
 and then pass it in the **Provider**:
@@ -131,7 +134,7 @@ const zIndices = {
   skipLink: 1600,
   toast: 1700,
   tooltip: 1800,
-};
+}
 ```
 
 #### Distancing
@@ -208,16 +211,16 @@ _env_ is an object of type **AppSettingsType** defined as it follows:
 
 ```typescript
 type AppSettingsType = {
-  clientID: string;
-  domain: string;
-  scopes: string;
-  knownAuthorities: string;
-  signUpSignInPolicyId: string;
-  serviceUrl: string;
-  redirectUri: string;
-  authority: string;
-  audience: string;
-};
+  clientID: string
+  domain: string
+  scopes: string
+  knownAuthorities: string
+  signUpSignInPolicyId: string
+  serviceUrl: string
+  redirectUri: string
+  authority: string
+  audience: string
+}
 ```
 
 This will be used as globals configuration and can be implemented to support more features (ex: subsidiaries).
@@ -225,8 +228,9 @@ This will be used as globals configuration and can be implemented to support mor
 ### Authentication
 
 This project supports multiple authentication providers through a flexible interface:
+
 - **MSAL** (Microsoft Authentication Library) for Azure AD B2C
-- **Auth0** for Auth0 authentication  
+- **Auth0** for Auth0 authentication
 - **NoopAuthProvider** for development/testing without authentication
 
 #### Selecting Your Authentication Provider
@@ -239,18 +243,22 @@ This project supports multiple authentication providers through a flexible inter
 2. Choose ONE of the following configurations by commenting/uncommenting the appropriate sections:
 
 **Option 1: MSAL (Azure AD B2C) - Default**
+
 ```typescript
 // MSAL - ACTIVE
-import { NoopAuthProvider, AuthProvider } from "../lib/authentication/providers/authProviderInterface";
-import { MsalAuthProvider } from "../lib/authentication/providers/msalAuthProvider";
-import { appSettings } from "./env";
+import {
+  NoopAuthProvider,
+  AuthProvider,
+} from "../lib/authentication/providers/authProviderInterface"
+import { MsalAuthProvider } from "../lib/authentication/providers/msalAuthProvider"
+import { appSettings } from "./env"
 
 export const authProvider: AuthProvider = appSettings.msal
   ? new MsalAuthProvider({
       ...appSettings.msal,
       permissionsClaims: ["extension_Scope"],
     })
-  : new NoopAuthProvider();
+  : new NoopAuthProvider()
 
 // Auth0 - COMMENTED OUT
 /*
@@ -260,6 +268,7 @@ import { Auth0AuthProvider } from "../lib/authentication/providers/auth0AuthProv
 ```
 
 **Option 2: Auth0**
+
 ```typescript
 // MSAL - COMMENTED OUT
 /*
@@ -268,24 +277,26 @@ import { MsalAuthProvider } from "../lib/authentication/providers/msalAuthProvid
 */
 
 // Auth0 - ACTIVE
-const claimsUrl = "http://ark-energy.eu/claims/";
-import { Auth0AuthProvider } from "../lib/authentication/providers/auth0AuthProvider";
-import type { AuthProvider } from "../lib/authentication/providers/authProviderInterface";
-import { appSettings } from "./env";
+const claimsUrl = "http://ark-energy.eu/claims/"
+import { Auth0AuthProvider } from "../lib/authentication/providers/auth0AuthProvider"
+import type { AuthProvider } from "../lib/authentication/providers/authProviderInterface"
+import { appSettings } from "./env"
 
 export const authProvider: AuthProvider = new Auth0AuthProvider({
   ...appSettings,
   permissionsClaims: [claimsUrl + "permissions", claimsUrl + "groups"],
-});
+})
 ```
 
 **Option 3: No Authentication (Development)**
+
 ```typescript
-import { NoopAuthProvider } from "../lib/authentication/providers/authProviderInterface";
-export const authProvider = new NoopAuthProvider();
+import { NoopAuthProvider } from "../lib/authentication/providers/authProviderInterface"
+export const authProvider = new NoopAuthProvider()
 ```
 
 **Bundle Size Impact:**
+
 - **Active provider only:** ~60-70 KB gzipped (MSAL or Auth0)
 - **Unused providers:** 0 KB (automatically excluded by tree-shaking)
 - **Total savings:** ~60-70 KB by ensuring unused providers are commented out
@@ -308,24 +319,24 @@ In order to make this work locally you must create a **.env.local** file in the 
 ##### .env.local
 
 ```javascript
-AUTH0_ClientId = "yourclientId";
-AUTH0_Domain = "yourDomain";
-AUTH0_Audience = "https://yourAudience.auth0.com/api/v2/";
-AUTH0_RedirectUri = "yourRedirectUri";
-SERVICE_URL = "yourApi.com";
+AUTH0_ClientId = "yourclientId"
+AUTH0_Domain = "yourDomain"
+AUTH0_Audience = "https://yourAudience.auth0.com/api/v2/"
+AUTH0_RedirectUri = "yourRedirectUri"
+SERVICE_URL = "yourApi.com"
 ```
 
 ##### connectionStrings.cjs
 
 ```javascript
-var http = require("http");
-var port = process.env.port;
+var http = require("http")
+var port = process.env.port
 if (process.env.NODE_ENV === "development") {
-  require("dotenv").config({ path: ".env.local" });
+  require("dotenv").config({ path: ".env.local" })
 }
 http
   .createServer(function (req, res) {
-    res.writeHead(200, { "Content-Type": "text/javascript" });
+    res.writeHead(200, { "Content-Type": "text/javascript" })
     res.end(`
   window.appSettings = {
   clientID: "${process.env["AUTH0_ClientId"]}",
@@ -334,9 +345,9 @@ http
   redirectUri: "${process.env["AUTH0_RedirectUri"]}",
   serviceUrl: "${process.env["SERVICE_URL"]}",
   };
- `);
+ `)
   })
-  .listen(port);
+  .listen(port)
 ```
 
 #### MSAL
@@ -344,27 +355,27 @@ http
 ##### .env.local
 
 ```javascript
-PORT = 4000;
-MSAL_ClientId = "yourclientId";
-MSAL_Domain = "yourDomain";
-MSAL_Scopes = "YourScopes";
-MSAL_knownAuthorities = "yourKnownAutorities";
-MSAL_authority = "YourMsalAutority";
-MSAL_RedirectUri = "yourRedirectUri";
-SERVICE_URL = "yourApi.com";
+PORT = 4000
+MSAL_ClientId = "yourclientId"
+MSAL_Domain = "yourDomain"
+MSAL_Scopes = "YourScopes"
+MSAL_knownAuthorities = "yourKnownAutorities"
+MSAL_authority = "YourMsalAutority"
+MSAL_RedirectUri = "yourRedirectUri"
+SERVICE_URL = "yourApi.com"
 ```
 
 ##### connectionStrings.cjs
 
 ```javascript
-var http = require("http");
-var port = process.env.port;
+var http = require("http")
+var port = process.env.port
 if (process.env.NODE_ENV === "development") {
-  require("dotenv").config({ path: ".env.local" });
+  require("dotenv").config({ path: ".env.local" })
 }
 http
   .createServer(function (req, res) {
-    res.writeHead(200, { "Content-Type": "text/javascript" });
+    res.writeHead(200, { "Content-Type": "text/javascript" })
     res.end(`
   window.appSettings = {
   clientID: "${process.env["MSAL_ClientId"]}",
@@ -375,9 +386,9 @@ http
   redirectUri: "${process.env["MSAL_RedirectUri"]}",
   serviceUrl: "${process.env["SERVICE_URL"]}",
   };
- `);
+ `)
   })
-  .listen(port);
+  .listen(port)
 ```
 
 #### Adding providers
@@ -391,41 +402,41 @@ export interface AuthProvider {
    * Initializes the authentication module with configuration data,
    * typically fetched from Azure, and stores it in the Redux store.
    */
-  init: () => Promise<void>;
+  init: () => Promise<void>
   /**
    * Initiates the login process.
    */
-  login: () => void;
+  login: () => void
   /**
    * Initiates the logout process.
    */
-  logout: () => void;
+  logout: () => void
   /**
    * Retrieves the authentication token information
    * if token is not valid token will be refreshed silently
    * @returns The authentication token information.
    */
-  handleLoginRedirect: () => Promise<void>;
-  getToken: (audience?: string) => TokenResponse;
+  handleLoginRedirect: () => Promise<void>
+  getToken: (audience?: string) => TokenResponse
   /*
    * Checks whether the current user has the specified permission.
    *
    * @param permission - The permission to check.
    * @returns true if the user has the permission, false otherwise.
    */
-  hasPermission: (permission: string, audience?: string) => boolean;
+  hasPermission: (permission: string, audience?: string) => boolean
   /**
    * Provides information about the current login status,
    * including whether the authentication process is loading, any data retrieved,
    * and any encountered errors.
    */
-  getLoginStatus: () => LoginStatus;
+  getLoginStatus: () => LoginStatus
   /**
    * Provides information about the current token retrieval status,
    * including whether the process is loading, any data retrieved,
    * and any encountered errors.
    */
-  getUserDetail: () => Promise<UserAccountInfo | null>;
+  getUserDetail: () => Promise<UserAccountInfo | null>
 }
 ```
 
@@ -452,7 +463,7 @@ const TestSchema = z.object({
       i18n: { key: "custom_error" },
     },
   }),
-});
+})
 ```
 
 ```json

@@ -1,4 +1,4 @@
-import { Flex, Spinner } from "@chakra-ui/react";
+import { Flex, Spinner } from "@chakra-ui/react"
 
 export default function CenterSpinner() {
   return (
@@ -11,5 +11,5 @@ export default function CenterSpinner() {
     >
       <Spinner />
     </Flex>
-  );
+  )
 }

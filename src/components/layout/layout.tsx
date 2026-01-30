@@ -1,16 +1,16 @@
-import { Grid, GridItem } from "@chakra-ui/react";
-import { Suspense } from "react";
-import { Outlet } from "react-router";
+import { Grid, GridItem } from "@chakra-ui/react"
+import { Suspense } from "react"
+import { Outlet } from "react-router"
 
-import { AppErrorModal } from "../../lib/components/AppErrorModal/appErrorModal";
-import CenterSpinner from "../centerSpinner";
-import { ErrorBoundary } from "../errorBoundary";
-import { GdprConsentDialog } from "../gdprConsentDialog";
-import { Toaster } from "../ui/toaster";
+import { AppErrorModal } from "../../lib/components/AppErrorModal/appErrorModal"
+import CenterSpinner from "../centerSpinner"
+import { ErrorBoundary } from "../errorBoundary"
+import { GdprConsentDialog } from "../gdprConsentDialog"
+import { Toaster } from "../ui/toaster"
 
-import Header from "./header/view";
-import { LayoutContextProvider } from "./LayoutContextProvider";
-import SimpleSidebar from "./sideBar/sideBar";
+import Header from "./header/view"
+import { LayoutContextProvider } from "./LayoutContextProvider"
+import SimpleSidebar from "./sideBar/sideBar"
 
 const Layout = () => {
   return (
@@ -53,7 +53,7 @@ const Layout = () => {
       <GdprConsentDialog />
       <Toaster />
     </LayoutContextProvider>
-  );
-};
+  )
+}
 
-export default Layout;
+export default Layout

@@ -46,6 +46,7 @@ npm test
 ### Graded Color Palette (50-950)
 
 The theme uses a graded color palette from 50 (lightest) to 950 (darkest), following Chakra UI conventions. This allows for:
+
 - Consistent color variations
 - Automatic light/dark mode support
 - Type-safe color references
@@ -114,13 +115,15 @@ Use the `error` colorPalette with layerStyles for error states. The `colorPalett
 ```
 
 **Available layerStyles** (from Chakra UI):
+
 - `fill.subtle`, `fill.muted`, `fill.surface`, `fill.solid` - Background + text color combinations
-- `outline.subtle`, `outline.solid` - Border + text color combinations  
+- `outline.subtle`, `outline.solid` - Border + text color combinations
 - `indicator.bottom`, `indicator.top`, `indicator.start`, `indicator.end` - Indicator lines
 
 The `error` palette automatically provides contextual semantic tokens:
+
 - `colorPalette.solid` - Solid error background
-- `colorPalette.subtle` - Subtle error background  
+- `colorPalette.subtle` - Subtle error background
 - `colorPalette.fg` - Error text color
 - `colorPalette.border` - Error border color
 - `colorPalette.muted`, `colorPalette.emphasized`, `colorPalette.contrast`, `colorPalette.focusRing`
@@ -185,6 +188,7 @@ The global `colorPalette: "brand"` setting in `theme.ts` ensures all components 
 ```
 
 **Using LayerStyles**: Chakra provides pre-defined layerStyles that work with colorPalette:
+
 - `fill.subtle` - Subtle background with appropriate text color
 - `fill.solid` - Solid background with contrast text
 - `outline.solid` - Border with appropriate text color
@@ -213,6 +217,7 @@ const { colorMode, toggleColorMode } = useColorMode()
 ## Strict Tokens Mode
 
 The theme uses `strictTokens: true` for type safety. This ensures:
+
 - Only defined tokens can be used
 - TypeScript will error on invalid color values
 - Better autocomplete in IDE
@@ -220,6 +225,7 @@ The theme uses `strictTokens: true` for type safety. This ensures:
 ## Migration from Old Theme
 
 The new theme replaces:
+
 - `brandPalette` → Proper graded `brand` palette
 - `header` → `bg.emphasized`
 - `page` → `bg`

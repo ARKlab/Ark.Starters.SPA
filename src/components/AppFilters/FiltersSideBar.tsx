@@ -8,47 +8,47 @@ import {
   Portal,
   Text,
   VStack,
-} from "@chakra-ui/react";
-import { useEffect, useId, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { LuCheck, LuX } from "react-icons/lu";
+} from "@chakra-ui/react"
+import { useEffect, useId, useState } from "react"
+import { useTranslation } from "react-i18next"
+import { LuCheck, LuX } from "react-icons/lu"
 
-import { AppInput } from "../../lib/components/AppInput/appInput";
-import AppSelect from "../../lib/components/AppSelect/appSelect";
+import { AppInput } from "../../lib/components/AppInput/appInput"
+import AppSelect from "../../lib/components/AppSelect/appSelect"
 
-import type { FilterDefinition } from "./Filters";
+import type { FilterDefinition } from "./Filters"
 
 interface FilterSidebarProps<T extends object> {
-  isOpen: boolean;
-  onClose: () => void;
-  filters?: Partial<T>;
-  filterDefinitions: FilterDefinition<T>[];
-  onApplyFilter: (filter: Partial<T>) => void;
+  isOpen: boolean
+  onClose: () => void
+  filters?: Partial<T>
+  filterDefinitions: FilterDefinition<T>[]
+  onApplyFilter: (filter: Partial<T>) => void
 }
 
 export function FilterSidebar<T extends object>(props: FilterSidebarProps<T>) {
-  const { isOpen, onClose, filters, filterDefinitions } = props;
+  const { isOpen, onClose, filters, filterDefinitions } = props
 
-  const formId = useId();
+  const formId = useId()
 
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
-  const [localValues, setLocalValues] = useState<Partial<T>>(filters ?? {});
+  const [localValues, setLocalValues] = useState<Partial<T>>(filters ?? {})
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLocalValues(filters ?? {});
-  }, [filters]);
+    setLocalValues(filters ?? {})
+  }, [filters])
 
   function applyFilters() {
-    props.onApplyFilter(localValues);
+    props.onApplyFilter(localValues)
   }
 
   return (
     <Drawer.Root
       open={isOpen}
       onOpenChange={_ => {
-        onClose();
+        onClose()
       }}
       lazyMount
       unmountOnExit
@@ -67,8 +67,8 @@ export function FilterSidebar<T extends object>(props: FilterSidebarProps<T>) {
                 as={"form"}
                 id={formId}
                 onSubmit={e => {
-                  e.preventDefault();
-                  applyFilters();
+                  e.preventDefault()
+                  applyFilters()
                 }}
               >
                 {filterDefinitions.map(filter => {
@@ -84,7 +84,7 @@ export function FilterSidebar<T extends object>(props: FilterSidebarProps<T>) {
                           value={String(localValues[filter.propName] ?? "")}
                           filterLabel={""}
                           setValue={e => {
-                            setLocalValues(prev => ({ ...prev, [filter.id]: e }));
+                            setLocalValues(prev => ({ ...prev, [filter.id]: e }))
                           }}
                         />
                       )}
@@ -99,7 +99,7 @@ export function FilterSidebar<T extends object>(props: FilterSidebarProps<T>) {
                               setLocalValues(prev => ({
                                 ...prev,
                                 [filter.id]: value ?? undefined,
-                              }));
+                              }))
                             }}
                             options={filter.collection}
                           />
@@ -112,7 +112,7 @@ export function FilterSidebar<T extends object>(props: FilterSidebarProps<T>) {
                       )}
                       {/* Additional filter types can be handled here using AppComponents in /src/lib/components directory */}
                     </Box>
-                  );
+                  )
                 })}
               </VStack>
             </Drawer.Body>
@@ -143,7 +143,7 @@ export function FilterSidebar<T extends object>(props: FilterSidebarProps<T>) {
         </Drawer.Positioner>
       </Portal>
     </Drawer.Root>
-  );
+  )
 }
 
 function AppInputFilterWrapper({
@@ -152,13 +152,13 @@ function AppInputFilterWrapper({
   value,
   setValue,
 }: {
-  placeholder?: string;
-  value?: string;
-  filterLabel: string;
-  setValue: (a: string) => void;
+  placeholder?: string
+  value?: string
+  filterLabel: string
+  setValue: (a: string) => void
 }) {
   function handleChange(nextValue: string) {
-    setValue(nextValue);
+    setValue(nextValue)
   }
 
   return (
@@ -170,5 +170,5 @@ function AppInputFilterWrapper({
         title={filterLabel}
       />
     </Field.Root>
-  );
+  )
 }

@@ -35,22 +35,22 @@ const GetResult = ({ option }: { option: ResultOption }) => {
   const { data, error, isFetching } = useGetQuery(option)
 
   if (isFetching) {
-    return <CenterSpinner />;
+    return <CenterSpinner />
   }
 
   if (error) {
-    return <LuX />;
+    return <LuX />
   }
 
   return (
     <Stack>
       <CodeBlock data-test="query-results">{JSON.stringify(data)}</CodeBlock>
     </Stack>
-  );
-};
+  )
+}
 
 const PostResult = ({ option }: { option: ResultOption }) => {
-  const [post, result] = usePostMutation();
+  const [post, result] = usePostMutation()
 
   return (
     <>
@@ -72,11 +72,11 @@ const PostResult = ({ option }: { option: ResultOption }) => {
         ) : null}
       </Stack>
     </>
-  );
-};
+  )
+}
 
 const Download = () => {
-  const [download, { error, isLoading }] = useDownloadMutation();
+  const [download, { error, isLoading }] = useDownloadMutation()
 
   return (
     <>
@@ -108,16 +108,16 @@ const Download = () => {
         <CodeBlock data-test="mutation-download-error">{JSON.stringify(error, null, 2)}</CodeBlock>
       ) : null}
     </>
-  );
-};
+  )
+}
 
 const RTKQErrorHandlingPage = () => {
   // Inject API slice for lazy loading
   useInjectApiSlice(rtkqErrorHandlingApi)
 
   const { t } = useTranslation()
-  const [selectQueryValue, setSelectQueryValue] = useState<ResultOption>();
-  const [selectMutationValue, setSelectMutationValue] = useState<ResultOption>();
+  const [selectQueryValue, setSelectQueryValue] = useState<ResultOption>()
+  const [selectMutationValue, setSelectMutationValue] = useState<ResultOption>()
 
   const options = createListCollection({
     items: [
@@ -129,7 +129,7 @@ const RTKQErrorHandlingPage = () => {
       { label: "Error", value: "Error" as ResultOption },
       { label: "Timeout", value: "Timeout" as ResultOption },
     ],
-  });
+  })
 
   return (
     <Stack>
@@ -145,7 +145,7 @@ const RTKQErrorHandlingPage = () => {
               size="sm"
               w="xs"
               onValueChange={({ value }) => {
-                setSelectQueryValue(value[0] as ResultOption);
+                setSelectQueryValue(value[0] as ResultOption)
               }}
               value={selectQueryValue ? [selectQueryValue] : undefined}
             >
@@ -175,7 +175,7 @@ const RTKQErrorHandlingPage = () => {
               size="sm"
               width="xs"
               onValueChange={({ value }) => {
-                setSelectMutationValue(value[0] as ResultOption);
+                setSelectMutationValue(value[0] as ResultOption)
               }}
               value={selectMutationValue ? [selectMutationValue] : undefined}
             >
@@ -200,7 +200,7 @@ const RTKQErrorHandlingPage = () => {
         <Download />
       </Box>
     </Stack>
-  );
-};
+  )
+}
 
-export default RTKQErrorHandlingPage;
+export default RTKQErrorHandlingPage

@@ -1,13 +1,13 @@
-import { Box } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react"
 
-import ConfigTable from "./configTable";
+import ConfigTable from "./configTable"
 
 const ConfigTableExampleView = () => {
   return (
     <Box>
       <ConfigTable />
     </Box>
-  );
-};
+  )
+}
 
-export default ConfigTableExampleView;
+export default ConfigTableExampleView
