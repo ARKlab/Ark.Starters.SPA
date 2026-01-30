@@ -303,8 +303,9 @@ export default defineConfig(({ mode }) => {
         "/connectionStrings.cjs": "http://localhost:4000",
       },
     },
-    esbuild: {
-      drop: mode == "production" ? ["console", "debugger"] : [],
-    },
+    // Note: Vite 8 uses Oxc minifier which does not yet support drop_console option.
+    // Debugger statements are automatically removed by Oxc during minification.
+    // If dropping console statements is critical, consider using terser:
+    //   build: { minify: 'terser', terserOptions: { compress: { drop_console: true } } }
   };
 });
