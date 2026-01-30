@@ -115,7 +115,7 @@
     "svgo": "4.0.0",
     "typescript": "5.9.3",
     "unplugin-info": "1.2.4",
-    "vite": "8.0.0-beta.10",
+    "vite": "8.0.0-beta.11",
     "vite-plugin-image-optimizer": "2.0.3",
     "vite-plugin-istanbul": "7.2.1",
     "vite-plugin-oxlint": "1.5.1",
@@ -128,7 +128,7 @@
     "web-vitals": "5.1.0"
   },
   "overrides": {
-    "vite": "8.0.0-beta.10"
+    "vite": "8.0.0-beta.11"
   },
   "nyc": {
     "reporter": [
