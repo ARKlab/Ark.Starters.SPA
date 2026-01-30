@@ -99,7 +99,7 @@ legacy({
   ],
   modernPolyfills: false, // Remove polyfills for modern browsers
   renderLegacyChunks: true, // Provide fallback for legacy browsers
-});
+})
 ```
 
 **Browser Coverage:**

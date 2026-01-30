@@ -68,12 +68,12 @@ const MovieTableView = () => {
       header: () => <span>{t("movies_release")}</span>,
       meta: { type: "date" },
     }),
-  ] as ColumnDef<Movie>[];
-  const [filters, setFilters] = useState<Partial<Movie>>({});
-  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  ] as ColumnDef<Movie>[]
+  const [filters, setFilters] = useState<Partial<Movie>>({})
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
   const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
+    setIsSidebarOpen(!isSidebarOpen)
+  }
   const filterDefinitions: FilterDefinition<Movie>[] = [
     {
       id: "title",
@@ -82,7 +82,7 @@ const MovieTableView = () => {
       type: "text",
       placeholder: "Search by Title...",
     },
-  ];
+  ]
 
   return (
     <Box>
@@ -118,7 +118,7 @@ const MovieTableView = () => {
         reduxDispatchHook={useAppDispatch()}
       />
     </Box>
-  );
-};
+  )
+}
 
-export default MovieTableView;
+export default MovieTableView

@@ -1,21 +1,21 @@
-import { Field, IconButton, Input, Table } from "@chakra-ui/react";
-import type { Control, FieldErrors } from "react-hook-form";
-import { Controller } from "react-hook-form";
-import { LuTrash2 } from "react-icons/lu";
+import { Field, IconButton, Input, Table } from "@chakra-ui/react"
+import type { Control, FieldErrors } from "react-hook-form"
+import { Controller } from "react-hook-form"
+import { LuTrash2 } from "react-icons/lu"
 
-import { Checkbox } from "../../components/ui/checkbox";
+import { Checkbox } from "../../components/ui/checkbox"
 
-import type { Employee } from "./employee";
+import type { Employee } from "./employee"
 
 type TableRowProps = {
-  control: Control<{ table: Employee[] }>;
-  errors?: FieldErrors<{ table: Employee[] }>;
-  index: number;
-  onDelete: () => void;
-};
+  control: Control<{ table: Employee[] }>
+  errors?: FieldErrors<{ table: Employee[] }>
+  index: number
+  onDelete: () => void
+}
 
 export function TableRow(props: TableRowProps) {
-  const { control, index, errors, onDelete } = props;
+  const { control, index, errors, onDelete } = props
 
   return (
     <Table.Row verticalAlign={"top"}>
@@ -57,5 +57,5 @@ export function TableRow(props: TableRowProps) {
         </IconButton>
       </Table.Cell>
     </Table.Row>
-  );
+  )
 }

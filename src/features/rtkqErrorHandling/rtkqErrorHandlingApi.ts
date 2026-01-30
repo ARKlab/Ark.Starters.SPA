@@ -1,7 +1,7 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import { z } from "zod";
+import { createApi } from "@reduxjs/toolkit/query/react"
+import { z } from "zod"
 
-import { appFetchQuery } from "../../app/appFetchQuery";
+import { appFetchQuery } from "../../app/appFetchQuery"
 
 export type ResultOption =
   | "200"
@@ -10,7 +10,7 @@ export type ResultOption =
   | "500"
   | "Error"
   | "200WithWrongSchema"
-  | "Timeout";
+  | "Timeout"
 
 export const rtkqErrorHandlingApi = createApi({
   reducerPath: "rtkqErrorHandlingApi",
@@ -36,6 +36,6 @@ export const rtkqErrorHandlingApi = createApi({
       }),
     }),
   }),
-});
+})
 
-export const { useGetQuery, usePostMutation, useDownloadMutation } = rtkqErrorHandlingApi;
+export const { useGetQuery, usePostMutation, useDownloadMutation } = rtkqErrorHandlingApi

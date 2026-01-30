@@ -1,4 +1,4 @@
 export type ApplicationInsightsConfig = {
-  connectionString: string | Promise<string>;
-  enableClickAnalytics?: boolean;
-};
+  connectionString: string | Promise<string>
+  enableClickAnalytics?: boolean
+}

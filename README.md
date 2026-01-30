@@ -75,7 +75,7 @@ For more commands, see the `scripts` section in `package.json`.
 To start the development server:
 
 ```bash
-npm start
+bun start
 ```
 
 This will:
@@ -89,7 +89,7 @@ This will:
 To run end-to-end tests:
 
 ```bash
-npm run test
+bun test
 ```
 
 This will:
@@ -107,7 +107,7 @@ This will:
 For interactive test development:
 
 ```bash
-npm run e2e:start
+bun run e2e:start
 ```
 
 This opens the Cypress UI for interactive test running and debugging against the dev server.
@@ -118,10 +118,10 @@ To run specific test files during development without a full build:
 
 ```bash
 # Start dev server
-npm start
+bun start
 
 # In another terminal, run a specific test
-npx cypress run --spec cypress/e2e/your-test.e2e.ts
+bunx cypress run --spec cypress/e2e/your-test.e2e.ts
 ```
 
 #### Performance Notes
@@ -146,7 +146,7 @@ On a deployed environment this do not rapresent any problem but, locally, having
 To avoid this ensure to set a custom name to this variable in the **index.tsx** file:
 
 ```typescript
-const colorModeManager = createLocalStorageManager("appName-ColorMode");
+const colorModeManager = createLocalStorageManager("appName-ColorMode")
 ```
 
 and then pass it in the **Provider**:
@@ -176,7 +176,7 @@ const zIndices = {
   skipLink: 1600,
   toast: 1700,
   tooltip: 1800,
-};
+}
 ```
 
 #### Distancing
@@ -253,16 +253,16 @@ _env_ is an object of type **AppSettingsType** defined as it follows:
 
 ```typescript
 type AppSettingsType = {
-  clientID: string;
-  domain: string;
-  scopes: string;
-  knownAuthorities: string;
-  signUpSignInPolicyId: string;
-  serviceUrl: string;
-  redirectUri: string;
-  authority: string;
-  audience: string;
-};
+  clientID: string
+  domain: string
+  scopes: string
+  knownAuthorities: string
+  signUpSignInPolicyId: string
+  serviceUrl: string
+  redirectUri: string
+  authority: string
+  audience: string
+}
 ```
 
 This will be used as globals configuration and can be implemented to support more features (ex: subsidiaries).
@@ -291,16 +291,16 @@ This project supports multiple authentication providers through a flexible inter
 import {
   NoopAuthProvider,
   AuthProvider,
-} from "../lib/authentication/providers/authProviderInterface";
-import { MsalAuthProvider } from "../lib/authentication/providers/msalAuthProvider";
-import { appSettings } from "./env";
+} from "../lib/authentication/providers/authProviderInterface"
+import { MsalAuthProvider } from "../lib/authentication/providers/msalAuthProvider"
+import { appSettings } from "./env"
 
 export const authProvider: AuthProvider = appSettings.msal
   ? new MsalAuthProvider({
       ...appSettings.msal,
       permissionsClaims: ["extension_Scope"],
     })
-  : new NoopAuthProvider();
+  : new NoopAuthProvider()
 
 // Auth0 - COMMENTED OUT
 /*
@@ -319,22 +319,22 @@ import { MsalAuthProvider } from "../lib/authentication/providers/msalAuthProvid
 */
 
 // Auth0 - ACTIVE
-const claimsUrl = "http://ark-energy.eu/claims/";
-import { Auth0AuthProvider } from "../lib/authentication/providers/auth0AuthProvider";
-import type { AuthProvider } from "../lib/authentication/providers/authProviderInterface";
-import { appSettings } from "./env";
+const claimsUrl = "http://ark-energy.eu/claims/"
+import { Auth0AuthProvider } from "../lib/authentication/providers/auth0AuthProvider"
+import type { AuthProvider } from "../lib/authentication/providers/authProviderInterface"
+import { appSettings } from "./env"
 
 export const authProvider: AuthProvider = new Auth0AuthProvider({
   ...appSettings,
   permissionsClaims: [claimsUrl + "permissions", claimsUrl + "groups"],
-});
+})
 ```
 
 **Option 3: No Authentication (Development)**
 
 ```typescript
-import { NoopAuthProvider } from "../lib/authentication/providers/authProviderInterface";
-export const authProvider = new NoopAuthProvider();
+import { NoopAuthProvider } from "../lib/authentication/providers/authProviderInterface"
+export const authProvider = new NoopAuthProvider()
 ```
 
 **Bundle Size Impact:**
@@ -361,24 +361,24 @@ In order to make this work locally you must create a **.env.local** file in the 
 ##### .env.local
 
 ```javascript
-AUTH0_ClientId = "yourclientId";
-AUTH0_Domain = "yourDomain";
-AUTH0_Audience = "https://yourAudience.auth0.com/api/v2/";
-AUTH0_RedirectUri = "yourRedirectUri";
-SERVICE_URL = "yourApi.com";
+AUTH0_ClientId = "yourclientId"
+AUTH0_Domain = "yourDomain"
+AUTH0_Audience = "https://yourAudience.auth0.com/api/v2/"
+AUTH0_RedirectUri = "yourRedirectUri"
+SERVICE_URL = "yourApi.com"
 ```
 
 ##### connectionStrings.cjs
 
 ```javascript
-var http = require("http");
-var port = process.env.port;
+var http = require("http")
+var port = process.env.port
 if (process.env.NODE_ENV === "development") {
-  require("dotenv").config({ path: ".env.local" });
+  require("dotenv").config({ path: ".env.local" })
 }
 http
   .createServer(function (req, res) {
-    res.writeHead(200, { "Content-Type": "text/javascript" });
+    res.writeHead(200, { "Content-Type": "text/javascript" })
     res.end(`
   window.appSettings = {
   clientID: "${process.env["AUTH0_ClientId"]}",
@@ -387,9 +387,9 @@ http
   redirectUri: "${process.env["AUTH0_RedirectUri"]}",
   serviceUrl: "${process.env["SERVICE_URL"]}",
   };
- `);
+ `)
   })
-  .listen(port);
+  .listen(port)
 ```
 
 #### MSAL
@@ -397,27 +397,27 @@ http
 ##### .env.local
 
 ```javascript
-PORT = 4000;
-MSAL_ClientId = "yourclientId";
-MSAL_Domain = "yourDomain";
-MSAL_Scopes = "YourScopes";
-MSAL_knownAuthorities = "yourKnownAutorities";
-MSAL_authority = "YourMsalAutority";
-MSAL_RedirectUri = "yourRedirectUri";
-SERVICE_URL = "yourApi.com";
+PORT = 4000
+MSAL_ClientId = "yourclientId"
+MSAL_Domain = "yourDomain"
+MSAL_Scopes = "YourScopes"
+MSAL_knownAuthorities = "yourKnownAutorities"
+MSAL_authority = "YourMsalAutority"
+MSAL_RedirectUri = "yourRedirectUri"
+SERVICE_URL = "yourApi.com"
 ```
 
 ##### connectionStrings.cjs
 
 ```javascript
-var http = require("http");
-var port = process.env.port;
+var http = require("http")
+var port = process.env.port
 if (process.env.NODE_ENV === "development") {
-  require("dotenv").config({ path: ".env.local" });
+  require("dotenv").config({ path: ".env.local" })
 }
 http
   .createServer(function (req, res) {
-    res.writeHead(200, { "Content-Type": "text/javascript" });
+    res.writeHead(200, { "Content-Type": "text/javascript" })
     res.end(`
   window.appSettings = {
   clientID: "${process.env["MSAL_ClientId"]}",
@@ -428,9 +428,9 @@ http
   redirectUri: "${process.env["MSAL_RedirectUri"]}",
   serviceUrl: "${process.env["SERVICE_URL"]}",
   };
- `);
+ `)
   })
-  .listen(port);
+  .listen(port)
 ```
 
 #### Adding providers
@@ -444,41 +444,41 @@ export interface AuthProvider {
    * Initializes the authentication module with configuration data,
    * typically fetched from Azure, and stores it in the Redux store.
    */
-  init: () => Promise<void>;
+  init: () => Promise<void>
   /**
    * Initiates the login process.
    */
-  login: () => void;
+  login: () => void
   /**
    * Initiates the logout process.
    */
-  logout: () => void;
+  logout: () => void
   /**
    * Retrieves the authentication token information
    * if token is not valid token will be refreshed silently
    * @returns The authentication token information.
    */
-  handleLoginRedirect: () => Promise<void>;
-  getToken: (audience?: string) => TokenResponse;
+  handleLoginRedirect: () => Promise<void>
+  getToken: (audience?: string) => TokenResponse
   /*
    * Checks whether the current user has the specified permission.
    *
    * @param permission - The permission to check.
    * @returns true if the user has the permission, false otherwise.
    */
-  hasPermission: (permission: string, audience?: string) => boolean;
+  hasPermission: (permission: string, audience?: string) => boolean
   /**
    * Provides information about the current login status,
    * including whether the authentication process is loading, any data retrieved,
    * and any encountered errors.
    */
-  getLoginStatus: () => LoginStatus;
+  getLoginStatus: () => LoginStatus
   /**
    * Provides information about the current token retrieval status,
    * including whether the process is loading, any data retrieved,
    * and any encountered errors.
    */
-  getUserDetail: () => Promise<UserAccountInfo | null>;
+  getUserDetail: () => Promise<UserAccountInfo | null>
 }
 ```
 
@@ -505,7 +505,7 @@ const TestSchema = z.object({
       i18n: { key: "custom_error" },
     },
   }),
-});
+})
 ```
 
 ```json

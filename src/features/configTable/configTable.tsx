@@ -51,26 +51,26 @@ export default function EditableTableExample() {
 
   const { t } = useTranslation();
 
-  const [postConfig, { isLoading: postConfigIsLoading }] = usePostConfigMutation();
+  const [postConfig, { isLoading: postConfigIsLoading }] = usePostConfigMutation()
 
   const { data, isLoading } = useGetConfigQuery(null, {
     refetchOnReconnect: true,
     refetchOnMountOrArgChange: true,
-  });
+  })
 
-  const [throwError, setError] = useState<boolean>(false);
+  const [throwError, setError] = useState<boolean>(false)
 
   const onSubmit = async (values: { table: Employee[] }) => {
-    const r = await postConfig({ employees: values.table, throwError });
-    setError(false);
+    const r = await postConfig({ employees: values.table, throwError })
+    setError(false)
     if (!r.error)
       toaster.create({
         title: "Config Submitted!",
         description: "Configuration has been submitted successfully",
         type: "success",
         duration: 5000,
-      });
-  };
+      })
+  }
 
   //#region FormConfiguration
   const {
@@ -83,12 +83,12 @@ export default function EditableTableExample() {
     values: { table: data ?? [] },
     mode: "onChange",
     resolver: zodResolver(configTableSchema),
-  });
+  })
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: "table",
-  });
+  })
   //#endregion
 
   return (
@@ -102,7 +102,7 @@ export default function EditableTableExample() {
               name: "",
               surName: "",
               employed: false,
-            });
+            })
           }}
           aria-label="Add Employee"
         >
@@ -120,7 +120,7 @@ export default function EditableTableExample() {
           disabled={isSubmitting || !isDirty || !errors}
           loading={isSubmitting || postConfigIsLoading}
           onClick={() => {
-            setError(true);
+            setError(true)
           }}
         >
           {t("triggerError")}
@@ -128,7 +128,7 @@ export default function EditableTableExample() {
         <Button
           disabled={!isDirty}
           onClick={() => {
-            reset();
+            reset()
           }}
         >
           {t("reset")}
@@ -159,7 +159,7 @@ export default function EditableTableExample() {
                 index={i}
                 errors={errors}
                 onDelete={() => {
-                  remove(i);
+                  remove(i)
                 }}
               />
             ))
@@ -167,5 +167,5 @@ export default function EditableTableExample() {
         </Table.Body>
       </Table.Root>
     </VStack>
-  );
+  )
 }

@@ -34,7 +34,7 @@ bun run preview        # Preview production build
 bun run analyze        # Build with bundle analysis (generates build/stats.html)
 
 # Quality
-bun run lint           # oxlint check (type-aware)
+bun run lint           # Run oxlint + typecheck (type-aware linting + full type checking)
 bun run format         # Format code with oxfmt
 bun run format:check   # Check formatting without changes
 bun test               # Run E2E tests (Cypress)
@@ -217,12 +217,12 @@ const { t } = useTranslation();
 
 ```typescript
 // In src/lib/components/AppDatePicker/appDatePicker.tsx
-const { t } = useTranslation();
-const label = t("libComponents:appDatePicker_openDatePicker");
+const { t } = useTranslation()
+const label = t("libComponents:appDatePicker_openDatePicker")
 
 // In src/features/movies/moviePage.tsx
-const { t } = useTranslation();
-const title = t("movies_movies"); // No namespace prefix
+const { t } = useTranslation()
+const title = t("movies_movies") // No namespace prefix
 ```
 
 #### 4. Semantic Tokens: No Hardcoded Colors
@@ -254,17 +254,17 @@ Available semantic token categories:
 
 ```typescript
 // ✅ CORRECT - i18next formatter
-const { t } = useTranslation();
-const formatted = t("{{val, shortDate}}", { val: new Date() });
+const { t } = useTranslation()
+const formatted = t("{{val, shortDate}}", { val: new Date() })
 
 // ❌ WRONG - Direct date-fns import
-import { format } from "date-fns"; // ESLint will block this
+import { format } from "date-fns" // ESLint will block this
 ```
 
 **In utility functions** (non-React), use helpers from `@/lib/i18n/formatDate`:
 
 ```typescript
-import { formatISODate, formatShortDate } from "@/lib/i18n/formatDate";
+import { formatISODate, formatShortDate } from "@/lib/i18n/formatDate"
 ```
 
 Available formatters:
@@ -285,13 +285,13 @@ Available formatters:
 ```typescript
 // ✅ CORRECT
 interface User {
-  id: string;
-  name: string;
+  id: string
+  name: string
 }
-const response: unknown = await fetch(url);
+const response: unknown = await fetch(url)
 
 // ❌ WRONG
-const data: any = await fetch(url);
+const data: any = await fetch(url)
 ```
 
 #### 7. Z-Index: Use Chakra Predefined Values Only
@@ -318,13 +318,13 @@ const zIndices = {
 // ✅ CORRECT
 export const MyComponent = () => {
   /* ... */
-};
+}
 export function useCustomHook() {
   /* ... */
 }
 
 // ❌ AVOID
-export default MyComponent;
+export default MyComponent
 ```
 
 #### 9. Commit Messages: Conventional Commits
@@ -439,14 +439,14 @@ Is your task about...
 
    ```typescript
    // For src/lib/components/*
-   import { useTranslation } from "react-i18next";
-   const { t } = useTranslation();
-   const label = t("libComponents:componentName_key");
+   import { useTranslation } from "react-i18next"
+   const { t } = useTranslation()
+   const label = t("libComponents:componentName_key")
 
    // For src/components/* or src/features/*
-   import { useTranslation } from "react-i18next";
-   const { t } = useTranslation();
-   const label = t("featureName_key");
+   import { useTranslation } from "react-i18next"
+   const { t } = useTranslation()
+   const label = t("featureName_key")
    ```
 
 3. **Use semantic tokens for styling**:
@@ -609,14 +609,14 @@ export const UserCard = ({ name, email }: UserCardProps) => {
 
      ```typescript
      export interface AuthProvider {
-       init: () => Promise<void>;
-       login: () => void;
-       logout: () => void;
-       handleLoginRedirect: () => Promise<void>;
-       getToken: (audience?: string) => TokenResponse;
-       hasPermission: (permission: string, audience?: string) => boolean;
-       getLoginStatus: () => LoginStatus;
-       getUserDetail: () => Promise<UserAccountInfo | null>;
+       init: () => Promise<void>
+       login: () => void
+       logout: () => void
+       handleLoginRedirect: () => Promise<void>
+       getToken: (audience?: string) => TokenResponse
+       hasPermission: (permission: string, audience?: string) => boolean
+       getLoginStatus: () => LoginStatus
+       getUserDetail: () => Promise<UserAccountInfo | null>
      }
      ```
 
@@ -662,8 +662,8 @@ export const UserCard = ({ name, email }: UserCardProps) => {
 1. **Create API slice** in `src/lib/rtk/{feature}Api.ts`:
 
    ```typescript
-   import { createAppApi } from "@/lib/rtk/createAppApi";
-   import { arkFetchBaseQuery } from "@/lib/rtk/arkFetchBaseQuery";
+   import { createAppApi } from "@/lib/rtk/createAppApi"
+   import { arkFetchBaseQuery } from "@/lib/rtk/arkFetchBaseQuery"
 
    export const moviesApi = createAppApi({
      reducerPath: "moviesApi",
@@ -683,9 +683,9 @@ export const UserCard = ({ name, email }: UserCardProps) => {
          }),
        }),
      }),
-   });
+   })
 
-   export const { useGetMoviesQuery, useCreateMovieMutation } = moviesApi;
+   export const { useGetMoviesQuery, useCreateMovieMutation } = moviesApi
    ```
 
 2. **Expected API response format** for paginated queries:
@@ -702,7 +702,7 @@ export const UserCard = ({ name, email }: UserCardProps) => {
 3. **Register API in store** (`src/lib/rtk/store.ts`):
 
    ```typescript
-   import { moviesApi } from "@/lib/rtk/moviesApi";
+   import { moviesApi } from "@/lib/rtk/moviesApi"
 
    export const store = configureStore({
      reducer: {
@@ -710,42 +710,42 @@ export const UserCard = ({ name, email }: UserCardProps) => {
        // ... other reducers
      },
      middleware: getDefaultMiddleware => getDefaultMiddleware().concat(moviesApi.middleware),
-   });
+   })
    ```
 
 4. **Mock API for testing** (optional):
    - Add MSW handler in `src/lib/mocks/handlers.ts`
 
    ```typescript
-   import { http, HttpResponse } from "msw";
+   import { http, HttpResponse } from "msw"
 
    export const handlers = [
      http.get("/api/movies", ({ request }) => {
-       const url = new URL(request.url);
-       const page = url.searchParams.get("page") || "0";
-       const limit = url.searchParams.get("limit") || "10";
+       const url = new URL(request.url)
+       const page = url.searchParams.get("page") || "0"
+       const limit = url.searchParams.get("limit") || "10"
 
        return HttpResponse.json({
          data: mockMovies,
          count: mockMovies.length,
          page: parseInt(page),
          limit: parseInt(limit),
-       });
+       })
      }),
-   ];
+   ]
    ```
 
 5. **Use in component**:
 
    ```typescript
-   import { useGetMoviesQuery } from "@/lib/rtk/moviesApi";
+   import { useGetMoviesQuery } from "@/lib/rtk/moviesApi"
 
    const { data, isLoading, error } = useGetMoviesQuery({
      pageIndex: 0,
      pageSize: 10,
      sorting: [],
      filters: [],
-   });
+   })
    ```
 
 6. **Testing** (MUST):
@@ -773,7 +773,7 @@ export const UserCard = ({ name, email }: UserCardProps) => {
 1. **Define Zod schema** with i18n error messages:
 
    ```typescript
-   import { z } from "zod";
+   import { z } from "zod"
 
    const movieSchema = z.object({
      title: z.string().min(1), // Uses default zod-i18n error
@@ -782,9 +782,9 @@ export const UserCard = ({ name, email }: UserCardProps) => {
      customField: z.string().refine(val => val.includes("test"), {
        params: { i18n: { key: "movies_customFieldError" } },
      }),
-   });
+   })
 
-   type MovieFormData = z.infer<typeof movieSchema>;
+   type MovieFormData = z.infer<typeof movieSchema>
    ```
 
 2. **Add custom error to `zodCustom.json`**:
@@ -799,8 +799,8 @@ export const UserCard = ({ name, email }: UserCardProps) => {
 3. **Set up React Hook Form**:
 
    ```typescript
-   import { useForm } from "react-hook-form";
-   import { zod2FormValidator } from "@/lib/i18n/zod2FormValidator";
+   import { useForm } from "react-hook-form"
+   import { zod2FormValidator } from "@/lib/i18n/zod2FormValidator"
 
    const {
      register,
@@ -808,7 +808,7 @@ export const UserCard = ({ name, email }: UserCardProps) => {
      formState: { errors },
    } = useForm<MovieFormData>({
      resolver: zod2FormValidator(movieSchema),
-   });
+   })
    ```
 
 4. **Build form with Chakra UI**:
@@ -867,14 +867,14 @@ export const UserCard = ({ name, email }: UserCardProps) => {
 1. **Use `PaginatedSortableTable` component**:
 
    ```typescript
-   import { PaginatedSortableTable } from "@/lib/components/PaginatedSortableTable";
-   import { ColumnDef } from "@tanstack/react-table";
+   import { PaginatedSortableTable } from "@/lib/components/PaginatedSortableTable"
+   import { ColumnDef } from "@tanstack/react-table"
 
    interface Movie {
-     id: string;
-     title: string;
-     year: number;
-     rating: number;
+     id: string
+     title: string
+     year: number
+     rating: number
    }
 
    const columns: ColumnDef<Movie>[] = [
@@ -894,7 +894,7 @@ export const UserCard = ({ name, email }: UserCardProps) => {
        header: t("movies_ratingColumn"),
        cell: ({ getValue }) => `⭐ ${getValue()}`,
      },
-   ];
+   ]
    ```
 
 2. **Implement RTK Query hook** (see [API Integration Workflow](#api-integration-workflow))
@@ -993,7 +993,7 @@ export const UserCard = ({ name, email }: UserCardProps) => {
          },
        },
      },
-   });
+   })
    ```
 
 4. **Use in components**:
@@ -1013,7 +1013,7 @@ export const UserCard = ({ name, email }: UserCardProps) => {
 
      ```typescript
      // src/index.tsx
-     const colorModeManager = createLocalStorageManager("arkStarters-ColorMode");
+     const colorModeManager = createLocalStorageManager("arkStarters-ColorMode")
      ```
 
 7. **Testing** (MUST):
@@ -1045,19 +1045,19 @@ export const UserCard = ({ name, email }: UserCardProps) => {
    // cypress/e2e/movies.cy.ts
    describe("Movies Feature", () => {
      beforeEach(() => {
-       cy.visit("/movies");
-     });
+       cy.visit("/movies")
+     })
 
      it("should display movie list", () => {
-       cy.findByRole("heading", { name: /movies/i }).should("exist");
-       cy.findAllByRole("row").should("have.length.greaterThan", 1);
-     });
+       cy.findByRole("heading", { name: /movies/i }).should("exist")
+       cy.findAllByRole("row").should("have.length.greaterThan", 1)
+     })
 
      it("should filter movies by title", () => {
-       cy.findByRole("textbox", { name: /search/i }).type("Inception");
-       cy.findByText("Inception").should("exist");
-     });
-   });
+       cy.findByRole("textbox", { name: /search/i }).type("Inception")
+       cy.findByText("Inception").should("exist")
+     })
+   })
    ```
 
 3. **Custom commands** (if needed):
@@ -1147,11 +1147,11 @@ export const siteMap: ArkRoute[] = [
     path: "/dashboard",
     lazy: async () => import("../features/dashboard/dashboardPage"),
   },
-];
+]
 
 // Entry points
-import { createLazyComponent } from "@/lib/components/createLazyComponent";
-const InitGlobals = createLazyComponent(() => import("./initGlobals"));
+import { createLazyComponent } from "@/lib/components/createLazyComponent"
+const InitGlobals = createLazyComponent(() => import("./initGlobals"))
 ```
 
 ---
@@ -1250,34 +1250,34 @@ export const MyComponent = ({ initialCount = 0 }: MyComponentProps) => {
 
 ```typescript
 // src/lib/useAsyncEffect.ts
-import { useEffect } from "react";
+import { useEffect } from "react"
 
 export const useAsyncEffect = (effect: () => Promise<void>, deps: React.DependencyList) => {
   useEffect(() => {
-    effect();
-  }, deps);
-};
+    effect()
+  }, deps)
+}
 
 // Usage
-import { useAsyncEffect } from "@/lib/useAsyncEffect";
+import { useAsyncEffect } from "@/lib/useAsyncEffect"
 
 useAsyncEffect(async () => {
-  const data = await fetchData();
-  setData(data);
-}, []);
+  const data = await fetchData()
+  setData(data)
+}, [])
 ```
 
 #### Debouncing
 
 ```typescript
-import { useDebounce } from "@/lib/useDebounce";
+import { useDebounce } from "@/lib/useDebounce"
 
-const [searchTerm, setSearchTerm] = useState("");
-const debouncedSearch = useDebounce(searchTerm, 500);
+const [searchTerm, setSearchTerm] = useState("")
+const debouncedSearch = useDebounce(searchTerm, 500)
 
 useEffect(() => {
   // Trigger search with debouncedSearch
-}, [debouncedSearch]);
+}, [debouncedSearch])
 ```
 
 ### State Management Patterns
@@ -1286,33 +1286,33 @@ useEffect(() => {
 
 ```typescript
 // src/lib/rtk/userSlice.ts
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 interface UserState {
-  currentUser: User | null;
-  preferences: UserPreferences;
+  currentUser: User | null
+  preferences: UserPreferences
 }
 
 const initialState: UserState = {
   currentUser: null,
   preferences: {},
-};
+}
 
 export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<User>) => {
-      state.currentUser = action.payload;
+      state.currentUser = action.payload
     },
     updatePreferences: (state, action: PayloadAction<Partial<UserPreferences>>) => {
-      state.preferences = { ...state.preferences, ...action.payload };
+      state.preferences = { ...state.preferences, ...action.payload }
     },
   },
-});
+})
 
-export const { setUser, updatePreferences } = userSlice.actions;
-export default userSlice.reducer;
+export const { setUser, updatePreferences } = userSlice.actions
+export default userSlice.reducer
 ```
 
 ### Error Handling
@@ -1362,13 +1362,13 @@ import { FeatureErrorBoundary } from "@/lib/components/FeatureErrorBoundary/Feat
 ```typescript
 const handleSubmit = async () => {
   try {
-    await submitData(formData);
-    toast.success(t("common_success"));
+    await submitData(formData)
+    toast.success(t("common_success"))
   } catch (error) {
-    console.error("Submit failed:", error);
-    toast.error(t("common_error"));
+    console.error("Submit failed:", error)
+    toast.error(t("common_error"))
   }
-};
+}
 ```
 
 ### Styling Patterns

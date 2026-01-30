@@ -1,13 +1,13 @@
-import type { QueryReturnValue } from "@reduxjs/toolkit/query";
-import { z } from "zod";
+import type { QueryReturnValue } from "@reduxjs/toolkit/query"
+import { z } from "zod"
 
-import type { ArkFetchBaseQueryFn } from "./appFetchBaseQuery";
+import type { ArkFetchBaseQueryFn } from "./appFetchBaseQuery"
 import type {
   ArkBaseQueryEnhancer,
   ArkBaseQueryError,
   ArkBaseQueryMeta,
   ArkBaseQueryResult,
-} from "./arkBaseQuery";
+} from "./arkBaseQuery"
 
 export const ProblemDetailsSchema = z.looseObject({
   status: z.number().nullish(),
@@ -15,14 +15,14 @@ export const ProblemDetailsSchema = z.looseObject({
   detail: z.string().nullish(),
   type: z.string(), // zod url() validates absolute urls only while RFC states type and instance can be relative uri
   instance: z.string().nullish(),
-});
+})
 
-export type ProblemDetails = z.infer<typeof ProblemDetailsSchema>;
+export type ProblemDetails = z.infer<typeof ProblemDetailsSchema>
 
 export type ProblemDetailsError = {
-  status: "PROBLEM_DETAILS_ERROR";
-  problemDetails: ProblemDetails;
-};
+  status: "PROBLEM_DETAILS_ERROR"
+  problemDetails: ProblemDetails
+}
 
 export function isProblemDetailsError(error: unknown): error is ProblemDetailsError {
   return (
@@ -31,7 +31,7 @@ export function isProblemDetailsError(error: unknown): error is ProblemDetailsEr
     "status" in error &&
     error.status === "PROBLEM_DETAILS_ERROR" &&
     "error" in error
-  );
+  )
 }
 
 export const withProblemDetails: ArkBaseQueryEnhancer<
@@ -46,15 +46,15 @@ export const withProblemDetails: ArkBaseQueryEnhancer<
     ArkBaseQueryResult<typeof baseQuery>,
     ArkBaseQueryError<typeof baseQuery>,
     ArkBaseQueryMeta<typeof baseQuery>
-  >;
+  >
 
   if (returnValue.error) {
-    const { error } = returnValue;
+    const { error } = returnValue
     if (
       typeof error.status === "number" &&
       returnValue.meta?.response?.headers.get("content-type")?.includes("application/problem+json")
     ) {
-      const res = ProblemDetailsSchema.safeParse(error.data);
+      const res = ProblemDetailsSchema.safeParse(error.data)
       if (res.success) {
         return {
           ...returnValue,
@@ -62,9 +62,9 @@ export const withProblemDetails: ArkBaseQueryEnhancer<
             problemDetails: res.data,
             status: "PROBLEM_DETAILS_ERROR",
           },
-        };
+        }
       } // else ignore the fact that the response is not a problem details even if the content-type is application/problem+json and return the original error
     }
   }
-  return returnValue;
-};
+  return returnValue
+}

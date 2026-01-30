@@ -35,16 +35,16 @@ This document captures technical insights, lessons learned, and best practices d
 
 ```typescript
 // ✅ GOOD - Tree-shakeable
-import { format, parseISO } from "date-fns";
+import { format, parseISO } from "date-fns"
 
 // ❌ BAD - Bundles more than needed
-import * as dateFns from "date-fns";
+import * as dateFns from "date-fns"
 
 // ✅ GOOD - Clear dependencies
-import { Button } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react"
 
 // ⚠️ AVOID - May bundle more
-import * as Chakra from "@chakra-ui/react";
+import * as Chakra from "@chakra-ui/react"
 ```
 
 **Documentation:** Always declare `sideEffects` in package.json appropriately:
@@ -72,16 +72,16 @@ import * as Chakra from "@chakra-ui/react";
 ```typescript
 // ❌ BREAKS E2E TESTS
 async function initializeApp() {
-  const authProvider = await getAuthProvider(); // Async!
-  const store = initStore({ authProvider });
-  window.appReady = true; // Set too late
+  const authProvider = await getAuthProvider() // Async!
+  const store = initStore({ authProvider })
+  window.appReady = true // Set too late
 }
 
 // ✅ WORKS WITH E2E TESTS
 function initializeApp() {
-  const authProvider = getAuthProvider(); // Synchronous
-  const store = initStore({ authProvider });
-  window.appReady = true; // Available immediately
+  const authProvider = getAuthProvider() // Synchronous
+  const store = initStore({ authProvider })
+  window.appReady = true // Available immediately
 }
 ```
 
@@ -165,15 +165,15 @@ const displayName = useMemo(() =>
 
 ```typescript
 // ❌ BEFORE - Always bundled
-import { setupAppInsights } from "./lib/applicationInsights";
+import { setupAppInsights } from "./lib/applicationInsights"
 if (settings.appInsights) {
-  setupAppInsights(settings.appInsights);
+  setupAppInsights(settings.appInsights)
 }
 
 // ✅ AFTER - Loaded only when needed
 if (settings.appInsights) {
-  const { setupAppInsights } = await import("./lib/applicationInsights");
-  setupAppInsights(settings.appInsights);
+  const { setupAppInsights } = await import("./lib/applicationInsights")
+  setupAppInsights(settings.appInsights)
 }
 ```
 
@@ -187,12 +187,12 @@ if (settings.appInsights) {
 
 ```typescript
 // ❌ BEFORE - All slices in configureStore.ts
-import { moviesApiSlice } from "../features/movies/moviesApi";
-import { configTableApiSlice } from "../features/configTable/configTableApi";
+import { moviesApiSlice } from "../features/movies/moviesApi"
+import { configTableApiSlice } from "../features/configTable/configTableApi"
 
 // ✅ AFTER - Import in feature component
 // features/movies/moviePage.tsx
-import { moviesApiSlice } from "./moviesApi"; // Loaded with route
+import { moviesApiSlice } from "./moviesApi" // Loaded with route
 ```
 
 **Patterns That Work:**
@@ -247,8 +247,8 @@ import { moviesApiSlice } from "./moviesApi"; // Loaded with route
 // Choose one by uncommenting:
 
 // Option A: MSAL
-import { MsalProvider } from "./msalProvider";
-export const authProvider = new MsalProvider(settings);
+import { MsalProvider } from "./msalProvider"
+export const authProvider = new MsalProvider(settings)
 
 // Option B: Auth0
 // import { Auth0Provider } from "./auth0Provider";
@@ -259,10 +259,10 @@ export const authProvider = new MsalProvider(settings);
 
 ```typescript
 // .env.development
-VITE_AUTH_PROVIDER = msal;
+VITE_AUTH_PROVIDER = msal
 
 // .env.production
-VITE_AUTH_PROVIDER = auth0;
+VITE_AUTH_PROVIDER = auth0
 
 // authProvider.ts
 if (import.meta.env.VITE_AUTH_PROVIDER === "auth0") {
@@ -345,12 +345,12 @@ if (import.meta.env.VITE_AUTH_PROVIDER === "auth0") {
 
 ```typescript
 // ✅ BEFORE
-import { HiOutlineInformationCircle } from "react-icons/hi";
-import { MdEmail } from "react-icons/md";
-import { LuUser } from "react-icons/lu";
+import { HiOutlineInformationCircle } from "react-icons/hi"
+import { MdEmail } from "react-icons/md"
+import { LuUser } from "react-icons/lu"
 
 // ✅ AFTER - All Lucide
-import { LuInfo, LuMail, LuUser } from "react-icons/lu";
+import { LuInfo, LuMail, LuUser } from "react-icons/lu"
 ```
 
 **For Missing Icons:**
@@ -426,7 +426,7 @@ manualChunks: {
 **Old Approach (Version-Based):**
 
 ```typescript
-modernTargets: ["chrome>=90", "firefox>=88", "safari>=14", "edge>=90"];
+modernTargets: ["chrome>=90", "firefox>=88", "safari>=14", "edge>=90"]
 ```
 
 **Problems:**
@@ -447,7 +447,7 @@ modernTargets: [
     "fully supports css-grid and " + // Required for layouts
     "fully supports async-functions and " + // Used throughout code
     "fully supports serviceworkers", // Required for PWA
-];
+]
 ```
 
 **Benefits:**

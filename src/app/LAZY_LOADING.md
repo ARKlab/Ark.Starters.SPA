@@ -33,7 +33,7 @@ The implementation maintains full TypeScript type safety using type-only imports
 import type { moviesApiSlice } from "../features/paginatedTable/paginatedTableApi";
 
 // Union type for compile-time safety
-export type LazyApiSlice = typeof moviesApiSlice | typeof configTableApiSlice;
+export type LazyApiSlice = typeof moviesApiSlice | typeof configTableApiSlice
 // ... other slices
 
 // Typed reducer with lazy loading support
@@ -148,11 +148,11 @@ The correct implementation uses TWO separate steps:
 
 ```typescript
 export function injectApiSlice(store: AppStore, slice: LazyApiSlice) {
-  const manager = getStoreManager(store);
+  const manager = getStoreManager(store)
 
   // Step 1: Inject the REDUCER using combineSlices().inject()
-  manager.currentReducer = manager.currentReducer.inject(slice);
-  store.replaceReducer(manager.currentReducer);
+  manager.currentReducer = manager.currentReducer.inject(slice)
+  store.replaceReducer(manager.currentReducer)
 
   // Step 2: Inject the MIDDLEWARE using createDynamicMiddleware
   // This is critical - combineSlices().inject() does NOT do this
@@ -165,7 +165,7 @@ export function injectApiSlice(store: AppStore, slice: LazyApiSlice) {
 The store must be configured with `createDynamicMiddleware`:
 
 ```typescript
-import { createDynamicMiddleware, configureStore } from "@reduxjs/toolkit";
+import { createDynamicMiddleware, configureStore } from "@reduxjs/toolkit"
 
 // Create the dynamic middleware instance
 const dynamicMiddlewareInstance = createDynamicMiddleware();
@@ -195,10 +195,10 @@ const { data: data2 } = useGetMoviesQuery(); // Uses cached data
 // Polling works
 const { data } = useGetMoviesQuery(params, {
   pollingInterval: 5000, // Auto-refetch every 5 seconds
-});
+})
 
 // Tag invalidation works
-dispatch(moviesApi.util.invalidateTags(["Movies"])); // Triggers refetch
+dispatch(moviesApi.util.invalidateTags(["Movies"])) // Triggers refetch
 ```
 
 All of these features require middleware to be properly injected using `createDynamicMiddleware`.
@@ -278,8 +278,8 @@ Each feature now has its own chunk with its API slice:
 
 ```typescript
 function MyComponent() {
-  useInjectApiSlice(myApiSlice); // ✅ First
-  const { data } = useGetDataQuery(); // ✅ After injection
+  useInjectApiSlice(myApiSlice) // ✅ First
+  const { data } = useGetDataQuery() // ✅ After injection
   // ...
 }
 ```
@@ -291,7 +291,7 @@ function MyComponent() {
 **Solution**: Add slice to `LazyApiSlice` union in `configureStore.ts`:
 
 ```typescript
-export type LazyApiSlice = typeof existingSlice | typeof yourNewSlice; // Add this
+export type LazyApiSlice = typeof existingSlice | typeof yourNewSlice // Add this
 ```
 
 ### Bundle still large after adding lazy loading

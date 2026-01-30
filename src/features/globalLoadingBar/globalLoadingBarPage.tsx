@@ -16,10 +16,10 @@ const GlobalLoadingBarPage = () => {
 
   const { t } = useTranslation();
 
-  const get = useSlowGetQuery();
+  const get = useSlowGetQuery()
 
-  const [triggerSlow, slow] = useSlowMutationMutation();
-  const [triggerFast, fast] = useFastMutationMutation();
+  const [triggerSlow, slow] = useSlowMutationMutation()
+  const [triggerFast, fast] = useFastMutationMutation()
 
   return (
     <Box>
@@ -48,7 +48,7 @@ const GlobalLoadingBarPage = () => {
         </Wrap>
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default GlobalLoadingBarPage;
+export default GlobalLoadingBarPage

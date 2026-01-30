@@ -1,19 +1,19 @@
-import { Provider } from "react-redux";
+import { Provider } from "react-redux"
 
-import { initStore, getResetApiActions } from "./app/configureStore";
-import { authProvider } from "./config/authProvider"; // this could fail if 'env' is malconfigured as is env-dependent
-import { InitApp } from "./initApp";
-import AuthenticationProviderContext from "./lib/authentication/components/AuthenticationProviderContext";
-import { setError } from "./lib/errorHandler/errorHandler";
+import { initStore, getResetApiActions } from "./app/configureStore"
+import { authProvider } from "./config/authProvider" // this could fail if 'env' is malconfigured as is env-dependent
+import { InitApp } from "./initApp"
+import AuthenticationProviderContext from "./lib/authentication/components/AuthenticationProviderContext"
+import { setError } from "./lib/errorHandler/errorHandler"
 
-const store = initStore({ authProvider });
+const store = initStore({ authProvider })
 
 if (import.meta.env.DEV || import.meta.env.MODE === "e2e") {
   window.rtkq = {
     resetCache: () => {
-      for (const x of getResetApiActions(store)) store.dispatch(x);
+      for (const x of getResetApiActions(store)) store.dispatch(x)
     },
-  };
+  }
 }
 
 // This is needed in case someone uses useEffect() for ASYNC promised instead of useAsyncEffect()
@@ -28,8 +28,8 @@ window.addEventListener("unhandledrejection", (e: PromiseRejectionEvent) => {
         stack: e.reason?.stack,
       },
     }),
-  );
-});
+  )
+})
 
 // this component, to be loaded as LazyLoad, is required to move the import of the authProvider
 // which depends on 'window.appSettings' so that in case the appSettings are wrong
@@ -41,7 +41,7 @@ const InitGlobals = () => {
         <InitApp />
       </Provider>
     </AuthenticationProviderContext>
-  );
-};
+  )
+}
 
-export default InitGlobals;
+export default InitGlobals

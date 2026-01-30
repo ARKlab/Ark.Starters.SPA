@@ -10,10 +10,10 @@ import {
   LuFilm,
   LuFlaskConical,
   LuListTree,
-} from "react-icons/lu";
-import { Navigate } from "react-router";
+} from "react-icons/lu"
+import { Navigate } from "react-router"
 
-import type { ArkRoute } from "../lib/siteMapTypes";
+import type { ArkRoute } from "../lib/siteMapTypes"
 
 /*This is the Main Section ARRAY populate this to populate the main nav menu
 It is also used to create all the Routes for the router*/
@@ -219,4 +219,4 @@ export const siteMap: ArkRoute[] = [
       },
     ],
   },
-];
+]

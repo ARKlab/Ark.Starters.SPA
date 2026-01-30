@@ -1,21 +1,21 @@
-"use client";
+"use client"
 
-import type { InputProps, TextProps } from "@chakra-ui/react";
-import { Field, FieldLabel, Input, Stack, Text } from "@chakra-ui/react";
-import { useRef } from "react";
+import type { InputProps, TextProps } from "@chakra-ui/react"
+import { Field, FieldLabel, Input, Stack, Text } from "@chakra-ui/react"
+import { useRef } from "react"
 
-import { InputGroup } from "../../../components/ui/input-group";
+import { InputGroup } from "../../../components/ui/input-group"
 
 interface InputWithClearProps {
-  value: number | undefined;
-  setValue: (value: number | undefined) => void;
-  title?: string;
-  width?: Field.RootProps["width"];
-  invalid?: boolean;
-  fieldErrorText?: string;
-  noPadding?: boolean;
-  fontSize?: TextProps["fontSize"];
-  inputSize?: InputProps["size"];
+  value: number | undefined
+  setValue: (value: number | undefined) => void
+  title?: string
+  width?: Field.RootProps["width"]
+  invalid?: boolean
+  fieldErrorText?: string
+  noPadding?: boolean
+  fontSize?: TextProps["fontSize"]
+  inputSize?: InputProps["size"]
 }
 
 export const AppNumberInput: React.FC<InputWithClearProps> = ({
@@ -29,11 +29,11 @@ export const AppNumberInput: React.FC<InputWithClearProps> = ({
   fontSize = "xs",
   inputSize = "sm",
 }) => {
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(Number(e.target.value));
-  };
+    setValue(Number(e.target.value))
+  }
 
   return (
     <>
@@ -70,5 +70,5 @@ export const AppNumberInput: React.FC<InputWithClearProps> = ({
         ) : null}
       </Field.Root>
     </>
-  );
-};
+  )
+}
