@@ -6,13 +6,13 @@ In this project, we've curated a collection of UI elements, layouts, and interac
 
 ### Packages
 
-In order to mantain this project with the most updated version of LTS's packages:
+In order to maintain this project with the most updated version of LTS's packages:
 
-Run `npm outdated` to see a table of packages with the current version, wanted version, and latest version.
+Run `bun outdated` to see a table of packages with the current version, wanted version, and latest version.
 
-To update a specific package, you can use `npm update package_name` This will update the package to the 'wanted' version, which is the maximum version that satisfies the versioning range specified in package.json.
+To update a specific package, you can use `bun update package_name` This will update the package to the 'wanted' version, which is the maximum version that satisfies the versioning range specified in package.json.
 
-In order to Update all packages you can also use the command `npx npm-check-updates` that upgrades your package.json dependencies to the latest versions, ignoring specified versions.
+In order to Update all packages you can also use the command `bunx npm-check-updates` that upgrades your package.json dependencies to the latest versions, ignoring specified versions.
 
 ## Features
 
@@ -24,7 +24,49 @@ In order to Update all packages you can also use the command `npx npm-check-upda
 
 ## Getting Started
 
-TODO: this section would provide examples on how to run the template and how to use it
+### Prerequisites
+
+This project uses [Bun](https://bun.sh) as the package manager and task runner. You'll need to install it first:
+
+```bash
+# Install Bun
+curl -fsSL https://bun.sh/install | bash
+```
+
+Or using npm/npx:
+
+```bash
+npm install -g bun
+```
+
+For Windows, use PowerShell:
+
+```powershell
+irm bun.sh/install.ps1 | iex
+```
+
+### Installation
+
+```bash
+# Install dependencies
+bun install
+
+# Start the development server
+bun start
+```
+
+The application will be available at `http://localhost:3000`.
+
+### Available Commands
+
+- `bun start` - Start development server
+- `bun run build` - Build for production
+- `bun run preview` - Preview production build
+- `bun run lint` - Run linter
+- `bun run format` - Format code
+- `bun test` - Run E2E tests
+
+For more commands, see the `scripts` section in `package.json`.
 
 ### Running and Testing
 
@@ -33,7 +75,7 @@ TODO: this section would provide examples on how to run the template and how to 
 To start the development server:
 
 ```bash
-npm start
+bun start
 ```
 
 This will:
@@ -47,7 +89,7 @@ This will:
 To run end-to-end tests:
 
 ```bash
-npm run test
+bun test
 ```
 
 This will:
@@ -65,7 +107,7 @@ This will:
 For interactive test development:
 
 ```bash
-npm run e2e:start
+bun run e2e:start
 ```
 
 This opens the Cypress UI for interactive test running and debugging against the dev server.
@@ -76,10 +118,10 @@ To run specific test files during development without a full build:
 
 ```bash
 # Start dev server
-npm start
+bun start
 
 # In another terminal, run a specific test
-npx cypress run --spec cypress/e2e/your-test.e2e.ts
+bunx cypress run --spec cypress/e2e/your-test.e2e.ts
 ```
 
 #### Performance Notes
@@ -484,14 +526,14 @@ This starter project include PWA via [vite-plugin-pwa](https://github.com/vite-p
 
 To test the PWA popup, run the preview build.
 
-1. npm run build
-2. npm run preview
+1. bun run build
+2. bun run preview
 3. Ctrl+C to stop the Preview server - leave the page open in the Browser
 4. edit any file
-5. npm run build
-6. npm run preview
+5. bun run build
+6. bun run preview
 7. A wild Popup happears!
-8. **Remember to uninstall the Service Worker** by clearing site data from DevTools before moving back to development via `npm run start`
+8. **Remember to uninstall the Service Worker** by clearing site data from DevTools before moving back to development via `bun run start`
 
 ![image](docs/pwa-uninstall.png)
 

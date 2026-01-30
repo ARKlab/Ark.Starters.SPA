@@ -28,26 +28,26 @@
 
 ````bash
 # Development
-npm start              # Start dev server (localhost:3000)
-npm run build          # Production build
-npm run preview        # Preview production build
-npm run analyze        # Build with bundle analysis (generates build/stats.html)
+bun start              # Start dev server (localhost:3000)
+bun run build          # Production build
+bun run preview        # Preview production build
+bun run analyze        # Build with bundle analysis (generates build/stats.html)
 
 # Quality
-npm run lint           # Run oxlint + typecheck (type-aware linting + full type checking)
-npm run format         # Format code with oxfmt
-npm run format:check   # Check formatting without changes
-npm test               # Run E2E tests (Cypress)
+bun run lint           # Run oxlint + typecheck (type-aware linting + full type checking)
+bun run format         # Format code with oxfmt
+bun run format:check   # Check formatting without changes
+bun test               # Run E2E tests (Cypress)
 
 # E2E Testing
 
 ## Full Test Suite (CI/Production Mode)
-npm test               # Run all E2E tests against production build (recommended for CI)
+bun test               # Run all E2E tests against production build (recommended for CI)
 
 ## Development Mode Testing
 
 ### Interactive UI Mode (Best for Writing Tests)
-npm run e2e:start      # Starts dev server + opens Cypress UI
+bun run e2e:start      # Starts dev server + opens Cypress UI
 
 ### Running Specific Specs Against Dev Server (For AI Agents)
 
@@ -56,44 +56,44 @@ npm run e2e:start      # Starts dev server + opens Cypress UI
 #### Step 1: Start Dev Server in Background
 ```bash
 # Start dev server on default ports (3000 app, 4000 connectionStrings)
-npm start &
+bun start &
 
 # Wait for server to be ready
-npx wait-on http-get://localhost:3000 http-get://localhost:4000
+bunx wait-on http-get://localhost:3000 http-get://localhost:4000
 ````
 
 #### Step 2: Run Specific Spec File
 
 ```bash
 # Run a single spec file against the dev server
-npx cypress run --spec cypress/e2e/your-test.e2e.ts
+bunx cypress run --spec cypress/e2e/your-test.e2e.ts
 
 # Example: Test the appInput component
-npx cypress run --spec cypress/e2e/appInput.e2e.ts
+bunx cypress run --spec cypress/e2e/appInput.e2e.ts
 ```
 
 #### For AI Agents: Complete Workflow
 
 ```bash
 # 1. Start dev server in background (async mode)
-npm start &
+bun start &
 
 # 2. Wait for server to be ready
-npx wait-on --timeout 60000 http-get://localhost:3000 http-get://localhost:4000
+bunx wait-on --timeout 60000 http-get://localhost:3000 http-get://localhost:4000
 
 # 3. Run specific test
-npx cypress run --spec cypress/e2e/appInput.e2e.ts
+bunx cypress run --spec cypress/e2e/appInput.e2e.ts
 
 # 4. Stop dev server when done
 pkill -f "vite"
 pkill -f "connectionStrings"
 ```
 
-**Note**: For full CI test runs, always use `npm test` which builds and serves the optimized production version for best performance.
+**Note**: For full CI test runs, always use `bun test` which builds and serves the optimized production version for best performance.
 
 # Utility
 
-npm outdated # Check package versions
+bun outdated # Check package versions
 
 ```
 
@@ -348,7 +348,7 @@ test(e2e): add tests for login flow
 
 #### 10. Code Formatting Style
 
-**Automated with oxfmt** - Run `npm run format` before committing.
+**Automated with oxfmt** - Run `bun run format` before committing.
 
 **Key formatting rules optimized for AI code generation:**
 
@@ -479,7 +479,7 @@ Is your task about...
    - [ ] TypeScript types defined
    - [ ] No `any` types
    - [ ] Accessible (test with keyboard)
-   - [ ] Runs `npm run lint` without errors
+   - [ ] Runs `bun run lint` without errors
 
 **Example Component**:
 
@@ -1067,16 +1067,16 @@ export const UserCard = ({ name, email }: UserCardProps) => {
 4. **Running tests**:
 
    ```bash
-   npm run e2e:start    # Interactive mode (UI)
-   npm run e2e:ci       # Headless mode (CI)
-   npm test             # Alias for e2e:ci
+   bun run e2e:start    # Interactive mode (UI)
+   bun run e2e:ci       # Headless mode (CI)
+   bun test             # Alias for e2e:ci
    ```
 
    To run an interactive testing loop for a specific file:
-   `npm run cypress:run -- --spec cypress/e2e/your-test.e2e.ts --headed --no-exit`
+   `bun run cypress:run -- --spec cypress/e2e/your-test.e2e.ts --headed --no-exit`
 
-   **Note**: If you are not using `npm run e2e:start`, run the dev server in E2E mode first:
-   `cross-env VITE_MODE=e2e npm start`
+   **Note**: If you are not using `bun run e2e:start`, run the dev server in E2E mode first:
+   `cross-env VITE_MODE=e2e bun start`
    Ensure the dev server is running and ready before executing the Cypress command.
 
 5. **MSW mocks** (for E2E mode):
@@ -1122,7 +1122,7 @@ export const UserCard = ({ name, email }: UserCardProps) => {
    - Semantic tokens for colors
 
 5. **Test your changes**:
-   - Run `npm run lint`
+   - Run `bun run lint`
    - Test manually in browser
    - Run relevant tests
    - Check both light and dark modes
@@ -1411,7 +1411,7 @@ Run these checks before committing code:
 #### 1. Linting
 
 ```bash
-npm run lint
+bun run lint
 ```
 
 **Expected**: No errors, no warnings (max warnings: 0)
@@ -1419,7 +1419,7 @@ npm run lint
 #### 2. TypeScript Compilation
 
 ```bash
-npx tsc --noEmit
+bunx tsc --noEmit
 ```
 
 **Expected**: No type errors
@@ -1427,7 +1427,7 @@ npx tsc --noEmit
 #### 3. Build
 
 ```bash
-npm run build
+bun run build
 ```
 
 **Expected**: Build succeeds, no errors
@@ -1465,7 +1465,7 @@ npm run build
 #### 5. E2E Tests (if applicable)
 
 ```bash
-npm run test
+bun run test
 ```
 
 **Expected**: All tests pass
@@ -1617,7 +1617,7 @@ npm run test
 **Fix**:
 
 1. Check package.json for dependency
-2. Run `npm install` if missing
+2. Run `bun install` if missing
 3. Verify import path uses `@/` alias correctly
 4. Check file exists at expected path
 

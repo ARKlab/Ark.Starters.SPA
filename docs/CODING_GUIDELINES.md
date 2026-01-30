@@ -73,9 +73,9 @@ toast: 1700, tooltip: 1800
 
 ## Testing
 
-- **MUST** run `npm run lint` before committing
-- **MUST** run `npm run build` to verify build success
-- **MUST** run `npm test` for E2E tests when modifying functionality
+- **MUST** run `bun run lint` before committing
+- **MUST** run `bun run build` to verify build success
+- **MUST** run `bun run test` for E2E tests when modifying functionality
 
 ## Bundle Optimization & Performance
 
@@ -164,6 +164,6 @@ toast: 1700, tooltip: 1800
 ### Verification
 
 - **MUST** run E2E tests after any optimization changes
-- **MUST** verify bundle impact with `npm run analyze`
+- **MUST** verify bundle impact with `bun run analyze`
 - **MUST** compare before/after measurements
 - **SHOULD** monitor bundle size in CI/CD to prevent regressions
