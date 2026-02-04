@@ -54,7 +54,7 @@
     "@reduxjs/toolkit": "2.11.2",
     "@semihbou/zod-i18n-map": "0.0.3",
     "@tanstack/react-table": "8.21.3",
-    "@tinyhttp/content-disposition": "2.2.3",
+    "@tinyhttp/content-disposition": "2.2.4",
     "date-fns": "4.1.0",
     "error-stack-parser": "2.1.4",
     "fast-deep-equal": "3.1.3",
