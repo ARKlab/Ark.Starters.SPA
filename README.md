@@ -476,6 +476,23 @@ const TestSchema = z.object({
 
 Check [LocalizationPage](src/features/localization/localizationPage.tsx) to see how to use Zod for validating the Forms using `zod2FormValidator` and `zod2FieldValidator` helpers.
 
+### Application Insights
+
+This project comes with Application Insights integration. When using authentication providers (like Auth0 or Azure AD B2C), it is important to exclude their domains from correlation headers to avoid CORS issues.
+
+You can configure the excluded domains in `public/connectionStrings.cjs`. Usually it's done by adding `correlationHeaderExcludedDomains` to the `applicationInsights` configuration object.
+
+Example configuration in `connectionStrings.cjs`:
+
+```javascript
+applicationInsights: {
+  connectionString: "...",
+  correlationHeaderExcludedDomains: ["*.auth0.com", "login.microsoftonline.com"]
+}
+```
+
+Ensure your authentication provider's domain is included in this list to prevent request rejections.
+
 ### PWA Support
 
 This starter project include PWA via [vite-plugin-pwa](https://github.com/vite-pwa/vite-plugin-pwa).

@@ -18,6 +18,7 @@ const versionString =
 export const setupAppInsights = ({
   connectionString,
   enableClickAnalytics,
+  correlationHeaderExcludedDomains,
 }: ApplicationInsightsConfig) => {
   // Create the ReactPlugin instance inside the function to avoid module-level side effects
   const reactPlugin = new ReactPlugin()
@@ -28,6 +29,7 @@ export const setupAppInsights = ({
       enableAutoRouteTracking: true,
       autoTrackPageVisitTime: true,
       enableCorsCorrelation: true,
+      correlationHeaderExcludedDomains: correlationHeaderExcludedDomains,
 
       // long-running pages with polling are considered "common" in SPA, thus don't limit the number of ajax calls
       maxAjaxCallsPerView: -1,
