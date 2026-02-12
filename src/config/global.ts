@@ -15,3 +15,7 @@ export type AppSettingsType = {
   applicationInsights?: ApplicationInsightsConfig
   serviceUrl?: string
 }
+
+// Add authentication domains here (e.g., Auth0, MSAL) to exclude them from correlation headers
+// and avoid CORS issues.
+export const defaultCorrelationHeaderExcludedDomains: string[] = []
