@@ -10,7 +10,6 @@ import { sha, abbreviatedSha, tag, lastTag } from "~build/git"
 // eslint-disable-next-line import/no-unresolved
 import { version, name } from "~build/package"
 
-import { defaultCorrelationHeaderExcludedDomains } from "../../config/global"
 import type { ApplicationInsightsConfig } from "./types"
 
 const versionString =
@@ -19,6 +18,7 @@ const versionString =
 export const setupAppInsights = ({
   connectionString,
   enableClickAnalytics,
+  correlationHeaderExcludedDomains,
 }: ApplicationInsightsConfig) => {
   // Create the ReactPlugin instance inside the function to avoid module-level side effects
   const reactPlugin = new ReactPlugin()
@@ -29,7 +29,7 @@ export const setupAppInsights = ({
       enableAutoRouteTracking: true,
       autoTrackPageVisitTime: true,
       enableCorsCorrelation: true,
-      correlationHeaderExcludedDomains: defaultCorrelationHeaderExcludedDomains,
+      correlationHeaderExcludedDomains: correlationHeaderExcludedDomains,
 
       // long-running pages with polling are considered "common" in SPA, thus don't limit the number of ajax calls
       maxAjaxCallsPerView: -1,

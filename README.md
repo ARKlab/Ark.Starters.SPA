@@ -480,13 +480,15 @@ Check [LocalizationPage](src/features/localization/localizationPage.tsx) to see 
 
 This project comes with Application Insights integration. When using authentication providers (like Auth0 or Azure AD B2C), it is important to exclude their domains from correlation headers to avoid CORS issues.
 
-You can configure the excluded domains in `src/config/global.ts`:
+You can configure the excluded domains in `public/connectionStrings.cjs`. Usually it's done by adding `correlationHeaderExcludedDomains` to the `applicationInsights` configuration object.
 
-```typescript
-export const defaultCorrelationHeaderExcludedDomains: string[] = [
-  "*.auth0.com",
-  "login.microsoftonline.com",
-]
+Example configuration in `connectionStrings.cjs`:
+
+```javascript
+applicationInsights: {
+  connectionString: "...",
+  correlationHeaderExcludedDomains: ["*.auth0.com", "login.microsoftonline.com"]
+}
 ```
 
 Ensure your authentication provider's domain is included in this list to prevent request rejections.
