@@ -2,32 +2,35 @@
 
 ## Executive Summary
 
-Successfully migrated ARK Starters SPA from Vite 7.3.1 to Vite 8.0.0-beta.10 (Rolldown-powered).
+Successfully migrated ARK Starters SPA from Vite 7.3.1 to Vite 8.0.0-beta.14 (Rolldown-powered).
 The migration is **technically feasible** but with some **caveats** regarding performance and API deprecations.
 
 ## Version Changes
 
 ### Core Updates
-- **Vite**: 7.3.1 → 8.0.0-beta.10
-- **@vitejs/plugin-legacy**: 7.2.1 → 8.0.0-beta.1
+- **Vite**: 7.3.1 → 8.0.0-beta.14 (latest beta as of Feb 2026)
+- **@vitejs/plugin-legacy**: 7.2.1 → 8.0.0-beta.3
+- **@vitejs/plugin-react**: 5.1.2 → 5.1.4
 
 ### Plugin Compatibility Matrix
 
 | Plugin | Version | Peer Dep | Status |
 |--------|---------|----------|--------|
-| @vitejs/plugin-react | 5.1.2 | ^4.2.0 ∥ ^5.0.0 ∥ ^6.0.0 ∥ ^7.0.0 | ✅ Works |
-| @vitejs/plugin-legacy | 8.0.0-beta.1 | ^7.0.0 | ⚠️ Beta, works |
+| @vitejs/plugin-react | 5.1.4 | ^4.2.0 ∥ ^5.0.0 ∥ ^6.0.0 ∥ ^7.0.0 | ✅ Works |
+| @vitejs/plugin-legacy | 8.0.0-beta.3 | ^7.0.0 | ⚠️ Beta, works |
 | vite-plugin-pwa | 1.2.0 | ^3.1.0 ∥ ... ∥ ^7.0.0 | ✅ Works |
 | vite-plugin-istanbul | 7.2.1 | >=4 <=7 | ⚠️ Warning, works |
 | vite-plugin-react-click-to-component | 4.2.0 | ^7 | ⚠️ Warning, works |
 | ~~vite-tsconfig-paths~~ | ~~6.0.4~~ | ~~*~~ | 🔄 **REMOVED** - using native |
 | vite-plugin-svgr | 4.5.0 | >=2.6.0 | ✅ Works |
-| vite-plugin-i18n-ally | 6.1.0 | >=5.0.0 | ✅ Works |
+| ~~vite-plugin-i18n-ally~~ | ~~6.1.0~~ | ~~>=5.0.0~~ | 🔄 **REMOVED** - using http-backend |
 | vite-plugin-image-optimizer | 2.0.3 | >=5 | ✅ Works |
 | vite-plugin-oxlint | 1.5.1 | >=5.0.0 | ✅ Works |
 | unplugin-info | 1.2.4 | >=3.2.7 | ✅ Works |
 
-**Key Change:** `vite-tsconfig-paths` plugin replaced with native `resolve.tsconfigPaths: true`
+**Key Changes:** 
+- `vite-tsconfig-paths` plugin replaced with native `resolve.tsconfigPaths: true`
+- `vite-plugin-i18n-ally` replaced with `i18next-http-backend` + `i18next-browser-languagedetector`
 
 ## Configuration Changes Required
 
@@ -115,50 +118,69 @@ rolldownOptions: {  // renamed from rollupOptions
 | Configuration | Build Time | vs Baseline | Notes |
 |--------------|------------|-------------|-------|
 | **Vite 7.3.1** (baseline) | 1m 33s | - | Rollup bundler |
-| Vite 8 + vite-tsconfig-paths plugin | 1m 50s | +17s (+18%) | Plugin bottleneck |
-| Vite 8 + native tsconfigPaths | 1m 52s | +19s (+20%) | i18n-ally bottleneck |
-| **Vite 8 + native + codeSplitting** | 1m 49s | **+16s (+17%)** | ✅ Proper config |
+| Vite 8.0.0-beta.10 + vite-tsconfig-paths plugin | 1m 50s | +17s (+18%) | Plugin bottleneck |
+| Vite 8.0.0-beta.10 + native tsconfigPaths | 1m 52s | +19s (+20%) | i18n-ally bottleneck |
+| Vite 8.0.0-beta.10 + native + codeSplitting | 1m 49s | +16s (+17%) | Proper config |
+| Vite 8.0.0-beta.11 (after i18n migration) | 1m 49s | +16s (+17%) | http-backend + detector |
+| **Vite 8.0.0-beta.14** (latest) | **1m 53s** | **+20s (+21%)** | ✅ Current version |
 
 ### Performance Impact
-❌ **Build is 17% slower** with Vite 8 beta (proper configuration):
-- Eliminated vite-tsconfig-paths bottleneck
-- Eliminated deprecation warnings
+❌ **Build is 21% slower** with Vite 8.0.0-beta.14 (latest):
+- Eliminated vite-tsconfig-paths bottleneck (using native support)
+- Eliminated vite-plugin-i18n-ally (replaced with http-backend)
+- No deprecation warnings
 - Still slower due to Rolldown beta optimizations pending
 
 **Root Cause:**
 1. Rolldown beta not fully optimized yet
-2. New bottleneck: vite-plugin-i18n-ally (92% of build time)
-3. Plugin compatibility layer overhead
+2. Plugin overhead: unplugin-info (63%), vite-plugin-svgr (30%)
+3. Legacy browser support transformation overhead
 
 ### Plugin Timing Analysis
 
-**With vite-tsconfig-paths plugin:**
+**Early Testing (beta.10 with vite-tsconfig-paths plugin):**
 - vite-tsconfig-paths: **84%** (MAJOR BOTTLENECK)
 - vite:plugin-i18n-ally: 9%
 - vite-plugin-svgr: 3%
 
-**With native resolve.tsconfigPaths:**
+**After Removing Plugin (beta.10 with native tsconfigPaths):**
 - vite:plugin-i18n-ally: **92%** (NEW BOTTLENECK)
 - vite-plugin-svgr: 3%
 
-**Key Insight:** 
+**After i18n Migration (beta.11 with http-backend):**
+- unplugin-info: 63%
+- vite-plugin-svgr: 30%
+- vite:react-babel: 5%
+
+**Latest (beta.14 - Current):**
+- unplugin-info: 63%
+- vite-plugin-svgr: 30%
+- vite:react-babel: 4%
+
+**Legacy Build Phase (separate):**
+- vite:legacy-post-process: 42%
+- vite:build-import-analysis: 35%
+- vite-plugin-svgr: 14%
+- vite:terser: 4%
+- unplugin-info: 4%
+
+**Key Insights:** 
 - ✅ Native tsconfigPaths successfully eliminated the 84% bottleneck
-- ⚠️ Build still slower because i18n-ally now dominates (92%)
-- 💡 Overall performance limited by Rolldown beta optimizations
+- ✅ i18next-http-backend has negligible impact vs vite-plugin-i18n-ally
+- ⚠️ Build still slower primarily due to Rolldown beta optimizations pending
+- 💡 Plugin ecosystem overhead and legacy browser support are main factors
 
 ## Known Issues & Warnings
 
-### 1. Deprecation Warnings
-```
-`advancedChunks` option is deprecated, please use `codeSplitting` instead.
-```
-- **Impact**: Future API change required
-- **Current**: Works fine with warning
-- **Action**: Monitor Rolldown docs for codeSplitting API
+### 1. Deprecation Warnings (RESOLVED ✅)
+All deprecation warnings have been resolved in the current configuration:
+- ✅ Using `codeSplitting` instead of deprecated `advancedChunks`
+- ✅ Using `rolldownOptions` instead of `rollupOptions`
+- ✅ No esbuild/oxc conflicts (removed esbuild.drop config)
 
-### 2. Peer Dependency Warnings
+### 2. Peer Dependency Warnings (Minimal Impact)
 ```
-npm error invalid: vite@8.0.0-beta.10 (peer deps not satisfied)
+npm error invalid: vite@8.0.0-beta.14 (peer deps not satisfied)
 ```
 - **Plugins affected**: 
   - vite-plugin-istanbul (>=4 <=7)
@@ -166,13 +188,15 @@ npm error invalid: vite@8.0.0-beta.10 (peer deps not satisfied)
 - **Impact**: None - plugins work correctly
 - **Action**: Wait for plugin maintainers to update peer deps
 
-### 3. Plugin Performance Bottleneck
+### 3. Plugin Performance (Ongoing Monitoring)
 ```
-[PLUGIN_TIMINGS] Warning: Build spent significant time in plugins
-  - vite-tsconfig-paths (60-84%)
+[PLUGIN_TIMINGS] Build spent time in plugins
+  - unplugin-info (63%)
+  - vite-plugin-svgr (30%)
 ```
-- **Impact**: Significant build slowdown
-- **Recommendation**: Consider alternatives or optimizations for this plugin
+- **Impact**: Moderate build slowdown
+- **Status**: Monitoring for optimization opportunities
+- **Note**: Much improved from earlier vite-tsconfig-paths (84%) and i18n-ally (92%) bottlenecks
 
 ## Build Output Quality
 
@@ -192,10 +216,10 @@ npm error invalid: vite@8.0.0-beta.10 (peer deps not satisfied)
 
 ### For Immediate Production Use: ❌ NOT RECOMMENDED
 **Reasons:**
-1. Performance regression (18-44% slower builds)
+1. Performance regression (21% slower builds with beta.14)
 2. Beta status - potential for breaking changes
-3. Deprecation warnings indicate API instability
-4. Plugin timing issues need resolution
+3. Plugin ecosystem still catching up
+4. Rolldown optimizations still pending
 
 ### For Testing/Staging: ✅ RECOMMENDED
 **Benefits:**
@@ -225,10 +249,10 @@ npm error invalid: vite@8.0.0-beta.10 (peer deps not satisfied)
 
 ## Blockers for Production Migration
 
-1. **Performance**: 18-44% build time increase unacceptable
-2. **Beta Status**: Risk of breaking changes
-3. **API Instability**: Deprecated APIs suggest ongoing changes
-4. **Plugin Ecosystem**: Not all plugins officially support Vite 8
+1. **Performance**: 21% build time increase unacceptable (beta.14: 1m 53s vs baseline 1m 33s)
+2. **Beta Status**: Risk of breaking changes before stable release
+3. **Rolldown Optimizations**: Bundler performance improvements still pending
+4. **Plugin Ecosystem**: Some plugins still showing peer dependency warnings
 
 ## Testing Status
 
@@ -241,24 +265,27 @@ npm error invalid: vite@8.0.0-beta.10 (peer deps not satisfied)
 
 ## Conclusion
 
-**Vite 8 migration is technically complete and properly configured** but **NOT recommended for production** at this time.
+**Vite 8.0.0-beta.14 migration is technically complete and properly configured** but **NOT recommended for production** at this time.
 
 ### Key Takeaways:
 1. ✅ All functionality works perfectly
 2. ✅ All APIs properly migrated (no deprecation warnings)
-3. ✅ Native tsconfigPaths eliminates plugin dependency
-4. ❌ 17% performance regression still unacceptable
-5. ⏳ Wait for stable release and optimizations
+3. ✅ Native tsconfigPaths eliminates vite-tsconfig-paths dependency
+4. ✅ i18next-http-backend eliminates vite-plugin-i18n-ally dependency
+5. ❌ 21% performance regression still unacceptable for production
+6. ⏳ Wait for stable release and further Rolldown optimizations
 
 ### Successful Migrations:
 - `vite-tsconfig-paths` plugin → native `resolve.tsconfigPaths`
+- `vite-plugin-i18n-ally` → `i18next-http-backend` + `i18next-browser-languagedetector`
 - `build.rollupOptions` → `build.rolldownOptions`
 - `output.manualChunks` → `output.codeSplitting`
 - All chunk splitting logic preserved and working
+- Custom i18next HMR plugin for namespace reloading without page refresh
 
 ### Next Steps:
 1. ✅ Configuration is production-ready (use this as reference)
 2. ⏳ Wait for Vite 8 stable release
-3. 🔄 Re-test when Rolldown performance improves
+3. 🔄 Continue testing with new beta releases
 4. 📊 Monitor community feedback and benchmarks
-5. 🎯 Migrate when build performance matches or exceeds Vite 7
+5. 🎯 Migrate when build performance matches or exceeds Vite 7 baseline
