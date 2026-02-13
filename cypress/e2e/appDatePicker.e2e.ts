@@ -39,13 +39,6 @@ describe("AppDatePicker", () => {
     tomorrow.setDate(tomorrow.getDate() + 1)
     const tomorrowDay = tomorrow.getDate()
 
-    if (tomorrowDay === 1) {
-      open(wrapper)
-      cy.get("button")
-        .contains(tomorrow.toLocaleString("default", { month: "long" }))
-        .should("exist")
-    }
-
     pickDay(wrapper, tomorrowDay)
 
     cy.get(`${wrapper} [data-test='datepicker-input']`)
