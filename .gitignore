@@ -25,10 +25,12 @@ yarn-error.log*
 
 src/locales/**/zod.json
 
+# Locale copies (generated from src/locales)
+public/locales
+
 cypress/screenshots
 cypress/videos
 cypress/downloads
-cypress/dist
 
 .nyc_output/
 debug.log

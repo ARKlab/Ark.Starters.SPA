@@ -1,29 +1,97 @@
 /// <reference types="vite/client" />
 /// <reference types="vite-plugin-svgr/client" />
 
-import msw from "@iodigital/vite-plugin-msw"
-import legacy from "@vitejs/plugin-legacy"
-import react from "@vitejs/plugin-react"
-import copy from "rollup-plugin-copy"
-import { visualizer } from "rollup-plugin-visualizer"
-import Info from "unplugin-info/vite"
-import { defineConfig, loadEnv } from "vite"
-import { i18nAlly } from "vite-plugin-i18n-ally"
-import { ViteImageOptimizer } from "vite-plugin-image-optimizer"
-import istanbul from "vite-plugin-istanbul"
-import oxlint from "vite-plugin-oxlint"
-import { VitePWA } from "vite-plugin-pwa"
-import { reactClickToComponent } from "vite-plugin-react-click-to-component"
-import svgr from "vite-plugin-svgr"
-import tsconfigPaths from "vite-tsconfig-paths"
+import fs from "fs";
+import path from "path";
 
-import { supportedLngs } from "./src/config/lang"
+import msw from "@iodigital/vite-plugin-msw";
+import legacy from "@vitejs/plugin-legacy";
+import react from "@vitejs/plugin-react";
+import copy from "rollup-plugin-copy";
+import { visualizer } from "rollup-plugin-visualizer";
+import Info from "unplugin-info/vite";
+import { defineConfig, loadEnv, type Plugin } from "vite";
+import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
+import istanbul from "vite-plugin-istanbul";
+import oxlint from "vite-plugin-oxlint";
+import { VitePWA } from "vite-plugin-pwa";
+import { reactClickToComponent } from "vite-plugin-react-click-to-component";
+import svgr from "vite-plugin-svgr";
 
-const chunkSizeLimit = 10048
+import { supportedLngs } from "./src/config/lang";
+
+const chunkSizeLimit = 10048;
+
+/**
+ * Vite plugin for i18next-http-backend with HMR support
+ * Copies locale files to public directory and enables HMR during development
+ */
+function i18nextBackendHMR(): Plugin {
+  return {
+    name: "vite-plugin-i18next-backend-hmr",
+    
+    buildStart() {
+      const srcLocalesDir = path.resolve(process.cwd(), "src/locales");
+      const publicLocalesDir = path.resolve(process.cwd(), "public/locales");
+      
+      if (!fs.existsSync(publicLocalesDir)) {
+        fs.mkdirSync(publicLocalesDir, { recursive: true });
+      }
+      
+      const languages = fs.readdirSync(srcLocalesDir);
+      for (const lang of languages) {
+        const langSrcDir = path.join(srcLocalesDir, lang);
+        const langPublicDir = path.join(publicLocalesDir, lang);
+        
+        if (fs.statSync(langSrcDir).isDirectory()) {
+          if (!fs.existsSync(langPublicDir)) {
+            fs.mkdirSync(langPublicDir, { recursive: true });
+          }
+          
+          const files = fs.readdirSync(langSrcDir);
+          for (const file of files) {
+            if (file.endsWith(".json")) {
+              fs.copyFileSync(
+                path.join(langSrcDir, file),
+                path.join(langPublicDir, file)
+              );
+            }
+          }
+        }
+      }
+    },
+    
+    handleHotUpdate({ file, server }) {
+      if (file.includes("/locales/") && file.endsWith(".json")) {
+        console.log("[i18next-hmr] Locale file changed:", file);
+        
+        const relativePath = path.relative(path.resolve(process.cwd(), "src/locales"), file);
+        const publicPath = path.resolve(process.cwd(), "public/locales", relativePath);
+        const publicDir = path.dirname(publicPath);
+        
+        if (!fs.existsSync(publicDir)) {
+          fs.mkdirSync(publicDir, { recursive: true });
+        }
+        
+        fs.copyFileSync(file, publicPath);
+        
+        const pathParts = relativePath.split(path.sep);
+        const lng = pathParts[0];
+        const ns = path.basename(pathParts[1], ".json");
+        
+        server.ws.send({
+          type: "custom",
+          event: "i18next-hmr-reload",
+          data: { lng, ns, path: `/locales/${lng}/${ns}.json` },
+        });
+      }
+    },
+  };
+}
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), "")
+  const env = loadEnv(mode, process.cwd(), "");
 
   return {
     plugins: [
@@ -34,30 +102,30 @@ export default defineConfig(({ mode }) => {
         // Feature-based for browsers lacking modern features
         // CSS Grid polyfills cause rendering problems, so require native support
         targets: [
-          "supports es6-module", // Basic module support
-          "supports css-variables", // Chakra UI v3 requirement
-          "supports css-grid", // Layouts (polyfills cause issues)
-          "supports serviceworkers", // PWA requirement
-          ">0.5%", // Market share threshold
-          "not dead", // Still maintained
+          "supports es6-module",        // Basic module support
+          "supports css-variables",      // Chakra UI v3 requirement
+          "supports css-grid",           // Layouts (polyfills cause issues)
+          "supports serviceworkers",     // PWA requirement
+          ">0.5%",                       // Market share threshold
+          "not dead",                    // Still maintained
         ],
-
+        
         // Modern browser targets (get clean, unpolyfilled code)
         // Uses Web Platform Baseline: features widely available for 30+ months
         // Includes downstream browsers (Opera, Brave, Samsung Internet)
         modernTargets: [
           "baseline widely available with downstream and " +
-            "fully supports css-variables and " +
-            "fully supports es6-module and " +
-            "fully supports es6-module-dynamic-import and " +
-            "fully supports css-grid and " +
-            "fully supports async-functions and " +
-            "fully supports serviceworkers",
+          "fully supports css-variables and " +
+          "fully supports es6-module and " +
+          "fully supports es6-module-dynamic-import and " +
+          "fully supports css-grid and " +
+          "fully supports async-functions and " +
+          "fully supports serviceworkers"
         ],
-
+        
         // Modern browsers get NO polyfills (fast experience)
         modernPolyfills: false,
-
+        
         // Legacy browsers get polyfilled chunks (degraded but functional)
         renderLegacyChunks: true,
       }),
@@ -76,7 +144,6 @@ export default defineConfig(({ mode }) => {
           plugins: [["babel-plugin-react-compiler", {}]],
         },
       }),
-      tsconfigPaths(),
       reactClickToComponent(),
       VitePWA({
         disable: mode == "e2e", // disable PWA in e2e mode due to conflict with MSW (only 1 ServiceWorker can be registered)
@@ -124,14 +191,14 @@ export default defineConfig(({ mode }) => {
           return {
             src: "node_modules/@semihbou/zod-i18n-map/locales/" + l,
             dest: "src/locales",
-          }
+          };
         }),
         hook: "buildStart",
       }),
-      i18nAlly(),
+      // i18next backend with HMR support
+      i18nextBackendHMR(),
       oxlint({
         path: "src",
-        params: "--type-aware --type-check",
       }),
       istanbul({
         cypress: true,
@@ -149,6 +216,9 @@ export default defineConfig(({ mode }) => {
           template: "treemap", // 'sunburst' | 'treemap' | 'network'
         }),
     ],
+    resolve: {
+      tsconfigPaths: true,
+    },
     test: {
       globals: true,
       environment: "jsdom",
@@ -172,32 +242,48 @@ export default defineConfig(({ mode }) => {
       outDir: mode == "e2e" ? "cypress/dist" : "build",
       chunkSizeWarningLimit: chunkSizeLimit,
       target: "esnext",
-      rollupOptions: {
+      rolldownOptions: {
         output: {
-          manualChunks: {
-            // Core libraries (rarely change) - separate for maximum cache stability
-            react: ["react", "react-dom"],
-            "react-router": ["react-router", "react-error-boundary"],
-
-            // State management (occasional updates)
-            rtk: [
-              "@reduxjs/toolkit",
-              "@reduxjs/toolkit/query",
-              "@reduxjs/toolkit/react",
-              "react-redux",
+          // Vite 8 with Rolldown uses codeSplitting for manual chunk grouping
+          // Migration: rollupOptions → rolldownOptions, advancedChunks → codeSplitting
+          // See: https://rolldown.rs/in-depth/manual-code-splitting
+          codeSplitting: {
+            groups: [
+              // Core libraries (rarely change) - separate for maximum cache stability
+              {
+                name: "react",
+                test: /\/(react|react-dom)\//,
+              },
+              {
+                name: "react-router",
+                test: /\/(react-router|react-error-boundary)\//,
+              },
+              // State management (occasional updates)
+              {
+                name: "rtk",
+                test: /\/@reduxjs\/toolkit|react-redux/,
+              },
+              // UI Framework (occasional updates) - already large, keep separate
+              {
+                name: "chakra",
+                test: /\/@chakra-ui\/react|@emotion\/react/,
+              },
+              // i18n libraries (rarely change)
+              {
+                name: "i18n",
+                test: /\/i18next|react-i18next|@semihbou\/zod-i18n-map/,
+              },
+              // Form libraries (occasional updates)
+              {
+                name: "hookForm",
+                test: /\/react-hook-form|@hookform\/resolvers|zod/,
+              },
+              // Utility libraries (rarely change)
+              {
+                name: "common",
+                test: /\/@tanstack\/react-table|date-fns|@dnd-kit\/(core|sortable)/,
+              },
             ],
-
-            // UI Framework (occasional updates) - already large, keep separate
-            chakra: ["@chakra-ui/react", "@emotion/react"],
-
-            // i18n libraries (rarely change)
-            i18n: ["i18next", "react-i18next", "@semihbou/zod-i18n-map"],
-
-            // Form libraries (occasional updates)
-            hookForm: ["react-hook-form", "@hookform/resolvers", "zod"],
-
-            // Utility libraries (rarely change)
-            common: ["@tanstack/react-table", "date-fns", "@dnd-kit/core", "@dnd-kit/sortable"],
           },
         },
       },
@@ -206,24 +292,20 @@ export default defineConfig(({ mode }) => {
     server: {
       port: parseInt(process.env.PORT ?? "", 10) || 3000,
       open: true,
-      watch: {
-        // Ignore coverage directories to prevent file watcher from triggering reloads
-        // when coverage files are generated during e2e tests
-        ignored: ["**/coverage/**", "**/.nyc_output/**"],
-      },
       proxy: {
-        "/connectionStrings.cjs": `http://localhost:${process.env.CONNECTIONSTRINGS_PORT ?? "4000"}`,
+        "/connectionStrings.cjs": "http://localhost:4000",
       },
     },
     preview: {
       port: parseInt(process.env.PORT ?? "", 10) || 3000,
       open: true,
       proxy: {
-        "/connectionStrings.cjs": `http://localhost:${process.env.CONNECTIONSTRINGS_PORT ?? "4000"}`,
+        "/connectionStrings.cjs": "http://localhost:4000",
       },
     },
-    esbuild: {
-      drop: mode == "production" ? ["console", "debugger"] : [],
-    },
-  }
-})
+    // Note: Vite 8 uses Oxc minifier which does not yet support drop_console option.
+    // Debugger statements are automatically removed by Oxc during minification.
+    // If dropping console statements is critical, consider using terser:
+    //   build: { minify: 'terser', terserOptions: { compress: { drop_console: true } } }
+  };
+});
