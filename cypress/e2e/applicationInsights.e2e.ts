@@ -115,8 +115,9 @@ describe("Application Insights Telemetry", () => {
       cy.navigateViaMenu(route.menu)
       cy.url().should("contain", route.expectedInUrl)
       cy.get("main").should("exist")
-      // Small delay between navigations to ensure each triggers its own page view
-      cy.wait(200)
+      // Wait between navigations to ensure each triggers its own page view
+      // Increased from 200ms to 500ms to prevent race conditions in CI
+      cy.wait(500)
     })
 
     // Force Application Insights to flush telemetry
@@ -139,10 +140,15 @@ describe("Application Insights Telemetry", () => {
           }
         })
       })
-      .then(() => {
-        // Now analyze the intercepted telemetry
-        cy.wrap(telemetryPayloads).then(payloads => {
-          cy.log(`=== Application Insights Telemetry Analysis ===`)
+
+    // Wait for telemetry requests to complete after flush
+    // This ensures all page view events have been sent before analysis
+    cy.wait(500)
+
+    cy.then(() => {
+      // Now analyze the intercepted telemetry
+      cy.wrap(telemetryPayloads).then(payloads => {
+        cy.log(`=== Application Insights Telemetry Analysis ===`)
           cy.log(`Total HTTP requests intercepted: ${payloads.length}`)
 
           // Parse and categorize all telemetry items
