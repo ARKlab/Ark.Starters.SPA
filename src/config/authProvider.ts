@@ -4,16 +4,20 @@ import {
   NoopAuthProvider,
   type AuthProvider,
 } from "../lib/authentication/providers/authProviderInterface"
+import { MockAuthProvider } from "../lib/mocks/mockAuthProvider"
 import { MsalAuthProvider } from "../lib/authentication/providers/msalAuthProvider"
 
 import { appSettings } from "./env"
 
-export const authProvider: AuthProvider = appSettings.msal
-  ? new MsalAuthProvider({
-      ...appSettings.msal,
-      permissionsClaims: ["extension_Scope"],
-    })
-  : new NoopAuthProvider()
+export const authProvider: AuthProvider =
+  import.meta.env.MODE === "e2e"
+    ? new MockAuthProvider()
+    : appSettings.msal
+      ? new MsalAuthProvider({
+          ...appSettings.msal,
+          permissionsClaims: ["extension_Scope"],
+        })
+      : new NoopAuthProvider()
 
 /* */
 

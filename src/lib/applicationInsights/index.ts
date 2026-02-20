@@ -24,6 +24,10 @@ export class StubReactPlugin {
     // no-op
   }
 
+  getAppInsights() {
+    return null
+  }
+
   priority = 0
   identifier = "StubReactPlugin"
 }

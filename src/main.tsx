@@ -1,13 +1,12 @@
 import { LocaleProvider } from "@chakra-ui/react"
-import { useAppInsightsContext } from "@microsoft/applicationinsights-react-js"
-import type { IApplicationInsights } from "@microsoft/applicationinsights-web"
-import { Suspense, useEffect } from "react"
+import { Suspense, useContext, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { RouterProvider } from "react-router"
 
 import { useAppSelector } from "./app/hooks"
 import CenterSpinner from "./components/centerSpinner"
 import { PWABadge } from "./components/pwaBadge"
+import { AppInsightsInstanceContext } from "./lib/applicationInsights/context"
 import { userSelector } from "./lib/authentication/authenticationSlice"
 import useLocalizeDocumentAttributes from "./lib/i18n/useLocalizeDocumentAttributes"
 import { router } from "./lib/router"
@@ -18,13 +17,13 @@ const Main = () => {
 
   const user = useAppSelector(userSelector)
 
-  const ai = useAppInsightsContext()
+  const appInsights = useContext(AppInsightsInstanceContext)
 
   useEffect(() => {
-    if (user) {
-      ;(ai.getAppInsights() as IApplicationInsights).setAuthenticatedUserContext(user.username)
+    if (user && appInsights) {
+      appInsights.setAuthenticatedUserContext(user.username)
     }
-  }, [user, ai])
+  }, [user, appInsights])
 
   return (
     <>

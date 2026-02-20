@@ -149,80 +149,172 @@ describe("Application Insights Telemetry", () => {
       // Now analyze the intercepted telemetry
       cy.wrap(telemetryPayloads).then(payloads => {
         cy.log(`=== Application Insights Telemetry Analysis ===`)
-          cy.log(`Total HTTP requests intercepted: ${payloads.length}`)
+        cy.log(`Total HTTP requests intercepted: ${payloads.length}`)
 
-          // Parse and categorize all telemetry items
-          let pageViewCount = 0
-          let eventCount = 0
-          let otherCount = 0
-          const pageViewUrls: string[] = []
+        // Parse and categorize all telemetry items
+        let pageViewCount = 0
+        let eventCount = 0
+        let otherCount = 0
+        const pageViewUrls: string[] = []
 
-          payloads.forEach(payload => {
-            // Handle both array and single item payloads
-            const items = Array.isArray(payload) ? payload : [payload]
+        payloads.forEach(payload => {
+          // Handle both array and single item payloads
+          const items = Array.isArray(payload) ? payload : [payload]
 
-            items.forEach(
-              (item: {
-                name?: string
+          items.forEach(
+            (item: {
+              name?: string
+              baseType?: string
+              data?: {
                 baseType?: string
-                data?: {
-                  baseType?: string
-                  baseData?: {
-                    uri?: string
-                    name?: string
-                  }
+                baseData?: {
+                  uri?: string
+                  name?: string
                 }
-              }) => {
-                const itemName = item.name?.toLowerCase()
-                const baseType = item.baseType ?? item.data?.baseType
-                const baseTypeLower =
-                  typeof baseType === "string" ? baseType.toLowerCase() : undefined
+              }
+            }) => {
+              const itemName = item.name?.toLowerCase()
+              const baseType = item.baseType ?? item.data?.baseType
+              const baseTypeLower =
+                typeof baseType === "string" ? baseType.toLowerCase() : undefined
 
-                if (
-                  itemName === "microsoft.applicationinsights.pageview" ||
-                  baseTypeLower === "pageviewdata"
-                ) {
-                  pageViewCount++
-                  const url = item.data?.baseData?.uri ?? item.data?.baseData?.name ?? "unknown"
-                  pageViewUrls.push(url)
-                  cy.log(`  Page View ${pageViewCount}: ${url}`)
-                } else if (
-                  itemName === "microsoft.applicationinsights.event" ||
-                  baseTypeLower === "eventdata"
-                ) {
-                  eventCount++
-                  const eventName = item.data?.baseData?.name ?? "unknown"
-                  cy.log(`  Event: ${eventName}`)
-                } else {
-                  otherCount++
-                }
-              },
-            )
+              if (
+                itemName === "microsoft.applicationinsights.pageview" ||
+                baseTypeLower === "pageviewdata"
+              ) {
+                pageViewCount++
+                const url = item.data?.baseData?.uri ?? item.data?.baseData?.name ?? "unknown"
+                pageViewUrls.push(url)
+                cy.log(`  Page View ${pageViewCount}: ${url}`)
+              } else if (
+                itemName === "microsoft.applicationinsights.event" ||
+                baseTypeLower === "eventdata"
+              ) {
+                eventCount++
+                const eventName = item.data?.baseData?.name ?? "unknown"
+                cy.log(`  Event: ${eventName}`)
+              } else {
+                otherCount++
+              }
+            },
+          )
+        })
+
+        cy.log(`Page Views: ${pageViewCount}`)
+        cy.log(`Events: ${eventCount}`)
+        cy.log(`Other telemetry: ${otherCount}`)
+
+        // CRITICAL ASSERTIONS - These validate that auto route tracking works
+        assert.isAtLeast(
+          payloads.length,
+          1,
+          "❌ FAILED: No telemetry requests were intercepted. " +
+            "Application Insights is not sending any data. Check SDK configuration and network settings.",
+        )
+
+        assert.isAtLeast(
+          pageViewCount,
+          routes.length,
+          `❌ FAILED: Expected at least ${routes.length} page views (one per navigation), but got ${pageViewCount}. ` +
+            "This means Application Insights auto route tracking is NOT working correctly with React Router. " +
+            "Check that enableAutoRouteTracking is true and ReactPlugin is properly integrated.",
+        )
+
+        cy.log(`✅ SUCCESS: Application Insights auto route tracking is working!`)
+        cy.log(`✅ Tracked ${pageViewCount} page views for ${routes.length} route navigations`)
+      })
+    })
+  })
+})
+
+describe("Application Insights - Authenticated User Context", () => {
+  const testUsername = "test.user@example.com"
+  let telemetryPayloads: unknown[] = []
+
+  beforeEach(() => {
+    telemetryPayloads = []
+
+    cy.intercept("POST", /\/v2\/track/, req => {
+      const body = req.body
+      let parsedBody: unknown = body
+
+      if (typeof body === "string") {
+        const trimmedBody = body.trim()
+        try {
+          parsedBody = JSON.parse(trimmedBody) as unknown
+        } catch {
+          const lines = trimmedBody
+            .split("\n")
+            .map(line => line.trim())
+            .filter(line => line.length > 0)
+          const parsedLines: unknown[] = []
+          for (const line of lines) {
+            try {
+              parsedLines.push(JSON.parse(line) as unknown)
+            } catch {
+              parsedLines.push(line)
+            }
+          }
+          parsedBody = parsedLines.length > 0 ? parsedLines : body
+        }
+      }
+
+      telemetryPayloads.push(parsedBody)
+      req.reply({ statusCode: 200, body: { itemsReceived: 1, itemsAccepted: 1, errors: [] } })
+    }).as("aiTelemetry")
+
+    cy.actAsLoggedUser(testUsername)
+  })
+
+  it("sets authenticated user context on Application Insights when user is logged in", () => {
+    cy.window().then(win => {
+      assert.isDefined(win.appInsights, "appInsights should be available on window")
+      assert.equal(
+        win.appInsights?.context?.user?.authenticatedId,
+        testUsername,
+        "Application Insights authenticatedId should match the logged-in username",
+      )
+    })
+  })
+
+  it("enriches telemetry with authenticated user ID tag", () => {
+    cy.window()
+      .its("appInsights")
+      .then(appInsights => {
+        appInsights.trackEvent({ name: "AuthenticatedUserTelemetryTest" })
+
+        return new Cypress.Promise<void>(resolve => {
+          void appInsights.flush(true, () => {
+            resolve()
           })
-
-          cy.log(`Page Views: ${pageViewCount}`)
-          cy.log(`Events: ${eventCount}`)
-          cy.log(`Other telemetry: ${otherCount}`)
-
-          // CRITICAL ASSERTIONS - These validate that auto route tracking works
-          assert.isAtLeast(
-            payloads.length,
-            1,
-            "❌ FAILED: No telemetry requests were intercepted. " +
-              "Application Insights is not sending any data. Check SDK configuration and network settings.",
-          )
-
-          assert.isAtLeast(
-            pageViewCount,
-            routes.length,
-            `❌ FAILED: Expected at least ${routes.length} page views (one per navigation), but got ${pageViewCount}. ` +
-              "This means Application Insights auto route tracking is NOT working correctly with React Router. " +
-              "Check that enableAutoRouteTracking is true and ReactPlugin is properly integrated.",
-          )
-
-          cy.log(`✅ SUCCESS: Application Insights auto route tracking is working!`)
-          cy.log(`✅ Tracked ${pageViewCount} page views for ${routes.length} route navigations`)
         })
       })
+
+    cy.wait(500)
+
+    cy.then(() => {
+      cy.wrap(telemetryPayloads).then(payloads => {
+        cy.log(`Total telemetry payloads: ${payloads.length}`)
+
+        let foundAuthUserId = false
+
+        payloads.forEach(payload => {
+          const items = Array.isArray(payload) ? payload : [payload]
+          items.forEach((item: { tags?: Record<string, string> }) => {
+            const tags = item.tags
+            if (tags && tags["ai.user.authUserId"] === testUsername) {
+              foundAuthUserId = true
+              cy.log(`✅ Found ai.user.authUserId = ${tags["ai.user.authUserId"]}`)
+            }
+          })
+        })
+
+        assert.isTrue(
+          foundAuthUserId,
+          `❌ FAILED: Expected at least one telemetry item with ai.user.authUserId = "${testUsername}". ` +
+            "This means setAuthenticatedUserContext is not enriching telemetry correctly.",
+        )
+      })
+    })
   })
 })

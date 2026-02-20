@@ -3,6 +3,8 @@ import type { http } from "msw"
 import { type SetupWorker } from "msw/browser"
 import { type Router } from "react-router"
 
+import type { UserAccountInfo } from "./lib/authentication/authTypes"
+
 declare global {
   interface Window {
     msw:
@@ -20,5 +22,7 @@ declare global {
     router: Router
     appReady: boolean
     appInsights: ApplicationInsights | undefined
+    /** Fake authenticated user injected by e2e tests via `onBeforeLoad` */
+    e2eUser?: UserAccountInfo
   }
 }
