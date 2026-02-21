@@ -1,3 +1,4 @@
+import type { IAppInsights } from "@microsoft/applicationinsights-common"
 import type { ReactPlugin } from "@microsoft/applicationinsights-react-js"
 import type { ApplicationInsights } from "@microsoft/applicationinsights-web"
 
@@ -25,8 +26,7 @@ export class StubReactPlugin {
   }
 
   // Return undefined to safely handle calls before AppInsights is loaded
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getAppInsights(): any {
+  getAppInsights(): IAppInsights | undefined {
     return undefined
   }
 
