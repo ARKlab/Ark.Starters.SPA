@@ -36,8 +36,8 @@ export const setupAppInsights = ({
       enableAjaxPerfTracking: true,
       enableUnhandledPromiseRejectionTracking: true,
 
-      // this is required to ensure by-default GDPR compliance is satisfied
-      // TODO: enable this when the GDPR consent is accepted using appInsights.getCookieMgr().enable()
+      // GDPR compliance: disable cookies by default.
+      // Cookies and telemetry are enabled when the user accepts statistics cookies via useAppInsightsCookieConsent hook.
       disableCookiesUsage: true,
 
       // Enable developer mode for immediate telemetry in e2e tests
@@ -68,6 +68,14 @@ export const setupAppInsights = ({
     },
   })
 
+  // GDPR consent gate: drop all telemetry items until consent is given.
+  // The gate is controlled externally via the returned setConsentGiven function.
+  let consentGiven = false
+  appInsights.addTelemetryInitializer(() => {
+    if (!consentGiven) return false
+    return
+  })
+
   appInsights.addTelemetryInitializer(envelope => {
     envelope.data ??= {}
     envelope.data["app.name"] = name
@@ -76,5 +84,12 @@ export const setupAppInsights = ({
   })
 
   appInsights.loadAppInsights()
-  return { appInsights, reactPlugin, clickAnalyticsPlugin }
+  return {
+    appInsights,
+    reactPlugin,
+    clickAnalyticsPlugin,
+    setConsentGiven: (value: boolean) => {
+      consentGiven = value
+    },
+  }
 }

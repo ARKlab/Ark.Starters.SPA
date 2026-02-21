@@ -36,6 +36,7 @@ export type AppInsightsResult = {
   reactPlugin: ReactPlugin
   appInsights?: ApplicationInsights
   clickAnalyticsPlugin?: unknown
+  setConsentGiven?: (value: boolean) => void
 }
 
 // Dynamic loader for Application Insights

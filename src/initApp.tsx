@@ -1,5 +1,6 @@
 import { AppInsightsContext } from "@microsoft/applicationinsights-react-js"
 import type { ReactPlugin } from "@microsoft/applicationinsights-react-js"
+import type { ApplicationInsights } from "@microsoft/applicationinsights-web"
 import { useRef, useState } from "react"
 
 import { useAppDispatch } from "./app/hooks"
@@ -7,6 +8,7 @@ import CenterSpinner from "./components/centerSpinner"
 import { appSettings } from "./config/env"
 import { loadApplicationInsights, stubReactPlugin } from "./lib/applicationInsights"
 import { ReactPluginContext } from "./lib/applicationInsights/context"
+import { useAppInsightsCookieConsent } from "./lib/applicationInsights/useAppInsightsCookieConsent"
 import { DetectLoggedInUser } from "./lib/authentication/authenticationSlice"
 import { useAuthContext } from "./lib/authentication/components/useAuthContext"
 import { i18nSetup } from "./lib/i18n/setup"
@@ -17,6 +19,11 @@ export function InitApp() {
   const ref = useRef<boolean>(false)
   const [loading, setLoading] = useState(true)
   const [reactPlugin, setReactPlugin] = useState<ReactPlugin>(stubReactPlugin)
+  const [appInsights, setAppInsights] = useState<ApplicationInsights | undefined>()
+  const [consentSetter, setConsentSetter] = useState<((value: boolean) => void) | undefined>()
+
+  // Gate ApplicationInsights telemetry on GDPR cookie consent
+  useAppInsightsCookieConsent(appInsights, consentSetter)
 
   const dispatch = useAppDispatch()
   const { context } = useAuthContext()
@@ -33,6 +40,10 @@ export function InitApp() {
     // Conditionally load Application Insights only when configured
     const aiResult = await loadApplicationInsights(appSettings.applicationInsights)
     setReactPlugin(aiResult.reactPlugin)
+    setAppInsights(aiResult.appInsights)
+    if (aiResult.setConsentGiven) {
+      setConsentSetter(() => aiResult.setConsentGiven)
+    }
 
     // Expose appInsights instance on window for E2E tests
     if (import.meta.env.MODE === "e2e" && aiResult.appInsights) {
