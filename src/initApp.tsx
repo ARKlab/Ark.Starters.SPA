@@ -1,12 +1,9 @@
 import { AppInsightsContext } from "@microsoft/applicationinsights-react-js"
-import type { ReactPlugin } from "@microsoft/applicationinsights-react-js"
-import type { ApplicationInsights } from "@microsoft/applicationinsights-web"
 import { useRef, useState } from "react"
 
 import { useAppDispatch } from "./app/hooks"
 import CenterSpinner from "./components/centerSpinner"
 import { appSettings } from "./config/env"
-import { loadApplicationInsights, stubReactPlugin } from "./lib/applicationInsights"
 import { ReactPluginContext } from "./lib/applicationInsights/context"
 import { useAppInsightsCookieConsent } from "./lib/applicationInsights/useAppInsightsCookieConsent"
 import { DetectLoggedInUser } from "./lib/authentication/authenticationSlice"
@@ -18,12 +15,10 @@ import Main from "./main"
 export function InitApp() {
   const ref = useRef<boolean>(false)
   const [loading, setLoading] = useState(true)
-  const [reactPlugin, setReactPlugin] = useState<ReactPlugin>(stubReactPlugin)
-  const [appInsights, setAppInsights] = useState<ApplicationInsights | undefined>()
-  const [consentSetter, setConsentSetter] = useState<((value: boolean) => void) | undefined>()
 
-  // Gate ApplicationInsights telemetry on GDPR cookie consent
-  useAppInsightsCookieConsent(appInsights, consentSetter)
+  // ApplicationInsights is loaded only after GDPR statistics cookie consent is given.
+  // Before consent, a Noop stub is used so the rest of the app works normally.
+  const { reactPlugin } = useAppInsightsCookieConsent(appSettings.applicationInsights)
 
   const dispatch = useAppDispatch()
   const { context } = useAuthContext()
@@ -35,19 +30,6 @@ export function InitApp() {
     if (import.meta.env.DEV || import.meta.env.MODE === "e2e") {
       const { worker } = await import("./lib/mocks/browserWorker")
       await worker.start({ onUnhandledRequest: "warn" })
-    }
-
-    // Conditionally load Application Insights only when configured
-    const aiResult = await loadApplicationInsights(appSettings.applicationInsights)
-    setReactPlugin(aiResult.reactPlugin)
-    setAppInsights(aiResult.appInsights)
-    if (aiResult.setConsentGiven) {
-      setConsentSetter(() => aiResult.setConsentGiven)
-    }
-
-    // Expose appInsights instance on window for E2E tests
-    if (import.meta.env.MODE === "e2e" && aiResult.appInsights) {
-      window.appInsights = aiResult.appInsights
     }
 
     await i18nSetup()

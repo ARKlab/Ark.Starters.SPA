@@ -24,6 +24,12 @@ export class StubReactPlugin {
     // no-op
   }
 
+  // Return undefined to safely handle calls before AppInsights is loaded
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getAppInsights(): any {
+    return undefined
+  }
+
   priority = 0
   identifier = "StubReactPlugin"
 }
@@ -36,7 +42,6 @@ export type AppInsightsResult = {
   reactPlugin: ReactPlugin
   appInsights?: ApplicationInsights
   clickAnalyticsPlugin?: unknown
-  setConsentGiven?: (value: boolean) => void
 }
 
 // Dynamic loader for Application Insights

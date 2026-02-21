@@ -39,7 +39,7 @@ describe("Application Insights GDPR Consent", () => {
     }).as("aiTelemetry")
   })
 
-  it("does not send telemetry before cookie consent is given", () => {
+  it("does not initialize Application Insights before cookie consent is given", () => {
     // Visit without any prior consent
     cy.visit("/null", {
       onBeforeLoad: win => {
@@ -51,18 +51,12 @@ describe("Application Insights GDPR Consent", () => {
     // GDPR dialog should be visible
     cy.get("[data-test='gdpr-acceptAll']").should("be.visible")
 
-    // Try to trigger telemetry manually - should be blocked
-    cy.window()
-      .its("appInsights")
-      .then(appInsights => {
-        appInsights.trackEvent({ name: "ShouldBeBlocked" })
-        return new Cypress.Promise<void>(resolve => {
-          void appInsights.flush(true, () => {
-            resolve()
-          })
-        })
-      })
+    // Application Insights should not be initialized (no consent given)
+    cy.window().then(win => {
+      expect(win.appInsights).to.be.undefined
+    })
 
+    // Wait to confirm no telemetry is sent
     cy.wait(500)
     cy.then(() => {
       expect(telemetryPayloads).to.have.length(
@@ -72,7 +66,7 @@ describe("Application Insights GDPR Consent", () => {
     })
   })
 
-  it("enables telemetry after accepting all cookies", () => {
+  it("initializes Application Insights after accepting all cookies", () => {
     // Visit without any prior consent
     cy.visit("/null", {
       onBeforeLoad: win => {
@@ -84,6 +78,9 @@ describe("Application Insights GDPR Consent", () => {
     // Accept all cookies
     cy.get("[data-test='gdpr-acceptAll']").should("be.visible")
     cy.get("[data-test='gdpr-acceptAll']").click()
+
+    // Wait for AppInsights to be initialized after consent
+    cy.window().its("appInsights", { timeout: 10000 }).should("exist")
 
     // Navigate to generate page view telemetry
     cy.navigateViaMenu(/posts/i)
@@ -111,7 +108,7 @@ describe("Application Insights GDPR Consent", () => {
     })
   })
 
-  it("does not send telemetry after rejecting cookies", () => {
+  it("does not initialize Application Insights after rejecting cookies", () => {
     // Visit without any prior consent
     cy.visit("/null", {
       onBeforeLoad: win => {
@@ -124,22 +121,14 @@ describe("Application Insights GDPR Consent", () => {
     cy.get("[data-test='gdpr-reject']").should("be.visible")
     cy.get("[data-test='gdpr-reject']").click()
 
-    // Wait for consent hook to process
+    // Wait for consent to be processed
     cy.wait(500)
 
-    // Try to trigger telemetry - should still be blocked
-    cy.window()
-      .its("appInsights")
-      .then(appInsights => {
-        appInsights.trackEvent({ name: "ShouldBeBlockedAfterReject" })
-        return new Cypress.Promise<void>(resolve => {
-          void appInsights.flush(true, () => {
-            resolve()
-          })
-        })
-      })
+    // Application Insights should not be initialized after rejection
+    cy.window().then(win => {
+      expect(win.appInsights).to.be.undefined
+    })
 
-    cy.wait(500)
     cy.then(() => {
       expect(telemetryPayloads).to.have.length(
         0,

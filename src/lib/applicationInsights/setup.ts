@@ -68,14 +68,6 @@ export const setupAppInsights = ({
     },
   })
 
-  // GDPR consent gate: drop all telemetry items until consent is given.
-  // The gate is controlled externally via the returned setConsentGiven function.
-  let consentGiven = false
-  appInsights.addTelemetryInitializer(() => {
-    if (!consentGiven) return false
-    return
-  })
-
   appInsights.addTelemetryInitializer(envelope => {
     envelope.data ??= {}
     envelope.data["app.name"] = name
@@ -84,12 +76,5 @@ export const setupAppInsights = ({
   })
 
   appInsights.loadAppInsights()
-  return {
-    appInsights,
-    reactPlugin,
-    clickAnalyticsPlugin,
-    setConsentGiven: (value: boolean) => {
-      consentGiven = value
-    },
-  }
+  return { appInsights, reactPlugin, clickAnalyticsPlugin }
 }
