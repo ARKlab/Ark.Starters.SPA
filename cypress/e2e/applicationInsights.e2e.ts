@@ -49,6 +49,9 @@ describe("Application Insights Telemetry", () => {
     }).as("aiTelemetry")
 
     cy.actAsAnonUser()
+
+    // AppInsights is loaded asynchronously after cookie consent — wait for it
+    cy.window().its("appInsights", { timeout: 10000 }).should("exist")
   })
 
   it("verifies Application Insights is configured in e2e mode", () => {
@@ -149,80 +152,80 @@ describe("Application Insights Telemetry", () => {
       // Now analyze the intercepted telemetry
       cy.wrap(telemetryPayloads).then(payloads => {
         cy.log(`=== Application Insights Telemetry Analysis ===`)
-          cy.log(`Total HTTP requests intercepted: ${payloads.length}`)
+        cy.log(`Total HTTP requests intercepted: ${payloads.length}`)
 
-          // Parse and categorize all telemetry items
-          let pageViewCount = 0
-          let eventCount = 0
-          let otherCount = 0
-          const pageViewUrls: string[] = []
+        // Parse and categorize all telemetry items
+        let pageViewCount = 0
+        let eventCount = 0
+        let otherCount = 0
+        const pageViewUrls: string[] = []
 
-          payloads.forEach(payload => {
-            // Handle both array and single item payloads
-            const items = Array.isArray(payload) ? payload : [payload]
+        payloads.forEach(payload => {
+          // Handle both array and single item payloads
+          const items = Array.isArray(payload) ? payload : [payload]
 
-            items.forEach(
-              (item: {
-                name?: string
+          items.forEach(
+            (item: {
+              name?: string
+              baseType?: string
+              data?: {
                 baseType?: string
-                data?: {
-                  baseType?: string
-                  baseData?: {
-                    uri?: string
-                    name?: string
-                  }
+                baseData?: {
+                  uri?: string
+                  name?: string
                 }
-              }) => {
-                const itemName = item.name?.toLowerCase()
-                const baseType = item.baseType ?? item.data?.baseType
-                const baseTypeLower =
-                  typeof baseType === "string" ? baseType.toLowerCase() : undefined
+              }
+            }) => {
+              const itemName = item.name?.toLowerCase()
+              const baseType = item.baseType ?? item.data?.baseType
+              const baseTypeLower =
+                typeof baseType === "string" ? baseType.toLowerCase() : undefined
 
-                if (
-                  itemName === "microsoft.applicationinsights.pageview" ||
-                  baseTypeLower === "pageviewdata"
-                ) {
-                  pageViewCount++
-                  const url = item.data?.baseData?.uri ?? item.data?.baseData?.name ?? "unknown"
-                  pageViewUrls.push(url)
-                  cy.log(`  Page View ${pageViewCount}: ${url}`)
-                } else if (
-                  itemName === "microsoft.applicationinsights.event" ||
-                  baseTypeLower === "eventdata"
-                ) {
-                  eventCount++
-                  const eventName = item.data?.baseData?.name ?? "unknown"
-                  cy.log(`  Event: ${eventName}`)
-                } else {
-                  otherCount++
-                }
-              },
-            )
-          })
-
-          cy.log(`Page Views: ${pageViewCount}`)
-          cy.log(`Events: ${eventCount}`)
-          cy.log(`Other telemetry: ${otherCount}`)
-
-          // CRITICAL ASSERTIONS - These validate that auto route tracking works
-          assert.isAtLeast(
-            payloads.length,
-            1,
-            "❌ FAILED: No telemetry requests were intercepted. " +
-              "Application Insights is not sending any data. Check SDK configuration and network settings.",
+              if (
+                itemName === "microsoft.applicationinsights.pageview" ||
+                baseTypeLower === "pageviewdata"
+              ) {
+                pageViewCount++
+                const url = item.data?.baseData?.uri ?? item.data?.baseData?.name ?? "unknown"
+                pageViewUrls.push(url)
+                cy.log(`  Page View ${pageViewCount}: ${url}`)
+              } else if (
+                itemName === "microsoft.applicationinsights.event" ||
+                baseTypeLower === "eventdata"
+              ) {
+                eventCount++
+                const eventName = item.data?.baseData?.name ?? "unknown"
+                cy.log(`  Event: ${eventName}`)
+              } else {
+                otherCount++
+              }
+            },
           )
-
-          assert.isAtLeast(
-            pageViewCount,
-            routes.length,
-            `❌ FAILED: Expected at least ${routes.length} page views (one per navigation), but got ${pageViewCount}. ` +
-              "This means Application Insights auto route tracking is NOT working correctly with React Router. " +
-              "Check that enableAutoRouteTracking is true and ReactPlugin is properly integrated.",
-          )
-
-          cy.log(`✅ SUCCESS: Application Insights auto route tracking is working!`)
-          cy.log(`✅ Tracked ${pageViewCount} page views for ${routes.length} route navigations`)
         })
+
+        cy.log(`Page Views: ${pageViewCount}`)
+        cy.log(`Events: ${eventCount}`)
+        cy.log(`Other telemetry: ${otherCount}`)
+
+        // CRITICAL ASSERTIONS - These validate that auto route tracking works
+        assert.isAtLeast(
+          payloads.length,
+          1,
+          "❌ FAILED: No telemetry requests were intercepted. " +
+            "Application Insights is not sending any data. Check SDK configuration and network settings.",
+        )
+
+        assert.isAtLeast(
+          pageViewCount,
+          routes.length,
+          `❌ FAILED: Expected at least ${routes.length} page views (one per navigation), but got ${pageViewCount}. ` +
+            "This means Application Insights auto route tracking is NOT working correctly with React Router. " +
+            "Check that enableAutoRouteTracking is true and ReactPlugin is properly integrated.",
+        )
+
+        cy.log(`✅ SUCCESS: Application Insights auto route tracking is working!`)
+        cy.log(`✅ Tracked ${pageViewCount} page views for ${routes.length} route navigations`)
       })
+    })
   })
 })
