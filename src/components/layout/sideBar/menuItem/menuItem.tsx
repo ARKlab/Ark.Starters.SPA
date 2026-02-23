@@ -16,7 +16,7 @@ export default function MenuItem(props: MenuItemProps) {
             alignItems="center"
             width={"full"}
             height="10"
-            color={"brand.contrast"}
+            color={"fg"}
             gap="3"
           >
             {icon && (

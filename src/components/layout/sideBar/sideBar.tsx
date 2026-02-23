@@ -66,7 +66,7 @@ const SidebarContent = ({ ...rest }: BoxProps) => {
   const defaultValue = siteMap[0].label + "accordionItem" + 0
 
   return (
-    <Box as={"nav"} {...rest}>
+    <Box as={"nav"} width="full" {...rest}>
       <AccordionRoot collapsible multiple defaultValue={[defaultValue]}>
         {siteMap.map((section, index) => (
           <AccordionItem
@@ -136,7 +136,7 @@ const InnerAccordionSections = (props: { section: ArkSubRoute; parentPath: strin
               key={section.path + "AccordionButtonInner"}
               _hover={{
                 background: "brand.solid",
-                color: "brand.contrast",
+                color: "fg",
               }}
             >
               <Box as="span" flex="1" textAlign="left">
