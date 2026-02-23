@@ -16,16 +16,12 @@ export default function MenuItem(props: MenuItemProps) {
             alignItems="center"
             width={"full"}
             height="10"
-            color={"fg"}
             gap="3"
           >
             {icon && (
               <Icon
                 ml="1"
                 fontSize="md"
-                _groupHover={{
-                  color: "fg",
-                }}
                 as={icon}
               />
             )}

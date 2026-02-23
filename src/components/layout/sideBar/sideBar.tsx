@@ -78,8 +78,8 @@ const SidebarContent = ({ ...rest }: BoxProps) => {
                 borderRadius="none"
                 key={section.label + "accordionButton" + index}
                 _hover={{
-                  background: "bg.info",
-                  color: "fg",
+                  bg: "colorPalette.subtle",
+                  color: "colorPalette.fg",
                 }}
                 paddingRight={"2"}
               >
@@ -135,8 +135,8 @@ const InnerAccordionSections = (props: { section: ArkSubRoute; parentPath: strin
               borderRadius="none"
               key={section.path + "AccordionButtonInner"}
               _hover={{
-                background: "brand.solid",
-                color: "fg",
+                bg: "colorPalette.solid",
+                color: "colorPalette.contrast",
               }}
             >
               <Box as="span" flex="1" textAlign="left">
@@ -182,10 +182,11 @@ const InnerMenuItems = (props: { section: ArkSubRoute; path: string; index: numb
     <Box
       key={section.path + "menuItemBox" + index}
       _hover={{
-        background: isActive ? "brand.emphasized" : "bg.info",
-        color: "fg",
+        bg: isActive ? "colorPalette.muted" : "colorPalette.subtle",
+        color: "colorPalette.fg",
       }}
-      background={isActive ? "brand.emphasized" : undefined}
+      bg={isActive ? "colorPalette.emphasized" : undefined}
+      color={isActive ? "colorPalette.fg" : undefined}
       px="4"
       py="0"
     >
