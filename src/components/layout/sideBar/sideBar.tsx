@@ -66,7 +66,7 @@ const SidebarContent = ({ ...rest }: BoxProps) => {
   const defaultValue = siteMap[0].label + "accordionItem" + 0
 
   return (
-    <Box as={"nav"} {...rest}>
+    <Box as={"nav"} width="full" {...rest}>
       <AccordionRoot collapsible multiple defaultValue={[defaultValue]}>
         {siteMap.map((section, index) => (
           <AccordionItem
@@ -78,7 +78,7 @@ const SidebarContent = ({ ...rest }: BoxProps) => {
                 borderRadius="none"
                 key={section.label + "accordionButton" + index}
                 _hover={{
-                  background: "bg.info",
+                  bg: "colorPalette.subtle",
                   color: "fg",
                 }}
                 paddingRight={"2"}
@@ -135,8 +135,8 @@ const InnerAccordionSections = (props: { section: ArkSubRoute; parentPath: strin
               borderRadius="none"
               key={section.path + "AccordionButtonInner"}
               _hover={{
-                background: "brand.solid",
-                color: "brand.contrast",
+                bg: "colorPalette.solid",
+                color: "colorPalette.contrast",
               }}
             >
               <Box as="span" flex="1" textAlign="left">
@@ -182,10 +182,11 @@ const InnerMenuItems = (props: { section: ArkSubRoute; path: string; index: numb
     <Box
       key={section.path + "menuItemBox" + index}
       _hover={{
-        background: isActive ? "brand.emphasized" : "bg.info",
+        bg: isActive ? "colorPalette.muted" : "colorPalette.subtle",
         color: "fg",
       }}
-      background={isActive ? "brand.emphasized" : undefined}
+      bg={isActive ? "colorPalette.emphasized" : undefined}
+      color={isActive ? "fg" : undefined}
       px="4"
       py="0"
     >
