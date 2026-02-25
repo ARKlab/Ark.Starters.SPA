@@ -22,7 +22,8 @@ const Main = () => {
 
   useEffect(() => {
     if (user) {
-      ;(ai.getAppInsights() as IApplicationInsights).setAuthenticatedUserContext(user.username)
+      const appInsights = ai.getAppInsights() as IApplicationInsights | undefined
+      appInsights?.setAuthenticatedUserContext(user.username)
     }
   }, [user, ai])
 

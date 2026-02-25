@@ -36,8 +36,8 @@ export const setupAppInsights = ({
       enableAjaxPerfTracking: true,
       enableUnhandledPromiseRejectionTracking: true,
 
-      // this is required to ensure by-default GDPR compliance is satisfied
-      // TODO: enable this when the GDPR consent is accepted using appInsights.getCookieMgr().enable()
+      // GDPR compliance: disable cookies by default.
+      // Cookies and telemetry are enabled when the user accepts statistics cookies via useAppInsightsCookieConsent hook.
       disableCookiesUsage: true,
 
       // Enable developer mode for immediate telemetry in e2e tests
