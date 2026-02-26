@@ -40,7 +40,7 @@
     "e2e:dev": "cross-env BROWSER=none VITE_MODE=e2e concurrently --kill-others \"npm:start\" \"npm:cypress:run\""
   },
   "dependencies": {
-    "@auth0/auth0-spa-js": "2.16.0",
+    "@auth0/auth0-spa-js": "2.17.0",
     "@azure/msal-browser": "5.2.0",
     "@chakra-ui/react": "3.33.0",
     "@dnd-kit/core": "6.3.1",
@@ -89,7 +89,7 @@
     "@types/react": "19.2.14",
     "@types/react-copy-to-clipboard": "5.0.7",
     "@types/react-dom": "19.2.3",
-    "@typescript/native-preview": "7.0.0-dev.20260221.1",
+    "@typescript/native-preview": "7.0.0-dev.20260223.1",
     "@vite-pwa/assets-generator": "1.0.2",
     "@vitejs/plugin-legacy": "7.2.1",
     "@vitejs/plugin-react": "5.1.4",
@@ -105,8 +105,8 @@
     "esbuild": "0.27.3",
     "jiti": "2.6.1",
     "msw": "2.12.10",
-    "oxfmt": "0.34.0",
-    "oxlint": "1.49.0",
+    "oxfmt": "0.35.0",
+    "oxlint": "1.50.0",
     "oxlint-tsgolint": "0.14.2",
     "rollup-plugin-copy": "3.5.0",
     "rollup-plugin-visualizer": "7.0.0",
