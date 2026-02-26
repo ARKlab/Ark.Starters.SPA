@@ -1,5 +1,9 @@
+export type RowClass = "k4viewEmailExpired" | "k4viewEmail" | "expired" | "";
+
 export interface ExpiryStatus {
-  status: "expired" | "expiring-soon" | "active";
+  status: "expired" | "active";
+  isK4ViewEmail: boolean;
+  rowClass: RowClass;
   daysUntilExpiry: number;
   colorScheme: {
     bg: string;
@@ -7,13 +11,17 @@ export interface ExpiryStatus {
   };
 }
 
-export function getUserExpiryStatus(expiryDate: string | number | undefined): ExpiryStatus {
+export function getUserExpiryStatus(expiryDate: string | number | undefined, email?: string): ExpiryStatus {
+  const isK4ViewEmail = email ? email.toLowerCase().includes("k4view.com") : false;
+
   if (!expiryDate) {
     return {
       status: "active",
+      isK4ViewEmail,
+      rowClass: isK4ViewEmail ? "k4viewEmail" : "",
       daysUntilExpiry: Infinity,
       colorScheme: {
-        bg: "bg.page",
+        bg: isK4ViewEmail ? "table.k4viewEmail" : "bg.page",
         color: "fg",
       },
     };
@@ -26,43 +34,45 @@ export function getUserExpiryStatus(expiryDate: string | number | undefined): Ex
   expiry.setHours(0, 0, 0, 0);
 
   const daysUntilExpiry = Math.ceil((expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  const isExpired = daysUntilExpiry <= 0;
 
-  if (daysUntilExpiry < 0) {
-    return {
-      status: "expired",
-      daysUntilExpiry,
-      colorScheme: {
-        bg: "table.expired",
-        color: "error.fg",
-      },
-    };
-  } else if (daysUntilExpiry <= 30) {
-    return {
-      status: "expiring-soon",
-      daysUntilExpiry,
-      colorScheme: {
-        bg: "table.expiringSoon",
-        color: "status.muted",
-      },
-    };
-  } else {
-    return {
-      status: "active",
-      daysUntilExpiry,
-      colorScheme: {
-        bg: "bg.page",
-        color: "fg",
-      },
-    };
+  let rowClass: RowClass = "";
+  if (isK4ViewEmail && isExpired) {
+    rowClass = "k4viewEmailExpired";
+  } else if (isK4ViewEmail) {
+    rowClass = "k4viewEmail";
+  } else if (isExpired) {
+    rowClass = "expired";
   }
+
+  let colorScheme: { bg: string; color: string };
+  switch (rowClass) {
+    case "k4viewEmailExpired":
+      colorScheme = { bg: "table.k4viewEmailExpired", color: "error.fg" };
+      break;
+    case "k4viewEmail":
+      colorScheme = { bg: "table.k4viewEmail", color: "fg" };
+      break;
+    case "expired":
+      colorScheme = { bg: "table.expired", color: "error.fg" };
+      break;
+    default:
+      colorScheme = { bg: "bg.page", color: "fg" };
+  }
+
+  return {
+    status: isExpired ? "expired" : "active",
+    isK4ViewEmail,
+    rowClass,
+    daysUntilExpiry,
+    colorScheme,
+  };
 }
 
 export function getExpiryStatusText(status: ExpiryStatus): string {
   switch (status.status) {
     case "expired":
       return `Expired ${Math.abs(status.daysUntilExpiry)} days ago`;
-    case "expiring-soon":
-      return `Expires in ${status.daysUntilExpiry} days`;
     case "active":
       return status.daysUntilExpiry === Infinity ? "No expiry date" : `Expires in ${status.daysUntilExpiry} days`;
     default:

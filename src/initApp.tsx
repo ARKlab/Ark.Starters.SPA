@@ -30,10 +30,7 @@ export function InitApp() {
           if (request.url.includes("auth0.com")) {
             return "bypass";
           }
-          if (request.url.includes("localhost") && request.url.includes("/api/")) {
-            return "bypass";
-          }
-          if (request.url.includes("k4view-admin-test-k2e.azurewebsites.net")) {
+          if (request.url.includes("localhost")) {
             return "bypass";
           }
           if (request.url.includes("k4view-portal-test-k2e.azurewebsites.net")) {

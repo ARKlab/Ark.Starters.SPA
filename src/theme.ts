@@ -1,6 +1,10 @@
 import { createSystem, defaultConfig } from "@chakra-ui/react";
 
-const theme = createSystem(defaultConfig, {
+/**
+ * Default theme configuration (original theme)
+ * This is the base theme that was originally used
+ */
+const defaultThemeConfig = {
   strictTokens: true,
   globalCss: {
     html: {
@@ -27,12 +31,7 @@ const theme = createSystem(defaultConfig, {
         page: {
           value: { base: "white", _dark: "{colors.cyan.900}" },
         },
-        sider: {
-          value: {
-            base: "gray.50",
-            _dark: "cyan.900",
-          },
-        },
+        siderBg: { value: { base: "gray.50", _dark: "cyan.900" } },
         brand: {
           selected: { value: { base: "{colors.gray.100}", _dark: "{colors.gray.800}" } },
           solid: { value: { _light: "#dad7d7ff", _dark: "#2d3748" } },
@@ -84,16 +83,28 @@ const theme = createSystem(defaultConfig, {
         },
         table: {
           expired: {
-            value: { _light: "{colors.red.200}", _dark: "{colors.red.800}" },
+            value: { _light: "#ff8317", _dark: "{colors.yellow.900}" },
           },
           expiredHover: {
-            value: { _light: "{colors.red.300}", _dark: "{colors.red.700}" },
+            value: { _light: "#e67615", _dark: "{colors.yellow.900}" },
+          },
+          k4viewEmail: {
+            value: { _light: "#e10019", _dark: "{colors.red.900}" },
+          },
+          k4viewEmailHover: {
+            value: { _light: "#c80016", _dark: "{colors.red.900}" },
+          },
+          k4viewEmailExpired: {
+            value: { _light: "#fce053", _dark: "{colors.yellow.800}" },
+          },
+          k4viewEmailExpiredHover: {
+            value: { _light: "#e3c94b", _dark: "{colors.yellow.800}" },
           },
           expiringSoon: {
-            value: { _light: "{colors.orange.50}", _dark: "{colors.orange.800}" },
+            value: { _light: "{colors.orange.50}", _dark: "{colors.yellow.900}" },
           },
           expiringSoonHover: {
-            value: { _light: "{colors.orange.100}", _dark: "{colors.orange.700}" },
+            value: { _light: "{colors.orange.100}", _dark: "{colors.yellow.900}" },
           },
           evenRow: {
             value: { _light: "white", _dark: "{colors.gray.800}" },
@@ -177,6 +188,37 @@ const theme = createSystem(defaultConfig, {
       },
     },
   },
-});
+} as const;
+
+/**
+ * Available theme configurations
+ */
+export const availableThemes = {
+  default: defaultThemeConfig,
+} as const;
+
+export type ThemeName = keyof typeof availableThemes;
+
+/**
+ * Get theme configuration by name
+ * @param themeName - Name of the theme to retrieve
+ * @returns Theme configuration object
+ */
+export function getThemeConfig(themeName: ThemeName = "default") {
+  return availableThemes[themeName];
+}
+
+/**
+ * Create a theme system based on the theme name
+ * @param themeName - Name of the theme to create
+ * @returns Chakra UI theme system
+ */
+export function createTheme(themeName: ThemeName = "default") {
+  const themeConfig = getThemeConfig(themeName);
+  return createSystem(defaultConfig, themeConfig);
+}
+
+// Default theme export for backward compatibility
+const theme = createTheme("default");
 
 export default theme;

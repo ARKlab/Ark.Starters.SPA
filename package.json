@@ -41,9 +41,11 @@
   "scripts": {
     "start": "concurrently --kill-others --success first \"npm:start:*\"",
     "start:connectionStrings": "cross-env NODE_ENV=development PORT=4000 node --watch -- public/connectionStrings.cjs",
-    "prestart:app": "wait-on --log --timeout 30000 http-get://localhost:4000",
+    "start:server": "cross-env PORT=5000 node --watch -- server/bin/www",
+    "prestart:app": "wait-on --log --timeout 30000 http-get://localhost:4000 tcp:localhost:5000",
     "start:app": "vite",
     "start:chakratheme": "npx @chakra-ui/cli typegen --watch --strict src/theme.ts",
+    "watch:chakratheme": "npx @chakra-ui/cli typegen --watch --strict src/theme.ts",
     "prebuild": "npx @chakra-ui/cli typegen --clean --strict src/theme.ts",
     "build": "vite build",
     "prepreview": "cross-env npm run build",
