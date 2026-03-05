@@ -111,7 +111,7 @@
     "rollup-plugin-copy": "3.5.0",
     "rollup-plugin-visualizer": "7.0.0",
     "sharp": "0.34.5",
-    "svgo": "4.0.0",
+    "svgo": "4.0.1",
     "typescript": "5.9.3",
     "unplugin-info": "1.2.4",
     "vite": "7.3.1",
