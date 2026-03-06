@@ -49,6 +49,9 @@ describe("Application Insights Telemetry", () => {
     }).as("aiTelemetry")
 
     cy.actAsAnonUser()
+
+    // AppInsights is loaded asynchronously after cookie consent — wait for it
+    cy.window().its("appInsights", { timeout: 10000 }).should("exist")
   })
 
   it("verifies Application Insights is configured in e2e mode", () => {
@@ -264,6 +267,9 @@ describe("Application Insights - Authenticated User Context", () => {
     }).as("aiTelemetry")
 
     cy.actAsLoggedUser(testUsername)
+
+    // AppInsights is loaded asynchronously after cookie consent — wait for it
+    cy.window().its("appInsights", { timeout: 10000 }).should("exist")
   })
 
   it("sets authenticated user context on Application Insights when user is logged in", () => {

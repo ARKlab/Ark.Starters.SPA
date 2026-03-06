@@ -1,3 +1,4 @@
+import type { IAppInsights } from "@microsoft/applicationinsights-common"
 import type { ReactPlugin } from "@microsoft/applicationinsights-react-js"
 import type { ApplicationInsights } from "@microsoft/applicationinsights-web"
 
@@ -24,8 +25,9 @@ export class StubReactPlugin {
     // no-op
   }
 
-  getAppInsights() {
-    return null
+  // Return undefined to safely handle calls before AppInsights is loaded
+  getAppInsights(): IAppInsights | undefined {
+    return undefined
   }
 
   priority = 0

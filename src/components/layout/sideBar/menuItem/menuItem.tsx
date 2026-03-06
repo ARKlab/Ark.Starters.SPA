@@ -16,19 +16,9 @@ export default function MenuItem(props: MenuItemProps) {
             alignItems="center"
             width={"full"}
             height="10"
-            color={"brand.contrast"}
             gap="3"
           >
-            {icon && (
-              <Icon
-                ml="1"
-                fontSize="md"
-                _groupHover={{
-                  color: "fg",
-                }}
-                as={icon}
-              />
-            )}
+            {icon && <Icon ml="1" fontSize="md" as={icon} />}
             <Text>{label}</Text>
             <Box width="4" /> {/* Placeholder to ensure consistent spacing */}
           </Grid>
