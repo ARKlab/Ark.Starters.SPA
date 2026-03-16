@@ -21,7 +21,7 @@ const Layout = () => {
         gridTemplateAreas={`'header header'
                             'nav content'
                             `}
-        gridTemplateColumns={"auto 1fr"}
+        gridTemplateColumns={"16rem 1fr"}
         gridTemplateRows={"4rem 1fr auto"}
       >
         <GridItem area={"header"} position={"sticky"} top="0" left="0" zIndex={"banner"}>
