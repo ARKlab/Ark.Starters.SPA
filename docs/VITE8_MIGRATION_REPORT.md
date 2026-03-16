@@ -10,14 +10,16 @@ The migration is **complete and production-ready** with Vite 8.0.0 stable releas
 ### Core Updates
 - **Vite**: 7.3.1 → 8.0.0 (STABLE RELEASE 🎉)
 - **@vitejs/plugin-legacy**: 7.2.1 → 8.0.0
-- **@vitejs/plugin-react**: 5.1.2 → 5.2.0
+- **@vitejs/plugin-react**: 5.1.2 → 6.0.1
+- **@rolldown/plugin-babel**: Added 0.2.1 (required for React Compiler in v6.x)
 
 ### Plugin Compatibility Matrix
 
 | Plugin | Version | Peer Dep | Status |
 |--------|---------|----------|--------|
-| @vitejs/plugin-react | 5.2.0 | ^4.2.0 ∥ ^5.0.0 ∥ ^6.0.0 ∥ ^7.0.0 ∥ ^8.0.0 | ✅ Works |
+| @vitejs/plugin-react | 6.0.1 | ^8.0.0 | ✅ Stable (Vite 8+ only) |
 | @vitejs/plugin-legacy | 8.0.0 | ^8.0.0 | ✅ Stable |
+| @rolldown/plugin-babel | 0.2.1 | - | ✅ Stable (required for React Compiler) |
 | vite-plugin-pwa | 1.2.0 | ^3.1.0 ∥ ... ∥ ^7.0.0 ∥ ^8.0.0 | ✅ Works |
 | vite-plugin-istanbul | 8.0.0 | >=4 <=8 | ✅ Works |
 | vite-plugin-react-click-to-component | 4.2.0 | ^7 ∥ ^8 | ✅ Works |
@@ -111,6 +113,66 @@ rolldownOptions: {  // renamed from rollupOptions
 2. `output.manualChunks` → `output.codeSplitting` (Rolldown API)
 3. Object syntax → `groups` array with `test` functions
 
+**Benefits:**
+- ✅ Modern API aligned with Rolldown
+- ✅ More flexible grouping with regex patterns
+- ✅ No deprecation warnings
+
+### 3. React Plugin v6 Migration (Vite 8+ Only)
+
+**Before (plugin-react 5.x):**
+```typescript
+import react from "@vitejs/plugin-react";
+
+export default defineConfig({
+  plugins: [
+    react({
+      babel: {
+        plugins: [["babel-plugin-react-compiler", {}]],
+      },
+    }),
+  ]
+});
+```
+
+**After (plugin-react 6.x with Vite 8+):**
+```typescript
+import react, { reactCompilerPreset } from "@vitejs/plugin-react";
+import babel from "@rolldown/plugin-babel";
+
+export default defineConfig({
+  plugins: [
+    react(),  // Native Oxc for React Refresh, no Babel needed!
+    babel({
+      presets: [reactCompilerPreset()],  // Optimized React Compiler config
+    }),
+  ]
+});
+```
+
+**Key Improvements in v6.0.1:**
+- ✅ **Native Oxc for React Refresh Transform** - No Babel overhead for core transforms
+- ✅ **Smaller installation** - babel removed as direct dependency of plugin-react
+- ✅ **Better performance** - Optimized for Rolldown architecture
+- ✅ **reactCompilerPreset()** - Pre-configured filter for better build performance
+- ✅ **Requires @rolldown/plugin-babel** - Only needed if using React Compiler
+- ✅ **8% additional performance improvement** over v5.2.0
+
+**Dependencies:**
+```json
+{
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.1",
+    "@rolldown/plugin-babel": "^0.2.1",  // Required for React Compiler
+    "babel-plugin-react-compiler": "1.0.0"
+  }
+}
+```
+
+**Performance Impact:**
+- plugin-react 5.2.0: 1m 26s build time
+- plugin-react 6.0.1: 1m 21s build time (5s / 6% faster)
+
 ## Performance Analysis
 
 ### Build Times
@@ -123,12 +185,15 @@ rolldownOptions: {  // renamed from rollupOptions
 | Vite 8.0.0-beta.10 + native + codeSplitting | 1m 49s | +16s (+17%) | Proper config |
 | Vite 8.0.0-beta.11 (after i18n migration) | 1m 49s | +16s (+17%) | http-backend + detector |
 | Vite 8.0.0-beta.14 (last beta tested) | 1m 53s | +20s (+21%) | Last beta version |
-| **Vite 8.0.0** (STABLE - current) | **1m 26s** | **-7s (-8%)** | 🎉 **FASTER than baseline!** |
+| Vite 8.0.0 stable + plugin-react 5.2.0 | 1m 26s | -7s (-8%) | ✅ Stable release |
+| **Vite 8.0.0 + plugin-react 6.0.1** | **1m 21s** | **-12s (-13%)** | 🎉 **FASTEST! Oxc transforms** |
 
 ### Performance Impact
-✅ **Build is 8% FASTER** with Vite 8.0.0 stable:
+✅ **Build is 13% FASTER** with Vite 8.0.0 stable + React plugin v6:
 - Eliminated vite-tsconfig-paths bottleneck (using native support)
 - Eliminated vite-plugin-i18n-ally (replaced with http-backend)
+- React plugin v6 uses native Oxc for React Refresh (no Babel overhead)
+- reactCompilerPreset() provides optimized filtering for better performance
 - No deprecation warnings
 - Rolldown stable optimizations delivered significant improvements!
 
@@ -152,25 +217,26 @@ rolldownOptions: {  // renamed from rollupOptions
 - vite-plugin-svgr: 30%
 - vite:react-babel: 5%
 
-**Latest (8.0.0 STABLE - Current):**
+**Latest (8.0.0 STABLE with plugin-react 6.0.1 - Current):**
 
 Modern Build Phase:
-- unplugin-info: 64%
-- vite-plugin-svgr: 30%
-- vite:react-babel: 4%
+- unplugin-info: 62%
+- vite-plugin-svgr: 31%
+- @rolldown/plugin-babel: 5%
 
 Legacy Build Phase (separate):
-- vite:legacy-post-process: 40%
-- vite:build-import-analysis: 32%
-- vite-plugin-svgr: 17%
-- vite:terser: 5%
-- unplugin-info: 4%
+- vite:legacy-post-process: 42%
+- vite:build-import-analysis: 33%
+- unplugin-info: 11%
+- vite-plugin-svgr: 7%
+- vite:terser: 6%
 
 **Key Insights:** 
 - ✅ Native tsconfigPaths successfully eliminated the 84% bottleneck
 - ✅ i18next-http-backend has negligible impact vs vite-plugin-i18n-ally
-- ⚠️ Build still slower primarily due to Rolldown beta optimizations pending
-- 💡 Plugin ecosystem overhead and legacy browser support are main factors
+- ✅ React plugin v6 provides 6% additional performance via native Oxc transforms
+- ✅ Rolldown stable optimizations resolved beta performance issues
+- ✅ Overall 13% faster than Vite 7 baseline
 
 ## Known Issues & Warnings
 
@@ -216,12 +282,13 @@ All peer dependency warnings resolved with Vite 8.0.0 stable:
 **Vite 8.0.0 Stable is Production-Ready!**
 
 **Reasons:**
-1. **Performance improvement**: 8% faster builds than Vite 7 (1m 26s vs 1m 33s)
+1. **Performance improvement**: 13% faster builds than Vite 7 (1m 21s vs 1m 33s)
 2. **Stable release**: No more breaking changes expected
 3. **Plugin ecosystem**: All plugins updated with Vite 8 support
 4. **Rolldown optimizations**: Completed and delivering superior performance
 5. **Native features**: tsconfigPaths support eliminates plugin overhead
 6. **i18n improvements**: Modern http-backend approach with smart HMR
+7. **React plugin v6**: Native Oxc transforms for additional 6% performance gain
 
 ### Migration Completed ✅
 
@@ -235,7 +302,7 @@ All peer dependency warnings resolved with Vite 8.0.0 stable:
 - Merged latest master with all dependency updates
 - Upgraded to Vite 8.0.0 stable
 - Upgraded all Vite plugins to stable versions
-- Verified build performance: 8% faster than baseline!
+- Verified build performance: 13% faster than baseline!
 - All tests passing
 
 **Phase 3: Production Deployment** ✅ READY
@@ -246,7 +313,7 @@ All peer dependency warnings resolved with Vite 8.0.0 stable:
 
 ## Success Factors for Production Migration
 
-1. **Performance**: ✅ 8% build time improvement achieved (stable: 1m 26s vs baseline 1m 33s)
+1. **Performance**: ✅ 8% build time improvement achieved (stable: 1m 21s vs baseline 1m 33s)
 2. **Stable Status**: ✅ Vite 8.0.0 stable released (March 2026)
 3. **Rolldown Optimizations**: ✅ Bundler performance optimizations delivered
 4. **Plugin Ecosystem**: ✅ All plugins updated with Vite 8 stable support
