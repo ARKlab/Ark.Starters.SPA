@@ -142,5 +142,8 @@
   "engineStrict": true,
   "overrides": {
     "vite": "8.0.0"
+  },
+  "comments": {
+    "overrides": "vite-plugin-react-click-to-component@4.2.0 has peerDependency 'vite: ^7' which doesn't include Vite 8. Override ensures all plugins use Vite 8.0.0 stable."
   }
 }
