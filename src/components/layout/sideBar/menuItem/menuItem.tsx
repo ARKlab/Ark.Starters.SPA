@@ -18,13 +18,7 @@ export default function MenuItem(props: MenuItemProps) {
             height="10"
             gap="3"
           >
-            {icon && (
-              <Icon
-                ml="1"
-                fontSize="md"
-                as={icon}
-              />
-            )}
+            {icon && <Icon ml="1" fontSize="md" as={icon} />}
             <Text>{label}</Text>
             <Box width="4" /> {/* Placeholder to ensure consistent spacing */}
           </Grid>
