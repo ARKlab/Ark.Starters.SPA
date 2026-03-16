@@ -1,0 +1,3 @@
+# Excluded from oxfmt/prettier formatting to prevent reformatting of files
+# that must match master's formatting exactly for clean merge history.
+src/components/layout/sideBar/menuItem/menuItem.tsx
