@@ -6,7 +6,8 @@ import path from "path";
 
 import msw from "@iodigital/vite-plugin-msw";
 import legacy from "@vitejs/plugin-legacy";
-import react from "@vitejs/plugin-react";
+import react, { reactCompilerPreset } from "@vitejs/plugin-react";
+import babel from "@rolldown/plugin-babel";
 import copy from "rollup-plugin-copy";
 import { visualizer } from "rollup-plugin-visualizer";
 import Info from "unplugin-info/vite";
@@ -140,9 +141,9 @@ export default defineConfig(({ mode }) => {
       ViteImageOptimizer(),
       react({
         //jsxImportSource: "@emotion/react",
-        babel: {
-          plugins: [["babel-plugin-react-compiler", {}]],
-        },
+      }),
+      babel({
+        presets: [reactCompilerPreset()],
       }),
       reactClickToComponent(),
       VitePWA({
