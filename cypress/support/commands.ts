@@ -27,6 +27,38 @@ Cypress.Commands.add("actAsAnonUser", () => {
   cy.get("[data-test='spinner']").should("not.exist")
 })
 
+Cypress.Commands.add("actAsLoggedUser", (username: string) => {
+  const sessionKey = `loggedUser-${username}`
+  const onBeforeLoad = (win: Window) => {
+    win.e2eUser = { username, permissions: [] }
+  }
+
+  cy.session(
+    sessionKey,
+    () => {
+      cy.visit("/null", { onBeforeLoad })
+      cy.window({ timeout: 30000 }).should("have.property", "appReady", true)
+      cy.get("[data-test='spinner']").should("not.exist")
+
+      cy.get("body").then($body => {
+        if ($body.find("[data-test='gdpr-acceptAll']").length > 0) {
+          cy.get("[data-test='gdpr-acceptAll']").click()
+        }
+      })
+    },
+    {
+      validate: () => {
+        cy.getLocalStorage("GDPR_CONSENT_STATE").then(x => expect(x).not.to.be.null)
+      },
+      cacheAcrossSpecs: true,
+    },
+  )
+
+  cy.visit("/null", { onBeforeLoad })
+  cy.window({ timeout: 30000 }).should("have.property", "appReady", true)
+  cy.get("[data-test='spinner']").should("not.exist")
+})
+
 Cypress.Commands.add("navigateViaMenu", (title: string | RegExp) => {
   // CANNOT use cy.visit() as that cause a full reload, not a SPA Navigation ...
   // - full page reload, resets the MSW mocks

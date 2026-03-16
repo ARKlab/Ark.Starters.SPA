@@ -4,7 +4,7 @@ import { useRef, useState } from "react"
 import { useAppDispatch } from "./app/hooks"
 import CenterSpinner from "./components/centerSpinner"
 import { appSettings } from "./config/env"
-import { ReactPluginContext } from "./lib/applicationInsights/context"
+import { AppInsightsInstanceContext, ReactPluginContext } from "./lib/applicationInsights/context"
 import { useAppInsightsCookieConsent } from "./lib/applicationInsights/useAppInsightsCookieConsent"
 import { DetectLoggedInUser } from "./lib/authentication/authenticationSlice"
 import { useAuthContext } from "./lib/authentication/components/useAuthContext"
@@ -18,7 +18,7 @@ export function InitApp() {
 
   // ApplicationInsights is loaded only after GDPR statistics cookie consent is given.
   // Before consent, a Noop stub is used so the rest of the app works normally.
-  const { reactPlugin } = useAppInsightsCookieConsent(appSettings.applicationInsights)
+  const { reactPlugin, appInsights } = useAppInsightsCookieConsent(appSettings.applicationInsights)
 
   const dispatch = useAppDispatch()
   const { context } = useAuthContext()
@@ -45,10 +45,12 @@ export function InitApp() {
   if (loading) return <CenterSpinner />
 
   return (
-    <ReactPluginContext.Provider value={reactPlugin}>
-      <AppInsightsContext.Provider value={reactPlugin}>
-        <Main />
-      </AppInsightsContext.Provider>
-    </ReactPluginContext.Provider>
+    <AppInsightsInstanceContext.Provider value={appInsights}>
+      <ReactPluginContext.Provider value={reactPlugin}>
+        <AppInsightsContext.Provider value={reactPlugin}>
+          <Main />
+        </AppInsightsContext.Provider>
+      </ReactPluginContext.Provider>
+    </AppInsightsInstanceContext.Provider>
   )
 }
