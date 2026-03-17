@@ -32,6 +32,42 @@ export const i18nSetup = async () => {
         loadPath: "/locales/{{lng}}/{{ns}}.json",
         crossDomain: false,
         parse: (data: string) => JSON.parse(data) as Record<string, unknown>,
+        requestOptions: {
+          mode: "cors" as RequestMode,
+          credentials: "same-origin" as RequestCredentials,
+          cache: "default" as RequestCache,
+        },
+        request: (
+          options: { requestOptions?: RequestInit },
+          url: string,
+          _payload: unknown,
+          callback: (err: Error | null, res: { status: number; data: string | null }) => void,
+        ) => {
+          // Custom request handler with timeout to prevent hanging
+          const controller = new AbortController()
+          const timeoutId = setTimeout(() => {
+            controller.abort()
+          }, 10000) // 10 second timeout
+          
+          fetch(url, { ...options.requestOptions, signal: controller.signal })
+            .then(response => {
+              clearTimeout(timeoutId)
+              if (!response.ok) {
+                callback(new Error(`HTTP ${response.status}: ${response.statusText}`), {
+                  status: response.status,
+                  data: null,
+                })
+                return
+              }
+              return response.text().then(data => {
+                callback(null, { status: response.status, data })
+              })
+            })
+            .catch((error: Error) => {
+              clearTimeout(timeoutId)
+              callback(error, { status: 500, data: null })
+            })
+        },
       },
 
       // Language detection configuration
