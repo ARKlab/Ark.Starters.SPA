@@ -124,5 +124,11 @@
   "controlComponents_dateRange": "Intervallo di date",
   "controlComponents_inputFilterWithClear": "Filtro Input Chakra Con Cancellazione",
   "backButton_goBack": "Torna indietro",
-  "header_openMenu": "Apri menu"
+  "header_openMenu": "Apri menu",
+  "unauthorized_title": "Accesso Negato",
+  "unauthorized_noPermissionSubtitle": "Non hai i permessi per visualizzare questa pagina",
+  "unauthorized_notLoggedSubtitle": "Non sei autenticato",
+  "unauthorized_noPermissionDescription": "Il tuo account non dispone dei permessi necessari per accedere a questa risorsa. Contatta l'amministratore se ritieni che sia un errore.",
+  "unauthorized_notLoggedDescription": "Effettua il login per accedere a questa pagina.",
+  "unauthorized_loginButton": "Accedi"
 }

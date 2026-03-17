@@ -124,5 +124,11 @@
   "controlComponents_dateRange": "Date range",
   "controlComponents_inputFilterWithClear": "Chakra Input Filter With Clear",
   "backButton_goBack": "Go back",
-  "header_openMenu": "Open menu"
+  "header_openMenu": "Open menu",
+  "unauthorized_title": "Access Denied",
+  "unauthorized_noPermissionSubtitle": "You don't have permission to view this page",
+  "unauthorized_notLoggedSubtitle": "You are not logged in",
+  "unauthorized_noPermissionDescription": "Your account does not have the necessary permissions to access this resource. Please contact your administrator if you believe this is a mistake.",
+  "unauthorized_notLoggedDescription": "Please log in to access this page.",
+  "unauthorized_loginButton": "Log In"
 }
