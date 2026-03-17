@@ -16,7 +16,7 @@ const Unauthorized = () => {
   }
 
   return (
-    <Center style={{ minHeight: "70dvh" }}>
+    <Center minH="xl">
       <Stack align="center" gap="6" maxW="md" textAlign="center" px="6">
         <Box bg="error.subtle" color="error.fg" borderRadius="full" p="5">
           <Icon as={isLogged ? LuShieldOff : LuLock} boxSize="10" />
