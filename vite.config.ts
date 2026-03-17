@@ -5,7 +5,7 @@ import fs from "fs";
 import path from "path";
 
 import msw from "@iodigital/vite-plugin-msw";
-import legacy from "@vitejs/plugin-legacy";
+import legacy, { cspHashes } from "@vitejs/plugin-legacy";
 import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import babel from "@rolldown/plugin-babel";
 import copy from "rollup-plugin-copy";
@@ -90,7 +90,28 @@ function i18nextBackendHMR(): Plugin {
   };
 }
 
-// https://vitejs.dev/config/
+/**
+ * Vite plugin that injects @vitejs/plugin-legacy CSP hashes into the
+ * Content-Security-Policy meta tag at build time.
+ * Required when renderLegacyChunks: true, which injects inline detection scripts.
+ * Uses cspHashes exported by the plugin so hashes stay in sync with the version.
+ */
+function legacyCspHashesPlugin(): Plugin {
+  const hashes = cspHashes.map(h => `'sha256-${h}'`).join(" ")
+  return {
+    name: "vite-plugin-legacy-csp-hashes",
+    enforce: "post",
+    transformIndexHtml(html) {
+      return html.replace(
+        /(<meta[^>]+http-equiv="Content-Security-Policy"[^>]+content=")([^"]*)(")/,
+        (_, prefix, content, suffix) =>
+          `${prefix}${content}; script-src 'self' ${hashes}${suffix}`,
+      )
+    },
+  }
+}
+
+
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
 
@@ -198,6 +219,8 @@ export default defineConfig(({ mode }) => {
       }),
       // i18next backend with HMR support
       i18nextBackendHMR(),
+      // Inject legacy plugin CSP hashes into Content-Security-Policy meta tag
+      legacyCspHashesPlugin(),
       oxlint({
         path: "src",
       }),
