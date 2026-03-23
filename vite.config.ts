@@ -223,6 +223,7 @@ export default defineConfig(({ mode }) => {
       legacyCspHashesPlugin(),
       oxlint({
         path: "src",
+        params: "--type-aware --type-check",
       }),
       istanbul({
         cypress: true,
