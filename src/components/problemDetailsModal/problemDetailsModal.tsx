@@ -1,6 +1,5 @@
 import { Box, Flex, Button, Stack } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
 
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import type { ErrorDetailsType } from "../../lib/errorHandler/errorHandler";
@@ -32,7 +31,6 @@ export const ProblemDetailsModal = () => {
 
 const ProblemDetailsModalBody = (props: { problem: ErrorDetailsType | null }) => {
   const problem = props.problem;
-  const navigate = useNavigate();
   const { t } = useTranslation("template");
   return (
     <>
@@ -73,9 +71,7 @@ const ProblemDetailsModalBody = (props: { problem: ErrorDetailsType | null }) =>
         <Flex justifyContent={"right"}>
           <Button
             colorPalette={"error"}
-            onClick={async () => {
-              await navigate(0);
-            }}
+            onClick={() => { window.location.reload(); }}
           >
             {t("errorHandler.reload")}
           </Button>

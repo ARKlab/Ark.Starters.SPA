@@ -7,6 +7,7 @@ import { RouterProvider } from "react-router";
 
 import { useAppSelector } from "./app/hooks";
 import CenterSpinner from "./components/centerSpinner";
+import { ProblemDetailsModal } from "./components/problemDetailsModal/problemDetailsModal";
 import { PWABadge } from "./components/pwaBadge";
 import { userSelector } from "./lib/authentication/authenticationSlice";
 import useLocalizeDocumentAttributes from "./lib/i18n/useLocalizeDocumentAttributes";
@@ -36,6 +37,7 @@ const Main = () => {
           <RouterProvider router={router} />
         </Suspense>
         <PWABadge />
+        <ProblemDetailsModal />
       </LocaleProvider>
     </>
   );

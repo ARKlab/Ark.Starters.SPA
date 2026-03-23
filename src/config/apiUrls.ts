@@ -4,7 +4,7 @@
  */
 
 export const API_URLS = {
-  admin: import.meta.env.VITE_ADMIN_API_BASE_URL ?? "https://k4view-admin-test-k2e.azurewebsites.net",
-  portal: import.meta.env.VITE_PORTAL_API_BASE_URL ?? "https://k4view-portal-test-k2e.azurewebsites.net",
-  artesian: import.meta.env.VITE_ARTESIAN_BASE_URL ?? "https://k4view-artesian-useradmin-test.azurewebsites.net",
+  admin: import.meta.env.VITE_ADMIN_API_BASE_URL,
+  portal: import.meta.env.VITE_PORTAL_API_BASE_URL,
+  artesian: import.meta.env.VITE_ARTESIAN_BASE_URL,
 } as const;
