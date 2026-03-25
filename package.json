@@ -124,7 +124,7 @@
     "vite-plugin-preload": "0.4.4",
     "vite-plugin-pwa": "1.2.0",
     "vite-plugin-react-click-to-component": "4.2.1",
-    "vite-plugin-static-copy": "3.3.0",
+    "vite-plugin-static-copy": "4.0.0",
     "vite-plugin-svgr": "4.5.0",
     "wait-on": "9.0.4",
     "web-vitals": "5.1.0"
