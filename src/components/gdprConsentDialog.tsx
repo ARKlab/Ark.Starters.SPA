@@ -37,8 +37,8 @@ import { Switch } from "./ui/switch"
 type OptionProps = {
   title: ReactNode
   desc: ReactNode
-  name: string
-  control: Control
+  name: keyof ConsentState
+  control: Control<ConsentState>
   required?: boolean
 }
 
@@ -55,9 +55,10 @@ function Option(props: OptionProps) {
         <Controller
           name={name}
           control={control}
-          render={({ field }) => (
-            <Switch {...field} size="lg" checked={field.value} readOnly={required} />
-          )}
+          render={({ field }) => {
+            const { value, ...fieldProps } = field
+            return <Switch {...fieldProps} size="lg" checked={value} readOnly={required} />
+          }}
         />
       </Flex>
       <FieldHelperText mt={"4"}>{desc}</FieldHelperText>

@@ -97,7 +97,7 @@ function i18nextBackendHMR(): Plugin {
  * Uses cspHashes exported by the plugin so hashes stay in sync with the version.
  */
 function legacyCspHashesPlugin(): Plugin {
-  const hashes = cspHashes.map(h => `'sha256-${h}'`).join(" ")
+  const inlineHashes = cspHashes.map(h => `'sha256-${h}'`).join(" ")
   return {
     name: "vite-plugin-legacy-csp-hashes",
     enforce: "post",
@@ -105,7 +105,7 @@ function legacyCspHashesPlugin(): Plugin {
       return html.replace(
         /(<meta[^>]+http-equiv="Content-Security-Policy"[^>]+content=")([^"]*)(")/,
         (_, prefix, content, suffix) =>
-          `${prefix}${content}; script-src 'self' ${hashes}${suffix}`,
+          `${prefix}${content}; script-src 'self' ${inlineHashes}${suffix}`,
       )
     },
   }
