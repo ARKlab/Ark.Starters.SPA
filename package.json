@@ -117,7 +117,7 @@
     "svgo": "4.0.1",
     "typescript": "5.9.3",
     "unplugin-info": "1.2.4",
-    "vite": "8.0.3",
+    "vite": "8.0.0",
     "vite-plugin-image-optimizer": "2.0.3",
     "vite-plugin-istanbul": "8.0.0",
     "vite-plugin-oxlint": "2.0.1",
@@ -141,7 +141,7 @@
   },
   "engineStrict": true,
   "overrides": {
-    "vite": "8.0.3"
+    "vite": "8.0.0"
   },
   "comments": {
     "overrides": "vite-plugin-react-click-to-component@4.2.0 has peerDependency 'vite: ^7' which doesn't include Vite 8. Override ensures all plugins use Vite 8.0.0 stable."
