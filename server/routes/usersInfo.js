@@ -11,6 +11,7 @@ var R = require("ramda");
 var email = require("mailer");
 var mailConstants = require("./constants");
 var AdminRequests = require("../ArtesianAdmin/AdminRequests");
+var logger = require("../logger")(__filename);
 
 function getQuery(q) {
   if (R.isEmpty(q) || R.isNil(q)) {
@@ -62,7 +63,7 @@ router.get("/", function (req, res, next) {
       include_fields: true,
       include_totals: true,
       fields:
-        "user_id,email,username,name,user_metadata,app_metadata,given_name,family_name",
+        "user_id,email,username,name,user_metadata,app_metadata,given_name,family_name,blocked",
       q: getQuery(req.param("user")),
     },
     [],
@@ -86,6 +87,30 @@ router.get("/:id", function (req, res, next) {
     });
 });
 
+// Unblock a specific user - sets blocked: false in Auth0
+// Auth0 Management API rate limits: ~15 PATCH requests/sec; individual actions only, no bulk endpoint
+router.patch("/:id/unblock", function (req, res, next) {
+  var targetUserId = decodeURIComponent(req.params.id);
+  // req.user.sub is the Auth0 user ID of the authenticated admin (set by JWT middleware)
+  var adminId = R.pathOr("unknown", ["user", "sub"], req);
+
+  userUtil
+    .updateUserInfo(targetUserId, { blocked: false })
+    .then(function (user) {
+      logger.info("User unblocked", {
+        req: req,
+        message: "AUDIT | action=unblock_user | adminId=" + adminId + " | targetUserId=" + targetUserId,
+        stack: null,
+      });
+      res.send(user);
+    })
+    .catch(function (err) {
+      res
+        .status(err.statusCode || 500)
+        .send(R.pathOr("Could not unblock user", ["message"], err));
+    });
+});
+
 // Update Users
 // User ID required
 // Sample Body
@@ -102,9 +127,19 @@ router.get("/:id", function (req, res, next) {
 //   },
 // };
 router.post("/:id", function (req, res, next) {
+  var targetUserId = decodeURIComponent(req.params.id);
+  var adminId = R.pathOr("unknown", ["user", "sub"], req);
+
   userUtil
-    .updateUserInfo(decodeURIComponent(req.params.id), req.body)
+    .updateUserInfo(targetUserId, req.body)
     .then(function (user) {
+      if (req.body.blocked === false) {
+        logger.info("User unblocked", {
+          req: req,
+          message: "AUDIT | action=unblock_user | adminId=" + adminId + " | targetUserId=" + targetUserId,
+          stack: null,
+        });
+      }
       res.send(user);
     })
     .catch(function (err) {

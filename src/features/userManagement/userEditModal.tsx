@@ -1,4 +1,4 @@
-import { Box, Input, VStack, Text } from "@chakra-ui/react";
+import { Badge, Box, Button, HStack, Input, Separator, Text, VStack } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 
 import { ChackraUIBaseModal } from "../../components/chackraModal/chackraBaseModal";
@@ -29,6 +29,7 @@ interface UserEditData {
   company?: string;
   expiry_date?: string;
   artesian_expiry_date?: number;
+  blocked?: boolean;
   identities?: {
     user_id: string;
     provider: string;
@@ -54,9 +55,10 @@ interface UserEditModalProps {
   onClose: () => void;
   onConfirm: (userData: UserEditData) => void;
   userId: string | null;
+  onBlockStatusChange?: (userId: string, blocked: boolean) => void;
 }
 
-export const UserEditModal = ({ open, onClose, onConfirm, userId }: UserEditModalProps) => {
+export const UserEditModal = ({ open, onClose, onConfirm, userId, onBlockStatusChange }: UserEditModalProps) => {
   const { data: userData, isLoading, error: apiError } = useGetUserInfoQuery(userId ?? "", { skip: !userId || !open });
 
   // Form fields
@@ -65,6 +67,10 @@ export const UserEditModal = ({ open, onClose, onConfirm, userId }: UserEditModa
   const [phone, setPhone] = useState("");
   const [company, setCompany] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
+
+  // Auth0 block status — tracks desired state; applied on save
+  const [blockedState, setBlockedState] = useState<boolean | undefined>(undefined);
+  const [originalBlockedState, setOriginalBlockedState] = useState<boolean | undefined>(undefined);
 
   // Populate form fields when user data is loaded
   useEffect(() => {
@@ -75,6 +81,9 @@ export const UserEditModal = ({ open, onClose, onConfirm, userId }: UserEditModa
     setSurname((userData as UserEditData).user_metadata?.family_name ?? (userData as UserEditData).family_name ?? "");
     setPhone((userData as UserEditData).user_metadata?.phone_number ?? "");
     setCompany((userData as UserEditData).app_metadata?.company ?? "");
+    const loadedBlocked = (userData as UserEditData).blocked ?? false;
+    setBlockedState(loadedBlocked);
+    setOriginalBlockedState(loadedBlocked);
 
     // Format expiry date for input field
     const expiryDateValue = (userData as UserEditData).app_metadata?.expiry_date;
@@ -102,7 +111,7 @@ export const UserEditModal = ({ open, onClose, onConfirm, userId }: UserEditModa
     const artesianExpiryDate = formattedExpiryDate ? new Date(formattedExpiryDate).getTime() : undefined;
 
     // Create payload with only the fields the API expects
-    const updatePayload = {
+    const updatePayload: UserEditData = {
       user_metadata: {
         phone_number: phone || "",
         name: fullName,
@@ -114,6 +123,8 @@ export const UserEditModal = ({ open, onClose, onConfirm, userId }: UserEditModa
         expiry_date: formattedExpiryDate,
       },
       artesian_expiry_date: artesianExpiryDate,
+      // Only include blocked when it has been changed in this session
+      ...(blockedState !== originalBlockedState ? { blocked: blockedState } : {}),
     };
 
     onConfirm(updatePayload);
@@ -126,8 +137,12 @@ export const UserEditModal = ({ open, onClose, onConfirm, userId }: UserEditModa
     setPhone("");
     setCompany("");
     setExpiryDate("");
+    setBlockedState(undefined);
+    setOriginalBlockedState(undefined);
     onClose();
   };
+
+
 
   // Extract error message from RTK Query error
   const errorMessage = (() => {
@@ -255,6 +270,33 @@ export const UserEditModal = ({ open, onClose, onConfirm, userId }: UserEditModa
                     setExpiryDate(e.target.value);
                   }}
                 />
+              </Box>
+
+              <Separator />
+
+              {/* Auth0 Block Status */}
+              <Box>
+                <Text fontSize="sm" fontWeight="medium" mb="2">
+                  Auth0 Status:
+                </Text>
+                <HStack gap="3" align="center">
+                  <Badge colorPalette={blockedState ? "red" : "green"} size="md">
+                    {blockedState ? "Blocked" : "Active"}
+                  </Badge>
+                  <Button
+                    size="sm"
+                    colorPalette={blockedState ? "green" : "red"}
+                    variant={blockedState ? "solid" : "outline"}
+                    onClick={() => { setBlockedState(prev => !prev); }}
+                  >
+                    {blockedState ? "Unblock User" : "Block User"}
+                  </Button>
+                </HStack>
+                {blockedState !== originalBlockedState && (
+                  <Text fontSize="xs" color="fg.muted" fontStyle="italic" mt="2">
+                    Change will be applied on save
+                  </Text>
+                )}
               </Box>
             </>
           )}

@@ -1,10 +1,11 @@
-import { Box, Heading, Button, Flex, Text, Input, HStack, Table } from "@chakra-ui/react";
-import React, { useState, useEffect, useCallback } from "react";
+import { Badge, Box, Button, Flex, Heading, HStack, Input, SimpleGrid, Table, Text } from "@chakra-ui/react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { z } from "zod";
 
 import { useAppDispatch } from "../../app/hooks";
 import CenterSpinner from "../../components/centerSpinner";
+import PaginationComponent from "../../components/chackraPaginationComponent/chackraTablePagination";
 import { API_URLS } from "../../config/apiUrls";
 import { Login } from "../../lib/authentication/authenticationSlice";
 import { useAuthContext } from "../../lib/authentication/components/useAuthContext";
@@ -25,12 +26,13 @@ export const UserTableDataSchema = z.object({
 
 export type UserTableDataType = z.infer<typeof UserTableDataSchema>;
 
-interface Auth0UserData {
+export interface Auth0UserData {
   email?: string;
   given_name?: string;
   family_name?: string;
   name?: string;
   user_id?: string;
+  blocked?: boolean;
   app_metadata?: {
     company?: string;
     expiry_date?: string | number;
@@ -60,6 +62,9 @@ interface UserEditData {
   artesian_expiry_date?: number;
 }
 
+type SortField = "email" | "company" | "name" | "surname" | "expiryDate";
+type SortDir = "asc" | "desc";
+
 const UserManagementView = () => {
   const dispatch = useAppDispatch();
   const { context, isLogged } = useAuthContext();
@@ -71,6 +76,19 @@ const UserManagementView = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
+
+  // Client-side column filters (no extra API calls — filter within loaded results)
+  const [filterEmail, setFilterEmail] = useState("");
+  const [filterCompany, setFilterCompany] = useState("");
+  const [filterName, setFilterName] = useState("");
+
+  // Client-side sort
+  const [sortField, setSortField] = useState<SortField | null>(null);
+  const [sortDir, setSortDir] = useState<SortDir>("asc");
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
 
   const handleLogin = () => {
     void dispatch(Login());
@@ -180,6 +198,7 @@ const UserManagementView = () => {
               given_name: userData.user_metadata?.given_name ?? user.given_name,
               family_name: userData.user_metadata?.family_name ?? user.family_name,
               name: userData.user_metadata?.name ?? user.name,
+              ...(userData.blocked !== undefined ? { blocked: userData.blocked } : {}),
             };
           }
           return user;
@@ -209,10 +228,92 @@ const UserManagementView = () => {
     setIsLoading(false);
   };
 
+  const handleBlockStatusChange = (userId: string, blocked: boolean) => {
+    setUsers(prev => prev.map(u => (u.user_id === userId ? { ...u, blocked } : u)));
+  };
+
+  const handleColumnSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDir(d => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortField(field);
+      setSortDir("asc");
+    }
+  };
+
+  const sortIndicator = (field: SortField): string => {
+    if (sortField !== field) return " ↕";
+    return sortDir === "asc" ? " ↑" : " ↓";
+  };
+
+  // Reset to page 1 whenever filters or sort change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filterEmail, filterCompany, filterName, sortField, sortDir]);
+
   // Initial fetch on component mount
   useEffect(() => {
     void fetchUsers();
   }, [fetchUsers]);
+
+  // All filtering + sorting happens client-side against the already-loaded users array.
+  // This means sorting, filtering, and pagination never trigger additional API calls.
+  //
+  // Note on Auth0 Management API rate limits:
+  //   GET /api/v2/users  — fetched once on load / on search; paginated in batches of 100 on the backend.
+  //   PATCH /api/v2/users/{id} — one call per block/unblock action; Auth0 limits ~15 req/sec.
+  //   Bulk block/unblock is NOT viable — Auth0 has no batch endpoint; individual actions only.
+  const filteredSortedUsers = useMemo(() => {
+    let result = users;
+
+    if (filterEmail) {
+      const lc = filterEmail.toLowerCase();
+      result = result.filter(u => u.email?.toLowerCase().includes(lc));
+    }
+    if (filterCompany) {
+      const lc = filterCompany.toLowerCase();
+      result = result.filter(u => u.app_metadata?.company?.toLowerCase().includes(lc));
+    }
+    if (filterName) {
+      const lc = filterName.toLowerCase();
+      result = result.filter(u => {
+        const fullName =
+          `${u.user_metadata?.given_name ?? u.given_name ?? ""} ${u.user_metadata?.family_name ?? u.family_name ?? ""}`.toLowerCase();
+        return fullName.includes(lc);
+      });
+    }
+
+    if (sortField) {
+      result = [...result].sort((a, b) => {
+        let av = "";
+        let bv = "";
+        if (sortField === "email") {
+          av = a.email ?? "";
+          bv = b.email ?? "";
+        } else if (sortField === "company") {
+          av = a.app_metadata?.company ?? "";
+          bv = b.app_metadata?.company ?? "";
+        } else if (sortField === "name") {
+          av = a.user_metadata?.given_name ?? a.given_name ?? "";
+          bv = b.user_metadata?.given_name ?? b.given_name ?? "";
+        } else if (sortField === "surname") {
+          av = a.user_metadata?.family_name ?? a.family_name ?? "";
+          bv = b.user_metadata?.family_name ?? b.family_name ?? "";
+        } else if (sortField === "expiryDate") {
+          av = String(a.app_metadata?.expiry_date ?? "");
+          bv = String(b.app_metadata?.expiry_date ?? "");
+        }
+        return sortDir === "asc" ? av.localeCompare(bv) : bv.localeCompare(av);
+      });
+    }
+
+    return result;
+  }, [users, filterEmail, filterCompany, filterName, sortField, sortDir]);
+
+  const paginatedUsers = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return filteredSortedUsers.slice(start, start + pageSize);
+  }, [filteredSortedUsers, currentPage, pageSize]);
 
   // Show unauthenticated message if user is not logged in
   if (!isLogged) {
@@ -254,15 +355,15 @@ const UserManagementView = () => {
     <Box>
       <Heading mb="4">User Management</Heading>
 
-      {/* Search Bar */}
-      <Box mb="6">
+      {/* Server-side search — re-fetches from Auth0 by name/email */}
+      <Box mb="4">
         <Text fontSize="sm" fontWeight="medium" mb="2">
           Search Users:
         </Text>
         <Flex justify="space-between" align="center" gap="2">
           <HStack gap="2">
             <Input
-              placeholder="Enter username to search..."
+              
               value={searchTerm}
               onChange={e => {
                 setSearchTerm(e.target.value);
@@ -294,6 +395,95 @@ const UserManagementView = () => {
         </Flex>
       </Box>
 
+      {/* Client-side column filters — no API calls, filter within loaded results */}
+      <SimpleGrid columns={3} gap="3" mb="3">
+        <Box>
+          <Text fontSize="xs" fontWeight="medium" mb="1" color="fg.muted">
+            Filter by Email
+          </Text>
+          <HStack gap="1">
+            <Input
+              size="sm"
+              value={filterEmail}
+              onChange={e => {
+                setFilterEmail(e.target.value);
+              }}
+            />
+            {filterEmail && (
+              <Button
+                size="sm"
+                variant="ghost"
+                px="2"
+                onClick={() => {
+                  setFilterEmail("");
+                }}
+              >
+                ×
+              </Button>
+            )}
+          </HStack>
+        </Box>
+        <Box>
+          <Text fontSize="xs" fontWeight="medium" mb="1" color="fg.muted">
+            Filter by Company
+          </Text>
+          <HStack gap="1">
+            <Input
+              size="sm"
+              value={filterCompany}
+              onChange={e => {
+                setFilterCompany(e.target.value);
+              }}
+            />
+            {filterCompany && (
+              <Button
+                size="sm"
+                variant="ghost"
+                px="2"
+                onClick={() => {
+                  setFilterCompany("");
+                }}
+              >
+                ×
+              </Button>
+            )}
+          </HStack>
+        </Box>
+        <Box>
+          <Text fontSize="xs" fontWeight="medium" mb="1" color="fg.muted">
+            Filter by Name / Surname
+          </Text>
+          <HStack gap="1">
+            <Input
+              size="sm"
+              value={filterName}
+              onChange={e => {
+                setFilterName(e.target.value);
+              }}
+            />
+            {filterName && (
+              <Button
+                size="sm"
+                variant="ghost"
+                px="2"
+                onClick={() => {
+                  setFilterName("");
+                }}
+              >
+                ×
+              </Button>
+            )}
+          </HStack>
+        </Box>
+      </SimpleGrid>
+
+      <Text fontSize="xs" color="fg.muted" mb="2">
+        Showing {paginatedUsers.length} of {filteredSortedUsers.length} users
+        {filteredSortedUsers.length !== users.length
+          ? ` (filtered from ${users.length} total)`
+          : ""}
+      </Text>
+
       <Box>
         {error ? (
           <Text color="status.error">Error: {error}</Text>
@@ -303,29 +493,78 @@ const UserManagementView = () => {
               <Table.Header>
                 <Table.Row>
                   <Table.ColumnHeader>Phone</Table.ColumnHeader>
-                  <Table.ColumnHeader>User</Table.ColumnHeader>
-                  <Table.ColumnHeader>Company</Table.ColumnHeader>
-                  <Table.ColumnHeader>Name</Table.ColumnHeader>
-                  <Table.ColumnHeader>Surname</Table.ColumnHeader>
+                  <Table.ColumnHeader
+                    cursor="pointer"
+                    userSelect="none"
+                    onClick={() => {
+                      handleColumnSort("email");
+                    }}
+                    _hover={{ bg: "bg.muted" }}
+                  >
+                    User{sortIndicator("email")}
+                  </Table.ColumnHeader>
+                  <Table.ColumnHeader
+                    cursor="pointer"
+                    userSelect="none"
+                    onClick={() => {
+                      handleColumnSort("company");
+                    }}
+                    _hover={{ bg: "bg.muted" }}
+                  >
+                    Company{sortIndicator("company")}
+                  </Table.ColumnHeader>
+                  <Table.ColumnHeader
+                    cursor="pointer"
+                    userSelect="none"
+                    onClick={() => {
+                      handleColumnSort("name");
+                    }}
+                    _hover={{ bg: "bg.muted" }}
+                  >
+                    Name{sortIndicator("name")}
+                  </Table.ColumnHeader>
+                  <Table.ColumnHeader
+                    cursor="pointer"
+                    userSelect="none"
+                    onClick={() => {
+                      handleColumnSort("surname");
+                    }}
+                    _hover={{ bg: "bg.muted" }}
+                  >
+                    Surname{sortIndicator("surname")}
+                  </Table.ColumnHeader>
                   <Table.ColumnHeader>Actions</Table.ColumnHeader>
-                  <Table.ColumnHeader>Expiry Date</Table.ColumnHeader>
+                  <Table.ColumnHeader
+                    cursor="pointer"
+                    userSelect="none"
+                    onClick={() => {
+                      handleColumnSort("expiryDate");
+                    }}
+                    _hover={{ bg: "bg.muted" }}
+                  >
+                    Expiry Date{sortIndicator("expiryDate")}
+                  </Table.ColumnHeader>
+                  <Table.ColumnHeader>Status</Table.ColumnHeader>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {users.map((user, index) => {
+                {paginatedUsers.map((user, index) => {
                   const expiryStatus = getUserExpiryStatus(user.app_metadata?.expiry_date);
+                  const isBlocked = user.blocked === true;
 
                   return (
                     <Table.Row
                       key={user.user_id ?? index}
                       bg={
-                        expiryStatus.status === "expired"
+                        isBlocked
                           ? "red.subtle"
-                          : expiryStatus.status === "expiring-soon"
-                            ? "yellow.subtle"
-                            : index % 2 === 0
-                              ? "bg.subtle"
-                              : undefined
+                          : expiryStatus.status === "expired"
+                            ? "orange.subtle"
+                            : expiryStatus.status === "expiring-soon"
+                              ? "yellow.subtle"
+                              : index % 2 === 0
+                                ? "bg.subtle"
+                                : undefined
                       }
                     >
                       <Table.Cell>{user.user_metadata?.phone_number ?? ""}</Table.Cell>
@@ -353,6 +592,15 @@ const UserManagementView = () => {
                             : String(user.app_metadata.expiry_date)
                           : "No expiry"}
                       </Table.Cell>
+                      <Table.Cell>
+                        {expiryStatus.status === "expired" ? (
+                          <Badge colorPalette="orange" size="sm">Expired</Badge>
+                        ) : isBlocked ? (
+                          <Badge colorPalette="red" size="sm">Blocked (Auth0)</Badge>
+                        ) : (
+                          <Badge colorPalette="green" size="sm">Active</Badge>
+                        )}
+                      </Table.Cell>
                     </Table.Row>
                   );
                 })}
@@ -362,12 +610,26 @@ const UserManagementView = () => {
         )}
       </Box>
 
+      {/* Pagination — client-side, zero extra API calls */}
+      <PaginationComponent
+        count={filteredSortedUsers.length}
+        page={currentPage}
+        pageSize={pageSize}
+        onPageChange={setCurrentPage}
+        onPageSizeChange={newSize => {
+          setPageSize(newSize);
+          setCurrentPage(1);
+        }}
+        isLoading={isLoading}
+      />
+
       {/* Edit Modal */}
       <UserEditModal
         open={showEditModal}
         onClose={handleEditModalClose}
         onConfirm={handleEditModalConfirm}
         userId={selectedUserId}
+        onBlockStatusChange={handleBlockStatusChange}
       />
 
       {/* Create User Modal */}
@@ -376,6 +638,7 @@ const UserManagementView = () => {
         onClose={handleCreateModalClose}
         onComplete={handleCreateModalSubmit}
       />
+
     </Box>
   );
 };
