@@ -6,7 +6,7 @@ import { stubReactPlugin } from "./index"
 
 // Context to hold the current reactPlugin instance
 // This allows components to re-render when the real plugin is loaded
-export const ReactPluginContext = createContext<ReactPlugin>(stubReactPlugin)
+export const ReactPluginContext = createContext(stubReactPlugin)
 
 // Hook to access the current reactPlugin
 export const useReactPlugin = (): ReactPlugin => {

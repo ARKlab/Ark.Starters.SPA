@@ -270,7 +270,7 @@
       }
     ],
     "@typescript-eslint/consistent-type-imports": "error",
-    "@typescript-eslint/promise-function-async": "warn",
+    "@typescript-eslint/promise-function-async": "error",
     "import/no-cycle": "error",
     "radix": "error"
   },
@@ -385,6 +385,12 @@
       "files": ["**/lib/zod2FormValidator.ts"],
       "rules": {
         "import/no-named-as-default": "off"
+      }
+    },
+    {
+      "files": ["**/mocks/**/*.ts"],
+      "rules": {
+        "@typescript-eslint/require-await": "off"
       }
     }
   ]

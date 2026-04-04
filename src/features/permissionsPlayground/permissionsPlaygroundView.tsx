@@ -11,8 +11,8 @@ import ProtectedComponent from "../../lib/authentication/components/protectedCom
 
 const PlaygroundView = () => {
   const user = useAppSelector(userSelector)
-  const [requiredPermission, setRequiredPermission] = useState<string>("mega:admin")
-  const [inputValue, setInputValue] = useState<string>(requiredPermission)
+  const [requiredPermission, setRequiredPermission] = useState("mega:admin")
+  const [inputValue, setInputValue] = useState(requiredPermission)
   const permissions: string[] = user?.permissions ?? []
   const { t } = useTranslation()
   const navigate = useNavigate()

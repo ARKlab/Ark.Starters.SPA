@@ -16,7 +16,7 @@ enum TestEnum {
 export default function ControlComponentsView() {
   const { t } = useTranslation()
 
-  const [textFilterValue, setTextFilterValue] = useState<string>("")
+  const [textFilterValue, setTextFilterValue] = useState("")
   const [selectValue, setSelectValue] = useState<string | undefined>(undefined)
   const [logs, setLogs] = useState<{ name: string; value: unknown }[]>([])
   const [dateRange, setDateRange] = useState<Date[]>([])

@@ -18,7 +18,6 @@ import type {
   Column,
   ColumnDef,
   ColumnFiltersState,
-  ColumnOrderState,
   OnChangeFn,
   PaginationState,
   Table as ReactTable,
@@ -101,16 +100,16 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
     extractPagination,
     tableKey,
   } = props
-  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
+  const [{ pageIndex, pageSize }, setPagination] = useState({
     pageIndex: 1,
     pageSize: pageSizeProp ?? 10,
   })
   const reduxTableState = useAppSelector(state => getTableState(state, tableKey))
   const filtersAreEquals = useFiltersEqual(reduxTableState?.filters, externalFiltersState)
-  const [sortingState, setSorting] = useState<SortingState>(
+  const [sortingState, setSorting] = useState(
     defaultSorting ?? [{ id: "", desc: false }],
   )
-  const [rowIndexSelection, setRowIndexSelection] = useState<RowSelectionState>(selectedRows ?? {}) //this is the state of the selected rows
+  const [rowIndexSelection, setRowIndexSelection] = useState(selectedRows ?? {}) //this is the state of the selected rows
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
   //When filters are provided externally, we use them instead of the internal state
@@ -144,7 +143,7 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columnFilters, pageIndex, pageSize, sortingState, tableKey])
 
-  const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(
+  const [columnOrder, setColumnOrder] = useState(
     columns
       .filter((x): x is ColumnDef<T> & { id: string } => x.id !== undefined)
       .map(column => column.id), //must start out with populated columnOrder so we can splice

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 
 export default function useDebounce<T>(value: T, delay: number): T {
   // State and setters for debounced value
-  const [debouncedValue, setDebouncedValue] = useState<T>(value)
+  const [debouncedValue, setDebouncedValue] = useState(value)
   useEffect(
     () => {
       // Update debounced value after delay
@@ -23,7 +23,7 @@ export default function useDebounce<T>(value: T, delay: number): T {
 
 export function useDebouncedState<T>(value: T, delay: number): [T, (value: T) => void] {
   // State and setters for debounced value
-  const [debouncedValue, setDebouncedValue] = useState<T>(value)
+  const [debouncedValue, setDebouncedValue] = useState(value)
 
   const [timerId, setTimerId] = useState<NodeJS.Timeout | string | number | undefined>(undefined)
 

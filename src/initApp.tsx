@@ -13,7 +13,7 @@ import useAsyncEffect from "./lib/useAsyncEffect"
 import Main from "./main"
 
 export function InitApp() {
-  const ref = useRef<boolean>(false)
+  const ref = useRef(false)
   const [loading, setLoading] = useState(true)
 
   // ApplicationInsights is loaded only after GDPR statistics cookie consent is given.

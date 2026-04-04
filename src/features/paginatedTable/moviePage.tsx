@@ -70,7 +70,7 @@ const MovieTableView = () => {
     }),
   ] as ColumnDef<Movie>[]
   const [filters, setFilters] = useState<Partial<Movie>>({})
-  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen)
   }
