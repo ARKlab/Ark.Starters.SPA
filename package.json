@@ -40,8 +40,8 @@
     "e2e:dev": "cross-env BROWSER=none VITE_MODE=e2e concurrently --kill-others \"npm:start\" \"npm:cypress:run\""
   },
   "dependencies": {
-    "@auth0/auth0-spa-js": "2.18.0",
-    "@azure/msal-browser": "5.6.1",
+    "@auth0/auth0-spa-js": "2.18.3",
+    "@azure/msal-browser": "5.6.2",
     "@chakra-ui/react": "3.34.0",
     "@dnd-kit/core": "6.3.1",
     "@dnd-kit/sortable": "10.0.0",
@@ -60,7 +60,7 @@
     "fast-deep-equal": "3.1.3",
     "i18next": "26.0.3",
     "i18next-browser-languagedetector": "8.2.1",
-    "i18next-http-backend": "3.0.2",
+    "i18next-http-backend": "3.0.4",
     "js-cookie": "3.0.5",
     "next-themes": "0.4.6",
     "react": "19.2.4",
@@ -92,15 +92,15 @@
     "@types/react": "19.2.14",
     "@types/react-copy-to-clipboard": "5.0.7",
     "@types/react-dom": "19.2.3",
-    "@typescript/native-preview": "7.0.0-dev.20260323.1",
+    "@typescript/native-preview": "7.0.0-dev.20260331.1",
     "@vite-pwa/assets-generator": "1.0.2",
-    "@vitejs/plugin-legacy": "8.0.0",
+    "@vitejs/plugin-legacy": "8.0.1",
     "@vitejs/plugin-react": "6.0.1",
     "babel-plugin-react-compiler": "1.0.0",
     "concurrently": "9.2.1",
     "cross-env": "10.1.0",
     "cross-fetch": "4.1.0",
-    "cypress": "15.12.0",
+    "cypress": "15.13.0",
     "cypress-localstorage-commands": "2.3.0",
     "cypress-real-events": "1.15.0",
     "cypress-wait-until": "3.0.2",
@@ -108,26 +108,26 @@
     "esbuild": "0.27.4",
     "jiti": "2.6.1",
     "msw": "2.12.14",
-    "oxfmt": "0.41.0",
-    "oxlint": "1.56.0",
-    "oxlint-tsgolint": "0.17.2",
+    "oxfmt": "0.43.0",
+    "oxlint": "1.58.0",
+    "oxlint-tsgolint": "0.19.0",
     "rollup-plugin-copy": "3.5.0",
     "rollup-plugin-visualizer": "7.0.1",
     "sharp": "0.34.5",
     "svgo": "4.0.1",
     "typescript": "5.9.3",
-    "unplugin-info": "1.2.4",
-    "vite": "8.0.0",
+    "unplugin-info": "1.3.2",
+    "vite": "8.0.3",
     "vite-plugin-image-optimizer": "2.0.3",
     "vite-plugin-istanbul": "8.0.0",
     "vite-plugin-oxlint": "2.0.1",
-    "vite-plugin-preload": "0.4.4",
+    "vite-plugin-preload": "0.7.0",
     "vite-plugin-pwa": "1.2.0",
     "vite-plugin-react-click-to-component": "4.2.1",
     "vite-plugin-static-copy": "4.0.0",
     "vite-plugin-svgr": "5.0.0",
     "wait-on": "9.0.4",
-    "web-vitals": "5.1.0"
+    "web-vitals": "5.2.0"
   },
   "nyc": {
     "reporter": [
@@ -141,7 +141,7 @@
   },
   "engineStrict": true,
   "overrides": {
-    "vite": "8.0.0"
+    "vite": "8.0.3"
   },
   "comments": {
     "overrides": "vite-plugin-react-click-to-component@4.2.0 has peerDependency 'vite: ^7' which doesn't include Vite 8. Override ensures all plugins use Vite 8.0.0 stable."
