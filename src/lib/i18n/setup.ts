@@ -50,7 +50,7 @@ export const i18nSetup = async () => {
           }, 10000) // 10 second timeout
           
           fetch(url, { ...options.requestOptions, signal: controller.signal })
-            .then(response => {
+            .then(async response => {
               clearTimeout(timeoutId)
               if (!response.ok) {
                 callback(new Error(`HTTP ${response.status}: ${response.statusText}`), {
@@ -59,9 +59,8 @@ export const i18nSetup = async () => {
                 })
                 return
               }
-              return response.text().then(data => {
-                callback(null, { status: response.status, data })
-              })
+              const data = await response.text()
+              callback(null, { status: response.status, data })
             })
             .catch((error: Error) => {
               clearTimeout(timeoutId)

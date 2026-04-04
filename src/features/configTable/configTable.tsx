@@ -58,7 +58,7 @@ export default function EditableTableExample() {
     refetchOnMountOrArgChange: true,
   })
 
-  const [throwError, setError] = useState<boolean>(false)
+  const [throwError, setError] = useState(false)
 
   const onSubmit = async (values: { table: Employee[] }) => {
     const r = await postConfig({ employees: values.table, throwError })
