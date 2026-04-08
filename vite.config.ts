@@ -1,7 +1,6 @@
 /// <reference types="vite/client" />
 /// <reference types="vite-plugin-svgr/client" />
 
-import { createHash } from "node:crypto"
 import fs from "fs";
 import path from "path";
 
@@ -97,10 +96,14 @@ function i18nextBackendHMR(): Plugin {
  * Required when renderLegacyChunks: true, which injects inline detection scripts.
  * Uses cspHashes exported by the plugin so hashes stay in sync with the version.
  *
- * Additionally extracts the data: URI used by the detection script (for import.meta.resolve
- * support checking) from the generated HTML and adds its SHA-256 hash to script-src.
- * Without this, Chrome's CSP blocks the data: import, window.__vite_is_modern_browser
- * is never set, and modern browsers fall back to loading the legacy bundle.
+ * @vitejs/plugin-legacy 8+ also injects a detection script that does:
+ *   import 'data:text/javascript,if(!import.meta.resolve)throw Error(...)'
+ * to check if the browser supports import.meta.resolve. Browsers enforce CSP on
+ * data: URI ES module imports as external scripts (not inline scripts), so a
+ * sha256 hash does NOT allow them — `data:` must appear in script-src.
+ * Without this, the browser blocks the import, window.__vite_is_modern_browser is
+ * never set, the legacy loader fires in modern browsers, and the two entry points
+ * conflict causing a runtime error that prevents window.appReady from being set.
  */
 function legacyCspHashesPlugin(): Plugin {
   const inlineHashes = cspHashes.map(h => `'sha256-${h}'`).join(" ")
@@ -108,32 +111,18 @@ function legacyCspHashesPlugin(): Plugin {
     name: "vite-plugin-legacy-csp-hashes",
     enforce: "post",
     transformIndexHtml(html) {
-      // @vitejs/plugin-legacy injects a detection script that does:
-      //   import 'data:text/javascript,if(!import.meta.resolve)throw Error(...)'
-      // The data: URI itself is blocked by CSP unless its content hash is in script-src.
-      // Extract the data: URI dynamically so we stay in sync if plugin-legacy changes it.
-      // Use alternating patterns: single-quoted first (plugin-legacy default), then double-quoted.
-      // Anchored to the known plugin-legacy prefix "if(!import.meta.resolve)" to avoid matching
-      // any other data: URI imports that may appear in the HTML.
-      const dataUriMatch =
-        html.match(/import'(data:text\/javascript,if\(!import\.meta\.resolve\)[^']+)'/) ??
-        html.match(/import"(data:text\/javascript,if\(!import\.meta\.resolve\)[^"]+)"/)
-      let dataUriHash = ""
-      if (dataUriMatch) {
-        try {
-          // URL-decode the script content (browsers decode data: URIs before executing/hashing)
-          const scriptContent = decodeURIComponent(dataUriMatch[1].replace(/^data:text\/javascript,/, ""))
-          const hash = createHash("sha256").update(scriptContent).digest("base64")
-          dataUriHash = ` 'sha256-${hash}'`
-        } catch (e) {
-          console.warn("[legacyCspHashesPlugin] Failed to decode data: URI content for CSP hash:", e)
-        }
-      }
+      // Detect whether plugin-legacy injected a data: URI module import for modern-browser
+      // detection (present when renderLegacyChunks: true, added in plugin-legacy 8+).
+      // If found, add `data:` to script-src so the browser can execute it and correctly
+      // identify the browser as modern, preventing the legacy bundle from loading.
+      const hasDataUriDetection =
+        /import['"]data:text\/javascript,if\(!import\.meta\.resolve\)/.test(html)
+      const dataUriSource = hasDataUriDetection ? " data:" : ""
 
       return html.replace(
         /(<meta[^>]+http-equiv="Content-Security-Policy"[^>]+content=")([^"]*)(")/,
         (_, prefix, content, suffix) =>
-          `${prefix}${content}; script-src 'self' ${inlineHashes}${dataUriHash}${suffix}`,
+          `${prefix}${content}; script-src 'self' ${inlineHashes}${dataUriSource}${suffix}`,
       )
     },
   }
