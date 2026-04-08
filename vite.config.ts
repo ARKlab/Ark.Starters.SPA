@@ -95,6 +95,16 @@ function i18nextBackendHMR(): Plugin {
  * Content-Security-Policy meta tag at build time.
  * Required when renderLegacyChunks: true, which injects inline detection scripts.
  * Uses cspHashes exported by the plugin so hashes stay in sync with the version.
+ *
+ * NOTE on `data:` URI and CSP: @vitejs/plugin-legacy 8+ injects a detection script
+ * containing `import 'data:text/javascript,...'` when renderLegacyChunks is true.
+ * The CSP spec does NOT allow `import 'data:...'` via sha256 hashes — hashes in
+ * script-src apply to inline scripts only; module `import` fetches are treated as
+ * external resources. `unsafe-hashes` also does NOT apply here (it covers only event
+ * handlers and javascript: navigations). The only way to allow it would be adding
+ * `data:` to script-src, which is a known CSP loosening (enables data: URI script
+ * execution). Therefore renderLegacyChunks is kept false in all builds so the
+ * detection script is never injected and `data:` is never needed.
  */
 function legacyCspHashesPlugin(): Plugin {
   const inlineHashes = cspHashes.map(h => `'sha256-${h}'`).join(" ")
@@ -148,8 +158,13 @@ export default defineConfig(({ mode }) => {
         // Modern browsers get NO polyfills (fast experience)
         modernPolyfills: false,
         
-        // Legacy browsers get polyfilled chunks (degraded but functional)
-        renderLegacyChunks: true,
+        // Legacy chunks are disabled in all builds. When enabled, plugin-legacy 8+ injects
+        // a detection script containing `import 'data:text/javascript,...'` which the CSP
+        // can only allow via `data:` in script-src — a known security loosening. There is
+        // no hash-based alternative (CSP hashes apply to inline scripts, not module imports;
+        // `unsafe-hashes` covers only event handlers). Disabling legacy chunks removes the
+        // detection script entirely and keeps the CSP tight.
+        renderLegacyChunks: false,
       }),
       svgr({
         svgrOptions: {
