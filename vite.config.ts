@@ -95,6 +95,11 @@ function i18nextBackendHMR(): Plugin {
  * Content-Security-Policy meta tag at build time.
  * Required when renderLegacyChunks: true, which injects inline detection scripts.
  * Uses cspHashes exported by the plugin so hashes stay in sync with the version.
+ *
+ * The `data:` source is required because the legacy plugin's modern browser
+ * detection uses `import 'data:text/javascript,...'` to test for
+ * `import.meta.resolve` support. Without `data:` in script-src, the detection
+ * fails and browsers fall back to legacy SystemJS bundles.
  */
 function legacyCspHashesPlugin(): Plugin {
   const inlineHashes = cspHashes.map(h => `'sha256-${h}'`).join(" ")
@@ -105,7 +110,7 @@ function legacyCspHashesPlugin(): Plugin {
       return html.replace(
         /(<meta[^>]+http-equiv="Content-Security-Policy"[^>]+content=")([^"]*)(")/,
         (_, prefix, content, suffix) =>
-          `${prefix}${content}; script-src 'self' ${inlineHashes}${suffix}`,
+          `${prefix}${content}; script-src 'self' data: ${inlineHashes}${suffix}`,
       )
     },
   }
