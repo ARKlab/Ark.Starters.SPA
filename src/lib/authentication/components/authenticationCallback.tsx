@@ -10,7 +10,7 @@ export const AuthenticationCallback = () => {
   const dispatch = useAppDispatch()
   const auth = useAppSelector(authSelector)
 
-  const ref = useRef<boolean>(false)
+  const ref = useRef(false)
 
   useAsyncEffect(async () => {
     if (ref.current) return

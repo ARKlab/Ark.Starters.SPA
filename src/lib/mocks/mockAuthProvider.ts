@@ -8,24 +8,24 @@ import type { AuthProvider } from "../authentication/providers/authProviderInter
  * Set `window.e2eUser` via `cy.visit` `onBeforeLoad` to simulate a logged-in user.
  */
 export class MockAuthProvider implements AuthProvider {
-  init(): Promise<void> {
-    return Promise.resolve()
+  async init(): Promise<void> {
+    return
   }
 
-  login(): Promise<void> {
-    return Promise.resolve()
+  async login(): Promise<void> {
+    return
   }
 
-  logout(): Promise<void> {
-    return Promise.resolve()
+  async logout(): Promise<void> {
+    return
   }
 
-  handleLoginRedirect(): Promise<void> {
-    return Promise.resolve()
+  async handleLoginRedirect(): Promise<void> {
+    return
   }
 
-  getToken(_audience?: string): Promise<string | null> {
-    return Promise.resolve(null)
+  async getToken(_audience?: string): Promise<string | null> {
+    return null
   }
 
   hasPermission(_permission: string, _audience?: string): boolean {
@@ -36,8 +36,8 @@ export class MockAuthProvider implements AuthProvider {
     return window.e2eUser ? LoginStatus.Logged : LoginStatus.NotLogged
   }
 
-  getUserDetail(): Promise<UserAccountInfo | null> {
-    return Promise.resolve(window.e2eUser ?? null)
+  async getUserDetail(): Promise<UserAccountInfo | null> {
+    return window.e2eUser ?? null
   }
 
   onLoginStatus(subscriber: (status: LoginStatus) => void): () => void {

@@ -31,7 +31,7 @@ export default function ComponentsTestPage() {
   const minBound = new Date(2025, 0, 10) // 10 Jan 2025
   const maxBound = new Date(2025, 0, 15) // 15 Jan 2025
   // AppInput state
-  const [inputValue, setInputValue] = useState<string>("")
+  const [inputValue, setInputValue] = useState("")
   // AppModal states
   const [modalOpen, setModalOpen] = useState(false)
   const [submitCount, setSubmitCount] = useState(0)
@@ -60,7 +60,7 @@ export default function ComponentsTestPage() {
   // App Tag Input states
   const [tagsBasic, setTagsBasic] = useState<string[]>([])
 
-  const [tagsDisabled] = useState<string[]>(["fixed"])
+  const [tagsDisabled] = useState(["fixed"])
   // FileUpload states
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
   const [selectedMultipleFiles, setSelectedMultipleFiles] = useState<File[]>([])
