@@ -113,10 +113,11 @@ function legacyCspHashesPlugin(): Plugin {
       // The data: URI itself is blocked by CSP unless its content hash is in script-src.
       // Extract the data: URI dynamically so we stay in sync if plugin-legacy changes it.
       // Use alternating patterns: single-quoted first (plugin-legacy default), then double-quoted.
-      // Note: [^'] / [^"] is used per pattern (not [^"']) to avoid stopping at quotes inside the URI.
+      // Anchored to the known plugin-legacy prefix "if(!import.meta.resolve)" to avoid matching
+      // any other data: URI imports that may appear in the HTML.
       const dataUriMatch =
-        html.match(/import'(data:text\/javascript,[^']+)'/) ??
-        html.match(/import"(data:text\/javascript,[^"]+)"/)
+        html.match(/import'(data:text\/javascript,if\(!import\.meta\.resolve\)[^']+)'/) ??
+        html.match(/import"(data:text\/javascript,if\(!import\.meta\.resolve\)[^"]+)"/)
       let dataUriHash = ""
       if (dataUriMatch) {
         try {
