@@ -64,31 +64,23 @@ describe("Application Insights - Authenticated User Context", () => {
         })
       })
 
-    cy.wait(500)
-
-    cy.then(() => {
-      cy.wrap(telemetryPayloads).then(payloads => {
-        cy.log(`Total telemetry payloads: ${payloads.length}`)
-
-        let foundAuthUserId = false
-
-        payloads.forEach(payload => {
-          const items = Array.isArray(payload) ? payload : [payload]
-          items.forEach((item: { tags?: Record<string, string> }) => {
-            const tags = item.tags
-            if (tags && tags["ai.user.authUserId"] === testUsername) {
-              foundAuthUserId = true
-              cy.log(`✅ Found ai.user.authUserId = ${tags["ai.user.authUserId"]}`)
-            }
-          })
-        })
-
-        assert.isTrue(
-          foundAuthUserId,
-          `❌ FAILED: Expected at least one telemetry item with ai.user.authUserId = "${testUsername}". ` +
-            "This means setAuthenticatedUserContext is not enriching telemetry correctly.",
+    // Use a retryable assertion instead of a fixed cy.wait(500) so that
+    // Cypress keeps checking until the intercepted telemetry payload arrives.
+    // This eliminates flakiness caused by timing differences in CI.
+    cy.wrap(null, { timeout: 10000 }).should(() => {
+      const foundItem = telemetryPayloads.some(payload => {
+        const items = Array.isArray(payload) ? payload : [payload]
+        return items.some(
+          (item: { tags?: Record<string, string> }) =>
+            item.tags?.["ai.user.authUserId"] === testUsername,
         )
       })
+
+      expect(
+        foundItem,
+        `Expected at least one telemetry item with ai.user.authUserId = "${testUsername}". ` +
+          "This means setAuthenticatedUserContext is not enriching telemetry correctly.",
+      ).to.be.true
     })
   })
 })
