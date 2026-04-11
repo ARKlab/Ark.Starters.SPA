@@ -23,6 +23,7 @@ export type ArkFetchBaseQueryFn = ArkBaseQueryFn<
   FetchBaseQueryError,
   { timeout?: number },
   FetchBaseQueryMeta,
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-arguments
   BaseQueryApi
 >
 

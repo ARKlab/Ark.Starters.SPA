@@ -38,6 +38,7 @@ type OptionProps = {
   title: ReactNode
   desc: ReactNode
   name: keyof ConsentState
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-arguments
   control: Control<ConsentState>
   required?: boolean
 }
@@ -73,6 +74,7 @@ export const GdprConsentDialog = () => {
   const { open, onOpen, onClose } = useDisclosure()
   const { t } = useTranslation("gdpr")
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-arguments
   const { handleSubmit, control, reset } = useForm<ConsentState>({
     defaultValues: { necessary: true },
   })

@@ -54,7 +54,7 @@ export const setupAppInsights = ({
         // The SDK will use async XHR by default which Cypress can intercept
       }),
 
-      extensions: ([reactPlugin] as ITelemetryPlugin[]).concat(
+      extensions: ([reactPlugin] as unknown as ITelemetryPlugin[]).concat(
         ...(enableClickAnalytics ? [clickAnalyticsPlugin] : []),
       ),
       extensionConfig: {
