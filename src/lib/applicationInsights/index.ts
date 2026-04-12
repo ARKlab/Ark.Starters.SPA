@@ -1,6 +1,5 @@
-import type { IAppInsights } from "@microsoft/applicationinsights-common"
 import type { ReactPlugin } from "@microsoft/applicationinsights-react-js"
-import type { ApplicationInsights } from "@microsoft/applicationinsights-web"
+import type { ApplicationInsights, IAppInsights } from "@microsoft/applicationinsights-web"
 
 import type { ApplicationInsightsConfig } from "./types"
 
