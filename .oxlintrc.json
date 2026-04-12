@@ -392,6 +392,23 @@
       "rules": {
         "@typescript-eslint/require-await": "off"
       }
+    },
+    {
+      // oxlint-tsgolint v0.20.0 expanded detection of no-unnecessary-type-arguments to cover
+      // Partial<T> aliases, causing false positives in RTK query generic type definitions and
+      // in react-hook-form usage where explicit type arguments are intentional for type safety
+      // and serve as documentation (e.g. ArkBaseQueryApi<BaseQuery>, useForm<ConsentState>).
+      // Removing them would silently widen the inferred types, so the rule is disabled here.
+      "files": [
+        "**/lib/rtk/arkBaseQuery.ts",
+        "**/lib/rtk/appFetchBaseQuery.ts",
+        "**/lib/rtk/withZodResultValidation.ts",
+        "**/lib/rtk/withToaster.ts",
+        "**/components/gdprConsentDialog.tsx"
+      ],
+      "rules": {
+        "@typescript-eslint/no-unnecessary-type-arguments": "off"
+      }
     }
   ]
 }
