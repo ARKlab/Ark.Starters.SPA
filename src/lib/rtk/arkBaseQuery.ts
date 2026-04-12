@@ -87,7 +87,6 @@ export type ArkBaseQueryEnhancer<
   UnionIfObject<ArkBaseQueryError<BaseQuery>, AdditionalError>,
   ArkBaseQueryExtraOptions<BaseQuery> & AdditionalDefinitionExtraOptions,
   NonNullable<ArkBaseQueryMeta<BaseQuery>>,
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-arguments
   ArkBaseQueryApi<BaseQuery>
 >
 

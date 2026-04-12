@@ -29,7 +29,6 @@ export type withToasterType = <BaseQuery extends ArkBaseQueryFn>(
   ArkBaseQueryError<BaseQuery>,
   ArkBaseQueryExtraOptions<BaseQuery> & { disableAutoToast?: boolean },
   NonNullable<ArkBaseQueryMeta<BaseQuery>>,
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-arguments
   ArkBaseQueryApi<BaseQuery>
 >
 

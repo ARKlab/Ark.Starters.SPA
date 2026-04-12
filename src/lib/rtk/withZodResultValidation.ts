@@ -28,7 +28,6 @@ export type withZodResultValidationType = <BaseQuery extends ArkBaseQueryFn>(
   UnionWithZodError<ArkBaseQueryError<BaseQuery>>,
   ArkBaseQueryExtraOptions<BaseQuery> & { dataSchema?: z.ZodType<ArkBaseQueryResult<BaseQuery>> },
   NonNullable<ArkBaseQueryMeta<BaseQuery>>,
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-arguments
   ArkBaseQueryApi<BaseQuery>
 >
 
