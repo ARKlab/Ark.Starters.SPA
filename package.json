@@ -92,7 +92,7 @@
     "@types/react": "19.2.14",
     "@types/react-copy-to-clipboard": "5.0.7",
     "@types/react-dom": "19.2.3",
-    "@typescript/native-preview": "7.0.0-dev.20260409.1",
+    "@typescript/native-preview": "7.0.0-dev.20260410.1",
     "@vite-pwa/assets-generator": "1.0.2",
     "@vitejs/plugin-legacy": "8.0.1",
     "@vitejs/plugin-react": "6.0.1",
@@ -126,7 +126,7 @@
     "vite-plugin-react-click-to-component": "4.2.1",
     "vite-plugin-static-copy": "4.0.1",
     "vite-plugin-svgr": "5.2.0",
-    "wait-on": "9.0.4",
+    "wait-on": "9.0.5",
     "web-vitals": "5.2.0"
   },
   "nyc": {
