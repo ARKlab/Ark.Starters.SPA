@@ -6,7 +6,6 @@
       "vite/client",
       "vite-plugin-pwa/pwa-assets",
       "vite-plugin-pwa/client",
-      "vite-plugin-i18n-ally/client",
       "unplugin-info/client"
     ],
     "allowJs": false,
