@@ -120,7 +120,7 @@
     "vite": "8.0.9",
     "vite-plugin-image-optimizer": "2.0.3",
     "vite-plugin-istanbul": "8.0.0",
-    "vite-plugin-oxlint": "2.0.1",
+    "vite-plugin-oxlint": "2.1.0",
     "vite-plugin-preload": "0.7.0",
     "vite-plugin-pwa": "1.2.0",
     "vite-plugin-react-click-to-component": "4.2.2",
