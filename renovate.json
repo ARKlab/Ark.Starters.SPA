@@ -1,10 +1,4 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["local>ARKlab/renovate-config", ":pinAllExceptPeerDependencies"],
-  "packageRules": [
-    {
-      "matchPackageNames": ["@typescript/native-preview"],
-      "followTag": "beta"
-    }
-  ]
+  "extends": ["local>ARKlab/renovate-config", ":pinAllExceptPeerDependencies"]
 }
