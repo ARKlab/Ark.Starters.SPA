@@ -141,9 +141,11 @@
   },
   "engineStrict": true,
   "overrides": {
-    "vite": "8.0.10"
+    "vite": "8.0.10",
+    "simple-git": "3.36.0"
   },
   "comments": {
-    "overrides": "vite-plugin-react-click-to-component@4.2.0 has peerDependency 'vite: ^7' which doesn't include Vite 8. Override ensures all plugins use Vite 8.0.0 stable."
+    "overrides": "vite-plugin-react-click-to-component@4.2.0 has peerDependency 'vite: ^7' which doesn't include Vite 8. Override ensures all plugins use Vite 8.0.0 stable.",
+    "overrides/simple-git": "Security override: simple-git <3.36.0 is vulnerable to RCE (GHSA-hffm-xvc3-vprc / CVE-2026-6951). Pinned to 3.36.0 until unplugin-info updates its dependency. Can be removed once the transitive dependency is updated."
   }
 }
