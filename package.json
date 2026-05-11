@@ -128,6 +128,20 @@
     "wait-on": "9.0.5",
     "web-vitals": "5.2.0"
   },
+  "overrides": {
+    "@cypress/request": {
+      "uuid": "11.1.1"
+    },
+    "glob": "13.0.6",
+    "istanbul-lib-processinfo": {
+      "uuid": "11.1.1"
+    },
+    "simple-git": "3.36.0",
+    "vite": "8.0.11",
+    "workbox-build": {
+      "source-map": "0.7.6"
+    }
+  },
   "nyc": {
     "reporter": [
       "lcov",
@@ -139,25 +153,12 @@
     "npm": ">=10"
   },
   "engineStrict": true,
-  "overrides": {
-    "vite": "8.0.11",
-    "simple-git": "3.36.0",
-    "@cypress/request": {
-      "uuid": "11.1.1"
-    },
-    "istanbul-lib-processinfo": {
-      "uuid": "11.1.1"
-    },
-    "workbox-build": {
-      "glob": "13.0.6",
-      "source-map": "0.7.6"
-    }
-  },
   "comments": {
     "overrides": "vite-plugin-react-click-to-component@4.2.0 has peerDependency 'vite: ^7' which doesn't include Vite 8. Override ensures all plugins use Vite 8.0.0 stable.",
     "overrides/simple-git": "Security override: simple-git <3.36.0 is vulnerable to RCE (GHSA-hffm-xvc3-vprc / CVE-2026-6951). Pinned to 3.36.0 until unplugin-info updates its dependency. Can be removed once the transitive dependency is updated.",
+    "overrides/glob": "Force supported glob 13 across the tree. This removes the remaining deprecated workbox-build glob@11 install warning and stays compatible on Node 24.",
     "overrides/@cypress/request/uuid": "Cypress still pulls @cypress/request with uuid@8.3.2, which is deprecated. Force uuid 11.1.1 until Cypress updates its transitive dependency range.",
     "overrides/istanbul-lib-processinfo/uuid": "nyc still resolves uuid@8.3.2 via istanbul-lib-processinfo. Force uuid 11.1.1 to remove the deprecated transitive dependency.",
-    "overrides/workbox-build": "workbox-build 7.4.1 still pulls deprecated glob@11 and source-map@0.8.0-beta.0. Override them to maintained releases that keep the build working on Node 24."
+    "overrides/workbox-build": "workbox-build 7.4.1 still pulls deprecated source-map@0.8.0-beta.0. Override it to a maintained release that keeps the build working on Node 24."
   }
 }
