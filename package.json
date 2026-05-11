@@ -130,11 +130,11 @@
   },
   "overrides": {
     "@cypress/request": {
-      "uuid": "13.0.2"
+      "uuid": "14.0.0"
     },
     "glob": "13.0.6",
     "istanbul-lib-processinfo": {
-      "uuid": "13.0.2"
+      "uuid": "14.0.0"
     },
     "simple-git": "3.36.0",
     "vite": "8.0.11",
