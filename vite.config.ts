@@ -8,7 +8,6 @@ import msw from "@iodigital/vite-plugin-msw";
 import legacy, { cspHashes } from "@vitejs/plugin-legacy";
 import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import babel from "@rolldown/plugin-babel";
-import copy from "rollup-plugin-copy";
 import { visualizer } from "rollup-plugin-visualizer";
 import Info from "unplugin-info/vite";
 import { defineConfig, loadEnv, type Plugin } from "vite";
@@ -88,6 +87,31 @@ function i18nextBackendHMR(): Plugin {
       }
     },
   };
+}
+
+function syncZodLocales(): Plugin {
+  return {
+    name: "vite-plugin-sync-zod-locales",
+
+    buildStart() {
+      const sourceRoot = path.resolve(process.cwd(), "node_modules/@semihbou/zod-i18n-map/locales")
+      const targetRoot = path.resolve(process.cwd(), "src/locales")
+
+      for (const language of Object.keys(supportedLngs)) {
+        const sourceDir = path.join(sourceRoot, language)
+        const targetDir = path.join(targetRoot, language)
+
+        if (!fs.existsSync(sourceDir)) {
+          continue
+        }
+
+        fs.cpSync(sourceDir, targetDir, {
+          force: true,
+          recursive: true,
+        })
+      }
+    },
+  }
 }
 
 /**
@@ -223,15 +247,7 @@ export default defineConfig(({ mode }) => {
           ],
         },
       }),
-      copy({
-        targets: Object.keys(supportedLngs).map(l => {
-          return {
-            src: "node_modules/@semihbou/zod-i18n-map/locales/" + l,
-            dest: "src/locales",
-          };
-        }),
-        hook: "buildStart",
-      }),
+      syncZodLocales(),
       // i18next backend with HMR support
       i18nextBackendHMR(),
       // Inject legacy plugin CSP hashes into Content-Security-Policy meta tag
