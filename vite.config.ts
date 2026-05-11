@@ -1,27 +1,26 @@
 /// <reference types="vite/client" />
 /// <reference types="vite-plugin-svgr/client" />
 
-import fs from "fs";
-import path from "path";
+import fs from "fs"
+import path from "path"
 
-import msw from "@iodigital/vite-plugin-msw";
-import legacy, { cspHashes } from "@vitejs/plugin-legacy";
-import react, { reactCompilerPreset } from "@vitejs/plugin-react";
-import babel from "@rolldown/plugin-babel";
-import copy from "rollup-plugin-copy";
-import { visualizer } from "rollup-plugin-visualizer";
-import Info from "unplugin-info/vite";
-import { defineConfig, loadEnv, type Plugin } from "vite";
-import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
-import istanbul from "vite-plugin-istanbul";
-import oxlint from "vite-plugin-oxlint";
-import { VitePWA } from "vite-plugin-pwa";
-import { reactClickToComponent } from "vite-plugin-react-click-to-component";
-import svgr from "vite-plugin-svgr";
+import msw from "@iodigital/vite-plugin-msw"
+import legacy, { cspHashes } from "@vitejs/plugin-legacy"
+import react, { reactCompilerPreset } from "@vitejs/plugin-react"
+import babel from "@rolldown/plugin-babel"
+import { visualizer } from "rollup-plugin-visualizer"
+import Info from "unplugin-info/vite"
+import { defineConfig, loadEnv, type Plugin } from "vite"
+import { ViteImageOptimizer } from "vite-plugin-image-optimizer"
+import istanbul from "vite-plugin-istanbul"
+import oxlint from "vite-plugin-oxlint"
+import { VitePWA } from "vite-plugin-pwa"
+import { reactClickToComponent } from "vite-plugin-react-click-to-component"
+import svgr from "vite-plugin-svgr"
 
-import { supportedLngs } from "./src/config/lang";
+import { supportedLngs } from "./src/config/lang"
 
-const chunkSizeLimit = 10048;
+const chunkSizeLimit = 10048
 
 /**
  * Vite plugin for i18next-http-backend with HMR support
@@ -30,64 +29,86 @@ const chunkSizeLimit = 10048;
 function i18nextBackendHMR(): Plugin {
   return {
     name: "vite-plugin-i18next-backend-hmr",
-    
+
     buildStart() {
-      const srcLocalesDir = path.resolve(process.cwd(), "src/locales");
-      const publicLocalesDir = path.resolve(process.cwd(), "public/locales");
-      
+      const srcLocalesDir = path.resolve(process.cwd(), "src/locales")
+      const publicLocalesDir = path.resolve(process.cwd(), "public/locales")
+
       if (!fs.existsSync(publicLocalesDir)) {
-        fs.mkdirSync(publicLocalesDir, { recursive: true });
+        fs.mkdirSync(publicLocalesDir, { recursive: true })
       }
-      
-      const languages = fs.readdirSync(srcLocalesDir);
+
+      const languages = fs.readdirSync(srcLocalesDir)
       for (const lang of languages) {
-        const langSrcDir = path.join(srcLocalesDir, lang);
-        const langPublicDir = path.join(publicLocalesDir, lang);
-        
+        const langSrcDir = path.join(srcLocalesDir, lang)
+        const langPublicDir = path.join(publicLocalesDir, lang)
+
         if (fs.statSync(langSrcDir).isDirectory()) {
           if (!fs.existsSync(langPublicDir)) {
-            fs.mkdirSync(langPublicDir, { recursive: true });
+            fs.mkdirSync(langPublicDir, { recursive: true })
           }
-          
-          const files = fs.readdirSync(langSrcDir);
+
+          const files = fs.readdirSync(langSrcDir)
           for (const file of files) {
             if (file.endsWith(".json")) {
-              fs.copyFileSync(
-                path.join(langSrcDir, file),
-                path.join(langPublicDir, file)
-              );
+              fs.copyFileSync(path.join(langSrcDir, file), path.join(langPublicDir, file))
             }
           }
         }
       }
     },
-    
+
     handleHotUpdate({ file, server }) {
       if (file.includes("/locales/") && file.endsWith(".json")) {
-        console.log("[i18next-hmr] Locale file changed:", file);
-        
-        const relativePath = path.relative(path.resolve(process.cwd(), "src/locales"), file);
-        const publicPath = path.resolve(process.cwd(), "public/locales", relativePath);
-        const publicDir = path.dirname(publicPath);
-        
+        console.log("[i18next-hmr] Locale file changed:", file)
+
+        const relativePath = path.relative(path.resolve(process.cwd(), "src/locales"), file)
+        const publicPath = path.resolve(process.cwd(), "public/locales", relativePath)
+        const publicDir = path.dirname(publicPath)
+
         if (!fs.existsSync(publicDir)) {
-          fs.mkdirSync(publicDir, { recursive: true });
+          fs.mkdirSync(publicDir, { recursive: true })
         }
-        
-        fs.copyFileSync(file, publicPath);
-        
-        const pathParts = relativePath.split(path.sep);
-        const lng = pathParts[0];
-        const ns = path.basename(pathParts[1], ".json");
-        
+
+        fs.copyFileSync(file, publicPath)
+
+        const pathParts = relativePath.split(path.sep)
+        const lng = pathParts[0]
+        const ns = path.basename(pathParts[1], ".json")
+
         server.ws.send({
           type: "custom",
           event: "i18next-hmr-reload",
           data: { lng, ns, path: `/locales/${lng}/${ns}.json` },
-        });
+        })
       }
     },
-  };
+  }
+}
+
+function syncZodLocales(): Plugin {
+  return {
+    name: "vite-plugin-sync-zod-locales",
+
+    buildStart() {
+      const sourceRoot = path.resolve(process.cwd(), "node_modules/@semihbou/zod-i18n-map/locales")
+      const targetRoot = path.resolve(process.cwd(), "src/locales")
+
+      for (const language of Object.keys(supportedLngs)) {
+        const sourceDir = path.join(sourceRoot, language)
+        const targetDir = path.join(targetRoot, language)
+
+        if (!fs.existsSync(sourceDir)) {
+          continue
+        }
+
+        fs.cpSync(sourceDir, targetDir, {
+          force: true,
+          recursive: true,
+        })
+      }
+    },
+  }
 }
 
 /**
@@ -121,9 +142,8 @@ function legacyCspHashesPlugin(): Plugin {
   }
 }
 
-
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), "");
+  const env = loadEnv(mode, process.cwd(), "")
 
   return {
     plugins: [
@@ -134,30 +154,30 @@ export default defineConfig(({ mode }) => {
         // Feature-based for browsers lacking modern features
         // CSS Grid polyfills cause rendering problems, so require native support
         targets: [
-          "supports es6-module",        // Basic module support
-          "supports css-variables",      // Chakra UI v3 requirement
-          "supports css-grid",           // Layouts (polyfills cause issues)
-          "supports serviceworkers",     // PWA requirement
-          ">0.5%",                       // Market share threshold
-          "not dead",                    // Still maintained
+          "supports es6-module", // Basic module support
+          "supports css-variables", // Chakra UI v3 requirement
+          "supports css-grid", // Layouts (polyfills cause issues)
+          "supports serviceworkers", // PWA requirement
+          ">0.5%", // Market share threshold
+          "not dead", // Still maintained
         ],
-        
+
         // Modern browser targets (get clean, unpolyfilled code)
         // Uses Web Platform Baseline: features widely available for 30+ months
         // Includes downstream browsers (Opera, Brave, Samsung Internet)
         modernTargets: [
           "baseline widely available with downstream and " +
-          "fully supports css-variables and " +
-          "fully supports es6-module and " +
-          "fully supports es6-module-dynamic-import and " +
-          "fully supports css-grid and " +
-          "fully supports async-functions and " +
-          "fully supports serviceworkers"
+            "fully supports css-variables and " +
+            "fully supports es6-module and " +
+            "fully supports es6-module-dynamic-import and " +
+            "fully supports css-grid and " +
+            "fully supports async-functions and " +
+            "fully supports serviceworkers",
         ],
-        
+
         // Modern browsers get NO polyfills (fast experience)
         modernPolyfills: false,
-        
+
         // Legacy chunks are disabled in all builds. When enabled, plugin-legacy 8+ injects
         // a detection script containing `import 'data:text/javascript,...'` which the CSP
         // can only allow via `data:` in script-src — a known security loosening. There is
@@ -223,15 +243,7 @@ export default defineConfig(({ mode }) => {
           ],
         },
       }),
-      copy({
-        targets: Object.keys(supportedLngs).map(l => {
-          return {
-            src: "node_modules/@semihbou/zod-i18n-map/locales/" + l,
-            dest: "src/locales",
-          };
-        }),
-        hook: "buildStart",
-      }),
+      syncZodLocales(),
       // i18next backend with HMR support
       i18nextBackendHMR(),
       // Inject legacy plugin CSP hashes into Content-Security-Policy meta tag
@@ -346,5 +358,5 @@ export default defineConfig(({ mode }) => {
     // Debugger statements are automatically removed by Oxc during minification.
     // If dropping console statements is critical, consider using terser:
     //   build: { minify: 'terser', terserOptions: { compress: { drop_console: true } } }
-  };
-});
+  }
+})
