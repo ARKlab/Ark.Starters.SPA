@@ -106,9 +106,7 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
   })
   const reduxTableState = useAppSelector(state => getTableState(state, tableKey))
   const filtersAreEquals = useFiltersEqual(reduxTableState?.filters, externalFiltersState)
-  const [sortingState, setSorting] = useState(
-    defaultSorting ?? [{ id: "", desc: false }],
-  )
+  const [sortingState, setSorting] = useState(defaultSorting ?? [{ id: "", desc: false }])
   const [rowIndexSelection, setRowIndexSelection] = useState(selectedRows ?? {}) //this is the state of the selected rows
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
@@ -380,7 +378,9 @@ function Filter<T>({ column }: { column: Column<T>; table: ReactTable<T>; isLoad
         <>
           <datalist id={column.id + "list"}>
             {sortedUniqueValues.slice(0, 5000).map(value => (
-              <option value={value} key={value} />
+              <option value={value} key={value}>
+                {value}
+              </option>
             ))}
           </datalist>
           {/* className is used here for datalist functionality - it's passed to the underlying HTML input element */}

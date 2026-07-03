@@ -47,7 +47,7 @@ export const simulatedArkQueryWithParams = (params: ArkPagedQueryParameters) => 
       return filters.every(columnFilter => {
         const movieValue = movie[columnFilter.id as keyof Movie]
         if (columnFilter.id === "releaseDate" && Array.isArray(columnFilter.value)) {
-          const releaseDate = new Date(movieValue as string)
+          const releaseDate = new Date(String(movieValue))
           const filterStartDate = columnFilter.value[0]
             ? // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
               new Date(columnFilter.value[0]).toISOString()

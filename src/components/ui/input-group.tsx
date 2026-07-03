@@ -8,9 +8,12 @@ export interface InputGroupProps extends BoxProps {
   startElement?: React.ReactNode
   endElement?: React.ReactNode
   children: React.ReactElement<InputElementProps>
-  startOffset?: InputElementProps["paddingStart"]
-  endOffset?: InputElementProps["paddingEnd"]
+  startOffset?: string | number
+  endOffset?: string | number
 }
+
+const toCssOffset = (offset: string | number) =>
+  typeof offset === "number" ? `${offset}px` : offset
 
 export const InputGroup = React.forwardRef<HTMLDivElement, InputGroupProps>(
   function InputGroup(props, ref) {
@@ -35,16 +38,13 @@ export const InputGroup = React.forwardRef<HTMLDivElement, InputGroupProps>(
           </InputElement>
         )}
 
-        {
-          // @ts-ignore - TypeScript type inference inconsistent across build configs
-          React.cloneElement(child, {
-            ...(startElement && {
-              ps: `calc(var(--input-height) - ${startOffset})`,
-            }),
-            ...(endElement && { pe: `calc(var(--input-height) - ${endOffset})` }),
-            ...children.props,
-          })
-        }
+        {React.cloneElement(child, {
+          ...(startElement && {
+            ps: `calc(var(--input-height) - ${toCssOffset(startOffset)})`,
+          }),
+          ...(endElement && { pe: `calc(var(--input-height) - ${toCssOffset(endOffset)})` }),
+          ...children.props,
+        } as InputElementProps)}
         {endElement && (
           <InputElement placement="end" {...endElementProps}>
             {endElement}
