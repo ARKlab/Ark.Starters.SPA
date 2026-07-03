@@ -1,26 +1,26 @@
-import { makeZodI18nMap } from "@semihbou/zod-i18n-map";
-import i18next, { getFixedT } from "i18next";
-import LanguageDetector from "i18next-browser-languagedetector";
-import Backend from "i18next-http-backend";
-import { initReactI18next } from "react-i18next";
-import * as z from "zod";
+import { makeZodI18nMap } from "@semihbou/zod-i18n-map"
+import i18next, { getFixedT } from "i18next"
+import LanguageDetector from "i18next-browser-languagedetector"
+import Backend from "i18next-http-backend"
+import { initReactI18next } from "react-i18next"
+import * as z from "zod"
 
-import { supportedLngs } from "../../config/lang";
+import { supportedLngs } from "../../config/lang"
 
-import { addCustomFormatters } from "./formatters";
-import { setupI18nextHMR } from "./hmr";
+import { addCustomFormatters } from "./formatters"
+import { setupI18nextHMR } from "./hmr"
 
-const langs = import.meta.env.MODE == "e2e" ? { en: "en" } : supportedLngs;
-const fallbackLng = Object.keys(langs)[0];
-const lookupTarget = "lang";
+const langs = import.meta.env.MODE == "e2e" ? { en: "en" } : supportedLngs
+const fallbackLng = Object.keys(langs)[0]
+const lookupTarget = "lang"
 
 export const i18nSetup = async () => {
-  if (i18next.isInitialized) return;
+  if (i18next.isInitialized) return
 
-  const zodNs = ["zodCustom", "zod"];
+  const zodNs = ["zodCustom", "zod"]
 
   // All available namespaces
-  const namespaces = ["translation", "libComponents", "gdpr", "zodCustom", "template"];
+  const namespaces = ["translation", "libComponents", "gdpr", "zodCustom", "template"]
 
   await i18next
     .use(Backend)
@@ -33,9 +33,9 @@ export const i18nSetup = async () => {
         crossDomain: false,
         parse: (data: string) => JSON.parse(data) as Record<string, unknown>,
         requestOptions: {
-          mode: "cors" as RequestMode,
-          credentials: "same-origin" as RequestCredentials,
-          cache: "default" as RequestCache,
+          mode: "cors",
+          credentials: "same-origin",
+          cache: "default",
         },
         request: (
           options: { requestOptions?: RequestInit },
@@ -48,10 +48,15 @@ export const i18nSetup = async () => {
           const timeoutId = setTimeout(() => {
             controller.abort()
           }, 10000) // 10 second timeout
-          
-          fetch(url, { ...options.requestOptions, signal: controller.signal })
-            .then(async response => {
+
+          void (async () => {
+            try {
+              const response = await fetch(url, {
+                ...options.requestOptions,
+                signal: controller.signal,
+              })
               clearTimeout(timeoutId)
+
               if (!response.ok) {
                 callback(new Error(`HTTP ${response.status}: ${response.statusText}`), {
                   status: response.status,
@@ -59,13 +64,17 @@ export const i18nSetup = async () => {
                 })
                 return
               }
+
               const data = await response.text()
               callback(null, { status: response.status, data })
-            })
-            .catch((error: Error) => {
+            } catch (error) {
               clearTimeout(timeoutId)
-              callback(error, { status: 500, data: null })
-            })
+              callback(error instanceof Error ? error : new Error("Unknown request error"), {
+                status: 500,
+                data: null,
+              })
+            }
+          })()
         },
       },
 
@@ -73,14 +82,14 @@ export const i18nSetup = async () => {
       detection: {
         // Order of detection methods
         order: ["querystring", "localStorage", "navigator", "htmlTag"],
-        
+
         // Keys to lookup language from
         lookupQuerystring: lookupTarget,
         lookupLocalStorage: `i18next_${lookupTarget}`,
-        
+
         // Cache user language on localStorage
         caches: ["localStorage"],
-        
+
         // Don't cache in cookies
         excludeCacheFor: ["cimode"],
       },
@@ -122,17 +131,17 @@ export const i18nSetup = async () => {
       nonExplicitSupportedLngs: true,
       cleanCode: true,
       lowerCaseLng: true,
-    });
+    })
 
   // Configure Zod with i18next translations
-  const t = getFixedT(null, zodNs);
+  const t = getFixedT(null, zodNs)
   z.config({
     customError: makeZodI18nMap({ t, ns: zodNs, handlePath: { keyPrefix: "paths" } }),
-  });
+  })
 
   // Add custom formatters for date formatting
-  addCustomFormatters(i18next);
-  
+  addCustomFormatters(i18next)
+
   // Setup HMR for development
-  setupI18nextHMR();
-};
+  setupI18nextHMR()
+}

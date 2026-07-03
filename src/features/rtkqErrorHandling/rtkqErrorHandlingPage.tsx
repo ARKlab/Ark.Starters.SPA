@@ -121,13 +121,13 @@ const RTKQErrorHandlingPage = () => {
 
   const options = createListCollection({
     items: [
-      { label: "200", value: "200" as ResultOption },
-      { label: "200WithWrongSchema", value: "200WithWrongSchema" as ResultOption },
-      { label: "400", value: "400" as ResultOption },
-      { label: "429", value: "429" as ResultOption },
-      { label: "500", value: "500" as ResultOption },
-      { label: "Error", value: "Error" as ResultOption },
-      { label: "Timeout", value: "Timeout" as ResultOption },
+      { label: "200", value: "200" },
+      { label: "200WithWrongSchema", value: "200WithWrongSchema" },
+      { label: "400", value: "400" },
+      { label: "429", value: "429" },
+      { label: "500", value: "500" },
+      { label: "Error", value: "Error" },
+      { label: "Timeout", value: "Timeout" },
     ],
   })
 

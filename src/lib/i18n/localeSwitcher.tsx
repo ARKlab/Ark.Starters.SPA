@@ -1,5 +1,4 @@
 import { Button } from "@chakra-ui/react"
-import type { RefObject } from "react"
 import { useTranslation } from "react-i18next"
 import { LuChevronDown, LuGlobe } from "react-icons/lu"
 
@@ -35,7 +34,7 @@ export const LocaleSwitcher = ({
           <LuChevronDown />
         </Button>
       </MenuTrigger>
-      <MenuContent portalRef={portalRef as RefObject<HTMLElement> | undefined}>
+      <MenuContent portalRef={portalRef}>
         <MenuItemGroup title={"Language"}>
           {Object.entries(supportedLngs).map(([k, v]) => (
             <MenuItem value={k} key={k} onClick={async () => swith(k)}>

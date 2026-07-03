@@ -152,7 +152,7 @@ export class Auth0AuthProvider implements AuthProvider {
     return {
       username: currentAccounts.name ?? "",
       permissions: permissions,
-    } as UserAccountInfo
+    }
   }
 
   private setLoginStatus(status: LoginStatus) {

@@ -46,13 +46,10 @@ export default function ControlComponentsView() {
   ): AppSelectOptionItem[] {
     return Object.values(enumObject)
       .filter(value => !excludeValues?.includes(value)) // Step 2: Filter out excluded values
-      .map(
-        value =>
-          ({
-            label: value,
-            value: parser ? parser(value) : value !== "NotSet" ? value : "",
-          }) as AppSelectOptionItem,
-      )
+      .map(value => ({
+        label: value,
+        value: parser ? parser(value) : value !== "NotSet" ? value : "",
+      }))
   }
 
   return (

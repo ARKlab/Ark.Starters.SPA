@@ -209,7 +209,7 @@ export class MsalAuthProvider implements AuthProvider {
         return {
           username: account.username,
           permissions: this.getUserPermissions(),
-        } as UserAccountInfo
+        }
       } catch (e) {
         if (e instanceof msal.InteractionRequiredAuthError) return null
 
