@@ -110,7 +110,7 @@
     "msw": "2.14.6",
     "oxfmt": "0.57.0",
     "oxlint": "1.72.0",
-    "oxlint-tsgolint": "0.24.0",
+    "oxlint-tsgolint": "0.23.0",
     "rollup-plugin-visualizer": "7.0.1",
     "sharp": "0.35.2",
     "svgo": "4.0.1",
