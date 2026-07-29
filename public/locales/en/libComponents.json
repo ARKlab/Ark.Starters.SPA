@@ -1,0 +1,19 @@
+{
+  "appDatePicker_openDatePicker": "Open date picker",
+  "appDatePicker_clearDatePicker": "Clear date picker",
+  "appDateRange_from": "From",
+  "appDateRange_to": "To",
+  "appPagination_firstPage": "First Page",
+  "appPagination_previous": "Previous",
+  "appPagination_next": "Next",
+  "appPagination_lastPage": "Last Page",
+  "appTagInput_tags": "Tags",
+  "appTagInput_addTag": "Add tag...",
+  "columnSorter_sort": "Sort",
+  "columnSorter_sortedAscending": "Sorted ascending",
+  "columnSorter_sortedDescending": "Sorted descending",
+  "featureErrorBoundary_errorInFeature": "Error in {{feature}}",
+  "featureErrorBoundary_errorOccurred": "Something went wrong",
+  "featureErrorBoundary_unexpectedError": "An unexpected error occurred",
+  "featureErrorBoundary_tryAgain": "Try again"
+}

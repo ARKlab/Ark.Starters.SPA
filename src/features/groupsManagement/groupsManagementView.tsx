@@ -1,5 +1,6 @@
 import { Box, Button, HStack, Heading, VStack, Text, Flex, Separator, Input } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { HiOutlinePlus, HiOutlineMinus } from "react-icons/hi";
 
 import { useAppDispatch } from "../../app/hooks";
@@ -78,6 +79,7 @@ interface SimpleMenuItem {
 }
 
 const GroupsManagementView = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { context, isLogged } = useAuthContext();
 
@@ -555,7 +557,7 @@ const GroupsManagementView = () => {
       if (isLeafNode) {
         totalItems++;
         const itemId = menuItem.menuSection;
-        const isSelected = checkedItems[itemId] || false;
+        const isSelected = checkedItems[itemId] ?? false;
         if (isSelected) selectedItems++;
 
         breakdown.push({
@@ -572,7 +574,7 @@ const GroupsManagementView = () => {
             totalItems++;
             sectionTotal++;
             const componentId = `${menuItem.class}-${childLink.reportId}-${component.widId}`;
-            const isSelected = checkedItems[componentId] || false;
+            const isSelected = checkedItems[componentId] ?? false;
             if (isSelected) {
               selectedItems++;
               sectionSelected++;
@@ -948,14 +950,14 @@ const GroupsManagementView = () => {
   const isAllChildComponentsSelected = (menuItemClass: string, childLink: ChildLink): boolean => {
     return childLink.components.every(component => {
       const componentId = `${menuItemClass}-${childLink.reportId}-${component.widId}`;
-      return checkedItems[componentId] || false;
+      return checkedItems[componentId] ?? false;
     });
   };
 
   const isSomeChildComponentsSelected = (menuItemClass: string, childLink: ChildLink): boolean => {
     return childLink.components.some(component => {
       const componentId = `${menuItemClass}-${childLink.reportId}-${component.widId}`;
-      return checkedItems[componentId] || false;
+      return checkedItems[componentId] ?? false;
     });
   };
 
@@ -976,10 +978,10 @@ const GroupsManagementView = () => {
     return (
       <Flex direction="column" align="center" justifyContent="center" minH="96" gap="4">
         <Text fontSize="lg" color="fg.muted" textAlign="center">
-          Unauthenticated user, please log in
+          {t("groupsManagement_unauthenticated")}
         </Text>
         <Button onClick={handleLogin} colorPalette="blue">
-          Login
+          {t("menu.login", { ns: "template" })}
         </Button>
       </Flex>
     );
@@ -993,7 +995,7 @@ const GroupsManagementView = () => {
     return (
       <Flex direction="column" align="center" justifyContent="center" minH="96" gap="4">
         <Text fontSize="lg" color="fg.error" textAlign="center">
-          Error initialising, please refresh
+          {t("groupsManagement_errorInitializing")}
         </Text>
         <Button
           onClick={() => {
@@ -1001,7 +1003,7 @@ const GroupsManagementView = () => {
           }}
           colorPalette="blue"
         >
-          Refresh Page
+          {t("userManagement_refreshPage")}
         </Button>
       </Flex>
     );
@@ -1010,7 +1012,7 @@ const GroupsManagementView = () => {
   return (
     <Box>
       <Box p="4">
-        <Heading size="lg">Groups Management</Heading>
+        <Heading size="lg">{t("groupsManagement_title")}</Heading>
       </Box>
 
       <Flex>
@@ -1047,7 +1049,7 @@ const GroupsManagementView = () => {
               alignSelf="flex-start"
               onClick={handleShowCreateUserTypeModal}
             >
-              <Text fontSize="sm">Create User Type</Text>
+              <Text fontSize="sm">{t("groupsManagement_createUserType")}</Text>
             </Button>
             </VStack>
           </Box>
@@ -1058,8 +1060,8 @@ const GroupsManagementView = () => {
             <HStack justify="space-between" align="center" mb="4">
               <Heading size="md">
                 {selectedUserType && userTypes.length > 0
-                  ? `Config: ${userTypes.find(ut => ut.ID === selectedUserType)?.Name ?? "Unknown"}`
-                  : "Config: Select a user type"}
+                  ? `${t("groupsManagement_config")} ${userTypes.find(ut => ut.ID === selectedUserType)?.Name ?? "Unknown"}`
+                  : `${t("groupsManagement_config")} ${t("groupsManagement_selectUserType")}`}
               </Heading>
               {selectedUserType && aggregatedReportSettings && (
                 <HStack gap="2">
@@ -1071,7 +1073,7 @@ const GroupsManagementView = () => {
                     }}
                     disabled={calculateCurrentPayloadSize().selectedCount === 0}
                   >
-                    Deselect All
+                    {t("groupsManagement_deselectAll")}
                   </Button>
                   <Button
                     size="xs"
@@ -1096,7 +1098,7 @@ const GroupsManagementView = () => {
                       setCheckedItems(newCheckedItems);
                     }}
                   >
-                    Select All
+                    {t("groupsManagement_selectAll")}
                   </Button>
                 </HStack>
               )}
@@ -1113,7 +1115,7 @@ const GroupsManagementView = () => {
                         return (
                           <Box key={menuItem.menuSection} pl="1">
                             <Checkbox
-                              checked={checkedItems[itemId] || false}
+                              checked={checkedItems[itemId] ?? false}
                               onCheckedChange={details => {
                                 handleCheckboxChange(itemId, Boolean(details.checked));
                               }}
@@ -1180,7 +1182,7 @@ const GroupsManagementView = () => {
                                           return (
                                             <Checkbox
                                               key={component.widId}
-                                              checked={checkedItems[componentId] || false}
+                                              checked={checkedItems[componentId] ?? false}
                                               onCheckedChange={details => {
                                                 handleCheckboxChange(componentId, Boolean(details.checked));
                                               }}
@@ -1205,8 +1207,8 @@ const GroupsManagementView = () => {
                 <Box>
                   <Text fontSize="sm" color="fg.muted" textAlign="center" py="8">
                     {!aggregatedReportSettings
-                      ? "Loading menu structure..."
-                      : "Select a user type from the left panel to configure its settings."}
+                      ? t("groupsManagement_loadingMenu")
+                      : t("groupsManagement_selectUserTypeLeft")}
                   </Text>
                 </Box>
               )}
@@ -1223,7 +1225,7 @@ const GroupsManagementView = () => {
                   }}
                   disabled={!selectedUserType || calculateCurrentPayloadSize().selectedCount === 0}
                 >
-                  <Text fontSize="sm">{isSaving ? "Saving..." : "Save Configuration"}</Text>
+                  <Text fontSize="sm">{isSaving ? t("groupsManagement_saving") : t("groupsManagement_saveConfiguration")}</Text>
                 </Button>
               </Box>
             </VStack>
@@ -1235,18 +1237,18 @@ const GroupsManagementView = () => {
             <Flex justify="space-between" align="center" mb="4">
               <Heading size="md">
                 {selectedUserType && userTypes.length > 0
-                  ? `User List: ${userTypes.find(ut => ut.ID === selectedUserType)?.Name ?? "Unknown"}`
-                  : "User List: Select a user type"}
+                  ? `${t("groupsManagement_userList")} ${userTypes.find(ut => ut.ID === selectedUserType)?.Name ?? "Unknown"}`
+                  : `${t("groupsManagement_userList")} ${t("groupsManagement_selectUserType")}`}
               </Heading>
             </Flex>
             <VStack align="stretch" gap="4">
               <Box>
                 <Text fontSize="sm" mb="2">
-                  Add User:
+                  {t("groupsManagement_addUser")}
                 </Text>
                 <HStack>
                   <Input
-                    placeholder="Enter username"
+                    placeholder={t("groupsManagement_enterUsername")}
                     size="sm"
                     value={newUserName}
                     onChange={e => {
@@ -1271,7 +1273,7 @@ const GroupsManagementView = () => {
                       return existingUsers.includes(trimmedName) || usersToAdd.includes(trimmedName);
                     })()}
                   >
-                    <Text fontSize="sm">Add</Text>
+                    <Text fontSize="sm">{t("groupsManagement_add")}</Text>
                   </Button>
                 </HStack>
               </Box>
@@ -1281,7 +1283,7 @@ const GroupsManagementView = () => {
               <Box>
                 <HStack justify="space-between" mb="2">
                   <Text fontSize="sm" fontWeight="medium">
-                    Users:
+                    {t("groupsManagement_users")}
                   </Text>
                   {selectedUserType && users.filter(user => user.UserType === selectedUserType).length > 0 && (
                     <Button
@@ -1290,7 +1292,7 @@ const GroupsManagementView = () => {
                       colorScheme="red"
                       onClick={handleRemoveToggle}
                     >
-                      {isRemoveMode ? "Cancel" : "Remove From List"}
+                      {isRemoveMode ? t("groupsManagement_cancel") : t("groupsManagement_removeFromList")}
                     </Button>
                   )}
                 </HStack>

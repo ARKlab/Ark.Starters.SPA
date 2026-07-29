@@ -1,5 +1,6 @@
 import { Badge, Box, Button, Flex, Heading, HStack, Input, SimpleGrid, Table, Text } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FaEdit } from "react-icons/fa";
 import { z } from "zod";
 
@@ -60,12 +61,14 @@ interface UserEditData {
     expiry_date?: string;
   };
   artesian_expiry_date?: number;
+  blocked?: boolean;
 }
 
 type SortField = "email" | "company" | "name" | "surname" | "expiryDate";
 type SortDir = "asc" | "desc";
 
 const UserManagementView = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { context, isLogged } = useAuthContext();
 
@@ -299,7 +302,7 @@ const UserManagementView = () => {
         } else if (sortField === "surname") {
           av = a.user_metadata?.family_name ?? a.family_name ?? "";
           bv = b.user_metadata?.family_name ?? b.family_name ?? "";
-        } else if (sortField === "expiryDate") {
+        } else {
           av = String(a.app_metadata?.expiry_date ?? "");
           bv = String(b.app_metadata?.expiry_date ?? "");
         }
@@ -320,10 +323,10 @@ const UserManagementView = () => {
     return (
       <Flex direction="column" align="center" justifyContent="center" minH="96" gap="4">
         <Text fontSize="lg" color="status.info" textAlign="center">
-          Unauthenticated user, please log in
+          {t("userManagement_unauthenticated")}
         </Text>
         <Button onClick={handleLogin} colorPalette="brand">
-          Login
+          {t("menu.login", { ns: "template" })}
         </Button>
       </Flex>
     );
@@ -337,7 +340,7 @@ const UserManagementView = () => {
     return (
       <Flex direction="column" align="center" justifyContent="center" minH="96" gap="4">
         <Text fontSize="lg" color="status.error" textAlign="center">
-          Error loading users: {error}
+          {t("userManagement_errorLoading")} {error}
         </Text>
         <Button
           onClick={() => {
@@ -345,7 +348,7 @@ const UserManagementView = () => {
           }}
           colorPalette="brand"
         >
-          Refresh Page
+          {t("userManagement_refreshPage")}
         </Button>
       </Flex>
     );
@@ -353,12 +356,12 @@ const UserManagementView = () => {
 
   return (
     <Box>
-      <Heading mb="4">User Management</Heading>
+      <Heading mb="4">{t("userManagement_title")}</Heading>
 
       {/* Server-side search — re-fetches from Auth0 by name/email */}
       <Box mb="4">
         <Text fontSize="sm" fontWeight="medium" mb="2">
-          Search Users:
+          {t("userManagement_searchUsers")}
         </Text>
         <Flex justify="space-between" align="center" gap="2">
           <HStack gap="2">
@@ -376,11 +379,11 @@ const UserManagementView = () => {
               maxWidth="md"
             />
             <Button onClick={handleSearch} colorPalette="brand" disabled={isLoading}>
-              Search
+              {t("userManagement_search")}
             </Button>
             {searchTerm && (
               <Button onClick={handleClearSearch} variant="outline" disabled={isLoading}>
-                Clear
+                {t("userManagement_clear")}
               </Button>
             )}
           </HStack>
@@ -390,7 +393,7 @@ const UserManagementView = () => {
               setShowCreateModal(true);
             }}
           >
-            Create User
+            {t("userManagement_createUser")}
           </Button>
         </Flex>
       </Box>
@@ -399,7 +402,7 @@ const UserManagementView = () => {
       <SimpleGrid columns={3} gap="3" mb="3">
         <Box>
           <Text fontSize="xs" fontWeight="medium" mb="1" color="fg.muted">
-            Filter by Email
+            {t("userManagement_filterByEmail")}
           </Text>
           <HStack gap="1">
             <Input
@@ -425,7 +428,7 @@ const UserManagementView = () => {
         </Box>
         <Box>
           <Text fontSize="xs" fontWeight="medium" mb="1" color="fg.muted">
-            Filter by Company
+            {t("userManagement_filterByCompany")}
           </Text>
           <HStack gap="1">
             <Input
@@ -451,7 +454,7 @@ const UserManagementView = () => {
         </Box>
         <Box>
           <Text fontSize="xs" fontWeight="medium" mb="1" color="fg.muted">
-            Filter by Name / Surname
+            {t("userManagement_filterByName")}
           </Text>
           <HStack gap="1">
             <Input
@@ -478,9 +481,9 @@ const UserManagementView = () => {
       </SimpleGrid>
 
       <Text fontSize="xs" color="fg.muted" mb="2">
-        Showing {paginatedUsers.length} of {filteredSortedUsers.length} users
+        {t("userManagement_showing")} {paginatedUsers.length} {t("userManagement_of")} {filteredSortedUsers.length} {t("userManagement_users")}
         {filteredSortedUsers.length !== users.length
-          ? ` (filtered from ${users.length} total)`
+          ? ` (${t("userManagement_filtered")} ${users.length} ${t("userManagement_total")})`
           : ""}
       </Text>
 
@@ -492,59 +495,59 @@ const UserManagementView = () => {
             <Table.Root>
               <Table.Header>
                 <Table.Row>
-                  <Table.ColumnHeader>Phone</Table.ColumnHeader>
+                  <Table.ColumnHeader>{t("userManagement_phone")}</Table.ColumnHeader>
                   <Table.ColumnHeader
-                    cursor="pointer"
+                    style={{ cursor: "pointer" }}
                     userSelect="none"
                     onClick={() => {
                       handleColumnSort("email");
                     }}
                     _hover={{ bg: "bg.muted" }}
                   >
-                    User{sortIndicator("email")}
+                    {t("userManagement_user")}{sortIndicator("email")}
                   </Table.ColumnHeader>
                   <Table.ColumnHeader
-                    cursor="pointer"
+                    style={{ cursor: "pointer" }}
                     userSelect="none"
                     onClick={() => {
                       handleColumnSort("company");
                     }}
                     _hover={{ bg: "bg.muted" }}
                   >
-                    Company{sortIndicator("company")}
+                    {t("userManagement_company")}{sortIndicator("company")}
                   </Table.ColumnHeader>
                   <Table.ColumnHeader
-                    cursor="pointer"
+                    style={{ cursor: "pointer" }}
                     userSelect="none"
                     onClick={() => {
                       handleColumnSort("name");
                     }}
                     _hover={{ bg: "bg.muted" }}
                   >
-                    Name{sortIndicator("name")}
+                    {t("userManagement_name")}{sortIndicator("name")}
                   </Table.ColumnHeader>
                   <Table.ColumnHeader
-                    cursor="pointer"
+                    style={{ cursor: "pointer" }}
                     userSelect="none"
                     onClick={() => {
                       handleColumnSort("surname");
                     }}
                     _hover={{ bg: "bg.muted" }}
                   >
-                    Surname{sortIndicator("surname")}
+                    {t("userManagement_surname")}{sortIndicator("surname")}
                   </Table.ColumnHeader>
-                  <Table.ColumnHeader>Actions</Table.ColumnHeader>
+                  <Table.ColumnHeader>{t("userManagement_actions")}</Table.ColumnHeader>
                   <Table.ColumnHeader
-                    cursor="pointer"
+                    style={{ cursor: "pointer" }}
                     userSelect="none"
                     onClick={() => {
                       handleColumnSort("expiryDate");
                     }}
                     _hover={{ bg: "bg.muted" }}
                   >
-                    Expiry Date{sortIndicator("expiryDate")}
+                    {t("userManagement_expiryDate")}{sortIndicator("expiryDate")}
                   </Table.ColumnHeader>
-                  <Table.ColumnHeader>Status</Table.ColumnHeader>
+                  <Table.ColumnHeader>{t("userManagement_status")}</Table.ColumnHeader>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -557,14 +560,12 @@ const UserManagementView = () => {
                       key={user.user_id ?? index}
                       bg={
                         isBlocked
-                          ? "red.subtle"
+                          ? "bg.error"
                           : expiryStatus.status === "expired"
-                            ? "orange.subtle"
-                            : expiryStatus.status === "expiring-soon"
-                              ? "yellow.subtle"
-                              : index % 2 === 0
-                                ? "bg.subtle"
-                                : undefined
+                            ? "bg.warning"
+                            : index % 2 === 0
+                              ? "bg.subtle"
+                              : undefined
                       }
                     >
                       <Table.Cell>{user.user_metadata?.phone_number ?? ""}</Table.Cell>
@@ -580,7 +581,7 @@ const UserManagementView = () => {
                             handleEditUser(user.user_id ?? "");
                           }}
                           disabled={!user.user_id}
-                          _hover={{ bg: "gray.100" }}
+                          _hover={{ bg: "bg.muted" }}
                         >
                           <FaEdit />
                         </Button>
@@ -590,15 +591,15 @@ const UserManagementView = () => {
                           ? typeof user.app_metadata.expiry_date === "string"
                             ? user.app_metadata.expiry_date.split("T")[0]
                             : String(user.app_metadata.expiry_date)
-                          : "No expiry"}
+                          : t("userManagement_noExpiry")}
                       </Table.Cell>
                       <Table.Cell>
                         {expiryStatus.status === "expired" ? (
-                          <Badge colorPalette="orange" size="sm">Expired</Badge>
+                          <Badge colorPalette="orange" size="sm">{t("userManagement_expired")}</Badge>
                         ) : isBlocked ? (
-                          <Badge colorPalette="red" size="sm">Blocked (Auth0)</Badge>
+                          <Badge colorPalette="red" size="sm">{t("userManagement_blockedAuth0")}</Badge>
                         ) : (
-                          <Badge colorPalette="green" size="sm">Active</Badge>
+                          <Badge colorPalette="green" size="sm">{t("userManagement_active")}</Badge>
                         )}
                       </Table.Cell>
                     </Table.Row>

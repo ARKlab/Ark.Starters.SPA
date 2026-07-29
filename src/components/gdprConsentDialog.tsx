@@ -93,7 +93,7 @@ export const GdprConsentDialog = () => {
             <Text>
               <Icon mr={1} as={FaCookieBite} />
               <Trans t={t} i18nKey="title">
-                We've Cookies!
+                We&apos;ve Cookies!
               </Trans>
             </Text>
           </DialogHeader>
@@ -150,7 +150,7 @@ export const GdprConsentDialog = () => {
         <DialogContent as={"form"} onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <Trans t={t} i18nKey="title">
-              We've Cookies!
+              We&apos;ve Cookies!
             </Trans>
           </DialogHeader>
 

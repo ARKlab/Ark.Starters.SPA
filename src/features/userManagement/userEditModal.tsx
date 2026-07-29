@@ -58,7 +58,7 @@ interface UserEditModalProps {
   onBlockStatusChange?: (userId: string, blocked: boolean) => void;
 }
 
-export const UserEditModal = ({ open, onClose, onConfirm, userId, onBlockStatusChange }: UserEditModalProps) => {
+export const UserEditModal = ({ open, onClose, onConfirm, userId, onBlockStatusChange: _onBlockStatusChange }: UserEditModalProps) => {
   const { data: userData, isLoading, error: apiError } = useGetUserInfoQuery(userId ?? "", { skip: !userId || !open });
 
   // Form fields

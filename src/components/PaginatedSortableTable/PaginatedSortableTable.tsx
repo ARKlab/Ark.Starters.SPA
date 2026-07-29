@@ -150,7 +150,7 @@ export function PaginatedSortableTable<T>(props: PaginatedSortableTableProps<T>)
       <Box overflowX="auto">
         <Button onClick={resetOrder} hidden={!isSortable}>
           {/*This should be only demostrative and should be outside of the component*/}
-          {t("movies_resetcolumnsorder")}
+          {t("table_resetColumnsOrder")}
         </Button>
         <Table.Root my="30px" minHeight={"500px"}>
           <Table.Header>

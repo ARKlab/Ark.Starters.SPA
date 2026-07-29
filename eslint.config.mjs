@@ -183,13 +183,18 @@ export default tseslint.config(
   },
   {
     files: ["**/*.{jsx,mjsx,tsx,mtsx,ts}"],
-    ...react.configs.flat.recommended,
     plugins: {
       react,
       "react-hooks": hooks,
       "react-refresh": reactRefresh,
     },
+    settings: {
+      react: { version: "detect" },
+    },
     rules: {
+      ...react.configs.recommended.rules,
+      "react/react-in-jsx-scope": "off",
+      "react/prop-types": "off",
       ...hooks.configs.recommended.rules,
       "react-refresh/only-export-components": ["error", { allowConstantExport: true }],
       "react-hooks/exhaustive-deps": ["error"],
@@ -214,6 +219,7 @@ export default tseslint.config(
       ".swc/**",
       "dev-dist/**",
       "eslint.config.mjs",
+      "server/**",
     ],
   },
 );

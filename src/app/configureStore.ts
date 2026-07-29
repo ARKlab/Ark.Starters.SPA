@@ -2,12 +2,6 @@ import type { Action, ThunkAction } from "@reduxjs/toolkit";
 import { configureStore, combineSlices } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
-import { configTableApiSlice } from "../features/configTable/configTableApi";
-import { jsonPlaceholderApi } from "../features/fetchApiExample/jsonPlaceholderApi";
-import { videoGameApiSlice } from "../features/formExample/videoGamesApiSlice";
-import { globalLoadingSlice } from "../features/globalLoadingBar/globalLoadingSlice";
-import { moviesApiSlice } from "../features/paginatedTable/paginatedTableApi";
-import { rtkqErrorHandlingApi } from "../features/rtkqErrorHandling/rtkqErrorHandlingApi";
 import { userManagementApi } from "../features/userManagement/userManagementApi";
 import { authSlice } from "../lib/authentication/authenticationSlice";
 import { envSlice } from "../lib/authentication/envSlice";
@@ -20,14 +14,8 @@ const sliceReducers = combineSlices(
   authSlice,
   envSlice,
 
-  configTableApiSlice,
-  videoGameApiSlice,
-  jsonPlaceholderApi,
-  moviesApiSlice,
-  rtkqErrorHandlingApi,
   userManagementApi,
 
-  globalLoadingSlice,
   {
     errorHandler: errorReducer,
   },
@@ -46,12 +34,6 @@ export function initStore(extra: ExtraType) {
           serializableCheck: true,
         },
       }).concat(
-        jsonPlaceholderApi.middleware,
-        configTableApiSlice.middleware,
-        moviesApiSlice.middleware,
-        videoGameApiSlice.middleware,
-        globalLoadingSlice.middleware,
-        rtkqErrorHandlingApi.middleware,
         userManagementApi.middleware,
       ),
   });
@@ -61,12 +43,6 @@ export function initStore(extra: ExtraType) {
 }
 
 export const resetApiActions = [
-  jsonPlaceholderApi.util.resetApiState(),
-  configTableApiSlice.util.resetApiState(),
-  moviesApiSlice.util.resetApiState(),
-  videoGameApiSlice.util.resetApiState(),
-  globalLoadingSlice.util.resetApiState(),
-  rtkqErrorHandlingApi.util.resetApiState(),
   userManagementApi.util.resetApiState(),
 ];
 
