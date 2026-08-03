@@ -6,18 +6,18 @@ This document explains the tooling choices made for this project and the rationa
 
 ### Development & Testing: tsgo (TypeScript-Native)
 
-- **Package**: `@typescript/native-preview@7.0.0-dev.20260124.1`
+- **Packages**: `typescript@7.0.2` + `@typescript/typescript6@6.0.2` (side-by-side)
 - **Commands**: Integrated into `npm run lint`
 - **Use Cases**:
   - Development type-checking (via `npm run lint`)
   - CI type-checking (via `npm run lint`)
 - **Benefits**: ~10x faster type-checking due to Go-based native implementation
-- **Limitations**: Preview/alpha software, rapid iteration
+- **Limitations**: Temporary side-by-side setup while some tools still require the TypeScript 6 API
 
-### Production Builds: TypeScript v5
+### Production Builds: TypeScript v7
 
-- **Package**: `typescript@5.9.3`
-- **Command**: `npm run build` (uses `tsc && vite build`)
+- **Package**: `typescript@7.0.2`
+- **Command**: `npm run build` (uses `vite build`)
 - **Rationale**:
   - Battle-tested, stable release
   - Maximum ecosystem compatibility
