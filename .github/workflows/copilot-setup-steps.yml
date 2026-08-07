@@ -36,3 +36,5 @@ jobs:
 
       - name: Install JavaScript dependencies
         run: npm ci
+        continue-on-error: true # Prevents the workflow from stopping immediately
+
