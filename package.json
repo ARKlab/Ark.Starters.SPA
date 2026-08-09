@@ -41,7 +41,7 @@
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "2.24.1",
-    "@azure/msal-browser": "5.17.3",
+    "@azure/msal-browser": "5.18.0",
     "@chakra-ui/react": "3.36.1",
     "@dnd-kit/core": "6.3.1",
     "@dnd-kit/sortable": "10.0.0",
@@ -122,11 +122,11 @@
     "vite-plugin-oxlint": "2.1.2",
     "vite-plugin-preload": "0.7.0",
     "vite-plugin-pwa": "1.3.0",
-    "vite-plugin-react-click-to-component": "4.2.2",
+    "vite-plugin-react-click-to-component": "4.2.3",
     "vite-plugin-static-copy": "4.1.1",
     "vite-plugin-svgr": "5.2.0",
     "wait-on": "9.1.0",
-    "web-vitals": "6.0.1"
+    "web-vitals": "6.1.0"
   },
   "overrides": {
     "@cypress/request": {
