@@ -1,8 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { RowData, ColumnFiltersState } from "@tanstack/react-table"
+import type { CellData, ColumnFiltersState, RowData, TableFeatures } from "@tanstack/react-table"
 
 declare module "@tanstack/react-table" {
-  interface ColumnMeta<TData extends RowData, TValue> {
+  interface ColumnMeta<
+    in out TFeatures extends TableFeatures,
+    in out TData extends RowData,
+    TValue extends CellData = CellData,
+  > {
     type: "string" | "number" | "boolean" | "date"
   }
 }

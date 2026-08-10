@@ -1,5 +1,4 @@
 import { Box, Button, Flex, Heading } from "@chakra-ui/react"
-import type { ColumnDef } from "@tanstack/react-table"
 import { createColumnHelper } from "@tanstack/react-table"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
@@ -10,12 +9,13 @@ import { useInjectApiSlice } from "../../app/useInjectApiSlice"
 import { AppFilters } from "../../components/AppFilters/AppFilters"
 import type { FilterDefinition } from "../../components/AppFilters/Filters"
 import { AppArkApiTable } from "../../lib/components/AppArkApiTable/AppArkApiTable"
+import type { AppTableFeatures } from "../../lib/components/AppArkApiTable/AppArkApiTable"
 import { toColumnFiltersState } from "../../lib/ex"
 
 import type { Movie } from "./fakeMoviesData"
 import { moviesApiSlice, useGetMoviesQuery } from "./paginatedTableApi"
 
-const columnHelper = createColumnHelper<Movie>()
+const columnHelper = createColumnHelper<AppTableFeatures, Movie>()
 
 const MovieTableView = () => {
   // Inject API slice for lazy loading
@@ -23,7 +23,7 @@ const MovieTableView = () => {
 
   const { t } = useTranslation()
 
-  const columns = [
+  const columns = columnHelper.columns([
     columnHelper.accessor(row => row.title, {
       id: "title",
       cell: info => info.getValue(),
@@ -68,7 +68,7 @@ const MovieTableView = () => {
       header: () => <span>{t("movies_release")}</span>,
       meta: { type: "date" },
     }),
-  ] as ColumnDef<Movie>[]
+  ])
   const [filters, setFilters] = useState<Partial<Movie>>({})
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const toggleSidebar = () => {

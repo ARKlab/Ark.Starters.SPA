@@ -1,11 +1,11 @@
 import { Box, Heading } from "@chakra-ui/react"
-import type { ColumnDef } from "@tanstack/react-table"
 import { createColumnHelper } from "@tanstack/react-table"
 import { useTranslation } from "react-i18next"
 
 import { useAppDispatch } from "../../app/hooks"
 import { useInjectApiSlice } from "../../app/useInjectApiSlice"
 import { AppArkApiTable } from "../../lib/components/AppArkApiTable/AppArkApiTable"
+import type { AppTableFeatures } from "../../lib/components/AppArkApiTable/AppArkApiTable"
 
 import {
   videoGameApiSlice,
@@ -15,7 +15,7 @@ import {
 import VideoGamesForm from "./videoGamesForm"
 import type { VideoGame } from "./videoGamesSampleDataAndTypes"
 
-const columnHelper = createColumnHelper<VideoGame>()
+const columnHelper = createColumnHelper<AppTableFeatures, VideoGame>()
 
 const VideoGamesTableView = () => {
   // Inject API slice for lazy loading
@@ -23,7 +23,7 @@ const VideoGamesTableView = () => {
 
   const { data: genres } = useGetVideoGamesGenresQuery()
   const { t } = useTranslation()
-  const columns = [
+  const columns = columnHelper.columns([
     columnHelper.accessor(row => row.title, {
       id: "title",
       cell: info => info.getValue(),
@@ -78,7 +78,7 @@ const VideoGamesTableView = () => {
       meta: { type: "number" },
       enableColumnFilter: false,
     }),
-  ] as ColumnDef<VideoGame>[]
+  ])
 
   return (
     <Box>

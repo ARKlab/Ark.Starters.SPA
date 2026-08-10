@@ -20,19 +20,26 @@ import type {
   ColumnFiltersState,
   OnChangeFn,
   PaginationState,
-  Table as ReactTable,
+  RowData,
   RowSelectionState,
   SortingState,
 } from "@tanstack/react-table"
 import {
+  columnFacetingFeature,
+  columnFilteringFeature,
+  columnOrderingFeature,
+  columnVisibilityFeature,
+  createFacetedMinMaxValues,
+  createFacetedRowModel,
+  createFacetedUniqueValues,
+  createFilteredRowModel,
+  createPaginatedRowModel,
   flexRender,
-  getCoreRowModel,
-  getFacetedMinMaxValues,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  useReactTable,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  rowSortingFeature,
+  tableFeatures,
+  useTable,
 } from "@tanstack/react-table"
 import { useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
@@ -49,8 +56,25 @@ import { ColumnSorter } from "./columnSorter"
 import { DraggableColumnHeader } from "./draggableColumnHeader"
 import { getTableState, setTableState } from "./tableStateSlice"
 
-type ArkApiTableProps<T> = {
-  columns: ColumnDef<T>[]
+export const appTableFeatures = tableFeatures({
+  columnFacetingFeature,
+  columnFilteringFeature,
+  columnOrderingFeature,
+  columnVisibilityFeature,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  rowSortingFeature,
+  facetedMinMaxValues: createFacetedMinMaxValues(),
+  facetedRowModel: createFacetedRowModel(),
+  facetedUniqueValues: createFacetedUniqueValues(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+})
+
+export type AppTableFeatures = typeof appTableFeatures
+
+type ArkApiTableProps<T extends RowData> = {
+  columns: ColumnDef<AppTableFeatures, T>[]
   useQueryHook: (
     args: {
       pageIndex: number
@@ -81,7 +105,7 @@ type ArkApiTableProps<T> = {
   overWriteStore?: boolean //if true, when setting the table state in the store, it will overwrite all other table states. Deafault is true. Could be usueful when you have multiple tables in the same page and you want to retain filters for all of them
 }
 
-export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
+export function AppArkApiTable<T extends RowData>(props: ArkApiTableProps<T>) {
   const {
     columns,
     useQueryHook,
@@ -143,14 +167,14 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
 
   const [columnOrder, setColumnOrder] = useState(
     columns
-      .filter((x): x is ColumnDef<T> & { id: string } => x.id !== undefined)
+      .filter((x): x is ColumnDef<AppTableFeatures, T> & { id: string } => x.id !== undefined)
       .map(column => column.id), //must start out with populated columnOrder so we can splice
   )
 
   const resetOrder = () => {
     setColumnOrder(
       columns
-        .filter((x): x is ColumnDef<T> & { id: string } => x.id !== undefined)
+        .filter((x): x is ColumnDef<AppTableFeatures, T> & { id: string } => x.id !== undefined)
         .map(column => column.id),
     )
   }
@@ -175,7 +199,7 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
 
     const rows = selectedIds
       .map(id => data?.data.find(row => getRowId(row) === id)) // Find rows by ID
-      .filter(row => row !== undefined) as T[] // Filter out undefined rows
+      .filter((row): row is T => row !== undefined) // Filter out undefined rows
 
     if (setRowSelection) setRowSelection(rows)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -191,11 +215,11 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
     [pageIndex, pageSize],
   )
   const { t } = useTranslation()
-  const table = useReactTable<T>({
+  const table = useTable<AppTableFeatures, T>({
+    features: appTableFeatures,
     //this is the definition of the table
     data: tableData,
     columns,
-    getPaginationRowModel: getPaginationRowModel(),
     pageCount: Math.ceil(tableData.length / pageSize),
     //this is the state of the table (table.getState()) we take care of it manually to have all features server side and ARK compatibile
     state: {
@@ -213,11 +237,6 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
     onColumnFiltersChange: setColumnFilters,
     onPaginationChange: setPagination,
     onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(), //this is the core row model, it is used to get the rows that are visible after filtering, sorting and pagination
-    getFilteredRowModel: getFilteredRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues(),
     manualPagination: true, //manual xxx means that Tanstack (React Table v8) expects that we take care of the table state manually
     manualSorting: true,
     enableSorting: isSortable,
@@ -295,11 +314,7 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
                               </HStack>
                               <Box>
                                 {header.column.getCanFilter() && !disableHeaderFilters ? (
-                                  <Filter<T>
-                                    column={header.column}
-                                    table={table}
-                                    isLoading={isFetching}
-                                  />
+                                  <Filter<T> column={header.column} />
                                 ) : null}
                               </Box>
                             </VStack>
@@ -341,8 +356,8 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
           </Table.Root>
         </Table.ScrollArea>
         <AppPagination
-          page={table.getState().pagination.pageIndex}
-          pageSize={table.getState().pagination.pageSize}
+          page={table.state.pagination.pageIndex}
+          pageSize={table.state.pagination.pageSize}
           count={data?.count ?? 0}
           onPageChange={onPageIndexChange}
           onPageSizeChange={onPageSizeChange}
@@ -353,7 +368,7 @@ export function AppArkApiTable<T>(props: ArkApiTableProps<T>) {
   )
 }
 
-function Filter<T>({ column }: { column: Column<T>; table: ReactTable<T>; isLoading: boolean }) {
+function Filter<T extends RowData>({ column }: { column: Column<AppTableFeatures, T> }) {
   const columnFilterValue = column.getFilterValue()
   const columnFacetedUniqueValues = column.getFacetedUniqueValues()
 
