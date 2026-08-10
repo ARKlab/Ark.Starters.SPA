@@ -1,9 +1,15 @@
 import { IconButton } from "@chakra-ui/react"
-import type { Column, SortDirection } from "@tanstack/react-table"
+import type { Column, RowData, SortDirection } from "@tanstack/react-table"
 import { useTranslation } from "react-i18next"
 import { LuChevronUp, LuChevronDown, LuChevronsUpDown } from "react-icons/lu"
 
-export const ColumnSorter = <T,>({ column }: { column: Column<T> }) => {
+import type { AppTableFeatures } from "./AppArkApiTable"
+
+export const ColumnSorter = <T extends RowData>({
+  column,
+}: {
+  column: Column<AppTableFeatures, T>
+}) => {
   const { t } = useTranslation()
 
   if (!column.getCanSort()) {

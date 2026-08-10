@@ -1,11 +1,13 @@
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
-import type { Header, Table as ReactTable } from "@tanstack/react-table"
+import type { Header, ReactTable, RowData } from "@tanstack/react-table"
 import { flexRender } from "@tanstack/react-table"
 
-export const DraggableColumnHeader = <T,>(props: {
-  header: Header<T, unknown>
-  table: ReactTable<T>
+import type { AppTableFeatures } from "./AppArkApiTable"
+
+export const DraggableColumnHeader = <T extends RowData>(props: {
+  header: Header<AppTableFeatures, T>
+  table: ReactTable<AppTableFeatures, T>
 }) => {
   const { header } = props
   const { column } = header
