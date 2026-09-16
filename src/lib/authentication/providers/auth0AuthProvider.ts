@@ -94,10 +94,10 @@ export class Auth0AuthProvider implements AuthProvider {
     await this.auth0Client.logout()
   }
 
-  public async getToken() {
+  public async getToken(): Promise<string | null> {
     const token = await this.auth0Client.getTokenSilently()
 
-    return token
+    return token ?? null
   }
   public getLoginStatus(): LoginStatus {
     return this.loginStatus
