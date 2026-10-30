@@ -1,33 +1,62 @@
+/* Popup container */
 [data-scope="date-picker"][data-part="view"] {
   width: fit-content;
-  border: 1px solid #e5e5e5;
-  background-color: var(--chakra-colors-page);
-  z-index: 11000;
+  border: 1px solid var(--chakra-colors-border);
+  background-color: var(--chakra-colors-bg-panel);
+  border-radius: var(--chakra-radii-md);
+  padding: var(--chakra-spacing-2);
+  box-shadow: var(--chakra-shadows-lg);
 }
+
 [data-scope="date-picker"][data-part="view-control"] {
   display: flex;
   justify-content: space-between;
 }
-[data-scope="date-picker"][data-part="table-cell-trigger"][data-in-range][data-range-start] {
-  background-color: var(--chakra-colors-color-palette-solid);
-}
-[data-scope="date-picker"][data-part="table-cell-trigger"][data-in-range][data-range-end] {
-  background-color: var(--chakra-colors-color-palette-solid);
-}
-[data-scope="date-picker"][data-part="table-cell-trigger"][data-in-range][data-selected] {
-  background-color: var(--chakra-colors-color-palette-solid);
-}
-[data-scope="date-picker"][data-part="table-cell-trigger"][data-in-range] {
-  background-color: var(--chakra-colors-color-palette-subtle);
-  color: var(--chakra-colors-color-palette-contrast);
-}
-[data-scope="date-picker"][data-part="table-cell-trigger"][data-disabled] {
-  color: var(--chakra-colors-fg-subtle);
+
+/* Day cells */
+[data-scope="date-picker"][data-part="table-cell-trigger"] {
+  color: var(--chakra-colors-fg);
+  cursor: pointer;
 }
 
-[data-scope="date-picker"][data-part="table-cell-trigger"] {
-  color: var(--chakra-colors-color-palette-contrast);
+[data-scope="date-picker"][data-part="table-cell-trigger"][data-disabled],
+[data-scope="date-picker"][data-part="table-cell-trigger"][data-outside-range] {
+  color: var(--chakra-colors-fg-subtle);
+  cursor: default;
 }
+
+[data-scope="date-picker"][data-part="table-cell-trigger"][data-selected] {
+  background-color: var(--chakra-colors-color-palette-solid);
+  color: var(--chakra-colors-color-palette-contrast);
+  border-radius: var(--chakra-radii-md);
+}
+
+[data-scope="date-picker"][data-part="table-cell-trigger"][data-today]:not([data-selected]) {
+  border: 1px solid var(--chakra-colors-border-emphasized);
+}
+
+/* Range states */
+[data-scope="date-picker"][data-part="table-cell-trigger"][data-in-range] {
+  background-color: var(--chakra-colors-color-palette-subtle);
+  color: var(--chakra-colors-fg);
+}
+
+[data-scope="date-picker"][data-part="table-cell-trigger"][data-in-range][data-range-start],
+[data-scope="date-picker"][data-part="table-cell-trigger"][data-in-range][data-range-end] {
+  background-color: var(--chakra-colors-color-palette-solid);
+  color: var(--chakra-colors-color-palette-contrast);
+  border-radius: var(--chakra-radii-md);
+}
+
+/* Weekday names */
+[data-scope="date-picker"][data-part="table-header"] {
+  color: var(--chakra-colors-fg-muted);
+  font-weight: var(--chakra-font-weights-semibold);
+  font-size: var(--chakra-font-sizes-xs);
+}
+
+/* Above sticky table headers and modals */
+[data-scope="date-picker"][data-part="positioner"],
 [data-test="datepicker-content"] {
-  z-index: 11001;
+  z-index: var(--chakra-z-index-popover);
 }
