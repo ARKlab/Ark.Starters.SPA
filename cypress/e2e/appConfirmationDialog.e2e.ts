@@ -15,8 +15,9 @@ describe("AppConfirmationDialog", () => {
 
   it("closes via close button", () => {
     cy.get('[data-test="open-appconfirmationdialog-btn"]').click()
+    cy.get('[data-test="appconfirmationdialog-content"]').should("be.visible")
     cy.get('[data-test="appconfirmationdialog-close"]').click()
-    cy.get('[data-test="appconfirmationdialog-root"]').should("not.exist")
+    cy.get('[data-test="appconfirmationdialog-content"]').should("not.exist")
   })
 
   it("fires confirm callback", () => {

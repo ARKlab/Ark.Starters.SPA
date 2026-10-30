@@ -26,6 +26,7 @@ export const AppConfirmationDialog = (props: {
     <>
       <DialogRoot
         open={props.open}
+        onOpenChange={e => props.onOpenChange?.(e.open)}
         initialFocusEl={() => closeRef.current}
         role="alertdialog"
         data-test="appconfirmationdialog-root"
