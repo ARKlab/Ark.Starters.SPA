@@ -78,7 +78,6 @@
   "devDependencies": {
     "@chakra-ui/cli": "3.37.0",
     "@cypress/code-coverage": "4.1.2",
-    "@iodigital/vite-plugin-msw": "2.0.0",
     "@rolldown/plugin-babel": "0.3.0",
     "@svgr/plugin-jsx": "8.1.0",
     "@svgr/plugin-svgo": "8.1.0",
@@ -107,7 +106,7 @@
     "dotenv": "18.0.9",
     "esbuild": "0.28.2",
     "jiti": "2.7.0",
-    "msw": "2.15.0",
+    "msw": "3.0.3",
     "oxfmt": "0.75.0",
     "oxlint": "1.90.0",
     "oxlint-tsgolint": "7.0.2005",

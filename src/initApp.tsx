@@ -29,7 +29,7 @@ export function InitApp() {
 
     if (import.meta.env.DEV || import.meta.env.MODE === "e2e") {
       const { worker } = await import("./lib/mocks/browserWorker")
-      await worker.start({ onUnhandledRequest: "warn" })
+      await worker.start({ onUnhandledFrame: "warn" })
     }
 
     await i18nSetup()

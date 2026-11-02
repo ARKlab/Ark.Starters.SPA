@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- API mocking uses MSW v3 and its built-in Vite plugin (`msw/vite`) instead of `@iodigital/vite-plugin-msw`.
+
 ### Fixed
 
 - `AppConfirmationDialog`: the Close button now closes the dialog.
