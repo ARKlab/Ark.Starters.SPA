@@ -4,10 +4,10 @@
 import fs from "fs"
 import path from "path"
 
-import msw from "@iodigital/vite-plugin-msw"
 import legacy, { cspHashes } from "@vitejs/plugin-legacy"
 import react, { reactCompilerPreset } from "@vitejs/plugin-react"
 import babel from "@rolldown/plugin-babel"
+import { msw } from "msw/vite"
 import { visualizer } from "rollup-plugin-visualizer"
 import Info from "unplugin-info/vite"
 import { defineConfig, loadEnv, type Plugin } from "vite"
@@ -142,13 +142,14 @@ function legacyCspHashesPlugin(): Plugin {
   }
 }
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), "")
 
   return {
     plugins: [
       Info(),
-      msw({ mode: "browser", handlers: [], build: mode == "e2e" }),
+      // worker-only: serve mockServiceWorker.js in dev, emit it only in e2e builds
+      (command === "serve" || mode === "e2e") && msw({ mode: "worker-only" }),
       legacy({
         // Legacy browser targets (browsers that need polyfills)
         // Feature-based for browsers lacking modern features
