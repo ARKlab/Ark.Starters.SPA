@@ -131,7 +131,7 @@
     "@cypress/request": {
       "uuid": "14.0.3"
     },
-    "glob": "14.0.3",
+    "glob": "14.0.4",
     "istanbul-lib-processinfo": {
       "uuid": "14.0.3"
     },
