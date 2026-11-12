@@ -129,7 +129,6 @@ export const i18nSetup = async () => {
       },
 
       nonExplicitSupportedLngs: true,
-      cleanCode: true,
       lowerCaseLng: true,
     })
 
