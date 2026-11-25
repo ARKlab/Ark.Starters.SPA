@@ -102,7 +102,7 @@ npm outdated # Check package versions
 ```
 
 src/
-├── app/ # Routes and page components
+├── app/ # Redux store setup, typed hooks and lazy slice injection
 ├── components/ # Shared UI components (use 'translation' namespace)
 ├── config/ # Configuration (lang.ts, gdpr.ts)
 ├── features/ # Feature modules (use 'translation' namespace)
