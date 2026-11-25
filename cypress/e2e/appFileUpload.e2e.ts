@@ -10,7 +10,7 @@ describe("AppFileUpload", () => {
   })
 
   it("keeps the dropzone text inside the dropzone", () => {
-    cy.get("[data-test='fileupload-single'] [data-test='fileupload-dropzone']").then($zone => {
+    cy.get("[data-test='fileupload-single'] [data-test='fileupload-dropzone']").should($zone => {
       const zone = $zone[0].getBoundingClientRect()
       const text = $zone.find("[data-test='fileupload-center']")[0].getBoundingClientRect()
       expect(text.left).to.be.gte(zone.left)
