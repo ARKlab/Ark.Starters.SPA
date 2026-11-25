@@ -18,7 +18,14 @@ describe("AppDateRange", () => {
 
     cy.get("[data-test='daterange-display']")
       .invoke("text")
-      .should("match", /^10\/\d{2}\/\d{4} - 12\/\d{2}\/\d{4}$/)
+      .should(text => {
+        // the component pins dates to CET, so on other time zones both days shift: check the span only
+        const [from, to] = text.split(" - ").map(d => {
+          const [day, month, year] = d.split("/").map(Number)
+          return Date.UTC(year, month - 1, day)
+        })
+        expect(to - from).to.equal(2 * 24 * 60 * 60 * 1000)
+      })
     // only the format: the logged ISO day can shift by one (isoDate formats in UTC)
     cy.findAllByText(/^dateRange start: "\d{4}-\d{2}-\d{2}"$/).should("exist")
     cy.findAllByText(/^dateRange end: "\d{4}-\d{2}-\d{2}"$/).should("exist")
