@@ -699,7 +699,7 @@ export const UserCard = ({ name, email }: UserCardProps) => {
    }
    ```
 
-3. **Register API in store** (`src/lib/rtk/store.ts`):
+3. **Register API in store** (`src/app/configureStore.ts`):
 
    ```typescript
    import { moviesApi } from "@/lib/rtk/moviesApi"
@@ -1550,7 +1550,7 @@ npm run test
 
 ---
 
-### `src/lib/rtk/store.ts`
+### `src/app/configureStore.ts`
 
 **Purpose**: Redux store configuration
 
