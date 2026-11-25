@@ -15,7 +15,7 @@ import { Navigate } from "react-router"
 
 import type { ArkRoute } from "../lib/siteMapTypes"
 
-/*This is the Main Section ARRAY populate this to populate the main nav menu
+/*This is the SiteMap ARRAY populate this to populate the main nav menu
 It is also used to create all the Routes for the router*/
 export const siteMap: ArkRoute[] = [
   {
