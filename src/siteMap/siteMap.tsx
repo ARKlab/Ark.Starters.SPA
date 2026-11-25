@@ -4,8 +4,10 @@ import {
   LuExternalLink,
   LuFlag,
   LuGamepad2,
+  LuHeading,
   LuLock,
   LuPlay,
+  LuShieldAlert,
   LuTable,
   LuFilm,
   LuFlaskConical,
@@ -139,6 +141,21 @@ export const siteMap: ArkRoute[] = [
         icon: LuFlaskConical,
         isInMenu: true,
         lazy: async () => import("../features/tests/ComponentsPage"),
+      },
+      {
+        path: "pageTitleDemo",
+        label: "Page Title",
+        icon: LuHeading,
+        isInMenu: true,
+        lazy: async () => import("../features/pageTitleDemo/pageTitleDemoPage"),
+      },
+      {
+        path: "featureErrorBoundaryDemo",
+        label: "Feature Error Boundary",
+        icon: LuShieldAlert,
+        isInMenu: true,
+        lazy: async () =>
+          import("../features/featureErrorBoundaryDemo/featureErrorBoundaryDemoPage"),
       },
       //This is the way we must define the routes for pages that have details pages
       {

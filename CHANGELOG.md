@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Demo pages for `AppPageTitle` ("Page Title") and `FeatureErrorBoundary` ("Feature Error Boundary") in the main menu.
+
 ### Changed
 
 - API mocking uses MSW v3 and its built-in Vite plugin (`msw/vite`) instead of `@iodigital/vite-plugin-msw`.
