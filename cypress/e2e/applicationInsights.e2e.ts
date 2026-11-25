@@ -107,7 +107,7 @@ describe("Application Insights Telemetry", () => {
   it("tracks all route changes and verifies telemetry count", () => {
     // Navigate to multiple routes to test auto route tracking
     const routes = [
-      { menu: /posts/i, expectedInUrl: "jsonplaceholder", testName: "Posts" },
+      { menu: /posts/i, expectedInUrl: "posts", testName: "Posts" },
       { menu: /config table/i, expectedInUrl: "configTable", testName: "Config Table" },
       { menu: /movie paginated/i, expectedInUrl: "moviesTable", testName: "Movies Table" },
     ]

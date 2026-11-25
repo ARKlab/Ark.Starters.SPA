@@ -28,14 +28,14 @@ export const siteMap: ArkRoute[] = [
         path: "",
         label: "index",
         isInMenu: false,
-        component: <Navigate to="jsonplaceholder" />,
+        component: <Navigate to="posts" />,
       },
       {
-        path: "jsonplaceholder",
+        path: "posts",
         label: "Posts",
         icon: LuCloudUpload,
         isInMenu: true,
-        lazy: async () => import("../features/fetchApiExample/JsonPlaceHolder"),
+        lazy: async () => import("../features/fetchApiExample/PostsPage"),
       },
       {
         path: "playground",

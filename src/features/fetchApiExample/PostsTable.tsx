@@ -5,7 +5,7 @@ import { z } from "zod"
 import { useInjectApiSlice } from "../../app/useInjectApiSlice"
 import { AppSimpleNonPaginatedTable } from "../../components/AppSimpleTable/AppSimpleNonPaginatedTable"
 
-import { jsonPlaceholderApi, useFetchPostsQuery } from "./jsonPlaceholderApi"
+import { postsApi, useFetchPostsQuery } from "./postsApi"
 
 export const PostDataSchema = z.object({
   id: z.number().nullable(),
@@ -15,9 +15,9 @@ export const PostDataSchema = z.object({
 })
 
 export type PostDataType = z.infer<typeof PostDataSchema>
-const JsonPlaceholderPostsTable = () => {
+const PostsTable = () => {
   // Inject API slice for lazy loading
-  useInjectApiSlice(jsonPlaceholderApi)
+  useInjectApiSlice(postsApi)
 
   const {
     data,
@@ -47,4 +47,4 @@ const JsonPlaceholderPostsTable = () => {
   )
 }
 
-export default JsonPlaceholderPostsTable
+export default PostsTable
