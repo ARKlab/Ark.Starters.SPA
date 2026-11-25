@@ -12,6 +12,20 @@ describe("FeatureErrorBoundary", () => {
     cy.findByRole("heading", { name: "Feature Error Boundary Demo" }).should("be.visible")
   })
 
+  it("catches the error when statistics consent is rejected", () => {
+    cy.visit("/featureErrorBoundaryDemo", {
+      onBeforeLoad: win => {
+        win.localStorage.removeItem("GDPR_CONSENT_STATE")
+      },
+    })
+    cy.window({ timeout: 30000 }).should("have.property", "appReady", true)
+    cy.get("[data-test='gdpr-reject']").click()
+
+    cy.findByRole("button", { name: "Throw error" }).click()
+
+    cy.findByRole("heading", { name: "Error in Demo widget" }).should("be.visible")
+  })
+
   it("try again remounts the widget", () => {
     cy.findByRole("button", { name: "Throw error" }).click()
     cy.findByRole("button", { name: "Try again" }).click()
