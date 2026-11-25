@@ -88,7 +88,7 @@ describe("Application Insights Telemetry", () => {
     cy.get("main").should("exist")
     cy.get("table").should("exist")
 
-    cy.navigateViaMenu(/movie paginated/i)
+    cy.navigateViaMenu(/sort, filter/i)
     cy.get("main").should("exist")
     cy.get("table").should("exist")
   })
@@ -109,7 +109,7 @@ describe("Application Insights Telemetry", () => {
     const routes = [
       { menu: /posts/i, expectedInUrl: "posts", testName: "Posts" },
       { menu: /config table/i, expectedInUrl: "configTable", testName: "Config Table" },
-      { menu: /movie paginated/i, expectedInUrl: "moviesTable", testName: "Movies Table" },
+      { menu: /sort, filter/i, expectedInUrl: "moviesTable", testName: "Movies Table" },
     ]
 
     // Perform navigations - each should trigger a page view event

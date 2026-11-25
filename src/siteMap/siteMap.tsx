@@ -85,14 +85,14 @@ export const siteMap: ArkRoute[] = [
       },
       {
         path: "moviesTable",
-        label: "Movie Paginated Table",
+        label: "Table: Sort, Filter & Drag",
         icon: LuFilm,
         isInMenu: true,
         lazy: async () => import("../features/paginatedTable/moviePage"),
       },
       {
         path: "videoGamesTable",
-        label: "VideoGames Table",
+        label: "Table with Insert Form",
         icon: LuGamepad2,
         isInMenu: true,
         lazy: async () => import("../features/formExample/videoGamesPage"),
