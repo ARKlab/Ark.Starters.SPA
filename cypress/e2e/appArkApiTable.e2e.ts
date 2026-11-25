@@ -30,7 +30,13 @@ describe("AppArkApiTable", () => {
   it("moves to the next page", () => {
     firstTitle().then(title => {
       cy.get("[title='Next']").click()
-      firstTitle().should("not.eq", title)
+      // the spinner row also has an empty first cell: require a full page with a new title
+      cy.get("table tbody tr").should($rows => {
+        expect($rows).to.have.length(10)
+        const newTitle = $rows.first().find("td").first().text()
+        expect(newTitle).to.not.equal("")
+        expect(newTitle).to.not.equal(title)
+      })
     })
   })
 })
