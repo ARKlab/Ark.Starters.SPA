@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - The "Posts" demo page moved from `/jsonplaceholder` to `/posts`.
-- Menu labels of the two table demos describe what they show: "Table: Sort, Filter & Drag" (movies) and "Table with Insert Form" (video games).
+- Menu labels of the two table demos describe what they show: "Full Table" (sorting, filters, column drag) and "Form Table" (insert form above the table).
 - API mocking uses MSW v3 and its built-in Vite plugin (`msw/vite`) instead of `@iodigital/vite-plugin-msw`.
 
 ### Fixed
