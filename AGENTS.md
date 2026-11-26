@@ -102,7 +102,7 @@ npm outdated # Check package versions
 ```
 
 src/
-├── app/ # Routes and page components
+├── app/ # Redux store setup, typed hooks and lazy slice injection
 ├── components/ # Shared UI components (use 'translation' namespace)
 ├── config/ # Configuration (lang.ts, gdpr.ts)
 ├── features/ # Feature modules (use 'translation' namespace)
@@ -699,7 +699,7 @@ export const UserCard = ({ name, email }: UserCardProps) => {
    }
    ```
 
-3. **Register API in store** (`src/lib/rtk/store.ts`):
+3. **Register API in store** (`src/app/configureStore.ts`):
 
    ```typescript
    import { moviesApi } from "@/lib/rtk/moviesApi"
@@ -1550,7 +1550,7 @@ npm run test
 
 ---
 
-### `src/lib/rtk/store.ts`
+### `src/app/configureStore.ts`
 
 **Purpose**: Redux store configuration
 
