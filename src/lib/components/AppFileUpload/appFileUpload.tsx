@@ -82,7 +82,9 @@ export default function AppFileUpload({
     <VStack gap={"4"} width="full" alignItems="stretch" data-test="fileupload-root">
       <Box
         data-test="fileupload-dropzone"
-        position="relative"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
         width="full"
         minHeight="3xs"
         border="xs"
@@ -99,11 +101,9 @@ export default function AppFileUpload({
         onClick={handleClick}
       >
         <VStack
-          position="absolute"
-          top="1/2"
-          left="1/2"
-          transform="translate(-50%, -50%)"
           gap={"3"}
+          p={"4"}
+          textAlign="center"
           pointerEvents="none"
           data-test="fileupload-center"
         >

@@ -29,6 +29,11 @@ export class StubReactPlugin {
     return undefined
   }
 
+  // Called by FeatureErrorBoundary
+  trackException() {
+    // no-op
+  }
+
   priority = 0
   identifier = "StubReactPlugin"
 }

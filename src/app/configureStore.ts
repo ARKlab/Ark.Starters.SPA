@@ -10,7 +10,7 @@ import errorReducer from "../lib/errorHandler/errorHandler"
 
 // Import types of lazy-loaded API slices for proper TypeScript typing
 import type { configTableApiSlice } from "../features/configTable/configTableApi"
-import type { jsonPlaceholderApi } from "../features/fetchApiExample/jsonPlaceholderApi"
+import type { postsApi } from "../features/fetchApiExample/postsApi"
 import type { videoGameApiSlice } from "../features/formExample/videoGamesApiSlice"
 import type { globalLoadingSlice } from "../features/globalLoadingBar/globalLoadingSlice"
 import type { moviesApiSlice } from "../features/paginatedTable/paginatedTableApi"
@@ -19,7 +19,7 @@ import type { rtkqErrorHandlingApi } from "../features/rtkqErrorHandling/rtkqErr
 // Union type of all possible lazy-loaded API slices
 export type LazyApiSlice =
   | typeof configTableApiSlice
-  | typeof jsonPlaceholderApi
+  | typeof postsApi
   | typeof videoGameApiSlice
   | typeof globalLoadingSlice
   | typeof moviesApiSlice
@@ -35,7 +35,7 @@ const rootReducer = combineSlices(authSlice, envSlice, tableStateSlice, {
 // Enable lazy-loaded slices to be injected dynamically with proper typing
 const sliceReducers = rootReducer.withLazyLoadedSlices<
   WithSlice<typeof configTableApiSlice> &
-    WithSlice<typeof jsonPlaceholderApi> &
+    WithSlice<typeof postsApi> &
     WithSlice<typeof videoGameApiSlice> &
     WithSlice<typeof globalLoadingSlice> &
     WithSlice<typeof moviesApiSlice> &

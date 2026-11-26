@@ -20,7 +20,7 @@ The store in `configureStore.ts` contains only essential slices that are needed 
   - `moviesApiSlice` - Movies feature API
   - `configTableApiSlice` - Config table API
   - `videoGameApiSlice` - Video games API
-  - `jsonPlaceholderApi` - JSON placeholder demo API
+  - `postsApi` - Posts demo API (jsonplaceholder.typicode.com)
   - `globalLoadingSlice` - Global loading demo API
   - `rtkqErrorHandlingApi` - Error handling demo API
 

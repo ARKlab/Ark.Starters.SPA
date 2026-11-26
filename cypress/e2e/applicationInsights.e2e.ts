@@ -88,7 +88,7 @@ describe("Application Insights Telemetry", () => {
     cy.get("main").should("exist")
     cy.get("table").should("exist")
 
-    cy.navigateViaMenu(/movie paginated/i)
+    cy.navigateViaMenu(/full table/i)
     cy.get("main").should("exist")
     cy.get("table").should("exist")
   })
@@ -107,9 +107,9 @@ describe("Application Insights Telemetry", () => {
   it("tracks all route changes and verifies telemetry count", () => {
     // Navigate to multiple routes to test auto route tracking
     const routes = [
-      { menu: /posts/i, expectedInUrl: "jsonplaceholder", testName: "Posts" },
+      { menu: /posts/i, expectedInUrl: "posts", testName: "Posts" },
       { menu: /config table/i, expectedInUrl: "configTable", testName: "Config Table" },
-      { menu: /movie paginated/i, expectedInUrl: "moviesTable", testName: "Movies Table" },
+      { menu: /full table/i, expectedInUrl: "moviesTable", testName: "Movies Table" },
     ]
 
     // Perform navigations - each should trigger a page view event

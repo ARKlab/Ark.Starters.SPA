@@ -4,8 +4,10 @@ import {
   LuExternalLink,
   LuFlag,
   LuGamepad2,
+  LuHeading,
   LuLock,
   LuPlay,
+  LuShieldAlert,
   LuTable,
   LuFilm,
   LuFlaskConical,
@@ -26,14 +28,14 @@ export const siteMap: ArkRoute[] = [
         path: "",
         label: "index",
         isInMenu: false,
-        component: <Navigate to="jsonplaceholder" />,
+        component: <Navigate to="posts" />,
       },
       {
-        path: "jsonplaceholder",
+        path: "posts",
         label: "Posts",
         icon: LuCloudUpload,
         isInMenu: true,
-        lazy: async () => import("../features/fetchApiExample/JsonPlaceHolder"),
+        lazy: async () => import("../features/fetchApiExample/PostsPage"),
       },
       {
         path: "playground",
@@ -83,14 +85,14 @@ export const siteMap: ArkRoute[] = [
       },
       {
         path: "moviesTable",
-        label: "Movie Paginated Table",
+        label: "Full Table",
         icon: LuFilm,
         isInMenu: true,
         lazy: async () => import("../features/paginatedTable/moviePage"),
       },
       {
         path: "videoGamesTable",
-        label: "VideoGames Table",
+        label: "Form Table",
         icon: LuGamepad2,
         isInMenu: true,
         lazy: async () => import("../features/formExample/videoGamesPage"),
@@ -139,6 +141,21 @@ export const siteMap: ArkRoute[] = [
         icon: LuFlaskConical,
         isInMenu: true,
         lazy: async () => import("../features/tests/ComponentsPage"),
+      },
+      {
+        path: "pageTitleDemo",
+        label: "Page Title",
+        icon: LuHeading,
+        isInMenu: true,
+        lazy: async () => import("../features/pageTitleDemo/pageTitleDemoPage"),
+      },
+      {
+        path: "featureErrorBoundaryDemo",
+        label: "Feature Error Boundary",
+        icon: LuShieldAlert,
+        isInMenu: true,
+        lazy: async () =>
+          import("../features/featureErrorBoundaryDemo/featureErrorBoundaryDemoPage"),
       },
       //This is the way we must define the routes for pages that have details pages
       {
